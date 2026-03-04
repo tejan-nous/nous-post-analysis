@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nous · Post Analysis</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:         #f4f3f0;
+      --surface:    #ffffff;
+      --border:     #e4e2dc;
+      --text:       #1a1a1a;
+      --muted:      #737373;
+      --nous:       #e8553e;
+      --nous-light: #fdf0ee;
+      --green:      #16a34a; --green-bg:  #dcfce7;
+      --amber:      #b45309; --amber-bg:  #fef3c7;
+      --red:        #dc2626; --red-bg:    #fee2e2;
+      --blue:       #2563eb; --blue-bg:   #dbeafe;
+      --skull:      #6b7280; --skull-bg:  #f3f4f6;
+      --orange:     #ea580c; --orange-bg: #ffedd5;
+      --gold:       #854d0e; --gold-bg:   #fef9c3;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.5; }
+
+    /* ── HEADER ── */
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
+    .logo { font-size: 16px; font-weight: 700; color: var(--nous); letter-spacing: -.02em; }
+    .logo-sub { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 10px; }
+    .page-tabs { display: flex; gap: 0; height: 100%; }
+    .page-tab { padding: 0 18px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; color: var(--muted); transition: color .15s; }
+    .page-tab:hover { color: var(--text); }
+    .page-tab.active { color: var(--nous); border-bottom-color: var(--nous); font-weight: 600; }
+    .header-right { font-size: 12px; color: var(--muted); }
+
+    /* ── POST TABS ── */
+    .post-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; overflow-x: auto; }
+    .post-tab { padding: 11px 16px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .post-tab:hover { color: var(--text); }
+    .post-tab.active { color: var(--nous); border-bottom-color: var(--nous); font-weight: 600; }
+    .ac-pill { background: var(--bg); border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 500; }
+    .post-tab.active .ac-pill { background: var(--nous-light); color: var(--nous); }
+
+    /* ── LAYOUT ── */
+    .main { display: grid; grid-template-columns: 300px 1fr; gap: 24px; max-width: 1280px; margin: 0 auto; padding: 24px 28px; align-items: start; }
+    .analysis { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── IMAGE PANEL ── */
+    .image-panel { position: sticky; top: 80px; }
+    .img-toggle { display: flex; background: var(--bg); border-radius: 8px; padding: 3px; margin-bottom: 10px; }
+    .img-toggle-btn { flex: 1; padding: 6px 10px; font-size: 12px; font-weight: 500; border-radius: 6px; cursor: pointer; text-align: center; color: var(--muted); transition: all .15s; }
+    .img-toggle-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .story-frame { width: 100%; aspect-ratio: 9/16; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,.14); background: #111; }
+    .story-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .image-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+    .notion-link { color: var(--muted); text-decoration: none; font-size: 12px; }
+    .notion-link:hover { color: var(--text); }
+
+    /* ── IMPROVED MOCK ── */
+    .mock-story { width: 100%; height: 100%; background: linear-gradient(175deg, #e8d5b0 0%, #d4b87a 18%, #c4a055 38%, #b08840 58%, #8a6a2a 78%, #6a4e18 100%); display: flex; flex-direction: column; padding: 16px 12px 12px; gap: 7px; position: relative; }
+    .mock-ad-label { position: absolute; top: 10px; right: 12px; font-size: 9px; color: rgba(255,255,255,.55); }
+    .mock-block { background: rgba(228,78,55,.86); border-radius: 10px; padding: 9px 11px; color: #fff; }
+    .mock-block-hook { font-size: 11.5px; font-weight: 700; line-height: 1.3; }
+    .mock-figure { font-size: 20px; font-weight: 900; color: #fde68a; display: block; margin-top: 3px; line-height: 1; }
+    .mock-block-body { font-size: 9.5px; line-height: 1.45; }
+    .mock-screenshot { background: rgba(255,255,255,.93); border-radius: 10px; padding: 8px 10px; color: #1a1a1a; font-size: 9px; }
+    .mock-screenshot-title { font-weight: 700; font-size: 9.5px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .mock-screenshot-row { display: flex; justify-content: space-between; padding: 3px 0; border-top: 1px solid #e5e5e5; font-size: 8.5px; }
+    .mock-screenshot-row span:last-child { font-weight: 700; color: var(--green); }
+    .mock-block-ease { font-size: 9.5px; line-height: 1.4; }
+    .mock-cta { margin-top: auto; background: rgba(255,255,255,.95); border-radius: 20px; padding: 8px 10px; text-align: center; font-size: 9.5px; font-weight: 700; color: #1a1a1a; display: flex; align-items: center; justify-content: center; gap: 5px; }
+    .mock-improvements { margin-top: 10px; }
+    .mock-improvement { display: flex; gap: 7px; font-size: 11.5px; color: var(--muted); padding: 4px 0; align-items: flex-start; }
+    .mock-improvement::before { content: "↑"; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+
+    /* ── CARD ── */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .card-head { padding: 12px 18px; border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+    .card-body { padding: 18px; }
+
+    /* ── TITLE CARD ── */
+    .title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+    .post-name { font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+    .post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag { background: var(--bg); border-radius: 6px; padding: 3px 9px; font-size: 12px; color: var(--muted); }
+    .tag.nous-tag { background: var(--nous-light); color: var(--nous); font-weight: 500; }
+    .overall-badge { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; min-width: 80px; }
+    .overall-pct { font-size: 36px; font-weight: 900; line-height: 1; letter-spacing: -.03em; }
+    .overall-pct.green { color: var(--green); }
+    .overall-pct.amber { color: var(--amber); }
+    .overall-pct.red   { color: var(--red);   }
+    .overall-tier {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+      padding: 2px 8px; border-radius: 99px;
+    }
+    .overall-sublabel { font-size: 10px; color: var(--muted); }
+
+    /* ── KPIs ── */
+    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .kpi { background: var(--surface); padding: 14px 10px; text-align: center; }
+    .kpi-val { font-size: 24px; font-weight: 800; line-height: 1; letter-spacing: -.03em; }
+    .kpi-val.green { color: var(--green); } .kpi-val.amber { color: var(--amber); } .kpi-val.red { color: var(--red); }
+    .kpi-label { font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; }
+    .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .ecac-rating { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .ecac-emoji { font-size: 22px; line-height: 1; }
+    .ecac-tier { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 99px; margin-top: 2px; }
+    .tier-skull  { background: var(--skull-bg);  color: var(--skull);  }
+    .tier-red    { background: var(--red-bg);    color: var(--red);    }
+    .tier-orange { background: var(--orange-bg); color: var(--orange); }
+    .tier-green  { background: var(--green-bg);  color: var(--green);  }
+    .tier-gold   { background: var(--gold-bg);   color: var(--gold);   }
+
+    /* ── WRITE-UP ── */
+    .writeup-body { display: flex; flex-direction: column; gap: 16px; }
+    .writeup-verdict { font-size: 14px; line-height: 1.7; }
+    .writeup-section-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 8px; }
+    .writeup-list { display: flex; flex-direction: column; gap: 7px; }
+    .writeup-item { display: flex; gap: 10px; font-size: 13px; line-height: 1.6; align-items: flex-start; }
+    .wi-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+    .wi-dot.green { background: var(--green); } .wi-dot.red { background: var(--red); }
+    .wi-dot.amber { background: var(--amber); } .wi-dot.blue { background: var(--blue); }
+    .writeup-divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
+
+    /* ── REVIEW COMMENTS ── */
+    .review-empty { font-size: 13px; color: var(--muted); font-style: italic; }
+    .review-comment { background: var(--bg); border-radius: 9px; padding: 11px 13px; font-size: 13px; line-height: 1.6; }
+    .review-meta { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+    /* ── CHECKLIST ── */
+    .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .check-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 13px; }
+    .check-item.pass { background: var(--green-bg); color: #14532d; }
+    .check-item.fail { background: var(--red-bg);   color: #7f1d1d; }
+
+    /* ── SCORE BARS ── */
+    .score-rows { display: flex; flex-direction: column; gap: 11px; }
+    .score-row { display: grid; grid-template-columns: 160px 1fr 36px; align-items: center; gap: 12px; }
+    .bar-track { height: 7px; background: var(--bg); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; }
+    .bar-fill.green { background: var(--green); } .bar-fill.amber { background: var(--amber); } .bar-fill.red { background: var(--red); }
+    .score-num { font-size: 13px; font-weight: 600; text-align: right; }
+
+    /* ── VIS NOTES ── */
+    .vis-notes { display: flex; flex-direction: column; }
+    .vis-note { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.55; }
+    .vis-note:last-child { border-bottom: none; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .dot.green { background: var(--green); } .dot.red { background: var(--red); } .dot.amber { background: var(--amber); }
+
+    /* ── AD PLACEMENT ── */
+    .placement-score { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .placement-score-val { font-size: 32px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+    .placement-score-meta { display: flex; flex-direction: column; }
+    .placement-score-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+    .placement-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 14px; }
+    .placement-check { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+    .placement-check.pass { background: var(--green-bg); color: #14532d; }
+    .placement-check.fail { background: var(--red-bg);   color: #7f1d1d; }
+    .placement-check-note { font-size: 10.5px; color: inherit; opacity: .75; margin-top: 2px; }
+    .placement-summary { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── STANDOUT ── */
+    .standout { background: var(--nous-light); border-left: 3px solid var(--nous); border-radius: 0 8px 8px 0; padding: 13px 15px; font-size: 14px; font-style: italic; line-height: 1.6; color: #6b1a10; }
+
+    /* ── INSIGHTS ── */
+    .insights { display: flex; flex-direction: column; gap: 8px; }
+    .insight { display: flex; gap: 10px; align-items: flex-start; background: var(--bg); border-radius: 9px; padding: 10px 12px; font-size: 13px; line-height: 1.55; }
+
+    /* ── META ANALYSIS ── */
+    .meta-placeholder { max-width: 600px; margin: 80px auto; text-align: center; padding: 0 20px; }
+    .meta-placeholder h2 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
+    .meta-placeholder p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+    .meta-placeholder .coming { display: inline-block; background: var(--amber-bg); color: var(--amber); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 99px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: .06em; }
+    .meta-sections { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .meta-section-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: left; }
+    .meta-section-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .meta-section-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .meta-section-card .meta-icon { font-size: 24px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center">
+    <span class="logo">nous</span>
+    <span class="logo-sub">Post Analysis</span>
+  </div>
+  <div class="page-tabs">
+    <div class="page-tab active" onclick="showPage('posts')" id="tab-posts">Posts</div>
+    <div class="page-tab" onclick="showPage('meta')" id="tab-meta">Meta Analysis</div>
+  </div>
+  <div class="header-right" id="header-count"></div>
+</header>
+
+<nav class="post-nav" id="post-nav"></nav>
+
+<div id="posts-view">
+  <div class="main" id="main-content"></div>
+</div>
+
+<div id="meta-view" style="display:none; padding: 24px 28px;">
+  <div class="meta-placeholder">
+    <div class="coming">Coming soon</div>
+    <h2>Meta Analysis</h2>
+    <p>Once we've analysed enough posts, this tab will surface cross-post patterns — what hooks, formats, visuals, and brief elements consistently drive low eCAC and high account creation. Split by niche, post sequence, and experiment type.</p>
+  </div>
+  <div class="meta-sections">
+    <div class="meta-section-card">
+      <div class="meta-icon">📝</div>
+      <h3>Text patterns</h3>
+      <p>Which hooks, framings, and £ figures correlate with the best-performing posts? Does post length matter?</p>
+    </div>
+    <div class="meta-section-card">
+      <div class="meta-icon">🖼️</div>
+      <h3>Visual patterns</h3>
+      <p>Do posts with product screenshots outperform those without? Does background type affect conversion?</p>
+    </div>
+    <div class="meta-section-card">
+      <div class="meta-icon">🎯</div>
+      <h3>Brief compliance</h3>
+      <p>Which brief elements are most predictive of low eCAC? Are some elements correlated with over-forecasting?</p>
+    </div>
+    <div class="meta-section-card">
+      <div class="meta-icon">📊</div>
+      <h3>Post sequence</h3>
+      <p>Does Post 1 always outperform Post 2 and 3? What's the typical drop-off, and does content affect it?</p>
+    </div>
+    <div class="meta-section-card">
+      <div class="meta-icon">🧪</div>
+      <h3>Experiment results</h3>
+      <p>How do Girl Maths, Secret, Startling Stats, Must Have, and Bargain compare on actual accounts created?</p>
+    </div>
+    <div class="meta-section-card">
+      <div class="meta-icon">🏆</div>
+      <h3>The meta post</h3>
+      <p>What does the ideal post look like for each niche and post sequence? A synthesis of the best elements.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const posts = [
+  {
+    id: "305e4fd0-8136-8092-b0d3-d7bfe99dcc0a",
+    name: "Chloe's Deal Club",
+    post_sequence: 1,
+    date: "26 Feb 2026",
+    format: "IG Story",
+    niche: "Deals / Finance",
+    experiment: "Bargain",
+    notion_url: "https://www.notion.so/305e4fd081368092b0d3d7bfe99dcc0a",
+    image: "images/chloe_deal_club_post1.jpg",
+
+    performance: {
+      accounts_created: 29,
+      delegations: 18,
+      landing_page_views: 101,
+      forecast_accounts: 71,
+      forecast_hit_pct: 41,
+      ecac_stitched: 167,
+      forecast_cac: 232,
+      post_fee: 383,
+    },
+
+    brief_compliance: [
+      { label: "Problem-aware hook",  pass: true  },
+      { label: "Discovery moment",    pass: true  },
+      { label: "What Nous does",      pass: true  },
+      { label: "Specific £ figure",   pass: false },
+      { label: "Speed / ease",        pass: false },
+      { label: "@get_nous tag",       pass: true  },
+      { label: "CTA button bottom",   pass: true  },
+      { label: '"Free" mentioned',    pass: true  },
+    ],
+
+    scores: [
+      { label: "Text quality",       score: 7, max: 10 },
+      { label: "Tone match (niche)", score: 7, max: 10 },
+      { label: "Visual hierarchy",   score: 4, max: 10 },
+      { label: "CTA execution",      score: 9, max: 10 },
+      { label: "Social proof / £",   score: 5, max: 10 },
+    ],
+
+    visual_notes: [
+      { type: "green", text: "CTA button correctly at bottom — clear and unambiguous" },
+      { type: "green", text: "AD label top-right, small and unobtrusive" },
+      { type: "green", text: "White text on coral blocks: high contrast, very readable" },
+      { type: "green", text: "Text split into 5 separate blocks — easy to scan between taps" },
+      { type: "green", text: "Warm living-room background reinforces the household bills framing" },
+      { type: "red",   text: "No visual hierarchy — all blocks identical in size and weight. Hook doesn't draw the eye more than paragraph 3" },
+      { type: "red",   text: "No product screenshot — the savings claim has nothing visual to anchor it" },
+      { type: "amber", text: "Background is almost entirely obscured — lifestyle image becomes decorative noise" },
+    ],
+
+    standout_line: "You can shop around yourself, or you can sign up to a free tool like Nous that does it all for you.",
+    standout_note: "Borrowed from 'best ever finance post'. Positions Nous as the zero-effort alternative — the most persuasive framing in the post.",
+
+    review_comments: [
+      {
+        text: "Took \"shop around or use nous\" wording from the best ever finance post.",
+        source: "Notion · Comments in review",
+        author: "Team note"
+      }
+    ],
+
+    writeup: {
+      verdict: "Solid first post for a deals influencer — 29 accounts and a better eCAC than forecast despite missing two key brief elements. The \"shop around or use Nous\" framing clearly carried the weight: it's the most converting line in the post and positions Nous as the smart shortcut rather than a sponsored pitch.",
+      what_worked: [
+        { type: "green", text: "\"Shop around yourself, or sign up to Nous\" is borrowed from the top finance post and it shows — it converts because it meets deals audiences where they are (already comparison-shopping) and removes the effort objection." },
+        { type: "green", text: "Problem-aware opening (bills skyrocketing) before any pitch. Keeps the viewer engaged rather than immediately skipping." },
+        { type: "green", text: "\"Free tool\" framing reduces perceived risk and lowers signup hesitation — the audience doesn't feel sold to." },
+        { type: "green", text: "Clean CTA at the bottom, coral blocks on warm lifestyle background — readable and on-brand." },
+      ],
+      watch_out: [
+        { type: "red",   text: "No specific £ figure — \"saving hundreds\" is vague. A concrete number (£600+, £781/year) is one of the strongest conversion signals in this category." },
+        { type: "red",   text: "\"2 minutes from your phone\" is missing entirely — it removes the last friction point right before the click and it costs nothing to add." },
+        { type: "amber", text: "All five text blocks look identical — no visual hierarchy pulls the eye to the hook or the savings claim. The most important things aren't visually important." },
+        { type: "amber", text: "No product screenshot to validate the claim. The viewer is taking the influencer's word for it with no app UI or savings screen to anchor it." },
+      ],
+      for_next_time: [
+        { type: "blue", text: "Add a specific £ figure upfront — even the approved stat (\"typical family overpays by £781\") if no personal figure is available." },
+        { type: "blue", text: "Insert \"2 mins from my phone, it's free\" before the CTA." },
+        { type: "blue", text: "Make the first text block larger or bolder — the hook should stand out visually from the body." },
+        { type: "blue", text: "Test one Nous app screenshot placed after the body copy — gives the savings claim something to land on." },
+      ],
+    },
+
+    improved_post: {
+      hook: "Hands up if you haven't checked your bills in years? 🙋‍♀️ Turns out we were overpaying by",
+      figure: "£600+",
+      body: "A friend mentioned this free tool called Nous. You can shop around yourself — or just let them do it. I signed up and in 2 minutes from my phone, they showed me exactly where I was losing money on energy, mobile and broadband.",
+      screenshot_rows: [
+        { label: "Energy", saving: "Save £240/yr" },
+        { label: "Broadband", saving: "Save £180/yr" },
+        { label: "Mobile", saving: "Save £90/yr" },
+      ],
+      ease: "2 minutes from my phone. Genuinely one of those \"I can't believe I didn't do this sooner\" moments. @get_nous 👇",
+      cta: "🔗 SAVE ON YOUR BILLS WITH NOUS",
+      improvements: [
+        "Hook opens with a relatable question, not a general statement",
+        "£600+ figure is the first thing after the hook — big and highlighted",
+        "Nous app screenshot anchors the savings claim visually",
+        "\"2 minutes from my phone\" addresses the effort objection before the CTA",
+      ],
+    },
+
+    ad_placement: {
+      score: 6,
+      summary: "Fundamentals are correct — AD label and CTA are in the right place — but five identically-weighted blocks covering ~85% of the frame mean the background becomes wallpaper and nothing draws the eye where it matters most.",
+      checks: [
+        { pass: true,  label: "AD label",            note: "Top-right corner, 9px — small, unobtrusive, correct" },
+        { pass: true,  label: "CTA at bottom",        note: "Clear CTA block anchored at the base — correct placement" },
+        { pass: true,  label: "No competing elements",note: "No poll sticker, voting box, or swipe-up competing with the link" },
+        { pass: true,  label: "Hook enters top",      note: "First block is the hook — viewer's eye hits it before the body" },
+        { pass: false, label: "Text density",         note: "~85% of the frame is covered — the lifestyle background exists in name only" },
+        { pass: false, label: "Visual hierarchy",     note: "All 5 blocks identical in size and weight — hierarchy is flat; nothing stands out" },
+        { pass: false, label: "Product screenshot",   note: "No app UI or savings screen — the savings claim has nothing visual to anchor it" },
+      ],
+    },
+
+    insights: [
+      { icon: "💡", text: "The 'shop around or use Nous' framing is worth testing across all finance/deals influencers — it works because it meets their audience's existing behaviour." },
+      { icon: "📉", text: "29 ACs without a specific £ figure suggests the framing alone can convert — but adding one is the easiest untested lever." },
+      { icon: "🎯", text: "41% of forecast accounts but eCAC beat forecast by £65 — fewer but more valuable sign-ups, likely from a high-intent deals audience." },
+    ],
+  }
+];
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function eCAcRating(ecac) {
+  if (ecac == null) return { emoji: '☠️', tier: 'No data',   cls: 'skull'  };
+  if (ecac > 200)   return { emoji: '☠️', tier: 'Over £200', cls: 'skull'  };
+  if (ecac > 100)   return { emoji: '🔴', tier: '£101–£200', cls: 'red'    };
+  if (ecac > 71)    return { emoji: '🟠', tier: '£72–£100',  cls: 'orange' };
+  if (ecac > 40)    return { emoji: '🟢', tier: '£41–£71',   cls: 'green'  };
+  return              { emoji: '🤑', tier: 'Under £40',   cls: 'gold'   };
+}
+
+function acColor(actual, forecast) {
+  const pct = actual / forecast;
+  if (pct >= 0.9) return 'green';
+  if (pct >= 0.6) return 'amber';
+  return 'red';
+}
+
+function scoreColor(s, max) {
+  const p = s / max;
+  return p >= 0.75 ? 'green' : p >= 0.5 ? 'amber' : 'red';
+}
+
+function forecastColor(pct) {
+  return pct >= 90 ? 'green' : pct >= 60 ? 'amber' : 'red';
+}
+
+// Post effectiveness: eCAC band (40%) + AC vs forecast (40%) + beat forecast CAC (20%)
+function postEffectiveness(perf) {
+  const ecacScore = (ecac => {
+    if (ecac == null || ecac > 200) return 0;
+    if (ecac > 100) return 25;
+    if (ecac > 71)  return 50;
+    if (ecac > 40)  return 75;
+    return 100;
+  })(perf.ecac_stitched);
+
+  const acScore  = Math.min(perf.forecast_hit_pct, 100);
+  const beatScore = (perf.ecac_stitched != null && perf.ecac_stitched < perf.forecast_cac) ? 100 : 0;
+
+  const score = Math.round(ecacScore * 0.4 + acScore * 0.4 + beatScore * 0.2);
+
+  let tier, tierCls, tierBg;
+  if (score >= 80) { tier = 'Excellent';      tierCls = 'green'; tierBg = 'var(--green-bg)'; }
+  else if (score >= 65) { tier = 'Good';       tierCls = 'green'; tierBg = 'var(--green-bg)'; }
+  else if (score >= 50) { tier = 'Decent';     tierCls = 'amber'; tierBg = 'var(--amber-bg)'; }
+  else if (score >= 35) { tier = 'Below target'; tierCls = 'amber'; tierBg = 'var(--amber-bg)'; }
+  else                  { tier = 'Underperforming'; tierCls = 'red'; tierBg = 'var(--red-bg)'; }
+
+  const pctColor = score >= 65 ? 'green' : score >= 40 ? 'amber' : 'red';
+  return { score, tier, tierCls, tierBg, pctColor };
+}
+
+// ── PAGE NAV ─────────────────────────────────────────────────────────────────
+function showPage(page) {
+  document.getElementById('posts-view').style.display = page === 'posts' ? '' : 'none';
+  document.getElementById('meta-view').style.display  = page === 'meta'  ? '' : 'none';
+  document.getElementById('post-nav').style.display   = page === 'posts' ? '' : 'none';
+  document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
+  document.getElementById('tab-meta').classList.toggle('active',  page === 'meta');
+}
+
+// ── IMAGE TOGGLE ─────────────────────────────────────────────────────────────
+let currentImageView = 'original';
+function toggleImage(view, postIdx) {
+  currentImageView = view;
+  document.querySelectorAll('.img-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  document.getElementById('original-frame').style.display  = view === 'original'  ? '' : 'none';
+  document.getElementById('improved-frame').style.display  = view === 'improved'  ? '' : 'none';
+}
+
+// ── RENDER TABS ───────────────────────────────────────────────────────────────
+function renderTabs(activeIdx) {
+  document.getElementById('post-nav').innerHTML = posts.map((p, i) => `
+    <div class="post-tab ${i === activeIdx ? 'active' : ''}" onclick="renderPost(${i})">
+      ${p.name} — Post ${p.post_sequence}
+      <span class="ac-pill">${p.performance.accounts_created} AC</span>
+    </div>`).join('');
+  document.getElementById('header-count').textContent =
+    `${posts.length} post${posts.length !== 1 ? 's' : ''} analysed`;
+}
+
+// ── RENDER POST ───────────────────────────────────────────────────────────────
+function renderPost(idx) {
+  renderTabs(idx);
+  const p    = posts[idx];
+  const perf = p.performance;
+  const rat  = eCAcRating(perf.ecac_stitched);
+  const eff  = postEffectiveness(perf);
+  const imp  = p.improved_post;
+
+  document.getElementById('main-content').innerHTML = `
+
+    <!-- IMAGE PANEL -->
+    <div class="image-panel">
+      <div class="img-toggle">
+        <div class="img-toggle-btn active" data-view="original" onclick="toggleImage('original',${idx})">Original</div>
+        <div class="img-toggle-btn" data-view="improved" onclick="toggleImage('improved',${idx})">Improved ✨</div>
+      </div>
+
+      <div id="original-frame" class="story-frame">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#ccc'">
+      </div>
+
+      <div id="improved-frame" class="story-frame" style="display:none">
+        <div class="mock-story">
+          <div class="mock-ad-label">ad</div>
+          <div class="mock-block">
+            <div class="mock-block-hook">${imp.hook}</div>
+            <span class="mock-figure">${imp.figure}</span>
+          </div>
+          <div class="mock-block mock-block-body">${imp.body}</div>
+          <div class="mock-screenshot">
+            <div class="mock-screenshot-title">📱 Your savings with Nous</div>
+            ${imp.screenshot_rows.map(r => `
+              <div class="mock-screenshot-row"><span>${r.label}</span><span>${r.saving}</span></div>
+            `).join('')}
+          </div>
+          <div class="mock-block mock-block-ease">${imp.ease}</div>
+          <div class="mock-cta">🔗 ${imp.cta.replace('🔗 ','')}</div>
+        </div>
+      </div>
+
+      <div id="improved-notes" style="display:none" class="mock-improvements">
+        ${imp.improvements.map(t => `<div class="mock-improvement">${t}</div>`).join('')}
+      </div>
+
+      <div class="image-footer">
+        <span>${p.date} · ${p.format} · Post ${p.post_sequence}</span>
+        <a class="notion-link" href="${p.notion_url}" target="_blank">↗ Notion</a>
+      </div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <div class="analysis">
+
+      <!-- TITLE + OVERALL SCORE -->
+      <div class="card"><div class="card-body">
+        <div class="title-row">
+          <div>
+            <div class="post-name">${p.name} — Post ${p.post_sequence}</div>
+            <div class="post-tags">
+              <span class="tag">${p.format}</span>
+              <span class="tag">${p.niche}</span>
+              <span class="tag nous-tag">${p.experiment}</span>
+              <span class="tag">${p.date}</span>
+            </div>
+          </div>
+          <div class="overall-badge">
+            <div class="overall-pct ${eff.pctColor}">${eff.score}%</div>
+            <span class="overall-tier" style="background:${eff.tierBg};color:var(--${eff.tierCls})">${eff.tier}</span>
+            <div class="overall-sublabel">Post effectiveness</div>
+          </div>
+        </div>
+      </div></div>
+
+      <!-- KPIs -->
+      <div class="card">
+        <div class="card-head">Performance</div>
+        <div class="card-body" style="padding:0">
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-val ${acColor(perf.accounts_created, perf.forecast_accounts)}">${perf.accounts_created}</div>
+              <div class="kpi-label">Accounts Created</div>
+              <div class="kpi-sub">${perf.forecast_hit_pct}% of ${perf.forecast_accounts} forecast</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-val" style="color:var(--muted)">${perf.delegations}</div>
+              <div class="kpi-label">Delegations</div>
+              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.delegations*10)/10} AC / del</div>
+            </div>
+            <div class="kpi">
+              <div class="ecac-rating">
+                <div class="ecac-emoji">${rat.emoji}</div>
+                <div class="kpi-val" style="font-size:20px;margin-top:2px">£${perf.ecac_stitched}</div>
+                <span class="ecac-tier tier-${rat.cls}">${rat.tier}</span>
+              </div>
+              <div class="kpi-label" style="margin-top:5px">eCAC (stitched)</div>
+              <div class="kpi-sub">forecast £${perf.forecast_cac}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-val ${forecastColor(perf.forecast_hit_pct)}">${perf.forecast_hit_pct}%</div>
+              <div class="kpi-label">vs Forecast ACs</div>
+              <div class="kpi-sub">${perf.accounts_created} of ${perf.forecast_accounts}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-val" style="color:var(--text)">${perf.landing_page_views}</div>
+              <div class="kpi-label">LPVs</div>
+              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.landing_page_views*100)}% → AC</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WRITE-UP -->
+      <div class="card">
+        <div class="card-head">Write-up</div>
+        <div class="card-body">
+          <div class="writeup-body">
+            <div class="writeup-verdict">${p.writeup.verdict}</div>
+            <hr class="writeup-divider">
+            <div>
+              <div class="writeup-section-head">What worked</div>
+              <div class="writeup-list">
+                ${p.writeup.what_worked.map(w => `
+                  <div class="writeup-item"><div class="wi-dot ${w.type}"></div><span>${w.text}</span></div>`).join('')}
+              </div>
+            </div>
+            <hr class="writeup-divider">
+            <div>
+              <div class="writeup-section-head">Watch out for</div>
+              <div class="writeup-list">
+                ${p.writeup.watch_out.map(w => `
+                  <div class="writeup-item"><div class="wi-dot ${w.type}"></div><span>${w.text}</span></div>`).join('')}
+              </div>
+            </div>
+            <hr class="writeup-divider">
+            <div>
+              <div class="writeup-section-head">For next time</div>
+              <div class="writeup-list">
+                ${p.writeup.for_next_time.map(w => `
+                  <div class="writeup-item"><div class="wi-dot ${w.type}"></div><span>${w.text}</span></div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHAT WE SAID -->
+      <div class="card">
+        <div class="card-head">What we said about it</div>
+        <div class="card-body">
+          ${p.review_comments.length === 0
+            ? `<div class="review-empty">No review comments found for this post.</div>`
+            : p.review_comments.map(c => `
+                <div class="review-comment">
+                  "${c.text}"
+                  <div class="review-meta">${c.author} · ${c.source}</div>
+                </div>`).join('')
+          }
+        </div>
+      </div>
+
+      <!-- BRIEF COMPLIANCE -->
+      <div class="card">
+        <div class="card-head">
+          Brief Compliance
+          <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">
+            ${p.brief_compliance.filter(c=>c.pass).length}/${p.brief_compliance.length}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="checklist">
+            ${p.brief_compliance.map(c => `
+              <div class="check-item ${c.pass ? 'pass' : 'fail'}">
+                <span style="font-size:12px;flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT DIAGNOSTIC -->
+      <div class="card">
+        <div class="card-head">Content Diagnostic</div>
+        <div class="card-body">
+          <div class="score-rows">
+            ${p.scores.map(s => {
+              const col = scoreColor(s.score, s.max);
+              return `<div class="score-row">
+                <div style="font-size:13px">${s.label}</div>
+                <div class="bar-track"><div class="bar-fill ${col}" style="width:${Math.round(s.score/s.max*100)}%"></div></div>
+                <div class="score-num" style="color:var(--${col})">${s.score}/${s.max}</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL ANALYSIS -->
+      <div class="card">
+        <div class="card-head">Visual Analysis</div>
+        <div class="card-body">
+          <div class="vis-notes">
+            ${p.visual_notes.map(n => `
+              <div class="vis-note"><div class="dot ${n.type}"></div><div>${n.text}</div></div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- AD PLACEMENT -->
+      <div class="card">
+        <div class="card-head">
+          Ad Placement
+          <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">
+            ${p.ad_placement.checks.filter(c=>c.pass).length}/${p.ad_placement.checks.length} checks
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="placement-score">
+            <div class="placement-score-val" style="color:${p.ad_placement.score >= 8 ? 'var(--green)' : p.ad_placement.score >= 6 ? 'var(--amber)' : 'var(--red)'}">${p.ad_placement.score}/10</div>
+            <div class="placement-score-meta">
+              <span class="placement-score-label">Placement score</span>
+              <span style="font-size:12px;color:var(--muted)">Basics correct, density high</span>
+            </div>
+          </div>
+          <div class="placement-checks">
+            ${p.ad_placement.checks.map(c => `
+              <div class="placement-check ${c.pass ? 'pass' : 'fail'}">
+                <span style="font-size:12px;flex-shrink:0;margin-top:1px">${c.pass ? '✓' : '✗'}</span>
+                <div>
+                  <div style="font-weight:600">${c.label}</div>
+                  <div class="placement-check-note">${c.note}</div>
+                </div>
+              </div>`).join('')}
+          </div>
+          <div class="placement-summary">${p.ad_placement.summary}</div>
+        </div>
+      </div>
+
+      <!-- STANDOUT LINE -->
+      <div class="card">
+        <div class="card-head">Standout Line</div>
+        <div class="card-body">
+          <div class="standout">"${p.standout_line}"</div>
+          <div style="margin-top:10px;font-size:13px;color:var(--muted);line-height:1.6">${p.standout_note}</div>
+        </div>
+      </div>
+
+      <!-- KEY INSIGHTS -->
+      <div class="card">
+        <div class="card-head">Key Insights</div>
+        <div class="card-body">
+          <div class="insights">
+            ${p.insights.map(i => `
+              <div class="insight"><span style="flex-shrink:0">${i.icon}</span><span>${i.text}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  // wire up improved-notes visibility
+  document.querySelectorAll('.img-toggle-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      const v = b.dataset.view;
+      document.getElementById('improved-notes').style.display = v === 'improved' ? '' : 'none';
+    });
+  });
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderPost(0);
+</script>
+</body>
+</html>
