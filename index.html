@@ -156,6 +156,36 @@
     .wi-dot.amber { background: var(--amber); } .wi-dot.blue { background: var(--blue); }
     .writeup-divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 
+    /* ── DASHBOARD ROW ── */
+    .dashboard-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+    .dash-body { padding: 14px; }
+    /* Perf compact */
+    .dash-kpi-pair { display: flex; flex-direction: column; gap: 12px; }
+    .dash-kpi { display: flex; align-items: baseline; gap: 6px; }
+    .dash-kpi-val { font-size: 28px; font-weight: 900; line-height: 1; letter-spacing: -.03em; }
+    .dash-kpi-val.green { color: var(--green); } .dash-kpi-val.amber { color: var(--amber); } .dash-kpi-val.red { color: var(--red); }
+    .dash-kpi-meta { display: flex; flex-direction: column; }
+    .dash-kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+    .dash-kpi-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .dash-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+    .dash-ecac { display: flex; align-items: center; gap: 8px; }
+    .dash-ecac-emoji { font-size: 20px; line-height: 1; }
+    /* Brief compact */
+    .dash-brief-score { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
+    .dash-brief-score-val { font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+    .dash-mini-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .dash-mini-check { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 6px; border-radius: 6px; }
+    .dash-mini-check.pass { background: var(--green-bg); color: #14532d; }
+    .dash-mini-check.fail { background: var(--red-bg);   color: #7f1d1d; }
+    /* Meta compact */
+    .dash-meta-dims { display: flex; flex-direction: column; gap: 5px; }
+    .dash-meta-dim { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+    .dash-meta-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .dash-meta-dot.pass { background: var(--green); } .dash-meta-dot.fail { background: var(--red); }
+    .dash-meta-placeholder { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
     /* ── AD PLACEMENT ── */
     .placement-score { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
     .placement-score-val { font-size: 32px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
@@ -518,116 +548,83 @@ function renderPost(idx) {
         </div>
       </div></div>
 
-      <!-- PERFORMANCE -->
-      <div class="card">
-        <div class="card-head">Performance</div>
-        <div class="card-body" style="padding:0">
-          <div class="kpi-row">
-            <div class="kpi">
-              <div class="kpi-val ${acColor(perf.accounts_created, perf.forecast_accounts)}">${perf.accounts_created}</div>
-              <div class="kpi-label">Accounts Created</div>
-              <div class="kpi-sub">${perf.forecast_hit_pct}% of ${perf.forecast_accounts} forecast</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-val" style="color:var(--muted)">${perf.delegations}</div>
-              <div class="kpi-label">Delegations</div>
-              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.delegations*10)/10} AC / del</div>
-            </div>
-            <div class="kpi">
-              <div class="ecac-rating">
-                <div class="ecac-emoji">${rat.emoji}</div>
-                <div class="kpi-val" style="font-size:20px;margin-top:2px">£${perf.ecac_stitched}</div>
-                <span class="ecac-tier tier-${rat.cls}">${rat.tier}</span>
-              </div>
-              <div class="kpi-label" style="margin-top:5px">eCAC (stitched)</div>
-              <div class="kpi-sub">forecast £${perf.forecast_cac}</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-val ${forecastColor(perf.forecast_hit_pct)}">${perf.forecast_hit_pct}%</div>
-              <div class="kpi-label">vs Forecast ACs</div>
-              <div class="kpi-sub">${perf.accounts_created} of ${perf.forecast_accounts}</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-val" style="color:var(--text)">${perf.landing_page_views}</div>
-              <div class="kpi-label">LPVs</div>
-              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.landing_page_views*100)}% → AC</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- DASHBOARD ROW: Performance | Brief | Meta -->
+      <div class="dashboard-row">
 
-      <!-- BRIEF -->
-      <div class="card">
-        <div class="card-head">
-          Brief
-          <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">${passCount}/${totalCount} elements hit</span>
-        </div>
-        <div class="card-body">
-
-          <div class="brief-campaign">
-            <div style="flex:1">
-              <div class="brief-campaign-label">Campaign</div>
-              <div style="font-size:13px;font-weight:600;margin-top:2px">${bi.campaign}</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:2px">${bi.niche_brief}</div>
-            </div>
-            <span class="brief-experiment-pill ${bi.experiment_treatment === 'No experiment' ? 'none' : 'has'}">${bi.experiment_treatment}</span>
-          </div>
-
-          <div class="brief-pillars">
-            ${bi.pillars.map(pl => `
-              <div class="brief-pillar">
-                <span class="brief-pillar-num">${pl.num}</span>
-                <div>
-                  <div style="font-weight:700;font-size:13px;line-height:1.3">${pl.theme}</div>
-                  <div style="font-size:12px;color:var(--muted);margin-top:2px">${pl.desc}</div>
+        <!-- Performance -->
+        <div class="dash-card">
+          <div class="dash-head">Performance</div>
+          <div class="dash-body">
+            <div class="dash-kpi-pair">
+              <div class="dash-kpi">
+                <div class="dash-kpi-val ${acColor(perf.accounts_created, perf.forecast_accounts)}">${perf.accounts_created}</div>
+                <div class="dash-kpi-meta">
+                  <span class="dash-kpi-label">Accounts Created</span>
+                  <span class="dash-kpi-sub">${perf.forecast_hit_pct}% of ${perf.forecast_accounts} forecast</span>
                 </div>
-              </div>`).join('')}
-          </div>
-
-          <div class="brief-compliance-head">
-            <span>Did this post hit the brief?</span>
-            <span>${passCount}/${totalCount}</span>
-          </div>
-          <div class="checklist">
-            ${p.brief_compliance.map(c => `
-              <div class="check-item ${c.pass ? 'pass' : 'fail'}">
-                <span style="font-size:12px;flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
-              </div>`).join('')}
-          </div>
-
-        </div>
-      </div>
-
-      <!-- VS THE META -->
-      <div class="card">
-        <div class="card-head">
-          vs. The Meta
-          <span style="background:var(--amber-bg);color:var(--amber);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;text-transform:none;letter-spacing:0">Needs more posts</span>
-        </div>
-        <div class="card-body">
-          <div class="meta-coming">
-            <span style="font-size:20px;flex-shrink:0">📊</span>
-            <span><strong>Coming once we have 5+ posts analysed.</strong> This section will show how this post compares to the cross-post average — which elements it beat, and where it fell short of what typically drives low eCAC.</span>
-          </div>
-          <div class="meta-dims">
-            ${[
-              { label: "Problem-aware hook",    pass: true  },
-              { label: "Specific £ figure",     pass: false },
-              { label: "Effort removal line",   pass: false },
-              { label: "Product screenshot",    pass: false },
-              { label: "CTA placement (bottom)",pass: true  },
-              { label: "Visual hierarchy",      pass: false },
-            ].map(d => `
-              <div class="meta-dim">
-                <div class="meta-dim-label">${d.label}</div>
-                <span class="meta-dim-this" style="background:${d.pass ? 'var(--green-bg)' : 'var(--red-bg)'};color:${d.pass ? 'var(--green)' : 'var(--red)'}">
-                  ${d.pass ? '✓' : '✗'} This post
-                </span>
-                <span class="meta-dim-meta">Meta: — / —</span>
-              </div>`).join('')}
+              </div>
+              <hr class="dash-divider">
+              <div class="dash-ecac">
+                <span class="dash-ecac-emoji">${rat.emoji}</span>
+                <div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">£${perf.ecac_stitched}</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">eCAC · forecast £${perf.forecast_cac}</div>
+                </div>
+              </div>
+              <hr class="dash-divider">
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+                <span>${perf.delegations} delegations</span>
+                <span>${perf.landing_page_views} LPVs</span>
+                <span>${Math.round(perf.accounts_created/perf.landing_page_views*100)}% → AC</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <!-- Brief -->
+        <div class="dash-card">
+          <div class="dash-head">
+            Brief
+            <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">${passCount}/${totalCount}</span>
+          </div>
+          <div class="dash-body">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">${bi.campaign} · <em>${bi.experiment_treatment}</em></div>
+            <div class="dash-mini-checks">
+              ${p.brief_compliance.map(c => `
+                <div class="dash-mini-check ${c.pass ? 'pass' : 'fail'}">
+                  <span style="flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- vs. Meta -->
+        <div class="dash-card">
+          <div class="dash-head">
+            vs. The Meta
+            <span style="background:var(--amber-bg);color:var(--amber);font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;text-transform:none;letter-spacing:0">Soon</span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-meta-placeholder" style="margin-bottom:10px">Patterns will appear once 5+ posts are analysed.</div>
+            <div class="dash-meta-dims">
+              ${[
+                { label: "Problem-aware hook",     pass: true  },
+                { label: "Specific £ figure",      pass: false },
+                { label: "Effort removal line",    pass: false },
+                { label: "Product screenshot",     pass: false },
+                { label: "CTA at bottom",          pass: true  },
+                { label: "Visual hierarchy",       pass: false },
+              ].map(d => `
+                <div class="dash-meta-dim">
+                  <div class="dash-meta-dot ${d.pass ? 'pass' : 'fail'}"></div>
+                  <span style="flex:1">${d.label}</span>
+                  <span style="font-size:10px;color:var(--muted)">— / —</span>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end dashboard-row -->
 
       <!-- WHAT WE SAID -->
       <div class="card">
