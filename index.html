@@ -218,6 +218,18 @@
     .insights { display: flex; flex-direction: column; gap: 8px; }
     .insight { display: flex; gap: 10px; align-items: flex-start; background: var(--bg); border-radius: 9px; padding: 10px 12px; font-size: 13px; line-height: 1.55; }
 
+    /* ── CAMPAIGN STRIP ── */
+    .campaign-strip { display: flex; align-items: center; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .campaign-strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-right: 4px; }
+    .campaign-post-pill { display: flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 99px; font-size: 12px; font-weight: 500; border: 1px solid var(--border); background: var(--bg); color: var(--muted); }
+    .campaign-post-pill.current { background: var(--nous-light); border-color: var(--nous); color: var(--nous); font-weight: 700; }
+    .campaign-post-pill.upcoming { background: var(--surface); color: var(--muted); }
+    .campaign-post-pill.analysed { background: var(--green-bg); border-color: var(--green-bg); color: #14532d; }
+    .campaign-post-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .campaign-post-pill.current  .campaign-post-dot { background: var(--nous); }
+    .campaign-post-pill.upcoming .campaign-post-dot { background: var(--muted); opacity: .4; }
+    .campaign-post-pill.analysed .campaign-post-dot { background: var(--green); }
+
     /* ── MORE DIVIDER ── */
     .more-divider { display: flex; align-items: center; gap: 12px; cursor: pointer; }
     .more-divider-line { flex: 1; height: 1px; background: var(--border); }
@@ -285,6 +297,12 @@ const posts = [
     niche: "Family & Lifestyle",
     notion_url: "https://www.notion.so/305e4fd081368092b0d3d7bfe99dcc0a",
     image: "images/chloe_deal_club_post1.jpg",
+
+    campaign_posts: [
+      { sequence: 1, status: "current",  label: "Post 1", detail: "29 AC · £167 eCAC" },
+      { sequence: 2, status: "upcoming", label: "Post 2", detail: "Not yet analysed" },
+      { sequence: 3, status: "upcoming", label: "Post 3", detail: "Not yet analysed" },
+    ],
 
     brief_info: {
       campaign: "2026 Family: Jan 1st campaign",
@@ -546,6 +564,15 @@ function renderPost(idx) {
           <span class="tag">${p.niche}</span>
           <span class="tag">${p.date}</span>
         </div>
+        ${p.campaign_posts ? `
+        <div class="campaign-strip">
+          <span class="campaign-strip-label">Campaign</span>
+          ${p.campaign_posts.map(cp => `
+            <div class="campaign-post-pill ${cp.status}" title="${cp.detail}">
+              <div class="campaign-post-dot"></div>
+              ${cp.label}${cp.status === 'current' ? ' ←' : ''}
+            </div>`).join('')}
+        </div>` : ''}
       </div></div>
 
       <!-- DASHBOARD ROW: Performance | Brief | Meta -->
