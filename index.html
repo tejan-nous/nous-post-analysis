@@ -252,7 +252,7 @@ const posts = [
     post_sequence: 1,
     date: "26 Feb 2026",
     format: "IG Story",
-    niche: "Deals / Finance",
+    niche: "Family & Lifestyle",
     notion_url: "https://www.notion.so/305e4fd081368092b0d3d7bfe99dcc0a",
     image: "images/chloe_deal_club_post1.jpg",
 
@@ -500,7 +500,7 @@ function renderPost(idx) {
       </div>
 
       <div class="image-footer">
-        <span>${p.date} · ${p.format} · Post ${p.post_sequence}</span>
+        <span>${p.format} · ${p.niche} · ${p.date}</span>
         <a class="notion-link" href="${p.notion_url}" target="_blank">↗ Notion</a>
       </div>
     </div>
@@ -517,6 +517,44 @@ function renderPost(idx) {
           <span class="tag">${p.date}</span>
         </div>
       </div></div>
+
+      <!-- PERFORMANCE -->
+      <div class="card">
+        <div class="card-head">Performance</div>
+        <div class="card-body" style="padding:0">
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-val ${acColor(perf.accounts_created, perf.forecast_accounts)}">${perf.accounts_created}</div>
+              <div class="kpi-label">Accounts Created</div>
+              <div class="kpi-sub">${perf.forecast_hit_pct}% of ${perf.forecast_accounts} forecast</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-val" style="color:var(--muted)">${perf.delegations}</div>
+              <div class="kpi-label">Delegations</div>
+              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.delegations*10)/10} AC / del</div>
+            </div>
+            <div class="kpi">
+              <div class="ecac-rating">
+                <div class="ecac-emoji">${rat.emoji}</div>
+                <div class="kpi-val" style="font-size:20px;margin-top:2px">£${perf.ecac_stitched}</div>
+                <span class="ecac-tier tier-${rat.cls}">${rat.tier}</span>
+              </div>
+              <div class="kpi-label" style="margin-top:5px">eCAC (stitched)</div>
+              <div class="kpi-sub">forecast £${perf.forecast_cac}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-val ${forecastColor(perf.forecast_hit_pct)}">${perf.forecast_hit_pct}%</div>
+              <div class="kpi-label">vs Forecast ACs</div>
+              <div class="kpi-sub">${perf.accounts_created} of ${perf.forecast_accounts}</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-val" style="color:var(--text)">${perf.landing_page_views}</div>
+              <div class="kpi-label">LPVs</div>
+              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.landing_page_views*100)}% → AC</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- BRIEF -->
       <div class="card">
@@ -557,44 +595,6 @@ function renderPost(idx) {
               </div>`).join('')}
           </div>
 
-        </div>
-      </div>
-
-      <!-- PERFORMANCE -->
-      <div class="card">
-        <div class="card-head">Performance</div>
-        <div class="card-body" style="padding:0">
-          <div class="kpi-row">
-            <div class="kpi">
-              <div class="kpi-val ${acColor(perf.accounts_created, perf.forecast_accounts)}">${perf.accounts_created}</div>
-              <div class="kpi-label">Accounts Created</div>
-              <div class="kpi-sub">${perf.forecast_hit_pct}% of ${perf.forecast_accounts} forecast</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-val" style="color:var(--muted)">${perf.delegations}</div>
-              <div class="kpi-label">Delegations</div>
-              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.delegations*10)/10} AC / del</div>
-            </div>
-            <div class="kpi">
-              <div class="ecac-rating">
-                <div class="ecac-emoji">${rat.emoji}</div>
-                <div class="kpi-val" style="font-size:20px;margin-top:2px">£${perf.ecac_stitched}</div>
-                <span class="ecac-tier tier-${rat.cls}">${rat.tier}</span>
-              </div>
-              <div class="kpi-label" style="margin-top:5px">eCAC (stitched)</div>
-              <div class="kpi-sub">forecast £${perf.forecast_cac}</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-val ${forecastColor(perf.forecast_hit_pct)}">${perf.forecast_hit_pct}%</div>
-              <div class="kpi-label">vs Forecast ACs</div>
-              <div class="kpi-sub">${perf.accounts_created} of ${perf.forecast_accounts}</div>
-            </div>
-            <div class="kpi">
-              <div class="kpi-val" style="color:var(--text)">${perf.landing_page_views}</div>
-              <div class="kpi-label">LPVs</div>
-              <div class="kpi-sub">${Math.round(perf.accounts_created/perf.landing_page_views*100)}% → AC</div>
-            </div>
-          </div>
         </div>
       </div>
 
