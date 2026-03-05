@@ -24,7 +24,7 @@
     }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.5; }
 
-    /* ── HEADER ── */
+    /* HEADER */
     header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; }
     .logo { font-size: 16px; font-weight: 700; color: var(--nous); letter-spacing: -.02em; }
     .logo-sub { font-weight: 400; color: var(--muted); font-size: 13px; margin-left: 10px; }
@@ -34,19 +34,20 @@
     .page-tab.active { color: var(--nous); border-bottom-color: var(--nous); font-weight: 600; }
     .header-right { font-size: 12px; color: var(--muted); }
 
-    /* ── POST TABS ── */
-    .post-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; overflow-x: auto; }
-    .post-tab { padding: 11px 16px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    /* POST TABS */
+    .post-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; overflow-x: auto; scrollbar-width: none; }
+    .post-nav::-webkit-scrollbar { display: none; }
+    .post-tab { padding: 11px 16px; font-size: 12px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; color: var(--muted); display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
     .post-tab:hover { color: var(--text); }
     .post-tab.active { color: var(--nous); border-bottom-color: var(--nous); font-weight: 600; }
     .ac-pill { background: var(--bg); border-radius: 99px; padding: 1px 7px; font-size: 11px; font-weight: 500; }
     .post-tab.active .ac-pill { background: var(--nous-light); color: var(--nous); }
 
-    /* ── LAYOUT ── */
+    /* LAYOUT */
     .main { display: grid; grid-template-columns: 300px 1fr; gap: 24px; max-width: 1280px; margin: 0 auto; padding: 24px 28px; align-items: start; }
     .analysis { display: flex; flex-direction: column; gap: 16px; }
 
-    /* ── IMAGE PANEL ── */
+    /* IMAGE PANEL */
     .image-panel { position: sticky; top: 80px; }
     .story-frame { width: 100%; aspect-ratio: 9/16; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,.14); background: #111; }
     .story-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -54,151 +55,19 @@
     .notion-link { color: var(--muted); text-decoration: none; font-size: 12px; }
     .notion-link:hover { color: var(--text); }
 
-/* ── CARD ── */
+    /* CARD */
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
     .card-head { padding: 12px 18px; border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
-    .card-head.toggleable { cursor: pointer; user-select: none; }
-    .card-head.toggleable:hover { background: var(--bg); }
     .card-body { padding: 18px; }
-    .toggle-chevron { font-size: 12px; color: var(--muted); transition: transform .2s; display: inline-block; }
-    .card.collapsed .toggle-chevron { transform: rotate(-90deg); }
-    .card.collapsed .card-body { display: none; }
-    .card.collapsed .card-head { border-bottom: none; border-radius: 14px; }
 
-    /* ── TITLE CARD ── */
+    /* TITLE CARD */
     .post-name { font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
     .post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .tag { background: var(--bg); border-radius: 6px; padding: 3px 9px; font-size: 12px; color: var(--muted); }
+    .ig-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--muted); text-decoration: none; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); transition: all .15s; white-space: nowrap; flex-shrink: 0; }
+    .ig-link:hover { color: #c13584; border-color: #c13584; }
 
-    /* ── BRIEF CARD ── */
-    .brief-campaign { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: var(--bg); border-radius: 10px; margin-bottom: 16px; }
-    .brief-campaign-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 3px; }
-    .brief-campaign-name { font-size: 13px; font-weight: 600; }
-    .brief-experiment-pill { padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
-    .brief-experiment-pill.none { background: var(--skull-bg); color: var(--skull); }
-    .brief-experiment-pill.has  { background: var(--blue-bg);  color: var(--blue);  }
-    .brief-pillars { margin-bottom: 16px; }
-    .brief-pillar { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; margin-bottom: 6px; }
-    .brief-pillar:nth-child(1) { background: #fff7ed; }
-    .brief-pillar:nth-child(2) { background: #f0fdf4; }
-    .brief-pillar:nth-child(3) { background: #eff6ff; }
-    .brief-pillar-num { font-weight: 800; font-size: 13px; width: 18px; flex-shrink: 0; margin-top: 1px; }
-    .brief-pillar:nth-child(1) .brief-pillar-num { color: var(--orange); }
-    .brief-pillar:nth-child(2) .brief-pillar-num { color: var(--green); }
-    .brief-pillar:nth-child(3) .brief-pillar-num { color: var(--blue); }
-    .brief-compliance-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; }
-    .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-    .check-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 13px; }
-    .check-item.pass { background: var(--green-bg); color: #14532d; }
-    .check-item.fail { background: var(--red-bg);   color: #7f1d1d; }
-
-    /* ── KPIs ── */
-    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
-    .kpi { background: var(--surface); padding: 14px 10px; text-align: center; }
-    .kpi-val { font-size: 24px; font-weight: 800; line-height: 1; letter-spacing: -.03em; }
-    .kpi-val.green { color: var(--green); } .kpi-val.amber { color: var(--amber); } .kpi-val.red { color: var(--red); }
-    .kpi-label { font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .05em; }
-    .kpi-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
-    .ecac-rating { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-    .ecac-emoji { font-size: 22px; line-height: 1; }
-    .ecac-tier { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 99px; margin-top: 2px; }
-    .tier-skull  { background: var(--skull-bg);  color: var(--skull);  }
-    .tier-red    { background: var(--red-bg);    color: var(--red);    }
-    .tier-orange { background: var(--orange-bg); color: var(--orange); }
-    .tier-green  { background: var(--green-bg);  color: var(--green);  }
-    .tier-gold   { background: var(--gold-bg);   color: var(--gold);   }
-
-    /* ── META COMPARISON ── */
-    .meta-coming { display: flex; gap: 12px; padding: 12px 14px; background: var(--bg); border-radius: 10px; margin-bottom: 14px; font-size: 13px; line-height: 1.6; color: var(--muted); }
-    .meta-dims { display: flex; flex-direction: column; gap: 7px; }
-    .meta-dim { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 8px 10px; background: var(--bg); border-radius: 8px; }
-    .meta-dim-label { flex: 1; }
-    .meta-dim-this { font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 600; white-space: nowrap; }
-    .meta-dim-meta { font-size: 11px; color: var(--muted); white-space: nowrap; }
-
-    /* ── REVIEW REFLECTION ── */
-    .review-comment { background: var(--bg); border-radius: 9px; padding: 11px 13px; font-size: 13px; line-height: 1.6; margin-bottom: 0; }
-    .review-meta { font-size: 11px; color: var(--muted); margin-top: 5px; }
-    .reflection-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-    .reflection-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 9px; font-size: 13px; line-height: 1.55; }
-    .reflection-row.good    { background: var(--green-bg); color: #14532d; }
-    .reflection-row.missed  { background: var(--amber-bg); color: var(--amber); }
-    .reflection-row.pending { background: var(--skull-bg); color: var(--skull); font-style: italic; }
-
-    /* ── WRITE-UP ── */
-    .writeup-body { display: flex; flex-direction: column; gap: 16px; }
-    .writeup-verdict { font-size: 14px; line-height: 1.7; }
-    .writeup-section-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 8px; }
-    .writeup-list { display: flex; flex-direction: column; gap: 7px; }
-    .writeup-item { display: flex; gap: 10px; font-size: 13px; line-height: 1.6; align-items: flex-start; }
-    .wi-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
-    .wi-dot.green { background: var(--green); } .wi-dot.red { background: var(--red); }
-    .wi-dot.amber { background: var(--amber); } .wi-dot.blue { background: var(--blue); }
-    .writeup-divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
-
-    /* ── DASHBOARD ROW ── */
-    .dashboard-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-    .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
-    .dash-body { padding: 14px; }
-    /* Perf compact */
-    .dash-kpi-pair { display: flex; flex-direction: column; gap: 12px; }
-    .dash-kpi { display: flex; align-items: baseline; gap: 6px; }
-    .dash-kpi-val { font-size: 28px; font-weight: 900; line-height: 1; letter-spacing: -.03em; }
-    .dash-kpi-val.green { color: var(--green); } .dash-kpi-val.amber { color: var(--amber); } .dash-kpi-val.red { color: var(--red); }
-    .dash-kpi-meta { display: flex; flex-direction: column; }
-    .dash-kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
-    .dash-kpi-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-    .dash-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
-    .dash-ecac { display: flex; align-items: center; gap: 8px; }
-    .dash-ecac-emoji { font-size: 20px; line-height: 1; }
-    /* Brief compact */
-    .dash-brief-score { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
-    .dash-brief-score-val { font-size: 28px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
-    .dash-mini-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-    .dash-mini-check { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 6px; border-radius: 6px; }
-    .dash-mini-check.pass { background: var(--green-bg); color: #14532d; }
-    .dash-mini-check.fail { background: var(--red-bg);   color: #7f1d1d; }
-    /* Meta compact */
-    .dash-meta-dims { display: flex; flex-direction: column; gap: 5px; }
-    .dash-meta-dim { display: flex; align-items: center; gap: 6px; font-size: 11px; }
-    .dash-meta-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .dash-meta-dot.pass { background: var(--green); } .dash-meta-dot.fail { background: var(--red); }
-    .dash-meta-placeholder { font-size: 11px; color: var(--muted); line-height: 1.5; }
-
-    /* ── AD PLACEMENT ── */
-    .placement-score { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .placement-score-val { font-size: 32px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
-    .placement-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 14px; }
-    .placement-check { display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
-    .placement-check.pass { background: var(--green-bg); color: #14532d; }
-    .placement-check.fail { background: var(--red-bg);   color: #7f1d1d; }
-    .placement-check-note { font-size: 10.5px; opacity: .75; margin-top: 2px; }
-    .placement-summary { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-    /* ── SCORE BARS ── */
-    .score-rows { display: flex; flex-direction: column; gap: 11px; }
-    .score-row { display: grid; grid-template-columns: 160px 1fr 36px; align-items: center; gap: 12px; }
-    .bar-track { height: 7px; background: var(--bg); border-radius: 99px; overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 99px; }
-    .bar-fill.green { background: var(--green); } .bar-fill.amber { background: var(--amber); } .bar-fill.red { background: var(--red); }
-    .score-num { font-size: 13px; font-weight: 600; text-align: right; }
-
-    /* ── VIS NOTES ── */
-    .vis-notes { display: flex; flex-direction: column; }
-    .vis-note { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.55; }
-    .vis-note:last-child { border-bottom: none; }
-    .dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-    .dot.green { background: var(--green); } .dot.red { background: var(--red); } .dot.amber { background: var(--amber); }
-
-    /* ── STANDOUT ── */
-    .standout { background: var(--nous-light); border-left: 3px solid var(--nous); border-radius: 0 8px 8px 0; padding: 13px 15px; font-size: 14px; font-style: italic; line-height: 1.6; color: #5a3e00; }
-
-    /* ── INSIGHTS ── */
-    .insights { display: flex; flex-direction: column; gap: 8px; }
-    .insight { display: flex; gap: 10px; align-items: flex-start; background: var(--bg); border-radius: 9px; padding: 10px 12px; font-size: 13px; line-height: 1.55; }
-
-    /* ── CAMPAIGN TIMELINE ── */
+    /* CAMPAIGN TIMELINE */
     .campaign-timeline { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
     .campaign-tl-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 12px; }
     .campaign-tl-track { display: flex; align-items: flex-start; }
@@ -206,28 +75,70 @@
     .campaign-tl-item { display: flex; flex-direction: column; align-items: center; min-width: 72px; }
     .campaign-tl-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); flex-shrink: 0; }
     .campaign-tl-dot.current  { background: var(--nous); border-color: var(--nous); box-shadow: 0 0 0 3px var(--nous-light); }
-    .campaign-tl-dot.upcoming { background: var(--surface); border-color: var(--border); }
-    .campaign-tl-dot.analysed { background: var(--green); border-color: var(--green); }
+    .campaign-tl-dot.past     { background: var(--green); border-color: var(--green); }
+    .campaign-tl-dot.future   { background: var(--surface); border-color: var(--border); }
+    .campaign-tl-dot.missing  { background: var(--bg); border-color: var(--border); }
     .campaign-tl-info { margin-top: 8px; text-align: center; }
     .campaign-tl-label { font-size: 11px; font-weight: 600; color: var(--muted); }
-    .campaign-tl-label.current { color: var(--nous); }
-    .campaign-tl-label.analysed { color: var(--green); }
-    .campaign-tl-date { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .campaign-tl-label.current  { color: var(--nous); }
+    .campaign-tl-label.past     { color: var(--green); }
+    .campaign-tl-date   { font-size: 10px; color: var(--muted); margin-top: 1px; }
     .campaign-tl-detail { font-size: 10px; color: var(--muted); margin-top: 1px; }
-    .campaign-tl-now { font-size: 9px; font-weight: 700; color: var(--nous); text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
+    .campaign-tl-now    { font-size: 9px; font-weight: 700; color: var(--nous); text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
 
-    /* ── IG LINK ── */
-    .ig-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--muted); text-decoration: none; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); transition: all .15s; white-space: nowrap; flex-shrink: 0; }
-    .ig-link:hover { color: #c13584; border-color: #c13584; }
+    /* DASHBOARD ROW */
+    .dashboard-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+    .dash-body { padding: 14px; }
 
-    /* ── MORE DIVIDER ── */
-    .more-divider { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-    .more-divider-line { flex: 1; height: 1px; background: var(--border); }
-    .more-divider-btn { font-size: 12px; font-weight: 600; color: var(--muted); padding: 5px 14px; border-radius: 99px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; white-space: nowrap; transition: all .15s; }
-    .more-divider-btn:hover { border-color: var(--nous); color: var(--nous); }
-    .collapsible-group { display: flex; flex-direction: column; gap: 16px; }
+    /* Performance card */
+    .dash-kpi-pair { display: flex; flex-direction: column; gap: 10px; }
+    .dash-kpi { display: flex; align-items: baseline; gap: 6px; }
+    .dash-kpi-val { font-size: 28px; font-weight: 900; line-height: 1; letter-spacing: -.03em; }
+    .dash-kpi-val.green { color: var(--green); } .dash-kpi-val.amber { color: var(--amber); } .dash-kpi-val.red { color: var(--red); }
+    .dash-kpi-meta { display: flex; flex-direction: column; }
+    .dash-kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+    .dash-kpi-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .dash-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+    .dash-ecac { display: flex; align-items: center; gap: 8px; }
+    .dash-ecac-emoji { font-size: 20px; line-height: 1; }
+    .ecac-tier { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 6px; border-radius: 99px; margin-top: 2px; }
+    .tier-skull  { background: var(--skull-bg);  color: var(--skull);  }
+    .tier-red    { background: var(--red-bg);    color: var(--red);    }
+    .tier-orange { background: var(--orange-bg); color: var(--orange); }
+    .tier-green  { background: var(--green-bg);  color: var(--green);  }
+    .tier-gold   { background: var(--gold-bg);   color: var(--gold);   }
 
-    /* ── META ANALYSIS PAGE ── */
+    /* Brief card */
+    .dash-mini-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .dash-mini-check { display: flex; align-items: center; gap: 5px; font-size: 11px; padding: 4px 6px; border-radius: 6px; }
+    .dash-mini-check.pass { background: var(--green-bg); color: #14532d; }
+    .dash-mini-check.fail { background: var(--red-bg);   color: #7f1d1d; }
+
+    /* Meta card */
+    .dash-meta-dims { display: flex; flex-direction: column; gap: 5px; }
+    .dash-meta-dim { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 4px 6px; border-radius: 6px; }
+    .dash-meta-dim.this-pass { background: var(--green-bg); }
+    .dash-meta-dim.this-fail { background: var(--red-bg); }
+    .dash-meta-label { flex: 1; color: var(--text); }
+    .dash-meta-dim.this-pass .dash-meta-label { color: #14532d; }
+    .dash-meta-dim.this-fail .dash-meta-label { color: #7f1d1d; }
+    .dash-meta-this { font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .dash-meta-pct { font-size: 10px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+
+    /* WHAT WE SAID */
+    .review-comment { background: var(--bg); border-radius: 9px; padding: 11px 13px; font-size: 13px; line-height: 1.6; }
+    .review-meta { font-size: 11px; color: var(--muted); margin-top: 5px; }
+
+    /* REVIEW REFLECTION */
+    .reflection-rows { display: flex; flex-direction: column; gap: 8px; }
+    .reflection-row { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 9px; font-size: 13px; line-height: 1.55; }
+    .reflection-row.good    { background: var(--green-bg); color: #14532d; }
+    .reflection-row.missed  { background: var(--amber-bg); color: var(--amber); }
+    .reflection-row.pending { background: var(--skull-bg); color: var(--skull); font-style: italic; }
+
+    /* META PAGE */
     .meta-placeholder { max-width: 600px; margin: 80px auto; text-align: center; padding: 0 20px; }
     .meta-placeholder h2 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
     .meta-placeholder p { font-size: 14px; color: var(--muted); line-height: 1.7; }
@@ -261,9 +172,9 @@
 
 <div id="meta-view" style="display:none; padding: 24px 28px;">
   <div class="meta-placeholder">
-    <div class="coming">Coming soon</div>
+    <div class="coming">56 posts analysed</div>
     <h2>Meta Analysis</h2>
-    <p>Once we've analysed enough posts, this tab will surface cross-post patterns — what hooks, formats, visuals, and brief elements consistently drive low eCAC and high account creation. Split by niche, post sequence, and experiment type.</p>
+    <p>Cross-post patterns — what hooks, formats, visuals, and brief elements consistently drive low eCAC and high account creation. Split by niche, post sequence, and experiment type.</p>
   </div>
   <div class="meta-sections">
     <div class="meta-section-card"><div class="meta-icon">📝</div><h3>Text patterns</h3><p>Which hooks, framings, and £ figures correlate with the best-performing posts? Does post length matter?</p></div>
@@ -276,184 +187,2706 @@
 </div>
 
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
 const posts = [
   {
-    id: "305e4fd0-8136-8092-b0d3-d7bfe99dcc0a",
-    name: "Chloe's Deal Club",
-    post_sequence: 1,
+    id: "30de4fd0-8136-80f7-8198-fe2f3972fd16",
+    name: "Rach (Part time working mummy)",
+    post_sequence: 3,
+    date: "28 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30de4fd0813680f78198fe2f3972fd16",
+    image: "images/rach_part_time_working_mummy_post3.jpg",
+    instagram_url: "https://www.instagram.com/parttimeworkingmummy/",
+    instagram_handle: "@parttimeworkingmummy",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-28",
+          detail: "70 AC · £667 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 70,
+      delegations: 39,
+      landing_page_views: 214,
+      post_fee: 667,
+      ecac: 10,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded", "The post opens with a follower reply DM screenshot, not a problem-aware hook from the creator — this is a third-party testimonial framing, not the brief's oblivious-to-shocked arc.", "The discovery moment is absent — the creator never describes personally finding Nous or their own revelation.", "The CTA 'click here to save money' is generic and does not match the required 'Save with Nous' phrasing, which is a brief compliance failure."],
+    },
+  },
+  {
+    id: "30ce4fd0-8136-80c6-b317-eea68a141446",
+    name: "Steph Elswood",
+    post_sequence: 3,
+    date: "28 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30ce4fd0813680c6b317eea68a141446",
+    image: "images/steph_elswood_post3.jpg",
+    instagram_url: "https://www.instagram.com/stephelswood",
+    instagram_handle: "@stephelswood",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-28",
+          detail: "278 AC · £500 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 278,
+      delegations: 171,
+      landing_page_views: 818,
+      post_fee: 500,
+      ecac: 2,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — this post passes all 8 checklist items and is a strong example of the Family brief executed cleanly, worth noting as a benchmark."],
+    },
+  },
+  {
+    id: "30ce4fd0-8136-80af-8dc0-fe3dbb5540e1",
+    name: "Sophie Westbrooke",
+    post_sequence: 2,
+    date: "27 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30ce4fd0813680af8dc0fe3dbb5540e1",
+    image: "images/sophie_westbrooke_post2.jpg",
+    instagram_url: "https://www.instagram.com/sophiewestbrooke",
+    instagram_handle: "@sophiewestbrooke",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-27",
+          detail: "60 AC · £350 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 60,
+      delegations: 24,
+      landing_page_views: 200,
+      post_fee: 350,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — this post is a strong all-round performer that correctly opens with a relatable self-deprecation before naming Nous, includes a specific savings claim ('hundreds of pounds'), ease ('few quick questions'), and a clean CTA; the one minor note is that 'I saw lots of ladies on here checking theirs' edges toward the prohibited 'loads of people posting about Nous' framing but is borderline acceptable."],
+    },
+  },
+  {
+    id: "30ce4fd0-8136-8099-826e-f6cab242148c",
+    name: "Danielle Lloyd",
+    post_sequence: 2,
+    date: "27 Feb 2026",
+    format: "Story",
+    niche: "Celebrity",
+    notion_url: "https://www.notion.so/30ce4fd081368099826ef6cab242148c",
+    image: "images/danielle_lloyd_post2.jpg",
+    instagram_url: "https://www.instagram.com/missdlloyd",
+    instagram_handle: "@missdlloyd",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-27",
+          detail: "1 AC · £292 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Celebrity 2026",
+      pillars: [{num:"1",theme:"Not wasting money",desc:"\"Fuming\" tone — busy life, hates waste, emotionally charged"}, {num:"2",theme:"Time / stress saving",desc:"\"Between family, work and everything else\" — Nous handled it all"}, {num:"3",theme:"Lightbulb moment",desc:"\"I've already saved hundreds\" — outcome-led social proof"}],
+    },
+    performance: {
+      accounts_created: 1,
+      delegations: 0,
+      landing_page_views: 11,
+      post_fee: 292,
+      ecac: 292,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — this is a strong Celebrity brief execution with 'between family, work and everything else' framing, but it opens on a slightly generic busy-life hook rather than the 'fuming' / 'not wasting money' dramatic angle the brief calls for in Frame 1, which could have been flagged as a softened hook."],
+    },
+  },
+  {
+    id: "2ffe4fd0-8136-80be-b63c-e7e65d28e018",
+    name: "Katie Hayes",
+    post_sequence: 3,
+    date: "27 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2ffe4fd0813680beb63ce7e65d28e018",
+    image: "images/katie_hayes_post3.jpg",
+    instagram_url: "https://www.instagram.com/katehayesmakeup/",
+    instagram_handle: "@katehayesmakeup",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "past",
+          date: "2026-02-13",
+          detail: "55 AC · £167 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-27",
+          detail: "34 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 34,
+      delegations: 15,
+      landing_page_views: 101,
+      post_fee: 167,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Normal. Added “ad” at the end of text weirdly. Like Jade Williams, hides link sticker behind text",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged the unusual placement of 'ad' at the end and the link sticker being hidden behind text, both of which are legitimate production/compliance issues."],
+      missed: ["The text opens with 'So I knew my bills had gone up recently, but I thought things were just more expensive now' which is a problem-aware hook — however, post_sequence is 3, meaning this is the final frame and is missing the sign-up ease element entirely (no mention of '2 minutes', 'few quick questions', or similar), which the team did not flag."],
+    },
+  },
+  {
+    id: "2f1e4fd0-8136-8054-8372-cf0708dbbb97",
+    name: "Lucy Hall",
+    post_sequence: 3,
+    date: "27 Feb 2026",
+    format: "IG Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/2f1e4fd0813680548372cf0708dbbb97",
+    image: "images/lucy_hall_post3.jpg",
+    instagram_url: "https://www.instagram.com/our_hanbury_hideaway/",
+    instagram_handle: "@our_hanbury_hideaway",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "past",
+          date: "2026-02-10",
+          detail: "28 AC · £167 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-27",
+          detail: "5 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 5,
+      delegations: 2,
+      landing_page_views: 27,
+      post_fee: 167,
+      ecac: 33,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — the team missed that the post opens with '@get_nous' mid-first-sentence rather than establishing the problem (overpaying on bills) before introducing the brand.", "The text lacks specificity about what Nous does (only 'transfer our bills and see if they could save us money'), missing the energy/broadband/phone framing from the brief."],
+    },
+  },
+  {
+    id: "30ce4fd0-8136-80ac-bf99-ecb103611c3e",
+    name: "Lauren Elizabeth Adamson",
+    post_sequence: 2,
+    date: "26 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30ce4fd0813680acbf99ecb103611c3e",
+    image: "images/lauren_elizabeth_adamson_post2.jpg",
+    instagram_url: "https://www.instagram.com/laurenelizabeth_xx",
+    instagram_handle: "@laurenelizabeth_xx",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-26",
+          detail: "266 AC · £917 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 266,
+      delegations: 158,
+      landing_page_views: 668,
+      post_fee: 917,
+      ecac: 3,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Saved £500 in first line, alone. Didn’t actually tag nous (get_nous wasn’t clickable)",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged that the @get_nous tag was not clickable, which is a real brief compliance issue even though '@get_nous' does appear in the text.", "The team noted the £500 saving was front-loaded in the first line, which they correctly identified as a structural choice worth flagging."],
+      missed: ["The team did not flag that the post opens with a savings claim ('I just saved over £500') rather than a problem-aware hook — the brief requires shock/revelation before the solution, not leading with the win.", "The team did not note that 'I know I need to manage my bills but realised I've not even looked' is slightly self-aware but buried after the savings headline, weakening the oblivious-to-shocked arc."],
+    },
+  },
+  {
+    id: "30be4fd0-8136-80d3-a482-cdec73bcd2ba",
+    name: "Emily Backhouse",
+    post_sequence: 3,
     date: "26 Feb 2026",
     format: "IG Story",
-    niche: "Family & Lifestyle",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30be4fd0813680d3a482cdec73bcd2ba",
+    image: "images/emily_backhouse_post3.jpg",
+    instagram_url: "https://www.instagram.com/ourlondonlittlelife/",
+    instagram_handle: "@ourlondonlittlelife",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-26",
+          detail: "38 AC · £150 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 38,
+      delegations: 14,
+      landing_page_views: 166,
+      post_fee: 150,
+      ecac: 4,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Copy paste of brief, small font (maybe bad maybe not)",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged that the copy reads as a paste from the brief, which risks feeling inauthentic (e.g. the exact £781 stat and 'without lifting a finger' phrasing mirror template language too closely)."],
+      missed: ["The CTA 'SAVE ON BILLS HERE' doesn't use the approved 'Save with Nous' phrase and omits the brand name entirely, which the team did not flag."],
+    },
+  },
+  {
+    id: "30ae4fd0-8136-80a6-b69f-f5e69888d891",
+    name: "Laura Anderson",
+    post_sequence: 2,
+    date: "26 Feb 2026",
+    format: "IG Story",
+    niche: "Celebrity",
+    notion_url: "https://www.notion.so/30ae4fd0813680a6b69ff5e69888d891",
+    image: "images/laura_anderson_post2.jpg",
+    instagram_url: "https://www.instagram.com/lauraanderson1x",
+    instagram_handle: "@lauraanderson1x",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-26",
+          detail: "190 AC · £467 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Celebrity 2026",
+      pillars: [{num:"1",theme:"Not wasting money",desc:"\"Fuming\" tone — busy life, hates waste, emotionally charged"}, {num:"2",theme:"Time / stress saving",desc:"\"Between family, work and everything else\" — Nous handled it all"}, {num:"3",theme:"Lightbulb moment",desc:"\"I've already saved hundreds\" — outcome-led social proof"}],
+    },
+    performance: {
+      accounts_created: 190,
+      delegations: 102,
+      landing_page_views: 492,
+      post_fee: 467,
+      ecac: 2,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"“let them roll over and rob me” is alarming language, very chaotic execution",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer correctly flagged 'roll over and rob me' as alarming language that could undermine brand safety, and 'chaotic execution' is accurate given the dense text block with embedded screenshot data mid-copy."],
+      missed: ["The text includes 'reminding me when contracts end' — a phrase explicitly on the brand's do-not-use list — which the reviewer did not flag."],
+    },
+  },
+  {
+    id: "305e4fd0-8136-8092-b0d3-d7bfe99dcc0a",
+    name: "Chloe’s Deal Club",
+    post_sequence: 1,
+    date: "26 Feb 2026",
+    format: "Story",
+    niche: "Finance",
     notion_url: "https://www.notion.so/305e4fd081368092b0d3d7bfe99dcc0a",
-    image: "images/chloe_deal_club_post1.jpg",
+    image: "images/chloe_s_deal_club_post1.jpg",
     instagram_url: "https://www.instagram.com/chloesdealclub",
     instagram_handle: "@chloesdealclub",
-
-    campaign_posts: [
-      { sequence: 1, status: "current",  label: "Post 1", date: "26 Feb", detail: "29 AC · £167 eCAC" },
-      { sequence: 2, status: "upcoming", label: "Post 2", date: "12 Mar", detail: "FC: 71 AC · £77 CAC" },
-      { sequence: 3, status: "upcoming", label: "Post 3", date: "26 Mar", detail: "FC: 71 AC · £77 CAC" },
-    ],
-
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-26",
+          detail: "29 AC · £383 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
     brief_info: {
-      campaign: "2026 Family: Jan 1st campaign",
-      experiment_treatment: "No experiment",
-      niche_brief: "Family & Lifestyle 2026 — 1st Campaign",
-      pillars: [
-        { num: "1", theme: "Shock / revelation", desc: "\"I was massively overpaying\" — opens with oblivious → shocked arc" },
-        { num: "2", theme: "Zero effort / time saving", desc: "\"Nous did everything\" — stressed → relieved; 2 minutes from your phone" },
-        { num: "3", theme: "Outcome / social proof", desc: "\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up" },
-      ],
+      niche_brief: "Finance/Lifestyle 2026",
+      pillars: [{num:"1",theme:"Problem awareness",desc:"Open with the cost-of-bills problem before any pitch"}, {num:"2",theme:"Discovery / how Nous works",desc:"Explain what Nous does and what it found"}, {num:"3",theme:"Outcome / social proof",desc:"Share the saving and invite the audience to try"}],
     },
-
     performance: {
       accounts_created: 29,
       delegations: 18,
       landing_page_views: 101,
-      forecast_accounts: 71,
-      forecast_hit_pct: 41,
-      ecac_stitched: 167,
-      forecast_cac: 77,
       post_fee: 383,
+      ecac: 13,
     },
-
-    brief_compliance: [
-      { label: "Oblivious → shocked hook",  pass: true  },
-      { label: "Discovery moment",          pass: true  },
-      { label: "What Nous does",            pass: true  },
-      { label: "Hundreds savings claim",    pass: true  },
-      { label: "Sign-up ease mentioned",    pass: false },
-      { label: "@get_nous tag",             pass: true  },
-      { label: "Save with Nous CTA",        pass: true  },
-      { label: "Calming home visual",       pass: true  },
-    ],
-
-    scores: [
-      { label: "Text quality",       score: 7, max: 10 },
-      { label: "Tone match (niche)", score: 7, max: 10 },
-      { label: "Visual hierarchy",   score: 4, max: 10 },
-      { label: "CTA execution",      score: 9, max: 10 },
-      { label: "Social proof / £",   score: 5, max: 10 },
-    ],
-
-    visual_notes: [
-      { type: "green", text: "CTA button correctly at bottom — clear and unambiguous" },
-      { type: "green", text: "AD label top-right, small and unobtrusive" },
-      { type: "green", text: "White text on coral blocks: high contrast, very readable" },
-      { type: "green", text: "Text split into 5 separate blocks — easy to scan between taps" },
-      { type: "green", text: "Warm living-room background reinforces the household bills framing" },
-      { type: "red",   text: "No visual hierarchy — all blocks identical in size and weight. Hook doesn't draw the eye more than paragraph 3" },
-      { type: "red",   text: "No product screenshot — the savings claim has nothing visual to anchor it" },
-      { type: "amber", text: "Background is almost entirely obscured — lifestyle image becomes decorative noise" },
-    ],
-
-    ad_placement: {
-      score: 6,
-      summary: "Fundamentals are correct — AD label and CTA are in the right place — but five identically-weighted blocks covering ~85% of the frame mean the background becomes wallpaper and nothing draws the eye where it matters most.",
-      checks: [
-        { pass: true,  label: "AD label",             note: "Top-right corner, 9px — small, unobtrusive, correct" },
-        { pass: true,  label: "CTA at bottom",         note: "Clear CTA block anchored at the base — correct placement" },
-        { pass: true,  label: "No competing elements", note: "No poll sticker, voting box, or competing interactive elements" },
-        { pass: true,  label: "Hook enters top",       note: "First block is the hook — viewer's eye hits it before the body" },
-        { pass: false, label: "Text density",          note: "~85% of the frame is covered — the lifestyle background exists in name only" },
-        { pass: false, label: "Visual hierarchy",      note: "All 5 blocks identical in size and weight — hierarchy is flat" },
-        { pass: false, label: "Product screenshot",    note: "No app UI or savings screen — the savings claim has nothing visual to anchor it" },
-      ],
-    },
-
-    standout_line: "You can shop around yourself, or you can sign up to a free tool like Nous that does it all for you.",
-    standout_note: "Borrowed from 'best ever finance post'. Positions Nous as the zero-effort alternative — the most persuasive framing in the post.",
-
-    review_comments: [
-      {
-        text: "Took \"shop around or use nous\" wording from the best ever finance post.",
-        source: "Notion · Comments in review",
-        author: "Team note"
-      }
-    ],
-
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Took “shop around or use nous” wording from the best ever finance post",source:"Notion · Comments in review",author:"Team note"}],
     review_reflection: {
-      good: [
-        "Correctly identified the standout line and flagged it — this was the best converting element in the post.",
-      ],
-      missed: [
-        "Sign-up ease not flagged — the brief explicitly asks for \"few quick questions\" / \"2 minutes\" framing and this was absent; catching it at review would have been a free conversion lift.",
-        "No specific £ figure wasn't surfaced as a performance risk — while not a brief requirement, a concrete number (£600+, £781/year) is one of the strongest conversion signals in this category.",
-      ],
+      good: ["The team correctly noted the 'shop around or use Nous' framing as borrowed from a high-performing Finance post, which is a legitimate strategic insight worth recording."],
+      missed: ["No sign-up ease element appears in the text — there is no mention of '2 minutes', 'few quick questions', 'so easy', or anything similar — and this gap was not flagged in the review notes.", "The post mentions 'loads of people posting about Nous' via 'I've seen a few people mentioning it' phrasing in similar posts; here, though the wording 'it's worth signing up' is generic, the Lifestyle brief's 'answered a few quick questions' sign-up ease cue is entirely absent."],
     },
-
-    writeup: {
-      verdict: "Solid first post for a deals influencer — 29 accounts despite missing one key brief element. The \"shop around or use Nous\" framing clearly carried the weight: it positions Nous as the smart shortcut rather than a sponsored pitch. eCAC came in at £167 against a £77 forecast — over budget, but the standout framing shows what's possible with stronger brief compliance.",
-      what_worked: [
-        { type: "green", text: "\"Shop around yourself, or sign up to Nous\" borrowed from the top finance post — it converts because it meets deals audiences where they are and removes the effort objection." },
-        { type: "green", text: "Problem-aware opening (bills skyrocketing) before any pitch. Keeps the viewer engaged rather than immediately skipping." },
-        { type: "green", text: "\"Free tool\" framing reduces perceived risk — the audience doesn't feel sold to." },
-        { type: "green", text: "Clean CTA at the bottom, coral blocks on warm lifestyle background — readable and on-brand." },
-      ],
-      watch_out: [
-        { type: "red",   text: "No specific £ figure — \"saving hundreds\" is vague. A concrete number (£600+, £781/year) is one of the strongest conversion signals in this category." },
-        { type: "red",   text: "\"2 minutes from your phone\" missing entirely — removes the last friction point right before the click and costs nothing to add." },
-        { type: "amber", text: "All five text blocks look identical — no visual hierarchy pulls the eye to the hook or the savings claim." },
-        { type: "amber", text: "No product screenshot to validate the claim — the viewer is taking the influencer's word with no app UI to anchor it." },
-      ],
-      for_next_time: [
-        { type: "blue", text: "Add a specific £ figure upfront — even the approved stat (\"typical family overpays by £781\") if no personal figure is available." },
-        { type: "blue", text: "Insert \"2 mins from my phone, it's free\" before the CTA." },
-        { type: "blue", text: "Make the first text block larger or bolder — the hook should stand out visually from the body." },
-        { type: "blue", text: "Test one Nous app screenshot placed after the body copy — gives the savings claim something to land on." },
-      ],
+  },
+  {
+    id: "2ffe4fd0-8136-80ca-83ff-f77e5f993545",
+    name: "Jade Darlington",
+    post_sequence: 3,
+    date: "26 Feb 2026",
+    format: "IG Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2ffe4fd0813680ca83fff77e5f993545",
+    image: "images/jade_darlington_post3.jpg",
+    instagram_url: "https://www.instagram.com/jadedarl",
+    instagram_handle: "@jadedarl",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "past",
+          date: "2026-02-12",
+          detail: "140 AC · £333 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-26",
+          detail: "58 AC · £333 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
     },
-
-    improved_post: {
-      hook: "Hands up if you haven't checked your bills in years? 🙋‍♀️ Turns out we were overpaying by",
-      figure: "£600+",
-      body: "A friend mentioned this free tool called Nous. You can shop around yourself — or just let them do it. I signed up and in 2 minutes from my phone, they showed me exactly where I was losing money on energy, mobile and broadband.",
-      screenshot_rows: [
-        { label: "Energy",    saving: "Save £240/yr" },
-        { label: "Broadband", saving: "Save £180/yr" },
-        { label: "Mobile",    saving: "Save £90/yr"  },
-      ],
-      ease: "2 minutes from my phone. Genuinely one of those \"I can't believe I didn't do this sooner\" moments. @get_nous 👇",
-      cta: "🔗 SAVE ON YOUR BILLS WITH NOUS",
-      improvements: [
-        "Hook opens with a relatable question, not a general statement",
-        "£600+ figure is the first thing after the hook — big and highlighted",
-        "Nous app screenshot anchors the savings claim visually",
-        "\"2 minutes from my phone\" addresses the effort objection before the CTA",
-      ],
+    performance: {
+      accounts_created: 58,
+      delegations: 29,
+      landing_page_views: 240,
+      post_fee: 333,
+      ecac: 6,
     },
-
-    insights: [
-      { icon: "💡", text: "The 'shop around or use Nous' framing is worth testing across all finance/deals influencers — it works because it meets their audience's existing behaviour." },
-      { icon: "📉", text: "29 ACs without a specific £ figure suggests the framing alone can convert — but adding one is the easiest untested lever." },
-      { icon: "🎯", text: "41% of forecast accounts and eCAC at £167 vs £77 forecast — the standout line worked but missing brief elements held back volume." },
-    ],
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Link says “link”, the previous stories were very aesthetic so this one was jarring. Said Ad twice",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly noted the CTA link simply says 'link' rather than a proper CTA label ('Start saving here!' or 'Save with Nous'), and flagged the jarring tone shift from aesthetic previous stories."],
+      missed: ["There is no sign-up ease element anywhere in the text (no '2 minutes', 'few quick questions', or 'basically nothing' that references the effort to sign up — only 'did basically nothing' referring to the result, not the sign-up process), and the Fashion brief specifically calls for 'Start saving here!' as the CTA on Frame 2, neither of which the team flagged as a brief compliance issue."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-80a8-8941-fc598b227d91",
+    name: "Georgie Elizabeth",
+    post_sequence: 3,
+    date: "26 Feb 2026",
+    format: "IG Story",
+    niche: "Celebrity",
+    notion_url: "https://www.notion.so/2fee4fd0813680a88941fc598b227d91",
+    image: "images/georgie_elizabeth_post3.jpg",
+    instagram_url: "https://www.instagram.com/georginaaelizabeth/",
+    instagram_handle: "@georginaaelizabeth",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "past",
+          date: "2026-02-12",
+          detail: "20 AC · £233 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-26",
+          detail: "31 AC · £233 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Celebrity 2026",
+      pillars: [{num:"1",theme:"Not wasting money",desc:"\"Fuming\" tone — busy life, hates waste, emotionally charged"}, {num:"2",theme:"Time / stress saving",desc:"\"Between family, work and everything else\" — Nous handled it all"}, {num:"3",theme:"Lightbulb moment",desc:"\"I've already saved hundreds\" — outcome-led social proof"}],
+    },
+    performance: {
+      accounts_created: 31,
+      delegations: 17,
+      landing_page_views: 119,
+      post_fee: 233,
+      ecac: 8,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"First paragraph very charismatic",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified the charismatic first paragraph, which delivers a strong celebrity-niche problem-aware hook with self-deprecating humour before introducing Nous."],
+      missed: ["The team did not flag that the CTA is 'TRY NOUS' rather than the required 'Save with Nous' (or 'Start saving here!'), which fails the brief's CTA requirement.", "There is no mention of sign-up ease — no '2 minutes', 'few quick questions', or equivalent phrase — which is a required brief element left unaddressed."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-80a4-8b27-f899c4f72ddd",
+    name: "Isabelle Handley-Allen",
+    post_sequence: 3,
+    date: "26 Feb 2026",
+    format: "IG Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2fee4fd0813680a48b27f899c4f72ddd",
+    image: "images/isabelle_handley_allen_post3.jpg",
+    instagram_url: "https://www.instagram.com/belle.so.chic/?hl=en",
+    instagram_handle: "@?hl=en",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "past",
+          date: "2026-02-12",
+          detail: "29 AC · £667 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-26",
+          detail: "10 AC · £667 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 10,
+      delegations: 5,
+      landing_page_views: 87,
+      post_fee: 667,
+      ecac: 67,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Good girl maths execution - maybe jarring on an otherwise curated feed",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified the girl maths execution as a notable creative approach."],
+      missed: ["The post opens with 'The way I see it, this beautiful suit was freeee!' and immediately references @get_nous in sentence two — this is a hook that leads with the fashion/haul framing but doesn't establish the problem-aware shock before name-dropping Nous, which is a brief requirement.", "The savings claim of 'almost £300 on my energy alone' undershoots the expected 'hundreds of pounds' framing and is notably lower than the approved stat range (£500+), which the team did not flag.", "There is no mention of sign-up ease (no '2 minutes', 'few quick questions', or equivalent), which the team did not catch."],
+    },
+  },
+  {
+    id: "2f8e4fd0-8136-80e3-bcfd-d04b62a4cd2c",
+    name: "Alysha Devon",
+    post_sequence: 3,
+    date: "26 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2f8e4fd0813680e3bcfdd04b62a4cd2c",
+    image: "images/alysha_devon_post3.jpg",
+    instagram_url: "https://www.instagram.com/alyshadevon/?hl=en-gb",
+    instagram_handle: "@?hl=en-gb",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "past",
+          date: "2026-02-12",
+          detail: "156 AC · £1000 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-26",
+          detail: "189 AC · £1000 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 189,
+      delegations: 100,
+      landing_page_views: 606,
+      post_fee: 1000,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Good CTA - don’t add robbed to the brief",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged the 'robbed' CTA language as inappropriate for the brief — it clashes with the calming, reassuring tone Nous requires."],
+      missed: ["The team missed that there is no fresh discovery moment — the post opens with 'I've mentioned before that @get_nous', framing it as a repeat reference rather than the brief's intended revelation arc, and there is no explicit sign-up ease claim (no '2 minutes', 'few quick questions', or equivalent)."],
+    },
+  },
+  {
+    id: "30de4fd0-8136-8079-855b-d38ac8f07185",
+    name: "Emily Jackman - Gp",
+    post_sequence: 1,
+    date: "25 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30de4fd081368079855bd38ac8f07185",
+    image: "images/emily_jackman_gp_post1.jpg",
+    instagram_url: "https://www.instagram.com/emily.jackman_",
+    instagram_handle: "@emily.jackman_",
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-25",
+          detail: "185 AC · £467 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 185,
+      delegations: 84,
+      landing_page_views: 791,
+      post_fee: 467,
+      ecac: 3,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Product shot is a bit weird. Personal experience very high",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer noted the 'product shot is a bit weird', which is a valid creative concern about the app screenshot layout dominating the visual."],
+      missed: ["The post opens with '@get_nous' as the very first line — a direct violation of the hook rule that prohibits leading with the brand name before establishing a problem — which the reviewer did not flag; the CTA is 'CHECK IT OUT' rather than 'Save with Nous', which is also non-compliant and unmentioned; and there is no discovery moment — the influencer never describes finding or choosing Nous."],
+    },
+  },
+  {
+    id: "30be4fd0-8136-8071-89c7-dbbdd9f2e955",
+    name: "Sophie Collis",
+    post_sequence: 2,
+    date: "25 Feb 2026",
+    format: "IG Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/30be4fd08136807189c7dbbdd9f2e955",
+    image: "images/sophie_collis_post2.jpg",
+    instagram_url: "https://www.instagram.com/sophieclairecurvy",
+    instagram_handle: "@sophieclairecurvy",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-25",
+          detail: "36 AC · £233 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 36,
+      delegations: 17,
+      landing_page_views: 143,
+      post_fee: 233,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"£800 on its own line is very effective",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified the isolated '£800' on its own line as visually effective — this is strong Fashion brief execution for Frame 2's teaser/shock moment."],
+      missed: ["The CTA reads 'SEE HOW MUCH YOU COULD SAVE' rather than the Fashion brief's required 'Start saving here!' or 'Save with Nous', which is a non-compliant CTA that was not flagged.", "This is post_sequence 2, which per the Fashion brief is the short teaser/intriguing frame — the post is considerably longer than a teaser should be, covering the full narrative arc, but the review did not flag this structural mismatch."],
+    },
+  },
+  {
+    id: "30ae4fd0-8136-8074-87a7-da9ecae9de53",
+    name: "Emma C (Brummy Mummy) - C3",
+    post_sequence: 3,
+    date: "25 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30ae4fd08136807487a7da9ecae9de53",
+    image: "images/emma_c_brummy_mummy_c3_post3.jpg",
+    instagram_url: "https://www.instagram.com/brummymummyof2/",
+    instagram_handle: "@brummymummyof2",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-25",
+          detail: "54 AC · £267 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 54,
+      delegations: 28,
+      landing_page_views: 234,
+      post_fee: 267,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"“as soon as my contracts end” is very light personal experience",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified that 'as soon as my contracts end they will switch us over' is weak personal proof — it signals she hasn't saved yet, which undermines the 'outcome' frame required for post_sequence 3."],
+      missed: ["There is no mention of sign-up ease ('2 minutes', 'few quick questions', 'so easy') anywhere in the text, which the team did not flag as a brief compliance failure."],
+    },
+  },
+  {
+    id: "30ae4fd0-8136-8097-90de-f8a2ce9ad7c3",
+    name: "Abigail Stacey",
+    post_sequence: 2,
+    date: "25 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/30ae4fd08136809790def8a2ce9ad7c3",
+    image: "images/abigail_stacey_post2.jpg",
+    instagram_url: "https://www.instagram.com/abigail_stacey22",
+    instagram_handle: "@abigail_stacey22",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-25",
+          detail: "40 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 40,
+      delegations: 23,
+      landing_page_views: 133,
+      post_fee: 167,
+      ecac: 4,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Copy paste, like the mug",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's 'copy paste' note is accurate — the text closely mirrors the standard Family brief template, which is a valid concern about authenticity even though the copy itself hits all brief criteria."],
+      missed: ["The team did not note that despite being templated, this post is structurally compliant on all 8 brief criteria, meaning the core risk is tone/authenticity not a content gap.", "The team did not flag that 'SEE HOW MUCH YOU CAN SAVE HERE' is a non-standard CTA that deviates slightly from the approved 'Save with Nous' phrasing, though it functions directionally."],
+    },
+  },
+  {
+    id: "30ae4fd0-8136-80b2-a73f-d679e70adbc2",
+    name: "Sophia Nikolaides",
+    post_sequence: 2,
+    date: "25 Feb 2026",
+    format: "IG Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/30ae4fd0813680b2a73fd679e70adbc2",
+    image: "images/sophia_nikolaides_post2.jpg",
+    instagram_url: "https://www.instagram.com/1894home",
+    instagram_handle: "@1894home",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-25",
+          detail: "47 AC · £267 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 47,
+      delegations: 27,
+      landing_page_views: 133,
+      post_fee: 267,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"rainbow button, pretty good hook and hidden ad",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly noted a good hook ('I always thought I was quite good at getting the best deals... But clearly not'), which is a solid problem-aware open.", "The team flagged the hidden ad disclosure as a concern, which is a legitimate compliance observation."],
+      missed: ["The post contains no specific £ savings figure and no 'hundreds of pounds' claim — the savings amount is entirely absent — which the team did not flag as a brief compliance failure.", "The CTA is 'Get Nous' rather than 'Save with Nous', which does not match the required phrasing and was not flagged by the team.", "Sign-up ease is implied ('genuinely easy to use') but the post never uses an approved phrase like '2 minutes' or 'a few quick questions' — the team did not note this gap."],
+    },
+  },
+  {
+    id: "303e4fd0-8136-8089-bd33-cd3adbd9bcea",
+    name: "Amanda Raine",
+    post_sequence: 3,
+    date: "25 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/303e4fd081368089bd33cd3adbd9bcea",
+    image: "images/amanda_raine_post3.jpg",
+    instagram_url: "https://www.instagram.com/amanda.raine_",
+    instagram_handle: "@amanda.raine_",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-25",
+          detail: "34 AC · £633 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 34,
+      delegations: 16,
+      landing_page_views: 121,
+      post_fee: 633,
+      ecac: 19,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Good copy, maybe one less paragraph",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's observation about cutting a paragraph is valid — the copy is slightly repetitive with both 'Why did no one tell me' and 'make sure you do' at the end."],
+      missed: ["The team missed that the hook fails the brief — 'GIRLS I have to share what I signed up to last week' leads with the product action rather than opening with a relatable problem or shock moment, which violates the Family brief's frame-1 structure."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-801b-af23-eaac827b12fd",
+    name: "Katie Woods",
+    post_sequence: 1,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Lifestyle",
+    notion_url: "https://www.notion.so/309e4fd08136801baf23eaac827b12fd",
+    image: "images/katie_woods_post1.jpg",
+    instagram_url: "https://www.instagram.com/comedowntothewoods",
+    instagram_handle: "@comedowntothewoods",
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-24",
+          detail: "52 AC · £400 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Lifestyle 2026",
+      pillars: [{num:"1",theme:"Life lesson incoming",desc:"\"Suppliers quietly creep up your bills\" — systemic explanation"}, {num:"2",theme:"Bill realisation",desc:"\"My phone bill has been a huge rip-off\" — stat-led shock (£7/month)"}, {num:"3",theme:"Fuming / sorted now",desc:"\"I'm still fuming after finding out I was massively overpaying\" — outcome"}],
+    },
+    performance: {
+      accounts_created: 52,
+      delegations: 25,
+      landing_page_views: 218,
+      post_fee: 400,
+      ecac: 8,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Looks like a Neom ad",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer's observation that it 'looks like a Neom ad' is a valid creative concern — the visual treatment appears to overshadow the Nous message and could confuse viewers about what is being promoted."],
+      missed: ["The post opens with '@get_nous' as the first word before any problem has been established, violating the hook rule — this compliance failure was not flagged; there is no discovery moment (no explanation of how the influencer found or chose Nous); and no ease of sign-up is mentioned at all."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-80f3-a755-f9efd6ba1034",
+    name: "Jen Rothbury",
+    post_sequence: 2,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/309e4fd0813680f3a755f9efd6ba1034",
+    image: "images/jen_rothbury_post2.jpg",
+    instagram_url: "https://www.instagram.com/crack_the_shutters",
+    instagram_handle: "@crack_the_shutters",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-24",
+          detail: "69 AC · £733 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 69,
+      delegations: 30,
+      landing_page_views: 253,
+      post_fee: 733,
+      ecac: 11,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Super standard home post - like the stop the press",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's note that 'Stop the press!!' is a likeable hook is fair — it creates intrigue — though the post immediately names @get_nous in the very first sentence, which technically fails the problem-aware hook criterion."],
+      missed: ["The post opens with '@get_nous' mentioned in the first sentence ('it's called @get_nous'), violating the rule that Nous should not be mentioned before establishing a relatable problem, and this was not flagged.", "The CTA 'start saving money now!' does not match the required 'Save with Nous' phrasing and was not flagged as a compliance issue."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-8019-adc2-dbf1f6b34226",
+    name: "Stephanie Larbey",
+    post_sequence: 1,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/309e4fd081368019adc2dbf1f6b34226",
+    image: "images/stephanie_larbey_post1.jpg",
+    instagram_url: "https://www.instagram.com/thecheshiregreyhome/",
+    instagram_handle: "@thecheshiregreyhome",
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-24",
+          detail: "28 AC · £200 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 28,
+      delegations: 16,
+      landing_page_views: 129,
+      post_fee: 200,
+      ecac: 7,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Like the picture - brief copy paste",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's note 'brief copy paste' is an accurate observation — the text closely mirrors the approved brief template rather than feeling authentically personal."],
+      missed: ["There is no mention of sign-up ease ('2 minutes', 'few quick questions') in the text despite this being a key Family brief element, and the team did not flag this gap."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-80dd-855b-c91ff3f4113d",
+    name: "Meg Brackpool",
+    post_sequence: 2,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/309e4fd0813680dd855bc91ff3f4113d",
+    image: "images/meg_brackpool_post2.jpg",
+    instagram_url: "https://www.instagram.com/megbrackpool",
+    instagram_handle: "@megbrackpool",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-24",
+          detail: "578 AC · £667 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 578,
+      delegations: 234,
+      landing_page_views: 1752,
+      post_fee: 667,
+      ecac: 1,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"We didn’t love this one before it ran - thought a bit soulless. Has really personal experience and has a picture of her using the thing (in theory)",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's concern about the post feeling 'soulless' was reasonable given the formulaic structure, but the post ultimately performed exceptionally well (578 accounts created, implied eCaC of £1), suggesting the personal details (holiday pot, postcode/question specifics) resonated strongly despite the team's reservations."],
+      missed: ["The team did not note that this Fashion-niche post does not follow the Fashion brief's three-frame haul/hack structure ('Check out my latest hack', 'did not see this coming', 'fuming about overpaying'), instead using a finance-reflection angle that diverges from the approved framework.", "The team missed that the sign-up ease description ('typed in my postcode and street address, answered 2 or 3 questions') is one of the most specific and compliant ease claims in the batch, which likely contributed to the exceptional conversion."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-803f-a5a3-f0a63c268766",
+    name: "Sophie Harris",
+    post_sequence: 3,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/309e4fd08136803fa5a3f0a63c268766",
+    image: "images/sophie_harris_post3.jpg",
+    instagram_url: "https://www.instagram.com/sophxharris/",
+    instagram_handle: "@sophxharris",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-24",
+          detail: "86 AC · £192 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 86,
+      delegations: 48,
+      landing_page_views: 244,
+      post_fee: 192,
+      ecac: 2,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"rainbow button",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team noted the rainbow button, which is a valid visual/CTA formatting observation for story compliance."],
+      missed: ["The CTA is 'check how much you could save here' — it does not use the required 'Save with Nous' phrasing, which the team did not flag.", "There is no mention of sign-up ease (no '2 minutes', 'quick questions', or equivalent), which was not caught by the team.", "The approved stat '£781/year typical overpay' is used correctly, but the team did not positively note this use of approved messaging — a missed quality point."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-801c-8ad5-e5f5d6ce355d",
+    name: "Jennifer Mccready",
+    post_sequence: 1,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/309e4fd08136801c8ad5e5f5d6ce355d",
+    image: "images/jennifer_mccready_post1.jpg",
+    instagram_url: "https://www.instagram.com/pinkpeonyhome",
+    instagram_handle: "@pinkpeonyhome",
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-24",
+          detail: "28 AC · £467 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 28,
+      delegations: 14,
+      landing_page_views: 92,
+      post_fee: 467,
+      ecac: 17,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"First sentence a bit garbled, doesn’t mention bills",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified that the opening sentence is garbled and doesn't mention bills — 'I've found the easiest tool that does all the hard work of saving money' skips the problem-awareness hook and jumps straight to the solution."],
+      missed: ["The team did not flag that the hook fails the brief entirely — leading with 'I've found the easiest tool' violates the Home brief's frame-1 requirement to open with a bargain-find or discovery moment framed around the problem (overpaying), not the solution."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-8040-9b89-dd3395aa6e27",
+    name: "Mia Rose",
+    post_sequence: 3,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2fee4fd0813680409b89dd3395aa6e27",
+    image: "images/mia_rose_post3.jpg",
+    instagram_url: "https://www.instagram.com/mia_boardman/?hl=en-gb",
+    instagram_handle: "@?hl=en-gb",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-24",
+          detail: "28 AC · £200 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 28,
+      delegations: 14,
+      landing_page_views: 91,
+      post_fee: 200,
+      ecac: 7,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Doesn’t actually say what Nous is",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer correctly identified that the post doesn't explain what Nous is — there is no description of what it does, only a mention of the tag."],
+      missed: ["The post also has no CTA phrase matching 'Save with Nous' or 'Start saving here' (the link CTA is 'TAP TO SEE HOW MUCH YOU CAN SAVE'), no sign-up ease is mentioned, and no discovery moment is present — none of these additional gaps were flagged; also, 'So many of you will be able to save loads' closely echoes the prohibited 'loads of people posting about Nous' framing."],
+    },
+  },
+  {
+    id: "2fce4fd0-8136-8038-a5e1-fa4985fcec95",
+    name: "Talia Oatway",
+    post_sequence: 3,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Celebrity",
+    notion_url: "https://www.notion.so/2fce4fd081368038a5e1fa4985fcec95",
+    image: "images/talia_oatway_post3.jpg",
+    instagram_url: "https://www.instagram.com/talia.oatway/?hl=en",
+    instagram_handle: "@?hl=en",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-24",
+          detail: "43 AC · £633 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Celebrity 2026",
+      pillars: [{num:"1",theme:"Not wasting money",desc:"\"Fuming\" tone — busy life, hates waste, emotionally charged"}, {num:"2",theme:"Time / stress saving",desc:"\"Between family, work and everything else\" — Nous handled it all"}, {num:"3",theme:"Lightbulb moment",desc:"\"I've already saved hundreds\" — outcome-led social proof"}],
+    },
+    performance: {
+      accounts_created: 43,
+      delegations: 29,
+      landing_page_views: 190,
+      post_fee: 633,
+      ecac: 15,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Okay execution, appreciate the extra video",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's assessment of 'okay execution' is accurate — the Celebrity brief's 'fuming' hook and busy-life angle are both present, and the narrative arc is sound if unremarkable."],
+      missed: ["There is no sign-up ease claim in the text — no mention of '2 minutes', 'few quick questions', or 'from my phone' — which was not flagged.", "The CTA 'click here' is generic and does not meet the 'Save with Nous' or 'Start saving here' standard, yet this was not raised in the review."],
+    },
+  },
+  {
+    id: "2f1e4fd0-8136-8005-a84d-c939595f750c",
+    name: "Sophie Price",
+    post_sequence: 3,
+    date: "24 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2f1e4fd081368005a84dc939595f750c",
+    image: "images/sophie_price_post3.jpg",
+    instagram_url: "https://www.instagram.com/sophie_pricey/",
+    instagram_handle: "@sophie_pricey",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "past",
+          date: "2026-02-10",
+          detail: "57 AC · £167 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-24",
+          detail: "34 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 34,
+      delegations: 19,
+      landing_page_views: 167,
+      post_fee: 167,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Pretty late to discuss resolutions",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged that the New Year's resolution angle was running very late (post date 24 Feb), making the hook feel stale and less relatable."],
+      missed: ["There is no specific £ figure or 'hundreds of pounds' savings claim in the text ('how much I could actually save' is too vague), and there is no sign-up ease mention — both are required brief elements the team did not flag."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-80a9-bc36-c281620228e4",
+    name: "Kirsty Jones",
+    post_sequence: 2,
+    date: "23 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/309e4fd0813680a9bc36c281620228e4",
+    image: "images/kirsty_jones_post2.jpg",
+    instagram_url: "https://www.instagram.com/bobalongwithkirsty",
+    instagram_handle: "@bobalongwithkirsty",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-23",
+          detail: "62 AC · £333 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 62,
+      delegations: 32,
+      landing_page_views: 188,
+      post_fee: 333,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"We think this is nice, has hidden “ad”",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged the hidden 'ad' disclosure, which is a compliance issue — the disclosure should be prominent and clearly visible rather than buried."],
+      missed: ["The team missed that '@get_nous' appears as the very first element of the post text, meaning the brand tag precedes the problem-aware hook entirely, which fails the brief's requirement to open with relatable problem/shock before introducing Nous.", "The savings claim '£100s' is unusually vague compared to the brief's approved phrasings ('hundreds of pounds', '£500+', specific figures), and the team did not flag this."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-8045-895b-e1de2a750af9",
+    name: "Martha Lewis",
+    post_sequence: 2,
+    date: "23 Feb 2026",
+    format: "IG Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/309e4fd081368045895be1de2a750af9",
+    image: "images/martha_lewis_post2.jpg",
+    instagram_url: "https://www.instagram.com/marthakatelewis",
+    instagram_handle: "@marthakatelewis",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-23",
+          detail: "42 AC · £367 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 42,
+      delegations: 24,
+      landing_page_views: 154,
+      post_fee: 367,
+      ecac: 9,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Kinda curated but not show homey",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team noted the rainbow button, a valid CTA format observation."],
+      missed: ["The post contains no specific £ savings figure — 'must-have for your home' and 'saves you so much money' are vague, with no 'hundreds of pounds', £500+, or any figure, which the team did not flag.", "There is no mention of sign-up ease in the text, which the team did not catch.", "The team did not note that the post says 'I can't wait to see how much we've saved!' which implies the savings haven't happened yet — undermining the social proof element of the brief."],
+    },
+  },
+  {
+    id: "309e4fd0-8136-80c7-bb4c-e4095c292388",
+    name: "Lauren Stobart",
+    post_sequence: 2,
+    date: "23 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/309e4fd0813680c7bb4ce4095c292388",
+    image: "images/lauren_stobart_post2.jpg",
+    instagram_url: "https://www.instagram.com/lauren.stobart",
+    instagram_handle: "@lauren.stobart",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-23",
+          detail: "107 AC · £500 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 107,
+      delegations: 61,
+      landing_page_views: 262,
+      post_fee: 500,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:false}, {label:"Calming/lifestyle visual",pass:false}, {label:"Save with Nous CTA",pass:false}],
+    review_comments: [{text:"Looks alright ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: [],
+      missed: ["The team signed off with 'Looks alright' but the extracted text ('Happy Monday NEW REEL! Come say hi') contains zero Nous content — no tag, no savings claim, no CTA, no hook — suggesting either the text extraction failed or the post was not a Nous story at all, and this should have been flagged before approval."],
+    },
+  },
+  {
+    id: "2f8e4fd0-8136-80cd-9f63-c8473a4bae94",
+    name: "Emily Lucy Rajch",
+    post_sequence: 2,
+    date: "23 Feb 2026",
+    format: "IG Story",
+    niche: "Fitness",
+    notion_url: "https://www.notion.so/2f8e4fd0813680cd9f63c8473a4bae94",
+    image: "images/emily_lucy_rajch_post2.jpg",
+    instagram_url: "https://www.instagram.com/emilylucyrajch/",
+    instagram_handle: "@emilylucyrajch",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "past",
+          date: "2026-02-09",
+          detail: "287 AC · £1100 fee",
+        }, {
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-23",
+          detail: "77 AC · £1100 fee",
+        }],
+    brief_info: {
+      niche_brief: "Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — relatable before/after"}, {num:"2",theme:"Zero effort",desc:"Nous handles it all — you just answer a few questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — community sharing"}],
+    },
+    performance: {
+      accounts_created: 77,
+      delegations: 52,
+      landing_page_views: 263,
+      post_fee: 1100,
+      ecac: 14,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Text should have been broken up",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer correctly flagged that the text should have been broken up, as the dense single paragraph is hard to read in a Story format."],
+      missed: ["The post opens immediately with 'A few weeks ago I started using @get_nous' — leading with the brand before any problem hook — which is a direct brief violation that was not flagged; the text includes 'reminding me when contracts end' which is on the explicit do-not-use list; the CTA is 'save money here' rather than 'Save with Nous'; no discovery moment is present; and 'I know loads of people using them at the moment' uses prohibited phrasing almost verbatim."],
+    },
+  },
+  {
+    id: "2ede4fd0-8136-806d-8d0f-e256d5d72606",
+    name: "Daisy Richmond",
+    post_sequence: 3,
+    date: "23 Feb 2026",
+    format: "IG Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2ede4fd08136806d8d0fe256d5d72606",
+    image: "images/daisy_richmond_post3.jpg",
+    instagram_url: "https://www.instagram.com/daisyrichmonnd/",
+    instagram_handle: "@daisyrichmonnd",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-23",
+          detail: "80 AC · £500 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 80,
+      delegations: 45,
+      landing_page_views: 266,
+      post_fee: 500,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Okay journey through the narrative. Opinion split on varying font sizes",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team noted the narrative journey and font-size debate, which is a fair observation about presentation — the varying font sizes are a legitimate review concern."],
+      missed: ["The post opens with a general observation ('Everyone keeps saying...') and then immediately names '@get_nous' in sentence 3 without a genuine personal problem-aware hook or discovery moment, failing two brief criteria that went unmentioned.", "There is no sign-up ease claim anywhere in the text, which is a notable brief gap that the review did not flag.", "The Family brief calls for a Frame 3 confessional/grateful tone with a personal revelation, but this post lacks any personal discovery story — the influencer never describes finding Nous or their own overpaying situation — which was not addressed in the review."],
+    },
+  },
+  {
+    id: "306e4fd0-8136-801a-822f-e42033e8ec0e",
+    name: "Katie Fearnehough",
+    post_sequence: 3,
+    date: "20 Feb 2026",
+    format: "IG Story",
+    niche: "Lifestyle",
+    notion_url: "https://www.notion.so/306e4fd08136801a822fe42033e8ec0e",
+    image: "images/katie_fearnehough_post3.jpg",
+    instagram_url: "https://www.instagram.com/katiefearnehoughx/",
+    instagram_handle: "@katiefearnehoughx",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-20",
+          detail: "87 AC · £258 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Lifestyle 2026",
+      pillars: [{num:"1",theme:"Life lesson incoming",desc:"\"Suppliers quietly creep up your bills\" — systemic explanation"}, {num:"2",theme:"Bill realisation",desc:"\"My phone bill has been a huge rip-off\" — stat-led shock (£7/month)"}, {num:"3",theme:"Fuming / sorted now",desc:"\"I'm still fuming after finding out I was massively overpaying\" — outcome"}],
+    },
+    performance: {
+      accounts_created: 87,
+      delegations: 49,
+      landing_page_views: null,
+      post_fee: 258,
+      ecac: 3,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes were recorded — the team missed several compliance issues: the savings figure is stated as '€300' (euros, not pounds £), which is a critical error for a UK service; there is no explanation of what Nous actually does (checking bills, comparing deals, switching suppliers); and the @get_nous tag is placed at the very end rather than naturally in the text flow."],
+    },
+  },
+  {
+    id: "306e4fd0-8136-80fb-bfb4-d2be6857a827",
+    name: "Cheralyn Hitcham",
+    post_sequence: 2,
+    date: "20 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/306e4fd0813680fbbfb4d2be6857a827",
+    image: "images/cheralyn_hitcham_post2.jpg",
+    instagram_url: "https://www.instagram.com/_cheralyn",
+    instagram_handle: "@_cheralyn",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-20",
+          detail: "6 AC · £433 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 6,
+      delegations: 2,
+      landing_page_views: null,
+      post_fee: 433,
+      ecac: 72,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Need to put button at bottom. “According to girl maths” isn’t quite right text. Weirdly bright white get nous tag",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged that the button should be at the bottom, as the CTA ('TAP TO SAVE WITH NOUS') appears mid-post rather than at the close, which breaks the expected story flow.", "The team correctly noted the Girl Maths framing is not quite right — opening with the outcome ('haul was free') before establishing the problem inverts the intended hook structure."],
+      missed: ["The team noted the 'weirdly bright white get nous tag' as a visual concern but did not connect this to the broader compliance failure: the opening hook leads with the outcome/punchline ('Primark haul was free') rather than problem awareness, so the Girl Maths execution undermines the brief's hook requirement.", "The team did not flag that the discovery moment is weak — 'I've recently started using @get_nous to sort my household bills' presents Nous as already in use rather than a moment of finding/discovering it."],
+    },
+  },
+  {
+    id: "306e4fd0-8136-80c5-b638-d9796f8342aa",
+    name: "Yasmin Lauren T",
+    post_sequence: 1,
+    date: "20 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/306e4fd0813680c5b638d9796f8342aa",
+    image: "images/yasmin_lauren_t_post1.jpg",
+    instagram_url: "https://www.instagram.com/_yasminlauren",
+    instagram_handle: "@_yasminlauren",
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-20",
+          detail: "48 AC · £300 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 48,
+      delegations: 23,
+      landing_page_views: null,
+      post_fee: 300,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"We have a hunch we like headings! ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's hunch about headings is a reasonable creative observation, as structured text may improve readability and stopping power in stories."],
+      missed: ["The team did not note that this post is one of the strongest brief-compliant examples in the batch — all 8 criteria pass, and the discovery story ('I signed up after seeing someone post about it') models the intended social proof chain.", "The team did not flag that the savings claim is general ('hundreds of pounds') rather than a personal figure, which while technically compliant is less compelling than a specific amount like £500+."],
+    },
+  },
+  {
+    id: "304e4fd0-8136-8040-b69b-d22932f743a9",
+    name: "Tori Gaynor",
+    post_sequence: 2,
+    date: "20 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/304e4fd081368040b69bd22932f743a9",
+    image: "images/tori_gaynor_post2.jpg",
+    instagram_url: "https://www.instagram.com/torixgaynor",
+    instagram_handle: "@torixgaynor",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-20",
+          detail: "37 AC · £233 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 37,
+      delegations: 20,
+      landing_page_views: null,
+      post_fee: 233,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Great example of secret ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified this as a strong 'Secret' experiment — the short, mysterious framing ('just realised I could be saving £600+') creates intrigue without over-explaining."],
+      missed: ["The team did not flag that the post never explains what Nous does (no mention of bill checking, switching, or how savings are achieved), and there is no explicit discovery moment naming or describing Nous — for a post_sequence 2 teaser this may be intentional, but it leaves the audience without clarity on the mechanism."],
+    },
+  },
+  {
+    id: "305e4fd0-8136-8020-ac59-f40e49a27b5a",
+    name: "Hannah Brown",
+    post_sequence: 1,
+    date: "19 Feb 2026",
+    format: "Story - Video",
+    niche: "Family",
+    notion_url: "https://www.notion.so/305e4fd081368020ac59f40e49a27b5a",
+    image: "images/hannah_brown_post1.jpg",
+    instagram_url: "https://www.instagram.com/mrshanbrown",
+    instagram_handle: "@mrshanbrown",
+    campaign_timeline: [{
+          seq: 1,
+          label: "Post 1",
+          status: "current",
+          date: "2026-02-19",
+          detail: "164 AC · £1083 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 164,
+      delegations: 90,
+      landing_page_views: null,
+      post_fee: 1083,
+      ecac: 7,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"It’s a video! She also added a followup to this ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer correctly noted it is a video — the near-empty extracted text ('Hello girls. Save with Nous. Ad @get_nous') is explained by the content being delivered verbally, which means text-based compliance analysis cannot be fully applied here."],
+      missed: ["The review should have noted that the extracted text alone fails 5 of 8 brief criteria and, without a transcript of the video, compliance cannot be confirmed — approving without verifying verbal content against the brief is a process gap that was not flagged."],
+    },
+  },
+  {
+    id: "303e4fd0-8136-808b-8101-db535e50a372",
+    name: "Joanna Fletcher",
+    post_sequence: 3,
+    date: "19 Feb 2026",
+    format: "Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/303e4fd08136808b8101db535e50a372",
+    image: "images/joanna_fletcher_post3.jpg",
+    instagram_url: "https://www.instagram.com/project_34_selfbuild",
+    instagram_handle: "@project_34_selfbuild",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-19",
+          detail: "5 AC · £300 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 5,
+      delegations: 2,
+      landing_page_views: null,
+      post_fee: 300,
+      ecac: 60,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Big gap between paras 1 and 2. Picture looks nice, very curated",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged the big paragraph gap as a layout issue, which is a legitimate presentational concern worth noting at approval."],
+      missed: ["The post's Home brief Frame 3 should reference a specific outcome with savings detail (the brief mentions broadband at £23/month or phone at £7/month as anchoring specifics), but 'hundreds of pounds' is the only figure used — no product-specific deal detail — and this was not flagged.", "The phrase 'sharing incase you need a little extra for that new sofa or yet another lamp' is a charming Home niche touch but the post lacks the 'one less thing to do' / maintenance angle from the brief's Frame 3, which the review did not address."],
+    },
+  },
+  {
+    id: "2f7e4fd0-8136-80e7-8b1e-eb612a7e88a8",
+    name: "Ruby Holley",
+    post_sequence: 2,
+    date: "19 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2f7e4fd0813680e78b1eeb612a7e88a8",
+    image: "images/ruby_holley_post2.jpg",
+    instagram_url: "https://www.instagram.com/rubyholley_/",
+    instagram_handle: "@rubyholley_",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-19",
+          detail: "171 AC · £833 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 171,
+      delegations: 89,
+      landing_page_views: null,
+      post_fee: 833,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Like the text at the end. Good button. Links nicely to fact she’s a fashion influencer",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly noted that the girl math framing links well to the fashion niche and praised the button and tone — this post does have strong niche alignment."],
+      missed: ["The text opens directly with 'I'm using the girl math logic... because I used @get_nous' meaning it opens with Nous rather than a problem-aware hook first; there is no specific £ figure or 'hundreds' savings claim ('so much off our bills' is too vague); and the CTA is 'if you want to try nous then click here' rather than the brief-specified 'Start saving here!' — none of these brief failures were flagged in review."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-807b-aeaf-f8a056f5b1cd",
+    name: "Holly Gee & Sophie Taylor (Life of Mummies)",
+    post_sequence: 3,
+    date: "17 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2fee4fd08136807baeaff8a056f5b1cd",
+    image: "images/holly_gee_sophie_taylor_life_of_mummies_post3.jpg",
+    instagram_url: "https://www.instagram.com/lifeofmummies",
+    instagram_handle: "@lifeofmummies",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-17",
+          detail: "22 AC · £267 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 22,
+      delegations: 11,
+      landing_page_views: null,
+      post_fee: 267,
+      ecac: 12,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Framing of “we” signed up for nous is a bit odd - need to change to “we both signed up for our houses?” ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's observation about 'we signed up' being odd is correct — for a duo account, 'we signed up for our own houses' would clarify that each creator independently used Nous, which is more credible and relevant to the audience."],
+      missed: ["The team did not note that despite the framing issue, all 8 brief criteria are otherwise met and the copy closely mirrors the Family brief template in a compliant way.", "The team missed that 'Save with nous' uses a lowercase 'n' for 'nous', which is a minor but consistent brand presentation issue compared to the approved '@get_nous' capitalisation convention."],
+    },
+  },
+  {
+    id: "2ffe4fd0-8136-805e-9fb3-cbce97d5213d",
+    name: "The Freckles",
+    post_sequence: 3,
+    date: "16 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2ffe4fd08136805e9fb3cbce97d5213d",
+    image: "images/the_freckles_post3.jpg",
+    instagram_url: "https://www.instagram.com/the_freckle_fam",
+    instagram_handle: "@the_freckle_fam",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-16",
+          detail: "6 AC · £267 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 6,
+      delegations: 3,
+      landing_page_views: null,
+      post_fee: 267,
+      ecac: 44,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Pretty chaotic. Maybe screams ad?",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified that the post reads as chaotic and ad-like, which is a real risk for audience trust and brief tone compliance.", "The team's concern about it 'screaming ad' is validated by the opening — a mock Nous app UI screenshot with specific savings breakdowns (Energy £280, Mobile £200, Broadband £255) leads the post, which is the opposite of an organic-feeling hook."],
+      missed: ["The post opens with a simulated Nous app results screen, not a problem-aware hook — this is a clear brief violation (leads with the product output, not the creator's relatable problem) that the team did not explicitly call out as a compliance failure.", "The CTA is 'sign up here' rather than the required 'Save with Nous', which the team did not flag."],
+    },
+  },
+  {
+    id: "2ffe4fd0-8136-80fe-9f97-efb59e414433",
+    name: "Katie Hayes",
+    post_sequence: 2,
+    date: "13 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2ffe4fd0813680fe9f97efb59e414433",
+    image: "images/katie_hayes_post2.jpg",
+    instagram_url: "https://www.instagram.com/katehayesmakeup/",
+    instagram_handle: "@katehayesmakeup",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-13",
+          detail: "55 AC · £167 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-27",
+          detail: "34 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 55,
+      delegations: 33,
+      landing_page_views: null,
+      post_fee: 167,
+      ecac: 3,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — the post passes all 8 checklist items with particularly strong brief alignment: the hook ('throwing money away on my bills'), the ease claim ('answered a few quick questions'), and the branded CTA ('Save Here with Nous') all match the Family brief closely; the only minor note is '@get_nous nous' contains a duplication error in the text that was not flagged."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-8012-baa4-d4fbce150a3e",
+    name: "Sarah Roberts",
+    post_sequence: 2,
+    date: "13 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2fee4fd081368012baa4d4fbce150a3e",
+    image: "images/sarah_roberts_post2.jpg",
+    instagram_url: "https://www.instagram.com/sarahrroberts_/",
+    instagram_handle: "@sarahrroberts_",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-13",
+          detail: "29 AC · £300 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 29,
+      delegations: 8,
+      landing_page_views: null,
+      post_fee: 300,
+      ecac: 10,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:false}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — the post never names or tags @get_nous directly in the body copy (only refers to 'a new tool' and 'it'), meaning someone seeing the post without the link might not know what they are clicking through to; the CTA 'TAP HERE TO SEE WHAT YOU CAN SAVE' does not match the required 'Save with Nous' or 'Start saving here' for the Fashion niche; and there is no explanation of what the tool actually does (checks bills, finds deals, switches suppliers)."],
+    },
+  },
+  {
+    id: "2ffe4fd0-8136-80b8-88b3-e40bec4d11a2",
+    name: "Jade Darlington",
+    post_sequence: 2,
+    date: "12 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2ffe4fd0813680b888b3e40bec4d11a2",
+    image: "images/jade_darlington_post2.jpg",
+    instagram_url: "https://www.instagram.com/jadedarl",
+    instagram_handle: "@jadedarl",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-12",
+          detail: "140 AC · £333 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-26",
+          detail: "58 AC · £333 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 140,
+      delegations: 62,
+      landing_page_views: null,
+      post_fee: 333,
+      ecac: 2,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:false}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Didn’t guide button location - needs to be at the bottom",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly flagged the missing button location guidance, which is a real compliance issue — the Fashion brief requires the CTA button at the bottom of the frame."],
+      missed: ["There is no @get_nous tag anywhere in the text, which is a fundamental brief requirement that was not flagged in the review.", "The post never explains what Nous does — there is no description of checking bills, finding deals, or switching suppliers — leaving viewers with no product understanding, which was not raised.", "The CTA 'SAVE HERE' does not match 'Start saving here!' or 'Save with Nous' as required by the Fashion brief, and this was not called out despite the team already reviewing the CTA positioning."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-80b8-9b99-f4eeb3fdc8d6",
+    name: "Georgie Elizabeth",
+    post_sequence: 2,
+    date: "12 Feb 2026",
+    format: "Story",
+    niche: "Celebrity",
+    notion_url: "https://www.notion.so/2fee4fd0813680b89b99f4eeb3fdc8d6",
+    image: "images/georgie_elizabeth_post2.jpg",
+    instagram_url: "https://www.instagram.com/georginaaelizabeth/",
+    instagram_handle: "@georginaaelizabeth",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-12",
+          detail: "20 AC · £233 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-26",
+          detail: "31 AC · £233 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Celebrity 2026",
+      pillars: [{num:"1",theme:"Not wasting money",desc:"\"Fuming\" tone — busy life, hates waste, emotionally charged"}, {num:"2",theme:"Time / stress saving",desc:"\"Between family, work and everything else\" — Nous handled it all"}, {num:"3",theme:"Lightbulb moment",desc:"\"I've already saved hundreds\" — outcome-led social proof"}],
+    },
+    performance: {
+      accounts_created: 20,
+      delegations: 11,
+      landing_page_views: null,
+      post_fee: 233,
+      ecac: 12,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Long personal intro - way too much text (according to gen z) ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified the excessive text length as a problem — the post is extremely long and broken into multiple paragraphs in a way that is unlikely to hold attention on an IG Story."],
+      missed: ["The team noted the long intro but did not flag that the @get_nous tag appears mid-text on its own line ('One of my friends told me about get_nous' also uses 'get_nous' without the @ symbol in the narrative portion), which is an inconsistency in tagging that could reduce discoverability."],
+    },
+  },
+  {
+    id: "2fee4fd0-8136-80e3-a2e2-ca1618528cf4",
+    name: "Isabelle Handley-Allen",
+    post_sequence: 3,
+    date: "12 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2fee4fd0813680e3a2e2ca1618528cf4",
+    image: "images/isabelle_handley_allen_post3.jpg",
+    instagram_url: "https://www.instagram.com/belle.so.chic/?hl=en",
+    instagram_handle: "@?hl=en",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-12",
+          detail: "29 AC · £667 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-26",
+          detail: "10 AC · £667 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 29,
+      delegations: 14,
+      landing_page_views: null,
+      post_fee: 667,
+      ecac: 23,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:false}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Hate this picture. Could be an advert for a naff wedding venue. Argentinian steakhouse etc. Too polished",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified the picture as a significant problem — an overly polished, non-authentic visual directly contradicts the brief's requirement for calming/lifestyle imagery that feels genuine and personal."],
+      missed: ["The team focused entirely on the visual and missed three critical text failures: the post opens with '@get_nous ad' (brand-first, not problem-first), never describes how or why the creator discovered Nous, and never explains what Nous actually does — it only says 'this new tool' with no context.", "The team did not flag that the Fashion brief requires a three-frame haul/hack structure with a 'fuming about overpaying' frame, none of which is present in this post, making it structurally non-compliant beyond just the image concern."],
+    },
+  },
+  {
+    id: "2f8e4fd0-8136-800d-950f-e153b9488a8f",
+    name: "Alysha Devon",
+    post_sequence: 3,
+    date: "12 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2f8e4fd08136800d950fe153b9488a8f",
+    image: "images/alysha_devon_post3.jpg",
+    instagram_url: "https://www.instagram.com/alyshadevon/?hl=en-gb",
+    instagram_handle: "@?hl=en-gb",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-12",
+          detail: "156 AC · £1000 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-26",
+          detail: "189 AC · £1000 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 156,
+      delegations: 78,
+      landing_page_views: null,
+      post_fee: 1000,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Incomprehensible first sentence (but left because maybe her style). Like the CTA in her voice",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly noted the first sentence is difficult to parse ('In true light of a chronic overspender, it turns out that a typical family overpay...') — this is a genuine readability issue that could lose audience attention.", "The team correctly praised the CTA as being 'in her voice' — 'CHECK YOU'RE NOT BEING MUGGED OFF LIKE I WAS' is tonally authentic and engaging."],
+      missed: ["The CTA is entirely custom ('CHECK YOU'RE NOT BEING MUGGED OFF LIKE I WAS') and does not include the required 'Save with Nous' phrase or a link directive — this is a brief compliance failure the team did not flag.", "There is no mention of sign-up ease (no '2 minutes', 'quick questions', or equivalent), which the team did not catch."],
+    },
+  },
+  {
+    id: "2ede4fd0-8136-80f1-b920-c635cf44ad3e",
+    name: "Chloe Patton",
+    post_sequence: 2,
+    date: "12 Feb 2026",
+    format: "Story",
+    niche: "Celebrity",
+    notion_url: "https://www.notion.so/2ede4fd0813680f1b920c635cf44ad3e",
+    image: "images/chloe_patton_post2.jpg",
+    instagram_url: "https://www.instagram.com/chloepatton_/?hl=en-gb",
+    instagram_handle: "@?hl=en-gb",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-12",
+          detail: "90 AC · £400 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Celebrity 2026",
+      pillars: [{num:"1",theme:"Not wasting money",desc:"\"Fuming\" tone — busy life, hates waste, emotionally charged"}, {num:"2",theme:"Time / stress saving",desc:"\"Between family, work and everything else\" — Nous handled it all"}, {num:"3",theme:"Lightbulb moment",desc:"\"I've already saved hundreds\" — outcome-led social proof"}],
+    },
+    performance: {
+      accounts_created: 90,
+      delegations: 52,
+      landing_page_views: null,
+      post_fee: 400,
+      ecac: 4,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:false}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Font needs background. Photo is fine ",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's note about font needing a background is a valid practical concern for readability."],
+      missed: ["The team missed four significant brief failures: no @get_nous tag anywhere in the text, no specific £ figure or 'hundreds' savings claim, no sign-up ease language, and the CTA 'SAVE MONEY ON YOUR BILLS!' omits the Nous brand name entirely — for a Celebrity niche post this is a particularly weak brand presence that should have been flagged."],
+    },
+  },
+  {
+    id: "2e8e4fd0-8136-8075-a492-db6d56210d86",
+    name: "Rebecca Meldrum",
+    post_sequence: 2,
+    date: "12 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2e8e4fd081368075a492db6d56210d86",
+    image: "images/rebecca_meldrum_post2.jpg",
+    instagram_url: "https://www.instagram.com/mrsrmeldrum/?hl=en",
+    instagram_handle: "@?hl=en",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-12",
+          detail: "48 AC · £433 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 48,
+      delegations: 25,
+      landing_page_views: null,
+      post_fee: 433,
+      ecac: 9,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:false}, {label:"Discovery moment",pass:false}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:false}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Very to the left. Like including the trustpilot review but it does set off “ad alarms”",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The reviewer correctly identified the ad-alarm risk of the Trustpilot screenshot making the post feel overly promotional and inauthentic, and noted the layout issue ('very to the left')."],
+      missed: ["The post opens with 'I can't believe how many people have recommended Nous to me' — leading with social proof of others rather than a personal problem hook, and echoing the prohibited 'loads of people posting about Nous' framing — which was not flagged; there is no specific savings figure or 'hundreds of pounds' claim; the CTA is 'check your bills here!' rather than 'Save with Nous'; and there is no discovery moment (the influencer was recommended to Nous by others, which is a passive framing the brief discourages)."],
+    },
+  },
+  {
+    id: "2efe4fd0-8136-805e-a6d6-c8150bc50380",
+    name: "Sophie Hawkins",
+    post_sequence: 3,
+    date: "11 Feb 2026",
+    format: "Story",
+    niche: "Fashion",
+    notion_url: "https://www.notion.so/2efe4fd08136805ea6d6c8150bc50380",
+    image: "images/sophie_hawkins_post3.jpg",
+    instagram_url: "https://www.instagram.com/sostylishsoph/?hl=en",
+    instagram_handle: "@?hl=en",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-11",
+          detail: "155 AC · £767 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Fashion 2026",
+      pillars: [{num:"1",theme:"Latest hack / haul framing",desc:"\"My latest haul was basically free\" — savings justify the spend"}, {num:"2",theme:"Short teaser",desc:"\"Did not see this coming but I just saved nearly £800\" — intriguing, keep it short"}, {num:"3",theme:"Fuming / sorted now",desc:"\"Normally I love a bargain, so I was fuming\" — relatable before/after"}],
+    },
+    performance: {
+      accounts_created: 155,
+      delegations: 82,
+      landing_page_views: null,
+      post_fee: 767,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Generally like filtering. Could have hit the “I was overpaying” messaging faster",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's note that the 'I was overpaying' messaging could have landed faster is correct — the hook takes two sentences to get to the problem before Nous is introduced, which dilutes the Frame 1 punch."],
+      missed: ["The post mentions 'letting me know when contracts are ending and switching me when better deals come up', which is the prohibited 'reminding you when contracts end' phrasing that should never be used per brand guidelines, and this was not caught in the review.", "There is no sign-up ease claim in the text — no '2 minutes', 'few quick questions', or equivalent — which was not flagged despite it being a brief requirement for Fashion Frame 3."],
+    },
+  },
+  {
+    id: "2f1e4fd0-8136-80f7-94b4-ea0cf1ee8fd9",
+    name: "Sophie Price",
+    post_sequence: 3,
+    date: "10 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2f1e4fd0813680f794b4ea0cf1ee8fd9",
+    image: "images/sophie_price_post3.jpg",
+    instagram_url: "https://www.instagram.com/sophie_pricey/",
+    instagram_handle: "@sophie_pricey",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-10",
+          detail: "57 AC · £167 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-24",
+          detail: "34 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 57,
+      delegations: 34,
+      landing_page_views: null,
+      post_fee: 167,
+      ecac: 3,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:false}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Maybe need to hide ad a bit. Divided on text color",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's concern about ad disclosure visibility ('maybe need to hide ad a bit') and the text colour debate are valid production-level observations worth tracking."],
+      missed: ["There is no sign-up ease element in the text — the post describes what Nous does but never conveys how easy it is to sign up ('2 minutes', 'few quick questions', etc.) — a required Family brief element that was not flagged in review."],
+    },
+  },
+  {
+    id: "2f1e4fd0-8136-8018-af20-ed9f8e206ea4",
+    name: "Lucy Hall",
+    post_sequence: 3,
+    date: "10 Feb 2026",
+    format: "Story",
+    niche: "Home",
+    notion_url: "https://www.notion.so/2f1e4fd081368018af20ed9f8e206ea4",
+    image: "images/lucy_hall_post3.jpg",
+    instagram_url: "https://www.instagram.com/our_hanbury_hideaway/",
+    instagram_handle: "@our_hanbury_hideaway",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-10",
+          detail: "28 AC · £167 fee",
+        }, {
+          seq: 3,
+          label: "Post 3",
+          status: "future",
+          date: "2026-02-27",
+          detail: "5 AC · £167 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Home 2026",
+      pillars: [{num:"1",theme:"Amazing bargain find",desc:"\"You know how much I love a bargain — my latest discovery\" — discovery framing"}, {num:"2",theme:"Must-have home tool",desc:"\"I've found such a great new tool for your home\" — product-as-tool angle"}, {num:"3",theme:"Saved hundreds + one less job",desc:"\"Saved £500+, one less thing to do for the house\" — outcome + relief"}],
+    },
+    performance: {
+      accounts_created: 28,
+      delegations: 17,
+      landing_page_views: null,
+      post_fee: 167,
+      ecac: 6,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"“Managing bills” not a thing most people think about",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team's note that 'managing bills' is not a relatable everyday phrase is a valid tone observation — 'bills going up' or 'overpaying' would be more emotionally resonant than the abstract 'managing bills' framing."],
+      missed: ["The team did not note that despite the slightly abstract hook, all 8 brief criteria are met and the Home brief structure (hate admin → Nous did it → saved £700) is closely followed.", "The team missed that 'See if you can save money too!' preceding the 'SAVE WITH NOUS' CTA is a soft double-CTA that slightly dilutes the clean call-to-action, though the primary CTA itself is compliant."],
+    },
+  },
+  {
+    id: "2f8e4fd0-8136-8078-a16b-d024a55bd19f",
+    name: "Emily Lucy Rajch",
+    post_sequence: 2,
+    date: "9 Feb 2026",
+    format: "Story",
+    niche: "Fitness",
+    notion_url: "https://www.notion.so/2f8e4fd081368078a16bd024a55bd19f",
+    image: "images/emily_lucy_rajch_post2.jpg",
+    instagram_url: "https://www.instagram.com/emilylucyrajch/",
+    instagram_handle: "@emilylucyrajch",
+    campaign_timeline: [{
+          seq: 2,
+          label: "Post 2",
+          status: "current",
+          date: "2026-02-09",
+          detail: "287 AC · £1100 fee",
+        }, {
+          seq: 2,
+          label: "Post 2",
+          status: "future",
+          date: "2026-02-23",
+          detail: "77 AC · £1100 fee",
+        }],
+    brief_info: {
+      niche_brief: "Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — relatable before/after"}, {num:"2",theme:"Zero effort",desc:"Nous handles it all — you just answer a few questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — community sharing"}],
+    },
+    performance: {
+      accounts_created: 287,
+      delegations: 137,
+      landing_page_views: null,
+      post_fee: 1100,
+      ecac: 4,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:false}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"Button slightly in wrong place, otherwise good",source:"Notion · Comments in review",author:"Team note"}],
+    review_reflection: {
+      good: ["The team correctly identified the button placement issue, which is a real story format concern affecting CTA visibility."],
+      missed: ["The savings claim of 'nearly £1000' is above the approved range (typical approved stats are £500+, £600+, or £781/year) and could be seen as an unapproved or unverified figure — the team did not flag this.", "The CTA 'see how much you can save!' appears mid-post as a link placement but the post never includes the required 'Save with Nous' phrase — the team noted button placement but did not flag the missing required CTA wording.", "The Fitness niche should follow the Lifestyle brief (life lesson angle), but this post uses a fairly standard Family-style hook — the team did not assess whether the niche-specific angle was applied."],
+    },
+  },
+  {
+    id: "2cae4fd0-8136-8093-8bea-f1cb1f93bb66",
+    name: "Eden Harvey",
+    post_sequence: 3,
+    date: "6 Feb 2026",
+    format: "Story",
+    niche: "Family",
+    notion_url: "https://www.notion.so/2cae4fd0813680938beaf1cb1f93bb66",
+    image: "images/eden_harvey_post3.jpg",
+    instagram_url: "https://www.instagram.com/edenharvzofficial/",
+    instagram_handle: "@edenharvzofficial",
+    campaign_timeline: [{
+          seq: 3,
+          label: "Post 3",
+          status: "current",
+          date: "2026-02-06",
+          detail: "94 AC · £500 fee",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }, {
+          seq: null,
+          label: "Post ?",
+          status: "missing",
+          date: null,
+          detail: "Not in Feb 2026 dataset",
+        }],
+    brief_info: {
+      niche_brief: "Family & Lifestyle 2026",
+      pillars: [{num:"1",theme:"Shock / revelation",desc:"\"I was massively overpaying\" — oblivious → shocked arc"}, {num:"2",theme:"Zero effort / time saving",desc:"\"Nous did everything\" — stressed → relieved; just a few quick questions"}, {num:"3",theme:"Outcome / social proof",desc:"\"Saved hundreds, you should too\" — grateful → sharing, drive sign-up"}],
+    },
+    performance: {
+      accounts_created: 94,
+      delegations: 56,
+      landing_page_views: null,
+      post_fee: 500,
+      ecac: 5,
+    },
+    brief_compliance: [{label:"Problem-aware hook",pass:true}, {label:"Discovery moment",pass:true}, {label:"What Nous does",pass:true}, {label:"Savings claim",pass:true}, {label:"Sign-up ease",pass:true}, {label:"@get_nous tag",pass:true}, {label:"Save with Nous CTA",pass:true}, {label:"Calming/lifestyle visual",pass:true}],
+    review_comments: [{text:"No review notes recorded for this post.",source:"Notion · Comments in review",author:"—"}],
+    review_reflection: {
+      good: [],
+      missed: ["No review notes recorded — the post passes all 8 checklist items and executes the Family brief well, with a strong problem-aware opening ('always seemed so expensive, but never thought to check'), a clear discovery arc, and the ongoing monitoring angle ('going to keep track of everything for me now') which is a genuine product differentiator worth highlighting in future briefs."],
+    },
   }
 ];
+// ── COMPUTED META ─────────────────────────────────────────────────────────────
+// Pre-compute pass rates for each brief compliance label across all posts
+const metaRates = {};
+const metaLabels = posts[0].brief_compliance.map(c => c.label);
+metaLabels.forEach(label => {
+  const passing = posts.filter(p =>
+    p.brief_compliance.find(c => c.label === label && c.pass)
+  ).length;
+  metaRates[label] = { passing, total: posts.length, pct: Math.round(passing / posts.length * 100) };
+});
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────────────────────────
 function eCAcRating(ecac) {
-  if (ecac == null) return { emoji: '☠️', tier: 'No data',   cls: 'skull'  };
-  if (ecac > 200)   return { emoji: '☠️', tier: 'Over £200', cls: 'skull'  };
-  if (ecac > 100)   return { emoji: '🔴', tier: '£101–£200', cls: 'red'    };
+  if (ecac == null) return { emoji: '☠️', tier: 'No data', cls: 'skull' };
+  if (ecac > 200)   return { emoji: '☠️', tier: 'Over £200', cls: 'skull' };
+  if (ecac > 100)   return { emoji: '🔴', tier: '£101–£200', cls: 'red' };
   if (ecac > 71)    return { emoji: '🟠', tier: '£72–£100',  cls: 'orange' };
-  if (ecac > 40)    return { emoji: '🟢', tier: '£41–£71',   cls: 'green'  };
-  return              { emoji: '🤑', tier: 'Under £40',   cls: 'gold'   };
-}
-function acColor(actual, forecast) {
-  const pct = actual / forecast;
-  return pct >= 0.9 ? 'green' : pct >= 0.6 ? 'amber' : 'red';
-}
-function scoreColor(s, max) {
-  const p = s / max;
-  return p >= 0.75 ? 'green' : p >= 0.5 ? 'amber' : 'red';
-}
-function forecastColor(pct) {
-  return pct >= 90 ? 'green' : pct >= 60 ? 'amber' : 'red';
+  if (ecac > 40)    return { emoji: '🟢', tier: '£41–£71',   cls: 'green' };
+  return              { emoji: '🤑', tier: 'Under £40',   cls: 'gold' };
 }
 
-// ── PAGE NAV ─────────────────────────────────────────────────────────────────
+// ── PAGE NAV ──────────────────────────────────────────────────────────────────
 function showPage(page) {
   document.getElementById('posts-view').style.display = page === 'posts' ? '' : 'none';
   document.getElementById('meta-view').style.display  = page === 'meta'  ? '' : 'none';
@@ -462,27 +2895,18 @@ function showPage(page) {
   document.getElementById('tab-meta').classList.toggle('active',  page === 'meta');
 }
 
-// ── COLLAPSIBLE ───────────────────────────────────────────────────────────────
-function toggleCard(el) {
-  el.closest('.card').classList.toggle('collapsed');
-}
-function toggleMoreSection() {
-  const group = document.getElementById('more-group');
-  const btn   = document.getElementById('more-btn');
-  const isOpen = group.style.display !== 'none';
-  group.style.display = isOpen ? 'none' : '';
-  btn.textContent = isOpen ? 'More analysis ↓' : 'Less ↑';
-}
-
 // ── RENDER TABS ───────────────────────────────────────────────────────────────
 function renderTabs(activeIdx) {
   document.getElementById('post-nav').innerHTML = posts.map((p, i) => `
     <div class="post-tab ${i === activeIdx ? 'active' : ''}" onclick="renderPost(${i})">
-      ${p.name} — Post ${p.post_sequence}
-      <span class="ac-pill">${p.performance.accounts_created} AC</span>
+      ${p.name} <span style="opacity:.5">P${p.post_sequence}</span>
+      <span class="ac-pill">${p.performance.accounts_created != null ? p.performance.accounts_created + ' AC' : '—'}</span>
     </div>`).join('');
   document.getElementById('header-count').textContent =
-    `${posts.length} post${posts.length !== 1 ? 's' : ''} analysed`;
+    `${posts.length} posts · Feb 2026`;
+  // Scroll active tab into view
+  const active = document.querySelector('.post-tab.active');
+  if (active) active.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 // ── RENDER POST ───────────────────────────────────────────────────────────────
@@ -490,19 +2914,81 @@ function renderPost(idx) {
   renderTabs(idx);
   const p    = posts[idx];
   const perf = p.performance;
-  const rat  = eCAcRating(perf.ecac_stitched);
-  const bi   = p.brief_info;
+  const rat  = eCAcRating(perf.ecac);
   const passCount  = p.brief_compliance.filter(c => c.pass).length;
   const totalCount = p.brief_compliance.length;
+
+  // Campaign timeline HTML
+  let timelineHtml = '';
+  if (p.campaign_timeline && p.campaign_timeline.length > 0) {
+    const items = p.campaign_timeline.map((t, i) => {
+      const isFirst = i === 0;
+      const conn = isFirst ? '' : '<div class="campaign-tl-connector"></div>';
+      const dateStr = t.date ? t.date.slice(5).replace('-', ' ') : '—';
+      return `${conn}<div class="campaign-tl-item">
+        <div class="campaign-tl-dot ${t.status}"></div>
+        <div class="campaign-tl-info">
+          <div class="campaign-tl-label ${t.status}">${t.label}</div>
+          ${t.date ? `<div class="campaign-tl-date">${dateStr}</div>` : ''}
+          <div class="campaign-tl-detail">${t.detail}</div>
+          ${t.status === 'current' ? '<div class="campaign-tl-now">▲ This post</div>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+    timelineHtml = `<div class="campaign-timeline">
+      <div class="campaign-tl-header">Campaign</div>
+      <div class="campaign-tl-track">${items}</div>
+    </div>`;
+  }
+
+  // Performance stats
+  const acVal  = perf.accounts_created != null ? perf.accounts_created : '—';
+  const ecacVal = perf.ecac != null ? `£${perf.ecac}` : '—';
+  const delVal = perf.delegations != null ? perf.delegations : '—';
+  const lpvVal = perf.landing_page_views != null ? perf.landing_page_views : '—';
+  const feeVal = perf.post_fee != null ? `£${perf.post_fee}` : '—';
+  const acPctStr = (perf.accounts_created != null && perf.landing_page_views)
+    ? `${Math.round(perf.accounts_created / perf.landing_page_views * 100)}% → AC`
+    : '—';
+
+  // Meta comparison HTML
+  const metaRows = p.brief_compliance.map(c => {
+    const rate = metaRates[c.label] || { passing: 0, total: posts.length, pct: 0 };
+    const thisClass = c.pass ? 'this-pass' : 'this-fail';
+    const thisSymbol = c.pass ? '✓' : '✗';
+    return `<div class="dash-meta-dim ${thisClass}">
+      <span class="dash-meta-this">${thisSymbol}</span>
+      <span class="dash-meta-label">${c.label}</span>
+      <span class="dash-meta-pct">${rate.pct}% of all</span>
+    </div>`;
+  }).join('');
+
+  // Brief compliance mini checks
+  const checkHtml = p.brief_compliance.map(c => `
+    <div class="dash-mini-check ${c.pass ? 'pass' : 'fail'}">
+      <span style="flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
+    </div>`).join('');
+
+  // Review comments
+  const commentsHtml = p.review_comments.map(c => `
+    <div class="review-comment">
+      "${c.text}"
+      <div class="review-meta">${c.author} · ${c.source}</div>
+    </div>`).join('');
+
+  // Review reflection
+  const goodHtml = p.review_reflection.good.map(t => `
+    <div class="reflection-row good"><span style="flex-shrink:0">✓</span><div><strong>Got right:</strong> ${t}</div></div>`).join('');
+  const missedHtml = p.review_reflection.missed.map(t => `
+    <div class="reflection-row missed"><span style="flex-shrink:0">△</span><div><strong>Missed:</strong> ${t}</div></div>`).join('');
 
   document.getElementById('main-content').innerHTML = `
 
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#ccc'">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#1a1a1a'">
       </div>
-
       <div class="image-footer">
         <span>${p.format} · ${p.niche} · ${p.date}</span>
         <a class="notion-link" href="${p.notion_url}" target="_blank">↗ Notion</a>
@@ -522,27 +3008,12 @@ function renderPost(idx) {
           <span class="tag">${p.format}</span>
           <span class="tag">${p.niche}</span>
           <span class="tag">${p.date}</span>
+          <span class="tag">${p.brief_info.niche_brief}</span>
         </div>
-        ${p.campaign_posts ? `
-        <div class="campaign-timeline">
-          <div class="campaign-tl-header">Campaign</div>
-          <div class="campaign-tl-track">
-            ${p.campaign_posts.map((cp, i) => `
-              ${i > 0 ? '<div class="campaign-tl-connector"></div>' : ''}
-              <div class="campaign-tl-item">
-                <div class="campaign-tl-dot ${cp.status}"></div>
-                <div class="campaign-tl-info">
-                  <div class="campaign-tl-label ${cp.status}">${cp.label}</div>
-                  ${cp.date ? `<div class="campaign-tl-date">${cp.date}</div>` : ''}
-                  <div class="campaign-tl-detail">${cp.detail}</div>
-                  ${cp.status === 'current' ? '<div class="campaign-tl-now">▲ Now</div>' : ''}
-                </div>
-              </div>`).join('')}
-          </div>
-        </div>` : ''}
+        ${timelineHtml}
       </div></div>
 
-      <!-- DASHBOARD ROW: Performance | Brief | Meta -->
+      <!-- DASHBOARD ROW -->
       <div class="dashboard-row">
 
         <!-- Performance -->
@@ -551,70 +3022,48 @@ function renderPost(idx) {
           <div class="dash-body">
             <div class="dash-kpi-pair">
               <div class="dash-kpi">
-                <div class="dash-kpi-val ${acColor(perf.accounts_created, perf.forecast_accounts)}">${perf.accounts_created}</div>
+                <div class="dash-kpi-val">${acVal}</div>
                 <div class="dash-kpi-meta">
                   <span class="dash-kpi-label">Accounts Created</span>
-                  <span class="dash-kpi-sub">${perf.forecast_hit_pct}% of ${perf.forecast_accounts} forecast</span>
                 </div>
               </div>
               <hr class="dash-divider">
               <div class="dash-ecac">
                 <span class="dash-ecac-emoji">${rat.emoji}</span>
                 <div>
-                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">£${perf.ecac_stitched}</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px">eCAC · forecast £${perf.forecast_cac}</div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal}</div>
+                  <div style="font-size:10px;color:var(--muted);margin-top:2px">implied eCAC · ${feeVal} post fee</div>
                 </div>
               </div>
               <hr class="dash-divider">
               <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
-                <span>${perf.delegations} delegations</span>
-                <span>${perf.landing_page_views} LPVs</span>
-                <span>${Math.round(perf.accounts_created/perf.landing_page_views*100)}% → AC</span>
+                <span>${delVal} del.</span>
+                <span>${lpvVal} LPVs</span>
+                <span>${acPctStr}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Brief -->
+        <!-- Brief Compliance -->
         <div class="dash-card">
           <div class="dash-head">
             Brief
             <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">${passCount}/${totalCount}</span>
           </div>
           <div class="dash-body">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">${bi.campaign} · <em>${bi.experiment_treatment}</em></div>
-            <div class="dash-mini-checks">
-              ${p.brief_compliance.map(c => `
-                <div class="dash-mini-check ${c.pass ? 'pass' : 'fail'}">
-                  <span style="flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
-                </div>`).join('')}
-            </div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">${p.brief_info.niche_brief}</div>
+            <div class="dash-mini-checks">${checkHtml}</div>
           </div>
         </div>
 
-        <!-- vs. Meta -->
+        <!-- vs. The Meta -->
         <div class="dash-card">
           <div class="dash-head">
             vs. The Meta
-            <span style="background:var(--amber-bg);color:var(--amber);font-size:9px;font-weight:700;padding:1px 6px;border-radius:99px;text-transform:none;letter-spacing:0">Soon</span>
           </div>
           <div class="dash-body">
-            <div class="dash-meta-placeholder" style="margin-bottom:10px">Patterns will appear once 5+ posts are analysed.</div>
-            <div class="dash-meta-dims">
-              ${[
-                { label: "Problem-aware hook",     pass: true  },
-                { label: "Specific £ figure",      pass: false },
-                { label: "Effort removal line",    pass: false },
-                { label: "Product screenshot",     pass: false },
-                { label: "CTA at bottom",          pass: true  },
-                { label: "Visual hierarchy",       pass: false },
-              ].map(d => `
-                <div class="dash-meta-dim">
-                  <div class="dash-meta-dot ${d.pass ? 'pass' : 'fail'}"></div>
-                  <span style="flex:1">${d.label}</span>
-                  <span style="font-size:10px;color:var(--muted)">— / —</span>
-                </div>`).join('')}
-            </div>
+            <div class="dash-meta-dims">${metaRows}</div>
           </div>
         </div>
 
@@ -623,154 +3072,25 @@ function renderPost(idx) {
       <!-- WHAT WE SAID -->
       <div class="card">
         <div class="card-head">What we said about it</div>
-        <div class="card-body">
-          ${p.review_comments.map(c => `
-            <div class="review-comment">
-              "${c.text}"
-              <div class="review-meta">${c.author} · ${c.source}</div>
-            </div>`).join('')}
-        </div>
+        <div class="card-body">${commentsHtml}</div>
       </div>
 
       <!-- DID WE REVIEW IT CORRECTLY -->
       <div class="card">
-        <div class="card-head">
-          Did we review it correctly?
-          <span style="background:var(--amber-bg);color:var(--amber);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;text-transform:none;letter-spacing:0">More posts needed</span>
-        </div>
+        <div class="card-head">Did we review it correctly?</div>
         <div class="card-body">
           <div class="reflection-rows">
-            ${p.review_reflection.good.map(t => `
-              <div class="reflection-row good"><span style="flex-shrink:0">✓</span><div><strong>Got right:</strong> ${t}</div></div>`).join('')}
-            ${p.review_reflection.missed.map(t => `
-              <div class="reflection-row missed"><span style="flex-shrink:0">△</span><div><strong>Missed:</strong> ${t}</div></div>`).join('')}
-            <div class="reflection-row pending">
-              <span style="flex-shrink:0">◌</span>
-              <div>Once more posts are reviewed, this section will surface what the team consistently catches vs misses at the approval stage — and build a checklist for future bookings.</div>
-            </div>
+            ${goodHtml}
+            ${missedHtml}
           </div>
         </div>
       </div>
-
-      <!-- MORE ANALYSIS TOGGLE -->
-      <div class="more-divider" onclick="toggleMoreSection()">
-        <div class="more-divider-line"></div>
-        <button class="more-divider-btn" id="more-btn">More analysis ↓</button>
-        <div class="more-divider-line"></div>
-      </div>
-
-      <div class="collapsible-group" id="more-group" style="display:none">
-
-        <!-- WRITE-UP -->
-        <div class="card">
-          <div class="card-head toggleable" onclick="toggleCard(this)">Write-up <span class="toggle-chevron">▾</span></div>
-          <div class="card-body">
-            <div class="writeup-body">
-              <div class="writeup-verdict">${p.writeup.verdict}</div>
-              <hr class="writeup-divider">
-              <div>
-                <div class="writeup-section-head">What worked</div>
-                <div class="writeup-list">
-                  ${p.writeup.what_worked.map(w => `<div class="writeup-item"><div class="wi-dot ${w.type}"></div><span>${w.text}</span></div>`).join('')}
-                </div>
-              </div>
-              <hr class="writeup-divider">
-              <div>
-                <div class="writeup-section-head">Watch out for</div>
-                <div class="writeup-list">
-                  ${p.writeup.watch_out.map(w => `<div class="writeup-item"><div class="wi-dot ${w.type}"></div><span>${w.text}</span></div>`).join('')}
-                </div>
-              </div>
-              <hr class="writeup-divider">
-              <div>
-                <div class="writeup-section-head">For next time</div>
-                <div class="writeup-list">
-                  ${p.writeup.for_next_time.map(w => `<div class="writeup-item"><div class="wi-dot ${w.type}"></div><span>${w.text}</span></div>`).join('')}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- CONTENT DIAGNOSTIC -->
-        <div class="card">
-          <div class="card-head toggleable" onclick="toggleCard(this)">Content Diagnostic <span class="toggle-chevron">▾</span></div>
-          <div class="card-body">
-            <div class="score-rows">
-              ${p.scores.map(s => {
-                const col = scoreColor(s.score, s.max);
-                return `<div class="score-row">
-                  <div style="font-size:13px">${s.label}</div>
-                  <div class="bar-track"><div class="bar-fill ${col}" style="width:${Math.round(s.score/s.max*100)}%"></div></div>
-                  <div class="score-num" style="color:var(--${col})">${s.score}/${s.max}</div>
-                </div>`;
-              }).join('')}
-            </div>
-          </div>
-        </div>
-
-        <!-- VISUAL ANALYSIS -->
-        <div class="card">
-          <div class="card-head toggleable" onclick="toggleCard(this)">Visual Analysis <span class="toggle-chevron">▾</span></div>
-          <div class="card-body">
-            <div class="vis-notes">
-              ${p.visual_notes.map(n => `<div class="vis-note"><div class="dot ${n.type}"></div><div>${n.text}</div></div>`).join('')}
-            </div>
-          </div>
-        </div>
-
-        <!-- AD PLACEMENT -->
-        <div class="card">
-          <div class="card-head toggleable" onclick="toggleCard(this)">
-            Ad Placement
-            <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0;margin-right:auto;padding-left:8px">${p.ad_placement.checks.filter(c=>c.pass).length}/${p.ad_placement.checks.length}</span>
-            <span class="toggle-chevron">▾</span>
-          </div>
-          <div class="card-body">
-            <div class="placement-score">
-              <div class="placement-score-val" style="color:${p.ad_placement.score >= 8 ? 'var(--green)' : p.ad_placement.score >= 6 ? 'var(--amber)' : 'var(--red)'}">${p.ad_placement.score}/10</div>
-              <div>
-                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)">Placement score</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Basics correct, density high</div>
-              </div>
-            </div>
-            <div class="placement-checks">
-              ${p.ad_placement.checks.map(c => `
-                <div class="placement-check ${c.pass ? 'pass' : 'fail'}">
-                  <span style="font-size:12px;flex-shrink:0;margin-top:1px">${c.pass ? '✓' : '✗'}</span>
-                  <div><div style="font-weight:600">${c.label}</div><div class="placement-check-note">${c.note}</div></div>
-                </div>`).join('')}
-            </div>
-            <div class="placement-summary">${p.ad_placement.summary}</div>
-          </div>
-        </div>
-
-        <!-- STANDOUT LINE -->
-        <div class="card">
-          <div class="card-head toggleable" onclick="toggleCard(this)">Standout Line <span class="toggle-chevron">▾</span></div>
-          <div class="card-body">
-            <div class="standout">"${p.standout_line}"</div>
-            <div style="margin-top:10px;font-size:13px;color:var(--muted);line-height:1.6">${p.standout_note}</div>
-          </div>
-        </div>
-
-        <!-- KEY INSIGHTS -->
-        <div class="card">
-          <div class="card-head toggleable" onclick="toggleCard(this)">Key Insights <span class="toggle-chevron">▾</span></div>
-          <div class="card-body">
-            <div class="insights">
-              ${p.insights.map(i => `<div class="insight"><span style="flex-shrink:0">${i.icon}</span><span>${i.text}</span></div>`).join('')}
-            </div>
-          </div>
-        </div>
-
-      </div><!-- end more-group -->
 
     </div><!-- end analysis -->
   `;
 }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────────────
 renderPost(0);
 </script>
 </body>
