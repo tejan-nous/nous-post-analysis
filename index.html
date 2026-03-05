@@ -148,6 +148,21 @@
     .meta-section-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
     .meta-section-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
     .meta-section-card .meta-icon { font-size: 24px; margin-bottom: 10px; }
+
+    /* ARROW NAV */
+    .arrow-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 48px; }
+    .arrow-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; color: var(--text); transition: all .15s; display: flex; align-items: center; gap: 6px; }
+    .arrow-btn:hover:not(:disabled) { border-color: var(--nous); color: var(--nous); background: var(--nous-light); }
+    .arrow-btn:disabled { opacity: .35; cursor: default; }
+    .arrow-center { text-align: center; font-size: 13px; }
+    .arrow-counter { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    /* STRONG BADGE */
+    .strong-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--gold-bg); color: var(--gold); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; border: 1px solid #ca8a04; letter-spacing: .03em; }
+    /* FORECAST ROW */
+    .forecast-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 7px 0; border-top: 1px solid var(--border); margin-top: 6px; }
+    .forecast-hit { font-weight: 700; font-size: 12px; }
+    .forecast-hit.over { color: var(--green); }
+    .forecast-hit.under { color: var(--amber); }
   </style>
 </head>
 <body>
@@ -164,7 +179,14 @@
   <div class="header-right" id="header-count"></div>
 </header>
 
-<nav class="post-nav" id="post-nav"></nav>
+<nav class="arrow-nav" id="arrow-nav">
+  <button class="arrow-btn" id="btn-prev" onclick="prevPost()">← Prev</button>
+  <div class="arrow-center">
+    <div id="arrow-name" style="font-weight:600;font-size:14px"></div>
+    <div class="arrow-counter" id="arrow-counter"></div>
+  </div>
+  <button class="arrow-btn" id="btn-next" onclick="nextPost()">Next →</button>
+</nav>
 
 <div id="posts-view">
   <div class="main" id="main-content"></div>
@@ -172,7 +194,7 @@
 
 <div id="meta-view" style="display:none; padding: 24px 28px;">
   <div class="meta-placeholder">
-    <div class="coming">56 posts analysed</div>
+    <div class="coming" id="meta-count">56 posts analysed</div>
     <h2>Meta Analysis</h2>
     <p>Cross-post patterns — what hooks, formats, visuals, and brief elements consistently drive low eCAC and high account creation. Split by niche, post sequence, and experiment type.</p>
   </div>
@@ -2865,16 +2887,103 @@ const posts = [
     },
   }
 ];
-// ── COMPUTED META ─────────────────────────────────────────────────────────────
-// Pre-compute pass rates for each brief compliance label across all posts
+
+const postExtras = {
+  "30de4fd0-8136-80f7-8198-fe2f3972fd16": {forecast_ac:119,forecast_cac:6,slack_notes:["Just to kick things off, I don't like the dm at an angle", "I like the dm format though ode to the next experiment @someone", "Agreed, hate the dm angle + having ad right below it  change sentence 1 to: \"With everything going up, you need to check if you're overpaying on household bills\"", "I adore 'that's so amazing babe'"],slack_matched:"Rach part time working mummy - startling stats - post 1 - feb 28th",slack_confidence:"high"},
+  "30ce4fd0-8136-80c6-b317-eea68a141446": {forecast_ac:102,forecast_cac:5,slack_notes:["Of two minds on whether or not to tighten up paragraph 1", "Not totally ideal composition - you reckon it'd be weird to swap the text and the product shot?", "Otherwise I think copy is fine", "Great thanks", "I quite like the copy"],slack_matched:"Steph Elswood - Frame 3 - Family / No experiment - March 26th",slack_confidence:"high"},
+  "30ce4fd0-8136-80af-8dc0-fe3dbb5540e1": {forecast_ac:85,forecast_cac:4,slack_notes:["like how she's taken the brief but randomly added the word girls twice", "I think good though, nice post"],slack_matched:"Sophie Westbrooke - Post 1 - No experiment - feb 27th",slack_confidence:"high"},
+  "30ce4fd0-8136-8099-826e-f6cab242148c": {forecast_ac:69,forecast_cac:4,slack_notes:["what's with the medieval font?", "here ye here ye", "wtf are those emojis", "like the copy though"],slack_matched:"Danielle Lloyd - Frame 1 - Celebrity: supermom - Feb 27th",slack_confidence:"high"},
+  "2ffe4fd0-8136-80be-b63c-e7e65d28e018": {forecast_ac:33,forecast_cac:5,slack_notes:["Looks like this is the original repeat campaign brief", "Just need to move the button down but think we need to change the experiment tag too", "Ah my bad, it's no experiment!", "Amend, think we're good to go here!"],slack_matched:"Katie Hayes - Post 5 - Startling No experiment - Feb 27th",slack_confidence:"high"},
+  "2f1e4fd0-8136-8054-8372-cf0708dbbb97": {forecast_ac:13,forecast_cac:13,slack_notes:["• Cut \"so you all know\" in sentence 1 •  Cut \"did you know\" in sentence 2", "Amend!  From Meg - 'Conscious Lucy has another sponsored story AD [today] and keen to keep them 24 hours apart'. Do we want to post today or delay till tomorrow?  I think we should push for today.", "I'd prefer to run tomorrow, as long as we have it approved there isn't any extra effort for us", "Like the amend!", "Do you think the other AD being first will hamper our chances?", "If she posts the other AD at 6pm say."],slack_matched:"Lucy Hall - Post 3 - No experiment - Posting 24th feb",slack_confidence:"high"},
+  "30ce4fd0-8136-80ac-bf99-ecb103611c3e": {forecast_ac:261,forecast_cac:4,slack_notes:["Change sentence 1 to \"Everyone must be saving money by sorting their finances out...\"  Move button to bottom", "the last line is fun", "haha yeah agreed", "Looks lovely, link is a bit off center but otherwise good - can ask to center it but no need to resend I think"],slack_matched:"Lauren Elizabeth Adamson - Post 2 - No experiment - 12th March",slack_confidence:"high"},
+  "30be4fd0-8136-80d3-a482-cdec73bcd2ba": {forecast_ac:45,forecast_cac:3,slack_notes:["think it looks good tbh"],slack_matched:"Emily Backhouse - Post 1 - 26/02 - Startling Stats",slack_confidence:"high"},
+  "30ae4fd0-8136-80a6-b69f-f5e69888d891": {forecast_ac:102,forecast_cac:5,slack_notes:["This this is more or less the brief? What a lovely picture, jeez", "Makes me yearn for the farm", "comic sans :hocho::hocho::hocho::hocho:", "but nice copy"],slack_matched:"Laura Emmerson - Post 2 - Home Bargain First - Feb 26th",slack_confidence:"high"},
+  "305e4fd0-8136-8092-b0d3-d7bfe99dcc0a": {forecast_ac:71,forecast_cac:5,slack_notes:["This is interesting, basically a finance influencer", "@someone recognize we didn't write a lot of it down but did we have a preferred message for finance people?", "Think we need to amp up sentences 1 and 2 either way:  \"If you aren't checking your bills before they renew, you're overspending on them.  Luckily there's a website called Nous that can save you so much money\"", "its kinda weird that it starts off sounding like she hasn't used it, and then quitely mentions we've saved her hundreds", "her account is literally all about deals so i wonder if we lean into that a bit more", "she's finding some amazing deals (unironically)"],slack_matched:"Chloe's Deal Club - Post 1 - No experiment - *Today!*",slack_confidence:"high"},
+  "2ffe4fd0-8136-80ca-83ff-f77e5f993545": {forecast_ac:105,forecast_cac:3,slack_notes:["Love this post", "lololol this haul is sickening", "but yeah like it! assume button below the text"],slack_matched:"Jade Darlington - Post 2 - Secret First - Feb 26th",slack_confidence:"high"},
+  "2fee4fd0-8136-80a8-8941-fc598b227d91": {forecast_ac:15,forecast_cac:16,slack_notes:["Think the copy here is very good, just needs to pop the button at the bottom"],slack_matched:"Georgie Elizabeth - Hate wasting money - Post 2 - *Feb 26th today*",slack_confidence:"high"},
+  "2fee4fd0-8136-80a4-8b27-f899c4f72ddd": {forecast_ac:22,forecast_cac:30,slack_notes:["Feel like she's done girl maths here", "Yeah definitely has", "Can just swap the experiment tags and run it I think", "\"I had been ostriching for a while\" what?", "oh: <https://en.wikipedia.org/wiki/Ostrich_effect>", "also those are Os not zeroes in \"£3OO\", right?"],slack_matched:"Isabelle Handley Allen - Post 1 - Fashion Secret First - Feb 26th *today* ",slack_confidence:"high"},
+  "2f8e4fd0-8136-80e3-bcfd-d04b62a4cd2c": {forecast_ac:165,forecast_cac:6,slack_notes:["10/10 from me"],slack_matched:"Alysha Devon - Post 2 - Startling Stats - Thursday 26th",slack_confidence:"high"},
+  "30de4fd0-8136-8079-855b-d38ac8f07185": {forecast_ac:100,forecast_cac:5,slack_notes:["move the button to the end", "\"so we spent 5 minutes using Nous – and they showed us so many areas we could save money!\"", "@someone was that one of the screenshots you added to the brief? or has she actually signed up ha", "Replying about this now"],slack_matched:"Emily Jackman - Post 1 - Friday 27th - No experiment",slack_confidence:"high"},
+  "30be4fd0-8136-8071-89c7-dbbdd9f2e955": {forecast_ac:44,forecast_cac:5,slack_notes:["Which hook is this meant to be?", "it's kinda mystery plus girl maths", "I quite like it but it doesn't fir in the experiment currently", "Sorry @someone it's Girl maths!", "Tbh I like it and we have so many posts booked for the experiment!  I'd leave it as it is but remove it from the experiment"],slack_matched:"Sophie Collis - Girls Maths - Post 1 - 25th Feb",slack_confidence:"high"},
+  "30ae4fd0-8136-8074-87a7-da9ecae9de53": {forecast_ac:57,forecast_cac:5,slack_notes:["Feels like she's trying not to lie, but I don't think the third par makes sense as is.  we were overpaying &gt;&gt; they've sorted it &gt;&gt; but they haven't switched us yet  doesn't really work imo", "could she do something like  Luckily they've sorted it all for me! They're switching us over to better deals and we're going to save hundreds of pounds overall with no effort. Hooray!", "@someone push back on this", "So maybe as is @someone? Maybe my current expensive contracts are done?"],slack_matched:"Emma C (brummy mummy) - Startling stats - Post 7 - tomorrow (25th)",slack_confidence:"high"},
+  "30ae4fd0-8136-8097-90de-f8a2ce9ad7c3": {forecast_ac:43,forecast_cac:4,slack_notes:["think good to go"],slack_matched:"Abigail Stacey - Post 2 for Mar 11  also a copy paste of the brief!",slack_confidence:"high"},
+  "30ae4fd0-8136-80b2-a73f-d679e70adbc2": {forecast_ac:54,forecast_cac:5,slack_notes:["<https://getnous.slack.com/archives/C0A9VNNMTU7/p1771860611104589>", "used our amends word for word, nice"],slack_matched:"Sophia Nikolaides - Post 2 - amends",slack_confidence:"high"},
+  "303e4fd0-8136-8089-bd33-cd3adbd9bcea": {forecast_ac:115,forecast_cac:6,slack_notes:["GIRLS I have to share what I signed up to last week whilst I was away! ITS SO GOOD. I had unknowingly been paying too much for a few of my bills :upside_down_face: So I signed up to get_nous and they checked everything for me (energy, broadband, mobile) and switched me to better deals!! I'm already saving hundreds and it took 2 minutes to sign up.  Why did no one tell me that it's so easy to get way cheaper bills?? If you're lazy like me it's genuinely one of the easiest money wins I've ever had :money_with_wings: If you've never checked your bills either make sure you do!", "*Amends- today - today*", "Looks good to me? @someone @someone @someone", "yeye looks good - process wise do we need a 2nd person to approve the 2nd amends?", "in most cases are they fine?"],slack_matched:"Amanda Raine - Post 1 - Family - No experiment",slack_confidence:"high"},
+  "309e4fd0-8136-801b-af23-eaac827b12fd": {forecast_ac:78,forecast_cac:5,slack_notes:["this feels a little bit lost", "it's confusing to me because it just screams an ad for neom :joy:", "\"I don't normally let myself have a splurge as we still have so much of the house to finish but I've had a little windfall in the form of get_nous. A simple check on Nous showed I'd been overpaying on my bills for months, so they got right to work finding me better deals and switching me over and I saved hundreds. So girl math means that my beauty haul is pretty much free right?\"", "Amended! Katie woods", "like this a lot !"],slack_matched:"Katie Woods - Girth Maths - Post 1 - Tuesday *tomorrow -* :large_orange_circle: Waiting for amends",slack_confidence:"high"},
+  "309e4fd0-8136-80f3-a755-f9efd6ba1034": {forecast_ac:131,forecast_cac:6,slack_notes:[],slack_matched:"Jen Rothbury - Post 2 for 10 Mar - Must Have First experiment",slack_confidence:"high"},
+  "309e4fd0-8136-8019-adc2-dbf1f6b34226": {forecast_ac:65,forecast_cac:3,slack_notes:["Looks like brief paste!", "(complimentary)", "smashing that cntrl c, happy with that!"],slack_matched:"Stephanie Larbey - Startling Stats - Post 1 - Posting Today!",slack_confidence:"high"},
+  "309e4fd0-8136-80dd-855b-c91ff3f4113d": {forecast_ac:117,forecast_cac:6,slack_notes:["Think good, just need to cut the references to Nous", "agree, apart from the Nous ref it's good!", "Hmm, hasn't removed the Nous reference", "needs to take out 'with get_nous'"],slack_matched:"Meg Brackpool - Post 2 for 10 Mar - Secret",slack_confidence:"high"},
+  "309e4fd0-8136-803f-a5a3-f0a63c268766": {forecast_ac:51,forecast_cac:4,slack_notes:["think we just need to ask to move the \"ad\" tag to below the button"],slack_matched:"Sophie Hawkins - No Experiment - Post 3 - *Today*",slack_confidence:"high"},
+  "309e4fd0-8136-801c-8ad5-e5f5d6ce355d": {forecast_ac:85,forecast_cac:5,slack_notes:["Think the 'must-have' element should be the hook. So becomes  I've found the easiest tool that does all the hard work of saving money for you!  It's called @get_nous, and they worked out we were overpaying on our energy, mobile and broadband by £649, I was so shocked to see how much it was!  And get what? Nous handles all the hassle of switching suppliers!  It's so easy and I did nothing!  Save money, time and stress here!", "@someone lmk what you think and I'll go back asap", "Agreed - I think actually the other hook is better but... we're running an experiment!"],slack_matched:"Jennifer Mccready - Post 1 - Home must have first - *posting today!!*",slack_confidence:"high"},
+  "2fee4fd0-8136-8040-9b89-dd3395aa6e27": {forecast_ac:44,forecast_cac:5,slack_notes:["absolutely bizarre photo, I love it", "She's completely ignored the brief", "Needs a rewrite:  I found out something quite shocking about bills – if you haven’t changed your energy recently, you’re probably overpaying by more than £250 a year! :exploding_head: :sob:  And one thing about me is I'll moan about my electric bill, but have every possible form of light on for comfort :melting-face:  So @get_nous has been a saving grace!!\"  and then the rest", "Needs to actually make the \":melting-face\" into the emoji!", "real amend!", "\"shocking\" runs right into the light in an unpleasant way but probably not a real problem"],slack_matched:"Mia Rose - Post 5 - Startling Stats - posting tomorrow 24th",slack_confidence:"high"},
+  "2fce4fd0-8136-8038-a5e1-fa4985fcec95": {forecast_ac:39,forecast_cac:16,slack_notes:["Did the brief, no tweaks!", "@someone worth going back over WA?", "wonder where she is going to put the link?", "i've said copy looks great, can she move text higher so there is space for a button at the bottom", "Please also apologize for my comment on the baby", "FYI Talia is changing the image, but the text looks the same"],slack_matched:"Talia Oatway - Celebrity hate waste - post 2 - *today!!!!!!*",slack_confidence:"high"},
+  "2f1e4fd0-8136-8005-a84d-c939595f750c": {forecast_ac:22,forecast_cac:8,slack_notes:["think we just need to ask to move the \"ad\" tag to below the button"],slack_matched:"Sophie Hawkins - No Experiment - Post 3 - *Today*",slack_confidence:"high"},
+  "309e4fd0-8136-80a9-bc36-c281620228e4": {forecast_ac:71,forecast_cac:5,slack_notes:["more space for nappies?", "I like the first 2 sentences, think the third can be tighter", "Anyone else in shock over the price of bills right now? Ours have almost doubled in the time we've lived here! I did some digging to see if we could save and stumbled across Nous. They look at your bills and switch you over, and we've already saved £100s without lifting a finger :clap: I was overpaying so much, but now we have more to spend on family days out etc!", "Cool - and reformat so button is at bottom presumably?"],slack_matched:"Kirsty Jones - Post 1 for 23 Feb - no experiment",slack_confidence:"high"},
+  "309e4fd0-8136-8045-895b-e1de2a750af9": {forecast_ac:84,forecast_cac:4,slack_notes:[],slack_matched:"Chloe Lewis - Post 2 - April 3rd - Girl Maths",slack_confidence:"high"},
+  "309e4fd0-8136-80c7-bb4c-e4095c292388": {forecast_ac:166,forecast_cac:3,slack_notes:["same as before would just change the button to something more convincing, mebbe  See what you could save!"],slack_matched:"Lauren Causer - Post 2 - March 8 - Bargain",slack_confidence:"high"},
+  "2f8e4fd0-8136-80cd-9f63-c8473a4bae94": {forecast_ac:126,forecast_cac:9,slack_notes:["I'd just add a quite line in the last par that we're saving her money -  \"They showed me how much I was overpaying and sorted better deals straight away, I'm already saving so much!\" Just sign up and answer a few quick questions it's super easy - thank me later :clap::skin-tone-2::clap::skin-tone-2::clap::skin-tone-2:\"", "Like the overall confessional tone :two_hearts:", "I think the second paragraph is a bit clunky (in an effort to reference having already posted about this) - could amend to:  \"Stupidly I've never thought to check if there were better deals until I looked the other day and realized I could save nearly £1000!!!\"  What do you think @someone?", "yep like that", "better flow", "she was the mystery post, so vvvvvvv intrigued how this one will do"],slack_matched:"Emily Lucy Rajch - Frame 1 - 6th Feb",slack_confidence:"high"},
+  "2ede4fd0-8136-806d-8d0f-e256d5d72606": {forecast_ac:26,forecast_cac:19,slack_notes:["add \"on my bills\" after \"HUNDREDS\" in para 2", "U-turns all over the place", "Think a whole rewrite", "Rewrite to :  \"Everyone keeps saying how impossible it is to save ANY money these days :sob:  BUT I have saved hundreds on my bills the last few months :money_mouth_face::money_mouth_face:  @get_nous has been amazing for me. They found savings on my bills I didn’t even know were possible and now they handle everything.  It's so good that I don’t need to think about bills anymore, I’m just saving money in the background.  Definitely one of those services where once you try it, you end up telling everyone else about it too\"", "BUT I've found a new tool that has saved me hundreds on my bills the last few months...", "Daisy Richmond Amends posting today :rotating_light:"],slack_matched:"Daisy Richmond - Post 3 for today - no experiment",slack_confidence:"high"},
+  "306e4fd0-8136-801a-822f-e42033e8ec0e": {forecast_ac:71,forecast_cac:4,slack_notes:["Basically impossible to read", "is this her usual font?", "i don't understand why anyone would pick that font", "The copy looks OK from what I can make out but crucial thing is for the text to be a bit darker", "not sure about 'better deals on your outgoings' - change to 'better deals on your household bills'?"],slack_matched:"Katie Fearnehough - post 1 - no experiment",slack_confidence:"high"},
+  "306e4fd0-8136-80fb-bfb4-d2be6857a827": {forecast_ac:72,forecast_cac:6,slack_notes:["• Move ad button Maybe 'I know I know it sounds boring but so much better than sitting on hold for 3 hours'  'save almost £800 already!'  cut the literally took para", "Yeah think it can shuffle around a bit", "I've finally taken a bit of time to adult &amp; did a bit of life admin.  I know I know sounds boring but I found a way to save almost £800 on my bills!  Literally took 5 mins to sort on my phone, I didn't realise how much I was overpaying!  I'll pop the link here so you can all check it out"],slack_matched:"Cheralyn post 2, mystery",slack_confidence:"high"},
+  "306e4fd0-8136-80c5-b638-d9796f8342aa": {forecast_ac:57,forecast_cac:5,slack_notes:["I bet we could trim the brief so we hit problem awareness in the first sentence", "I would cut the last paragraph but otherwise looks good", "Oh i quite like the last par I think it's more chatty", "maybe move above the button?", "yeh move the button to the bottom to make it more obv", "what do you think of adult life chat?"],slack_matched:"Yasmin Lauren, family, post 1 no experiment",slack_confidence:"high"},
+  "304e4fd0-8136-8040-b69b-d22932f743a9": {forecast_ac:48,forecast_cac:5,slack_notes:["I think this looks good, wish the button was on the right though", "What do you think @someone?", "Yeah nice agree again"],slack_matched:"Tori Gaynor - Fashion (girls maths)  - post 2 - feb 5th",slack_confidence:"high"},
+  "305e4fd0-8136-8020-ac59-f40e49a27b5a": {forecast_ac:289,forecast_cac:4,slack_notes:["lols the line about her bf leaving her", "it's quite wordy", "I knew our bills had gone up recently, but I just assumed things were more expensive now :woman-shrugging:  Andy deals with all the bills (should probably learn how to do this stuff incase he leaves :rolling_on_the_floor_laughing:) and he occasionally checks if we can get better deals for Sky, gas etc...  But after hearing a few people rave about get_nous we thought we'd sign up to see if we could save anything.  Turns out we'd been really overpaying on a few things, so they found us better deals and switched us over. I've saved hundreds and me (and Andy lol) haven't had to do a thing!  Annoyed at myself for not checking before!! If you haven't checked your bills in ages, this is your sign :eyes:", "damn, maybe ask if she can tweak but point out we have kept in lots of her additional lines!?", "then put the button at the bottom?"],slack_matched:"Scarlett Hannah B - No Experiment - post 1 - 5th march",slack_confidence:"high"},
+  "303e4fd0-8136-808b-8101-db535e50a372": {forecast_ac:59,forecast_cac:5,slack_notes:["this is mental i'm obsessed", "Yeah this is bonkers", "Think we keep the insane first paragraph tbh. But happy to be voted down. Should change the second paragraph to something like the brief:  \"But it turns out I’ve been paying way more than I need to on the bills for our home :exploding_head::house_with_garden: Thankfully I’ve found such a great little trick to save money and make all the house admin so much easier.  I’ve signed up to @get_nous and they checked all our bills (energy, broadband, phone), found better deals and switched me over – I’ve saved more than £500 I honestly didn’t have to do anything.\"  Then para three", "Like the edits. I wonder if we could end with more sauna for me!"],slack_matched:"And Joanna Fletcher Frame 3 for Mar 20th!",slack_confidence:"high"},
+  "2f7e4fd0-8136-80e7-8b1e-eb612a7e88a8": {forecast_ac:349,forecast_cac:2,slack_notes:["I think perfect _and_ I think we're going to miss forecast on this one because secret is better", "but who knows", "Yes looks good! Text might be a tiny bit hard to read but it looks good!"],slack_matched:"Ruby Holley 2nd post - for Thursday - Girl Maths experiment",slack_confidence:"high"},
+  "2fee4fd0-8136-807b-aeaf-f8a056f5b1cd": {forecast_ac:66,forecast_cac:4,slack_notes:[],slack_matched:"",slack_confidence:"none"},
+  "2ffe4fd0-8136-805e-9fb3-cbce97d5213d": {forecast_ac:57,forecast_cac:5,slack_notes:["I think this looks great!", "@someone on call!!", "Yes ditto looks good!"],slack_matched:"The Freckles - Post 1 - Monday - No experiment / family - w/amends",slack_confidence:"high"},
+  "2ffe4fd0-8136-80fe-9f97-efb59e414433": {forecast_ac:31,forecast_cac:5,slack_notes:["Looks like this is the original repeat campaign brief", "Just need to move the button down but think we need to change the experiment tag too", "Ah my bad, it's no experiment!", "Amend, think we're good to go here!"],slack_matched:"Katie Hayes - Post 5 - Startling No experiment - Feb 27th",slack_confidence:"high"},
+  "2fee4fd0-8136-8012-baa4-d4fbce150a3e": {forecast_ac:53,forecast_cac:6,slack_notes:["Are we tagging the experiment brief they were given or the specific message they're trying to hit?", "e.g. if they were given secret first here then this should be girl maths", "Sorry yes have been tagging the experiment so far. This is girl maths.", "damn she's secreting hard", "I mean it's good but it's mystery not girl maths", "Cool. Shall we leave it then?"],slack_matched:"Sarah Roberts - Fashion secret first - Feb 26th - Post 2",slack_confidence:"high"},
+  "2ffe4fd0-8136-80b8-88b3-e40bec4d11a2": {forecast_ac:400,forecast_cac:1,slack_notes:["Love this post", "lololol this haul is sickening", "but yeah like it! assume button below the text"],slack_matched:"Jade Darlington - Post 2 - Secret First - Feb 26th",slack_confidence:"high"},
+  "2fee4fd0-8136-80b8-9b99-f4eeb3fdc8d6": {forecast_ac:40,forecast_cac:6,slack_notes:["Think the copy here is very good, just needs to pop the button at the bottom"],slack_matched:"Georgie Elizabeth - Hate wasting money - Post 2 - *Feb 26th today*",slack_confidence:"high"},
+  "2fee4fd0-8136-80e3-a2e2-ca1618528cf4": {forecast_ac:137,forecast_cac:5,slack_notes:["Feel like she's done girl maths here", "Yeah definitely has", "Can just swap the experiment tags and run it I think", "\"I had been ostriching for a while\" what?", "oh: <https://en.wikipedia.org/wiki/Ostrich_effect>", "also those are Os not zeroes in \"£3OO\", right?"],slack_matched:"Isabelle Handley Allen - Post 1 - Fashion Secret First - Feb 26th *today* ",slack_confidence:"high"},
+  "2f8e4fd0-8136-800d-950f-e153b9488a8f": {forecast_ac:184,forecast_cac:5,slack_notes:["10/10 from me"],slack_matched:"Alysha Devon - Post 2 - Startling Stats - Thursday 26th",slack_confidence:"high"},
+  "2ede4fd0-8136-80f1-b920-c635cf44ad3e": {forecast_ac:100,forecast_cac:4,slack_notes:[],slack_matched:"Chloe Lewis - Post 2 - April 3rd - Girl Maths",slack_confidence:"high"},
+  "2e8e4fd0-8136-8075-a492-db6d56210d86": {forecast_ac:287,forecast_cac:2,slack_notes:["Just change \"sort out\" to \"save money and sort out\"", "The bottom half of this looks like a haiku", "I kinda think the key to mystery posts is high personal endorsement which we're missing here", "Like 'I did this and it's so good I had to share right now' vibes", "So I'd say:", "Fancy some extra money to spend on the fun stuff this summer (who doesn't!?) :tropical_drink: :sunny:  I found the best way to save money and sort out all your bills from your phone in a few minutes!  Check it out here"],slack_matched:"Rebecca Evans - post 2 - Mar 10 - Secret",slack_confidence:"high"},
+  "2efe4fd0-8136-805e-a6d6-c8150bc50380": {forecast_ac:265,forecast_cac:3,slack_notes:["think we just need to ask to move the \"ad\" tag to below the button"],slack_matched:"Sophie Hawkins - No Experiment - Post 3 - *Today*",slack_confidence:"high"},
+  "2f1e4fd0-8136-80f7-94b4-ea0cf1ee8fd9": {forecast_ac:87,forecast_cac:2,slack_notes:["think we just need to ask to move the \"ad\" tag to below the button"],slack_matched:"Sophie Hawkins - No Experiment - Post 3 - *Today*",slack_confidence:"high"},
+  "2f1e4fd0-8136-8018-af20-ed9f8e206ea4": {forecast_ac:18,forecast_cac:9,slack_notes:["• Cut \"so you all know\" in sentence 1 •  Cut \"did you know\" in sentence 2", "Amend!  From Meg - 'Conscious Lucy has another sponsored story AD [today] and keen to keep them 24 hours apart'. Do we want to post today or delay till tomorrow?  I think we should push for today.", "I'd prefer to run tomorrow, as long as we have it approved there isn't any extra effort for us", "Like the amend!", "Do you think the other AD being first will hamper our chances?", "If she posts the other AD at 6pm say."],slack_matched:"Lucy Hall - Post 3 - No experiment - Posting 24th feb",slack_confidence:"high"},
+  "2f8e4fd0-8136-8078-a16b-d024a55bd19f": {forecast_ac:352,forecast_cac:3,slack_notes:["I'd just add a quite line in the last par that we're saving her money -  \"They showed me how much I was overpaying and sorted better deals straight away, I'm already saving so much!\" Just sign up and answer a few quick questions it's super easy - thank me later :clap::skin-tone-2::clap::skin-tone-2::clap::skin-tone-2:\"", "Like the overall confessional tone :two_hearts:", "I think the second paragraph is a bit clunky (in an effort to reference having already posted about this) - could amend to:  \"Stupidly I've never thought to check if there were better deals until I looked the other day and realized I could save nearly £1000!!!\"  What do you think @someone?", "yep like that", "better flow", "she was the mystery post, so vvvvvvv intrigued how this one will do"],slack_matched:"Emily Lucy Rajch - Frame 1 - 6th Feb",slack_confidence:"high"},
+  "2cae4fd0-8136-8093-8bea-f1cb1f93bb66": {forecast_ac:72,forecast_cac:7,slack_notes:["honestly don't understand this at all! I'd just ask to remove the screensaver line", "yeh, i've basically rewritten", "such an odd intro hhaha"],slack_matched:"Eden, no experiment, today - what's with all the ambience messaging???",slack_confidence:"low"}
+};
+
+// ── META: beat-forecast posts ─────────────────────────────────────────────────
+const beatForecastPosts = posts.filter(p => {
+  const ex = postExtras[p.id] || {};
+  return ex.forecast_ac != null && p.performance.accounts_created >= ex.forecast_ac;
+});
+const strongEcacPosts = posts.filter(p => p.performance.ecac != null && p.performance.ecac < 70);
+
+// Use beat-forecast for meta (larger group)
+const metaPosts = beatForecastPosts.length >= 5 ? beatForecastPosts : posts;
 const metaRates = {};
 const metaLabels = posts[0].brief_compliance.map(c => c.label);
 metaLabels.forEach(label => {
-  const passing = posts.filter(p =>
+  const passing = metaPosts.filter(p =>
     p.brief_compliance.find(c => c.label === label && c.pass)
   ).length;
-  metaRates[label] = { passing, total: posts.length, pct: Math.round(passing / posts.length * 100) };
+  metaRates[label] = { passing, total: metaPosts.length, pct: Math.round(passing / metaPosts.length * 100) };
 });
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+let currentIdx = 0;
+function prevPost() { if (currentIdx > 0) renderPost(currentIdx - 1); }
+function nextPost() { if (currentIdx < posts.length - 1) renderPost(currentIdx + 1); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') prevPost();
+  if (e.key === 'ArrowRight') nextPost();
+});
+
+function updateArrowNav(idx) {
+  currentIdx = idx;
+  const total = posts.length;
+  const p = posts[idx];
+  document.getElementById('arrow-name').textContent = p.name + ' — Post ' + p.post_sequence;
+  document.getElementById('arrow-counter').textContent = (idx + 1) + ' / ' + total;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === total - 1;
+  document.getElementById('header-count').textContent = (idx + 1) + ' / ' + total + ' posts';
+}
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function eCAcRating(ecac) {
@@ -2890,33 +2999,32 @@ function eCAcRating(ecac) {
 function showPage(page) {
   document.getElementById('posts-view').style.display = page === 'posts' ? '' : 'none';
   document.getElementById('meta-view').style.display  = page === 'meta'  ? '' : 'none';
-  document.getElementById('post-nav').style.display   = page === 'posts' ? '' : 'none';
-  document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
+    document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
   document.getElementById('tab-meta').classList.toggle('active',  page === 'meta');
-}
-
-// ── RENDER TABS ───────────────────────────────────────────────────────────────
-function renderTabs(activeIdx) {
-  document.getElementById('post-nav').innerHTML = posts.map((p, i) => `
-    <div class="post-tab ${i === activeIdx ? 'active' : ''}" onclick="renderPost(${i})">
-      ${p.name} <span style="opacity:.5">P${p.post_sequence}</span>
-      <span class="ac-pill">${p.performance.accounts_created != null ? p.performance.accounts_created + ' AC' : '—'}</span>
-    </div>`).join('');
-  document.getElementById('header-count').textContent =
-    `${posts.length} posts · Feb 2026`;
-  // Scroll active tab into view
-  const active = document.querySelector('.post-tab.active');
-  if (active) active.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 
 // ── RENDER POST ───────────────────────────────────────────────────────────────
 function renderPost(idx) {
-  renderTabs(idx);
+  updateArrowNav(idx);
   const p    = posts[idx];
+  const ex   = postExtras[p.id] || {};
   const perf = p.performance;
   const rat  = eCAcRating(perf.ecac);
   const passCount  = p.brief_compliance.filter(c => c.pass).length;
   const totalCount = p.brief_compliance.length;
+
+  // Strong post?
+  const isStrong = perf.ecac != null && perf.ecac < 70;
+  const strongBadge = isStrong ? '<span class="strong-badge">★ Strong Post · eCAC &lt;£70</span>' : '';
+
+  // Beat forecast?
+  const fac = ex.forecast_ac;
+  const fcac = ex.forecast_cac;
+  const acHit = fac != null && perf.accounts_created != null
+    ? Math.round(perf.accounts_created / fac * 100) : null;
+  const beatForecast = acHit != null && acHit >= 100;
+  const hitClass = beatForecast ? 'over' : 'under';
+  const hitStr = acHit != null ? acHit + '%' : '—';
 
   // Campaign timeline HTML
   let timelineHtml = '';
@@ -2942,39 +3050,46 @@ function renderPost(idx) {
   }
 
   // Performance stats
-  const acVal  = perf.accounts_created != null ? perf.accounts_created : '—';
+  const acVal   = perf.accounts_created != null ? perf.accounts_created : '—';
+  const facVal  = fac != null ? fac : '—';
   const ecacVal = perf.ecac != null ? `£${perf.ecac}` : '—';
-  const delVal = perf.delegations != null ? perf.delegations : '—';
-  const lpvVal = perf.landing_page_views != null ? perf.landing_page_views : '—';
-  const feeVal = perf.post_fee != null ? `£${perf.post_fee}` : '—';
-  const acPctStr = (perf.accounts_created != null && perf.landing_page_views)
-    ? `${Math.round(perf.accounts_created / perf.landing_page_views * 100)}% → AC`
-    : '—';
+  const fcacVal = fcac != null ? `£${fcac}` : '—';
+  const delVal  = perf.delegations != null ? perf.delegations : '—';
+  const lpvVal  = perf.landing_page_views != null ? perf.landing_page_views : '—';
+  const feeVal  = perf.post_fee != null ? `£${perf.post_fee}` : '—';
 
   // Meta comparison HTML
   const metaRows = p.brief_compliance.map(c => {
-    const rate = metaRates[c.label] || { passing: 0, total: posts.length, pct: 0 };
+    const rate = metaRates[c.label] || { pct: 0 };
     const thisClass = c.pass ? 'this-pass' : 'this-fail';
     const thisSymbol = c.pass ? '✓' : '✗';
     return `<div class="dash-meta-dim ${thisClass}">
       <span class="dash-meta-this">${thisSymbol}</span>
       <span class="dash-meta-label">${c.label}</span>
-      <span class="dash-meta-pct">${rate.pct}% of all</span>
+      <span class="dash-meta-pct">${rate.pct}% of best</span>
     </div>`;
   }).join('');
 
-  // Brief compliance mini checks
   const checkHtml = p.brief_compliance.map(c => `
     <div class="dash-mini-check ${c.pass ? 'pass' : 'fail'}">
       <span style="flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
     </div>`).join('');
 
-  // Review comments
-  const commentsHtml = p.review_comments.map(c => `
-    <div class="review-comment">
-      "${c.text}"
-      <div class="review-meta">${c.author} · ${c.source}</div>
-    </div>`).join('');
+  // Review comments: prefer Slack notes, fallback to Notion comments
+  let commentsHtml = '';
+  const slackNotes = ex.slack_notes || [];
+  if (slackNotes.length > 0) {
+    const matchedLine = ex.slack_matched ? `<div class="review-meta">Matched thread: "${ex.slack_matched.slice(0,80)}..."</div>` : '';
+    commentsHtml = slackNotes.map(n => `
+      <div class="review-comment">"${n}"
+        <div class="review-meta">Slack · #approving-content</div>
+      </div>`).join('') + matchedLine;
+  } else {
+    commentsHtml = p.review_comments.map(c => `
+      <div class="review-comment">"${c.text}"
+        <div class="review-meta">${c.author} · ${c.source}</div>
+      </div>`).join('');
+  }
 
   // Review reflection
   const goodHtml = p.review_reflection.good.map(t => `
@@ -3000,8 +3115,11 @@ function renderPost(idx) {
 
       <!-- TITLE -->
       <div class="card"><div class="card-body">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
-          <div class="post-name">${p.name} — Post ${p.post_sequence}</div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div>
+            <div class="post-name">${p.name} — Post ${p.post_sequence}</div>
+            ${isStrong ? `<div style="margin-top:6px">${strongBadge}</div>` : ''}
+          </div>
           ${p.instagram_url ? `<a href="${p.instagram_url}" target="_blank" class="ig-link">📷 ${p.instagram_handle || 'Instagram'}</a>` : ''}
         </div>
         <div class="post-tags" style="margin-top:8px">
@@ -3022,24 +3140,29 @@ function renderPost(idx) {
           <div class="dash-body">
             <div class="dash-kpi-pair">
               <div class="dash-kpi">
-                <div class="dash-kpi-val">${acVal}</div>
+                <div class="dash-kpi-val ${beatForecast ? 'green' : ''}">${acVal}</div>
                 <div class="dash-kpi-meta">
                   <span class="dash-kpi-label">Accounts Created</span>
+                  <span class="dash-kpi-sub">Forecast: ${facVal}</span>
                 </div>
+              </div>
+              <div class="forecast-row">
+                <span style="color:var(--muted)">vs forecast</span>
+                <span class="forecast-hit ${hitClass}">${hitStr} of target</span>
               </div>
               <hr class="dash-divider">
               <div class="dash-ecac">
                 <span class="dash-ecac-emoji">${rat.emoji}</span>
                 <div>
-                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal}</div>
-                  <div style="font-size:10px;color:var(--muted);margin-top:2px">implied eCAC · ${feeVal} post fee</div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal} eCAC</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">Forecast CAC: ${fcacVal} · Fee: ${feeVal}</div>
                 </div>
               </div>
               <hr class="dash-divider">
               <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
                 <span>${delVal} del.</span>
                 <span>${lpvVal} LPVs</span>
-                <span>${acPctStr}</span>
+                <span>${perf.post_fee != null && perf.accounts_created ? '£'+Math.round(perf.post_fee/perf.accounts_created)+'/AC' : '—'}</span>
               </div>
             </div>
           </div>
@@ -3060,7 +3183,8 @@ function renderPost(idx) {
         <!-- vs. The Meta -->
         <div class="dash-card">
           <div class="dash-head">
-            vs. The Meta
+            vs. Best Posts
+            <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(${metaPosts.length} beat forecast)</span>
           </div>
           <div class="dash-body">
             <div class="dash-meta-dims">${metaRows}</div>
@@ -3080,8 +3204,7 @@ function renderPost(idx) {
         <div class="card-head">Did we review it correctly?</div>
         <div class="card-body">
           <div class="reflection-rows">
-            ${goodHtml}
-            ${missedHtml}
+            ${goodHtml || missedHtml ? goodHtml + missedHtml : '<div class="reflection-row pending"><span>?</span><div>No reflection recorded yet.</div></div>'}
           </div>
         </div>
       </div>
