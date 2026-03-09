@@ -5160,8 +5160,12 @@ function postEcac(perf) {
   return null;
 }
 
-// Only past posts in navigation
-const displayPosts = posts.filter(p => parseIsoDate(p.date) <= TODAY_STR);
+// Only past posts with computable eCAC (delegations > 0 and post_fee > 0)
+const displayPosts = posts.filter(p => {
+  if (parseIsoDate(p.date) > TODAY_STR) return false;
+  const perf = p.performance;
+  return perf.delegations && perf.delegations > 0 && perf.post_fee && perf.post_fee > 0;
+});
 
 // Unique month keys, most recent first (preserving array order)
 const allMonthKeys = [];
@@ -5219,7 +5223,7 @@ function updateArrowNav(idx) {
   const mp = getMonthPosts();
   const p = mp[idx];
   document.getElementById('arrow-name').textContent = p.name + ' — Post ' + p.post_sequence;
-  document.getElementById('arrow-counter').textContent = (idx + 1) + ' / ' + mp.length + ' in ' + selectedMonthKey;
+  document.getElementById('arrow-counter').textContent = 'Post ' + (idx + 1) + ' of ' + mp.length + ' · ' + selectedMonthKey;
   document.getElementById('btn-prev').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === mp.length - 1;
   document.getElementById('header-count').textContent = displayPosts.length + ' posts';
@@ -5571,15 +5575,14 @@ function renderPost(idx) {
               <div class="dash-ecac">
                 <span class="dash-ecac-emoji">${rat.emoji}</span>
                 <div>
-                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal} eCAC</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px">from delegations · Forecast CAC: ${fcacVal} · Fee: ${feeVal}</div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal} implied eCAC</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">from ${delVal} delegations · Forecast CAC: ${fcacVal}</div>
                 </div>
               </div>
               <hr class="dash-divider">
               <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
-                <span>${delVal} del.</span>
-                <span>${lpvVal} LPVs</span>
-                <span>${perf.post_fee && perf.accounts_created ? '£'+Math.round(perf.post_fee/perf.accounts_created)+'/AC' : '—'}</span>
+                <span>${acVal} AC created</span>
+                <span>${lpvVal ? lpvVal+' LPVs' : ''}</span>
               </div>
             </div>
           </div>
