@@ -163,6 +163,21 @@
     .forecast-hit { font-weight: 700; font-size: 12px; }
     .forecast-hit.over { color: var(--green); }
     .forecast-hit.under { color: var(--amber); }
+    /* MONTH PILLS */
+    .month-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; align-items: center; gap: 8px; height: 44px; overflow-x: auto; scrollbar-width: none; }
+    .month-nav::-webkit-scrollbar { display: none; }
+    .month-pill { background: none; border: 1px solid var(--border); border-radius: 99px; padding: 4px 13px; font-size: 12px; cursor: pointer; color: var(--muted); display: flex; align-items: center; gap: 5px; transition: all .15s; white-space: nowrap; flex-shrink: 0; }
+    .month-pill:hover { color: var(--text); border-color: var(--text); }
+    .month-pill.active { background: var(--nous); border-color: var(--nous); color: #fff; font-weight: 600; }
+    .month-pill-count { font-size: 10px; opacity: .75; }
+    /* META STATS */
+    .meta-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .meta-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .meta-stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .meta-stat-val { font-size: 30px; font-weight: 900; letter-spacing: -.03em; line-height: 1; }
+    .meta-stat-label { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    /* REVIEW SECTION */
+    .review-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
   </style>
 </head>
 <body>
@@ -179,6 +194,8 @@
   <div class="header-right" id="header-count"></div>
 </header>
 
+<div class="month-nav" id="month-nav"></div>
+
 <nav class="arrow-nav" id="arrow-nav">
   <button class="arrow-btn" id="btn-prev" onclick="prevPost()">← Prev</button>
   <div class="arrow-center">
@@ -192,20 +209,8 @@
   <div class="main" id="main-content"></div>
 </div>
 
-<div id="meta-view" style="display:none; padding: 24px 28px;">
-  <div class="meta-placeholder">
-    <div class="coming" id="meta-count">98 posts analysed</div>
-    <h2>Meta Analysis</h2>
-    <p>Cross-post patterns — what hooks, formats, visuals, and brief elements consistently drive low eCAC and high account creation. Split by niche, post sequence, and experiment type.</p>
-  </div>
-  <div class="meta-sections">
-    <div class="meta-section-card"><div class="meta-icon">📝</div><h3>Text patterns</h3><p>Which hooks, framings, and £ figures correlate with the best-performing posts? Does post length matter?</p></div>
-    <div class="meta-section-card"><div class="meta-icon">🖼️</div><h3>Visual patterns</h3><p>Do posts with product screenshots outperform those without? Does background type affect conversion?</p></div>
-    <div class="meta-section-card"><div class="meta-icon">🎯</div><h3>Brief compliance</h3><p>Which brief elements are most predictive of low eCAC? Are some elements correlated with over-forecasting?</p></div>
-    <div class="meta-section-card"><div class="meta-icon">📊</div><h3>Post sequence</h3><p>Does Post 1 always outperform Post 2 and 3? What's the typical drop-off, and does content affect it?</p></div>
-    <div class="meta-section-card"><div class="meta-icon">🧪</div><h3>Experiment results</h3><p>How do Girl Maths, Secret, Startling Stats, Must Have, and Bargain compare on actual accounts created?</p></div>
-    <div class="meta-section-card"><div class="meta-icon">🏆</div><h3>The meta post</h3><p>What does the ideal post look like for each niche and post sequence? A synthesis of the best elements.</p></div>
-  </div>
+<div id="meta-view" style="display:none; padding: 24px 28px; max-width: 1280px; margin: 0 auto;">
+  <div id="meta-content"></div>
 </div>
 
 <script>
@@ -3253,28 +3258,79 @@ const postExtras = {
   "2b7e4fd0-8136-806c-b3ae-e702027014a6": {forecast_ac:59,forecast_cac:63.4,slack_notes:[],slack_matched:"",slack_confidence:""}
 };
 
-// ── META: beat-forecast posts ─────────────────────────────────────────────────
-const beatForecastPosts = posts.filter(p => {
-  const ex = postExtras[p.id] || {};
-  return ex.forecast_ac != null && p.performance.accounts_created >= ex.forecast_ac;
-});
-const strongEcacPosts = posts.filter(p => p.performance.ecac != null && p.performance.ecac < 70);
+// ── DATA PREP ─────────────────────────────────────────────────────────────────
+const TODAY_STR = '2026-03-05';
+const MONTH_ORDER = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
 
-// Use beat-forecast for meta (larger group)
-const metaPosts = beatForecastPosts.length >= 5 ? beatForecastPosts : posts;
-const metaRates = {};
-const metaLabels = posts[0].brief_compliance.map(c => c.label);
-metaLabels.forEach(label => {
-  const passing = metaPosts.filter(p =>
-    p.brief_compliance.find(c => c.label === label && c.pass)
-  ).length;
-  metaRates[label] = { passing, total: metaPosts.length, pct: Math.round(passing / metaPosts.length * 100) };
+function parseIsoDate(dateStr) {
+  // "19 Mar 2026" → "2026-03-19"
+  const mn = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  const parts = dateStr.trim().split(/\s+/);
+  if (parts.length < 3) return '';
+  return parts[2] + '-' + (mn[parts[1]] || '01') + '-' + parts[0].padStart(2,'0');
+}
+
+function getMonthKey(p) {
+  const parts = p.date.trim().split(/\s+/);
+  return parts.length >= 3 ? parts[1] + ' ' + parts[2] : p.date;
+}
+
+// eCAC from delegations only
+function postEcac(perf) {
+  if (perf.post_fee && perf.delegations && perf.delegations > 0)
+    return Math.round(perf.post_fee / perf.delegations);
+  return null;
+}
+
+// Only past posts in navigation
+const displayPosts = posts.filter(p => parseIsoDate(p.date) <= TODAY_STR);
+
+// Unique month keys, most recent first (preserving array order)
+const allMonthKeys = [];
+displayPosts.forEach(p => {
+  const mk = getMonthKey(p);
+  if (!allMonthKeys.includes(mk)) allMonthKeys.push(mk);
 });
+
+// ── META DATA ─────────────────────────────────────────────────────────────────
+function computeBcRates(group) {
+  const rates = {};
+  if (!group.length) return rates;
+  posts[0].brief_compliance.map(c => c.label).forEach(label => {
+    const passing = group.filter(p => p.brief_compliance.find(c => c.label === label && c.pass)).length;
+    rates[label] = { passing, total: group.length, pct: Math.round(passing / group.length * 100) };
+  });
+  return rates;
+}
+
+const beatForecastPosts = displayPosts.filter(p => {
+  const ex = postExtras[p.id] || {};
+  return ex.forecast_ac != null && p.performance.accounts_created != null && p.performance.accounts_created >= ex.forecast_ac;
+});
+const metaPosts = beatForecastPosts.length >= 5 ? beatForecastPosts : displayPosts;
+const metaRates = computeBcRates(metaPosts);
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let selectedMonthKey = allMonthKeys[0] || '';
+let currentIdx = 0;
+
+function getMonthPosts() {
+  return displayPosts.filter(p => getMonthKey(p) === selectedMonthKey);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function eCAcRating(ecac) {
+  if (ecac == null) return { emoji: '☠️', tier: 'No data',    cls: 'skull'  };
+  if (ecac > 200)   return { emoji: '☠️', tier: 'Over £200',  cls: 'skull'  };
+  if (ecac > 100)   return { emoji: '🔴', tier: '£101–£200',  cls: 'red'    };
+  if (ecac > 71)    return { emoji: '🟠', tier: '£72–£100',   cls: 'orange' };
+  if (ecac > 40)    return { emoji: '🟢', tier: '£41–£71',    cls: 'green'  };
+  return                   { emoji: '🤑', tier: 'Under £40',  cls: 'gold'   };
+}
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
-let currentIdx = 0;
 function prevPost() { if (currentIdx > 0) renderPost(currentIdx - 1); }
-function nextPost() { if (currentIdx < posts.length - 1) renderPost(currentIdx + 1); }
+function nextPost() { const mp = getMonthPosts(); if (currentIdx < mp.length - 1) renderPost(currentIdx + 1); }
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') prevPost();
   if (e.key === 'ArrowRight') nextPost();
@@ -3282,63 +3338,245 @@ document.addEventListener('keydown', e => {
 
 function updateArrowNav(idx) {
   currentIdx = idx;
-  const total = posts.length;
-  const p = posts[idx];
+  const mp = getMonthPosts();
+  const p = mp[idx];
   document.getElementById('arrow-name').textContent = p.name + ' — Post ' + p.post_sequence;
-  document.getElementById('arrow-counter').textContent = (idx + 1) + ' / ' + total;
+  document.getElementById('arrow-counter').textContent = (idx + 1) + ' / ' + mp.length + ' in ' + selectedMonthKey;
   document.getElementById('btn-prev').disabled = idx === 0;
-  document.getElementById('btn-next').disabled = idx === total - 1;
-  document.getElementById('header-count').textContent = (idx + 1) + ' / ' + total + ' posts';
+  document.getElementById('btn-next').disabled = idx === mp.length - 1;
+  document.getElementById('header-count').textContent = displayPosts.length + ' posts';
 }
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-function eCAcRating(ecac) {
-  if (ecac == null) return { emoji: '☠️', tier: 'No data', cls: 'skull' };
-  if (ecac > 200)   return { emoji: '☠️', tier: 'Over £200', cls: 'skull' };
-  if (ecac > 100)   return { emoji: '🔴', tier: '£101–£200', cls: 'red' };
-  if (ecac > 71)    return { emoji: '🟠', tier: '£72–£100',  cls: 'orange' };
-  if (ecac > 40)    return { emoji: '🟢', tier: '£41–£71',   cls: 'green' };
-  return              { emoji: '🤑', tier: 'Under £40',   cls: 'gold' };
+// ── MONTH PILLS ───────────────────────────────────────────────────────────────
+function renderMonthNav() {
+  const el = document.getElementById('month-nav');
+  if (!el) return;
+  el.innerHTML = allMonthKeys.map(mk => {
+    const count = displayPosts.filter(p => getMonthKey(p) === mk).length;
+    const active = mk === selectedMonthKey ? 'active' : '';
+    return `<button class="month-pill ${active}" onclick="selectMonth('${mk}')">${mk} <span class="month-pill-count">${count}</span></button>`;
+  }).join('');
+}
+
+function selectMonth(mk) {
+  selectedMonthKey = mk;
+  renderMonthNav();
+  renderPost(0);
 }
 
 // ── PAGE NAV ──────────────────────────────────────────────────────────────────
 function showPage(page) {
   document.getElementById('posts-view').style.display = page === 'posts' ? '' : 'none';
   document.getElementById('meta-view').style.display  = page === 'meta'  ? '' : 'none';
-    document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
+  document.getElementById('month-nav').style.display  = page === 'posts' ? '' : 'none';
+  document.getElementById('arrow-nav').style.display  = page === 'posts' ? '' : 'none';
+  document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
   document.getElementById('tab-meta').classList.toggle('active',  page === 'meta');
+  if (page === 'meta') renderMetaPage();
+}
+
+// ── META PAGE ─────────────────────────────────────────────────────────────────
+function renderMetaPage() {
+  const container = document.getElementById('meta-content');
+  if (!container) return;
+
+  const past = displayPosts;
+  const ecacs = past.map(p => postEcac(p.performance)).filter(e => e != null && e > 0);
+  const avgEcac = ecacs.length ? Math.round(ecacs.reduce((a,b) => a+b,0) / ecacs.length) : null;
+  const under70 = ecacs.filter(e => e < 70).length;
+  const under40 = ecacs.filter(e => e < 40).length;
+
+  const tiers = [
+    { label: 'Under £40',   fn: e => e < 40,              cls: 'gold'   },
+    { label: '£41–£70',     fn: e => e >= 40 && e <= 70,  cls: 'green'  },
+    { label: '£71–£100',    fn: e => e > 70 && e <= 100,  cls: 'orange' },
+    { label: '£101–£200',   fn: e => e > 100 && e <= 200, cls: 'red'    },
+    { label: 'Over £200',   fn: e => e > 200,             cls: 'skull'  },
+  ];
+  const tierBars = tiers.map(t => {
+    const count = ecacs.filter(t.fn).length;
+    const pct = ecacs.length ? Math.round(count / ecacs.length * 100) : 0;
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px">
+      <div style="width:80px;font-size:11px;color:var(--muted);flex-shrink:0">${t.label}</div>
+      <div style="flex:1;background:var(--bg);border-radius:99px;height:8px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:var(--${t.cls});border-radius:99px"></div>
+      </div>
+      <div style="width:28px;font-size:11px;text-align:right;color:var(--muted);flex-shrink:0">${count}</div>
+    </div>`;
+  }).join('');
+
+  const allBcRates = computeBcRates(past);
+  const bcBars = posts[0].brief_compliance.map(c => c.label).map(label => {
+    const best = metaRates[label] || { pct: 0 };
+    const all  = allBcRates[label] || { pct: 0 };
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span>${label}</span>
+        <span style="color:var(--muted)">${best.pct}% beat-forecast · ${all.pct}% all</span>
+      </div>
+      <div style="background:var(--bg);border-radius:99px;height:6px;overflow:hidden">
+        <div style="width:${best.pct}%;height:100%;background:var(--green);border-radius:99px"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // By niche
+  const niches = {};
+  past.forEach(p => {
+    if (!niches[p.niche]) niches[p.niche] = { count: 0, ecacs: [], bf: 0 };
+    niches[p.niche].count++;
+    const e = postEcac(p.performance);
+    if (e != null && e > 0) niches[p.niche].ecacs.push(e);
+    const ex = postExtras[p.id] || {};
+    if (ex.forecast_ac != null && p.performance.accounts_created >= ex.forecast_ac) niches[p.niche].bf++;
+  });
+  const nicheRows = Object.entries(niches).sort((a,b) => b[1].count - a[1].count).map(([n,d]) => {
+    const avg  = d.ecacs.length ? Math.round(d.ecacs.reduce((a,b)=>a+b,0)/d.ecacs.length) : null;
+    const best = d.ecacs.length ? Math.min(...d.ecacs) : null;
+    return `<tr style="border-top:1px solid var(--border)">
+      <td style="padding:7px 12px 7px 0;font-size:12px">${n}</td>
+      <td style="padding:7px 8px;font-size:12px;text-align:right">${d.count}</td>
+      <td style="padding:7px 8px;font-size:12px;text-align:right">${d.bf}</td>
+      <td style="padding:7px 8px;font-size:12px;text-align:right">${avg != null ? '£'+avg : '—'}</td>
+      <td style="padding:7px 0;font-size:12px;text-align:right">${best != null ? '£'+best : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // By post sequence
+  const seqs = {};
+  past.forEach(p => {
+    const s = p.post_sequence || '?';
+    if (!seqs[s]) seqs[s] = { count: 0, ecacs: [] };
+    seqs[s].count++;
+    const e = postEcac(p.performance);
+    if (e != null && e > 0) seqs[s].ecacs.push(e);
+  });
+  const seqRows = Object.entries(seqs).sort((a,b) => +a[0]-(+b[0])).map(([s,d]) => {
+    const avg = d.ecacs.length ? Math.round(d.ecacs.reduce((a,b)=>a+b,0)/d.ecacs.length) : null;
+    return `<tr style="border-top:1px solid var(--border)">
+      <td style="padding:7px 12px 7px 0;font-size:12px">Post ${s}</td>
+      <td style="padding:7px 8px;font-size:12px;text-align:right">${d.count}</td>
+      <td style="padding:7px 0;font-size:12px;text-align:right">${avg != null ? '£'+avg : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // Top 10 by eCAC
+  const ranked = past.map(p => ({ p, ecac: postEcac(p.performance) }))
+    .filter(x => x.ecac != null && x.ecac > 0)
+    .sort((a,b) => a.ecac - b.ecac).slice(0,10);
+  const topRows = ranked.map((x, i) => {
+    const rat = eCAcRating(x.ecac);
+    return `<tr style="cursor:pointer;border-top:1px solid var(--border)" onclick="goToPost('${x.p.id}')">
+      <td style="padding:7px 8px 7px 0;font-size:11px;color:var(--muted)">${i+1}</td>
+      <td style="padding:7px 8px;font-size:12px">${x.p.name}</td>
+      <td style="padding:7px 8px;font-size:11px;color:var(--muted)">P${x.p.post_sequence}</td>
+      <td style="padding:7px 8px;font-size:11px;color:var(--muted)">${x.p.date}</td>
+      <td style="padding:7px 0;font-size:13px;font-weight:700;color:var(--${rat.cls})">${rat.emoji} £${x.ecac}</td>
+    </tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="meta-grid-3" style="margin-bottom:20px">
+      <div class="meta-stat-card"><div class="meta-stat-val">${past.length}</div><div class="meta-stat-label">Posts analysed</div></div>
+      <div class="meta-stat-card"><div class="meta-stat-val" style="color:var(--green)">${beatForecastPosts.length}</div><div class="meta-stat-label">Beat forecast (${past.length ? Math.round(beatForecastPosts.length/past.length*100) : 0}%)</div></div>
+      <div class="meta-stat-card"><div class="meta-stat-val">${avgEcac != null ? '£'+avgEcac : '—'}</div><div class="meta-stat-label">Avg eCAC (from delegations)</div></div>
+      <div class="meta-stat-card"><div class="meta-stat-val" style="color:var(--gold)">${under40}</div><div class="meta-stat-label">eCAC under £40 🤑</div></div>
+      <div class="meta-stat-card"><div class="meta-stat-val" style="color:var(--green)">${under70}</div><div class="meta-stat-label">eCAC under £70 ★</div></div>
+      <div class="meta-stat-card"><div class="meta-stat-val">${ecacs.length ? '£'+Math.min(...ecacs) : '—'}</div><div class="meta-stat-label">Best single post eCAC</div></div>
+    </div>
+
+    <div class="meta-grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-head">eCAC distribution (from delegations)</div>
+        <div class="card-body">${tierBars}</div>
+      </div>
+      <div class="card">
+        <div class="card-head">Brief compliance — beat-forecast posts (${metaPosts.length})</div>
+        <div class="card-body">${bcBars}</div>
+      </div>
+    </div>
+
+    <div class="meta-grid-2" style="margin-bottom:16px">
+      <div class="card">
+        <div class="card-head">By niche</div>
+        <div class="card-body" style="padding:0 18px">
+          <table style="width:100%;border-collapse:collapse">
+            <thead><tr style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">
+              <th style="text-align:left;padding:10px 12px 8px 0">Niche</th>
+              <th style="text-align:right;padding:10px 8px 8px">Posts</th>
+              <th style="text-align:right;padding:10px 8px 8px">Beat fc.</th>
+              <th style="text-align:right;padding:10px 8px 8px">Avg eCAC</th>
+              <th style="text-align:right;padding:10px 0 8px">Best</th>
+            </tr></thead>
+            <tbody>${nicheRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">By post sequence</div>
+        <div class="card-body" style="padding:0 18px">
+          <table style="width:100%;border-collapse:collapse">
+            <thead><tr style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">
+              <th style="text-align:left;padding:10px 12px 8px 0">Sequence</th>
+              <th style="text-align:right;padding:10px 8px 8px">Posts</th>
+              <th style="text-align:right;padding:10px 0 8px">Avg eCAC</th>
+            </tr></thead>
+            <tbody>${seqRows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">Top 10 posts by eCAC <span style="font-weight:400;color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0">— click to view</span></div>
+      <div class="card-body" style="padding:0 18px">
+        <table style="width:100%;border-collapse:collapse">
+          <tbody>${topRows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function goToPost(id) {
+  showPage('posts');
+  const p = displayPosts.find(x => x.id === id);
+  if (!p) return;
+  const mk = getMonthKey(p);
+  if (mk !== selectedMonthKey) { selectedMonthKey = mk; renderMonthNav(); }
+  const idx = getMonthPosts().findIndex(x => x.id === id);
+  if (idx >= 0) renderPost(idx);
 }
 
 // ── RENDER POST ───────────────────────────────────────────────────────────────
 function renderPost(idx) {
   updateArrowNav(idx);
-  const p    = posts[idx];
+  const mp   = getMonthPosts();
+  const p    = mp[idx];
   const ex   = postExtras[p.id] || {};
   const perf = p.performance;
-  const rat  = eCAcRating(perf.ecac);
+
+  // eCAC from delegations
+  const ecac = postEcac(perf);
+  const rat  = eCAcRating(ecac);
   const passCount  = p.brief_compliance.filter(c => c.pass).length;
   const totalCount = p.brief_compliance.length;
-
-  // Strong post?
-  const isStrong = perf.ecac != null && perf.ecac < 70;
+  const isStrong   = ecac != null && ecac < 70;
   const strongBadge = isStrong ? '<span class="strong-badge">★ Strong Post · eCAC &lt;£70</span>' : '';
 
-  // Beat forecast?
   const fac = ex.forecast_ac;
   const fcac = ex.forecast_cac;
   const acHit = fac != null && perf.accounts_created != null
     ? Math.round(perf.accounts_created / fac * 100) : null;
-  const beatForecast = acHit != null && acHit >= 100;
-  const hitClass = beatForecast ? 'over' : 'under';
-  const hitStr = acHit != null ? acHit + '%' : '—';
+  const beatFc  = acHit != null && acHit >= 100;
+  const hitStr  = acHit != null ? acHit + '%' : '—';
 
-  // Campaign timeline HTML
+  // Campaign timeline
   let timelineHtml = '';
   if (p.campaign_timeline && p.campaign_timeline.length > 0) {
     const items = p.campaign_timeline.map((t, i) => {
-      const isFirst = i === 0;
-      const conn = isFirst ? '' : '<div class="campaign-tl-connector"></div>';
-      const dateStr = t.date ? t.date.slice(5).replace('-', ' ') : '—';
+      const conn    = i === 0 ? '' : '<div class="campaign-tl-connector"></div>';
+      const dateStr = t.date ? t.date.slice(5).replace('-', '/') : '—';
       return `${conn}<div class="campaign-tl-item">
         <div class="campaign-tl-dot ${t.status}"></div>
         <div class="campaign-tl-info">
@@ -3355,22 +3593,19 @@ function renderPost(idx) {
     </div>`;
   }
 
-  // Performance stats
   const acVal   = perf.accounts_created != null ? perf.accounts_created : '—';
-  const facVal  = fac != null ? fac : '—';
-  const ecacVal = perf.ecac != null ? `£${perf.ecac}` : '—';
-  const fcacVal = fcac != null ? `£${fcac}` : '—';
+  const facVal  = fac  != null ? fac : '—';
+  const ecacVal = ecac != null ? `£${ecac}` : '—';
+  const fcacVal = fcac != null ? `£${Math.round(fcac)}` : '—';
   const delVal  = perf.delegations != null ? perf.delegations : '—';
   const lpvVal  = perf.landing_page_views != null ? perf.landing_page_views : '—';
   const feeVal  = perf.post_fee != null ? `£${perf.post_fee}` : '—';
 
-  // Meta comparison HTML
   const metaRows = p.brief_compliance.map(c => {
     const rate = metaRates[c.label] || { pct: 0 };
-    const thisClass = c.pass ? 'this-pass' : 'this-fail';
-    const thisSymbol = c.pass ? '✓' : '✗';
-    return `<div class="dash-meta-dim ${thisClass}">
-      <span class="dash-meta-this">${thisSymbol}</span>
+    const cls  = c.pass ? 'this-pass' : 'this-fail';
+    return `<div class="dash-meta-dim ${cls}">
+      <span class="dash-meta-this">${c.pass ? '✓' : '✗'}</span>
       <span class="dash-meta-label">${c.label}</span>
       <span class="dash-meta-pct">${rate.pct}% of best</span>
     </div>`;
@@ -3381,30 +3616,28 @@ function renderPost(idx) {
       <span style="flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
     </div>`).join('');
 
-  // Review comments: prefer Slack notes, fallback to Notion comments
-  let commentsHtml = '';
+  // Combined review
   const slackNotes = ex.slack_notes || [];
+  let whatWeSaidHtml = '';
   if (slackNotes.length > 0) {
-    const matchedLine = ex.slack_matched ? `<div class="review-meta">Matched thread: "${ex.slack_matched.slice(0,80)}..."</div>` : '';
-    commentsHtml = slackNotes.map(n => `
-      <div class="review-comment">"${n}"
-        <div class="review-meta">Slack · #approving-content</div>
-      </div>`).join('') + matchedLine;
-  } else {
-    commentsHtml = p.review_comments.map(c => `
-      <div class="review-comment">"${c.text}"
-        <div class="review-meta">${c.author} · ${c.source}</div>
-      </div>`).join('');
+    const matchedLine = ex.slack_matched
+      ? `<div style="font-size:11px;color:var(--muted);margin-top:6px">Thread: "${ex.slack_matched.slice(0,80)}…"</div>` : '';
+    whatWeSaidHtml = slackNotes.map(n =>
+      `<div class="review-comment">"${n}"<div class="review-meta">Slack · #approving-content</div></div>`
+    ).join('') + matchedLine;
+  } else if (p.review_comments && p.review_comments.length) {
+    whatWeSaidHtml = p.review_comments.map(c =>
+      `<div class="review-comment">"${c.text}"<div class="review-meta">${c.author} · ${c.source}</div></div>`
+    ).join('');
   }
 
-  // Review reflection
-  const goodHtml = p.review_reflection.good.map(t => `
-    <div class="reflection-row good"><span style="flex-shrink:0">✓</span><div><strong>Got right:</strong> ${t}</div></div>`).join('');
-  const missedHtml = p.review_reflection.missed.map(t => `
-    <div class="reflection-row missed"><span style="flex-shrink:0">△</span><div><strong>Missed:</strong> ${t}</div></div>`).join('');
+  const goodHtml   = (p.review_reflection.good || []).map(t =>
+    `<div class="reflection-row good"><span style="flex-shrink:0">✓</span><div>${t}</div></div>`).join('');
+  const missedHtml = (p.review_reflection.missed || []).map(t =>
+    `<div class="reflection-row missed"><span style="flex-shrink:0">△</span><div>${t}</div></div>`).join('');
+  const hasReflection = goodHtml || missedHtml;
 
   document.getElementById('main-content').innerHTML = `
-
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
@@ -3446,7 +3679,7 @@ function renderPost(idx) {
           <div class="dash-body">
             <div class="dash-kpi-pair">
               <div class="dash-kpi">
-                <div class="dash-kpi-val ${beatForecast ? 'green' : ''}">${acVal}</div>
+                <div class="dash-kpi-val ${beatFc ? 'green' : ''}">${acVal}</div>
                 <div class="dash-kpi-meta">
                   <span class="dash-kpi-label">Accounts Created</span>
                   <span class="dash-kpi-sub">Forecast: ${facVal}</span>
@@ -3454,21 +3687,21 @@ function renderPost(idx) {
               </div>
               <div class="forecast-row">
                 <span style="color:var(--muted)">vs forecast</span>
-                <span class="forecast-hit ${hitClass}">${hitStr} of target</span>
+                <span class="forecast-hit ${beatFc ? 'over' : 'under'}">${hitStr} of target</span>
               </div>
               <hr class="dash-divider">
               <div class="dash-ecac">
                 <span class="dash-ecac-emoji">${rat.emoji}</span>
                 <div>
                   <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal} eCAC</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px">Forecast CAC: ${fcacVal} · Fee: ${feeVal}</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">from delegations · Forecast CAC: ${fcacVal} · Fee: ${feeVal}</div>
                 </div>
               </div>
               <hr class="dash-divider">
               <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
                 <span>${delVal} del.</span>
                 <span>${lpvVal} LPVs</span>
-                <span>${perf.post_fee != null && perf.accounts_created ? '£'+Math.round(perf.post_fee/perf.accounts_created)+'/AC' : '—'}</span>
+                <span>${perf.post_fee && perf.accounts_created ? '£'+Math.round(perf.post_fee/perf.accounts_created)+'/AC' : '—'}</span>
               </div>
             </div>
           </div>
@@ -3476,8 +3709,7 @@ function renderPost(idx) {
 
         <!-- Brief Compliance -->
         <div class="dash-card">
-          <div class="dash-head">
-            Brief
+          <div class="dash-head">Brief
             <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">${passCount}/${totalCount}</span>
           </div>
           <div class="dash-body">
@@ -3486,40 +3718,40 @@ function renderPost(idx) {
           </div>
         </div>
 
-        <!-- vs. The Meta -->
+        <!-- vs Best Posts -->
         <div class="dash-card">
-          <div class="dash-head">
-            vs. Best Posts
-            <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(${metaPosts.length} beat forecast)</span>
+          <div class="dash-head">vs. Best Posts
+            <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(${metaPosts.length} beat fc.)</span>
           </div>
           <div class="dash-body">
             <div class="dash-meta-dims">${metaRows}</div>
           </div>
         </div>
 
-      </div><!-- end dashboard-row -->
+      </div><!-- dashboard-row -->
 
-      <!-- WHAT WE SAID -->
+      <!-- COMBINED REVIEW -->
       <div class="card">
-        <div class="card-head">What we said about it</div>
-        <div class="card-body">${commentsHtml}</div>
-      </div>
-
-      <!-- DID WE REVIEW IT CORRECTLY -->
-      <div class="card">
-        <div class="card-head">Did we review it correctly?</div>
-        <div class="card-body">
-          <div class="reflection-rows">
-            ${goodHtml || missedHtml ? goodHtml + missedHtml : '<div class="reflection-row pending"><span>?</span><div>No reflection recorded yet.</div></div>'}
-          </div>
+        <div class="card-head">Review</div>
+        <div class="card-body" style="padding:0">
+          ${whatWeSaidHtml ? `<div style="padding:14px 18px">
+            <div class="review-section-label">What we said at the time</div>
+            ${whatWeSaidHtml}
+          </div>` : ''}
+          ${hasReflection ? `<div style="padding:14px 18px${whatWeSaidHtml ? ';border-top:1px solid var(--border)' : ''}">
+            <div class="review-section-label">In hindsight</div>
+            <div class="reflection-rows">${goodHtml}${missedHtml}</div>
+          </div>` : ''}
+          ${!whatWeSaidHtml && !hasReflection ? `<div style="padding:18px;color:var(--muted);font-size:13px">No review notes recorded.</div>` : ''}
         </div>
       </div>
 
-    </div><!-- end analysis -->
+    </div><!-- analysis -->
   `;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+renderMonthNav();
 renderPost(0);
 </script>
 </body>
