@@ -214,6 +214,1010 @@
 </div>
 
 <script>
+const briefTypes = {
+  "family_post1": {
+    "name": "Family & Lifestyle 2026 \u2014 Post 1",
+    "niche": "Family",
+    "seq": 1,
+    "goal": "Hook with personal problem / overpaying shock before introducing Nous",
+    "checks": [
+      {
+        "label": "Problem-aware hook",
+        "desc": "Opens with personal problem (overpaying / never checking) BEFORE naming Nous. Must NOT open with 'I've been using @get_nous'. For Startling Stats: approved stat comes first. For Girl Maths: maths framing comes first."
+      },
+      {
+        "label": "Discovery moment",
+        "desc": "Creator personally signed up and found out they were overpaying. First-person discovery ('I signed up to @get_nous and... wow')."
+      },
+      {
+        "label": "What Nous does",
+        "desc": "Explains that Nous checks bills (energy, broadband, phone), finds better deals, and switches \u2014 without creator needing to do anything."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Must include specific figure: personal amount saved OR approved stat. 'Save loads' is not acceptable. Minimum: 'hundreds of pounds'."
+      },
+      {
+        "label": "Sign-up ease",
+        "desc": "Quick, free, easy framing. 'Just sign up and answer a few quick questions' / '2 minutes from my phone' / 'it's free to get started'."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous appears in text. Exception: Secret/Mystery experiment uses nous.co link only \u2014 do NOT include @get_nous."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "'Save with Nous' button present and positioned at the BOTTOM of the story. Not top-left, not over important content."
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "desc": "Background is a calming shot within the home. Text must be readable \u2014 large font, good contrast, or text background overlay."
+      },
+      {
+        "label": "Household framing (Family-specific)",
+        "desc": "Use 'we' / 'our' for household bills where natural. This is a shared family problem, not just the individual."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Lead with Girl Maths framing (savings = guilt-free spend) before revealing overpaying on bills. Less natural for Family niche \u2014 only use if influencer has a purchases angle.",
+      "Secret/Mystery": "Do NOT mention Nous or @get_nous \u2014 tease 'this tool' only. Use nous.co link instead of tag.",
+      "Startling Stats": "Lead with \u00a3781/year stat as shock opener BEFORE personal corroboration. 'Did you know a typical family overpays by \u00a3781 every year if contracts roll over?'",
+      "Must Have": "Frame Nous as a must-have household tool before revealing savings.",
+      "Bargain": "Lead with bargain-find framing \u2014 'I love a bargain and my latest discovery is so good' \u2014 before explaining Nous.",
+      "No Experiment": "Standard confessional opener: 'I never checked if my bills were normal' / 'I just assumed we were paying about the right amount'. Oblivious \u2192 Shocked arc."
+    }
+  },
+  "family_post2": {
+    "name": "Family & Lifestyle 2026 \u2014 Post 2",
+    "niche": "Family",
+    "seq": 2,
+    "goal": "Emphasise that Nous handles all the admin \u2014 no time, no hassle, ongoing management",
+    "checks": [
+      {
+        "label": "Time / admin problem hook",
+        "desc": "Opens with the problem of not having time or energy to deal with bill admin. 'I've never really looked to see if I could get cheaper bills \u2014 I wouldn't even know where to start.'"
+      },
+      {
+        "label": "Nous handles everything",
+        "desc": "Nous does all the work: checks bills, finds deals, switches \u2014 creator did nothing beyond signing up."
+      },
+      {
+        "label": "Ongoing management emphasis",
+        "desc": "Post 2 specifically should highlight that Nous keeps managing bills going forward \u2014 tracking contracts, monitoring deals, switching automatically. This differentiates Post 2 from Post 1."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Must include specific figure or 'hundreds of pounds'. Specific amounts preferred."
+      },
+      {
+        "label": "Relief / stress-removal emotion",
+        "desc": "Emotional tone should be relief. 'I'm just glad I don't have to deal with bills again.' 'Now I'm just paying less without thinking about it.'"
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous appears in text. Exception: Secret/Mystery experiment."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "'Save with Nous' button at the BOTTOM of the story."
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "desc": "Calming home shot. Readable text."
+      },
+      {
+        "label": "Household framing (Family-specific)",
+        "desc": "Use 'we' / 'our' for household bills where natural."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Less applicable for Post 2 ease angle. If used: savings = more family money for things that matter.",
+      "Secret/Mystery": "Short intriguing text: tease the admin-removal benefit without naming Nous. Only nous.co link.",
+      "Startling Stats": "Lead with a stat about how hard it is to stay on top of bills / how many people never switch, then pivot to how Nous solves this.",
+      "Must Have": "Position ongoing management as the must-have feature: 'I don't ever need to check again'.",
+      "Bargain": "Frame the time-saving as the bargain: saving hours + money = best deal.",
+      "No Experiment": "Confessional: 'I've never had time to check my bills. I wouldn't know where to start.' Then relief at Nous doing it all."
+    }
+  },
+  "family_post3": {
+    "name": "Family & Lifestyle 2026 \u2014 Post 3",
+    "niche": "Family",
+    "seq": 3,
+    "goal": "Share positive outcome and encourage followers to try \u2014 Trustpilot, community savings, 2026 resolution angle",
+    "checks": [
+      {
+        "label": "Outcome / result hook",
+        "desc": "Opens with the positive result \u2014 savings achieved, ongoing benefit. NOT a problem hook (that was Post 1). E.g. 'It's been amazing for me' / 'Love hearing from so many people about how they've saved'."
+      },
+      {
+        "label": "Community / social proof element",
+        "desc": "Reference to others also benefiting, OR Trustpilot, OR 2026 resolution framing. 'Did anyone else have get better with money as their 2026 resolution?'"
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Must include specific figure or 'hundreds of pounds'."
+      },
+      {
+        "label": "Nous ongoing management",
+        "desc": "Mention that Nous tracks, monitors and switches automatically \u2014 'saving money in the background', 'I don't need to think about bills anymore'."
+      },
+      {
+        "label": "Call to action to audience",
+        "desc": "Actively recommend followers try it. 'The best thing I've found', 'I recommend giving it a try', 'you need this'."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "'Save with Nous' button at the BOTTOM."
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "desc": "Calming home shot. Readable text."
+      },
+      {
+        "label": "Household framing (Family-specific)",
+        "desc": "Use 'we' / 'our' for household bills where natural."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Savings used for something the family enjoys \u2014 guilt-free outcome framing.",
+      "Secret/Mystery": "Tease the outcome ('I've been saving in the background') without naming Nous. Only nous.co link.",
+      "Startling Stats": "Lead with 83% stat or \u00a3250 energy overpay stat to position the audience as likely overpayers, then share outcome.",
+      "Must Have": "Frame as the tool everyone should have \u2014 outcome proves it.",
+      "Bargain": "Outcome framed as the ultimate bargain: savings + no effort = best deal found.",
+      "No Experiment": "Grateful/sharing tone. Community engagement or 2026 resolution framing. Trustpilot mention optional but adds trust."
+    }
+  },
+  "family_lifestyle_data_post1": {
+    "name": "Family & Lifestyle 2026 (Data/Stats variant) \u2014 Post 1",
+    "niche": "Family",
+    "seq": 1,
+    "goal": "Lead with \u00a3781/year stat as hook, then corroborate with personal discovery",
+    "checks": [
+      {
+        "label": "\u00a3781/year stat as hook",
+        "desc": "Must open with the \u00a3781/year typical overpay stat. This is the specific requirement of this brief variant. Do not open with personal story before the stat."
+      },
+      {
+        "label": "Personal corroboration",
+        "desc": "After the stat, creator confirms they too were overpaying ('I genuinely didn't realise... but then I found out I'd been majorly overpaying')."
+      },
+      {
+        "label": "Nous as solution",
+        "desc": "Nous found the overpaying and switched to better deals. No effort required."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Personal savings figure OR 'hundreds of pounds'. The \u00a3781 stat is for the hook; the personal figure is for the outcome."
+      },
+      {
+        "label": "Sign-up ease",
+        "desc": "'Without lifting a finger' / 'just sign up and answer a few quick questions'."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "desc": "Calming home shot. Readable text."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "PRIMARY variant for this brief. Open with \u00a3781/year stat. 'Woah\u2026 did you know a typical family overpays on their bills by \u00a3781 every year?' Then personal corroboration.",
+      "No Experiment": "If stat hook not used, default confessional opener \u2014 but stat brief specifically calls for stat-led hook."
+    }
+  },
+  "family_lifestyle_data_post2": {
+    "name": "Family & Lifestyle 2026 (Data/Stats variant) \u2014 Post 2",
+    "niche": "Family",
+    "seq": 2,
+    "goal": "Lead with \u00a37/month phone bill expert stat, then reveal personal overpayment and Nous solution",
+    "checks": [
+      {
+        "label": "\u00a37/month phone stat as hook",
+        "desc": "Must open with the expert stat: 'loads of money experts say no-one should pay more than \u00a37 a month for their mobile.' This is the specific hook for this post in the data brief."
+      },
+      {
+        "label": "Personal corroboration of overpaying",
+        "desc": "Creator was paying more than \u00a37 and thought it was normal \u2014 validates the stat personally."
+      },
+      {
+        "label": "Nous solution across bills",
+        "desc": "Nous saved on phone PLUS other bills (energy, internet). Show breadth, not just phone."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Specific amount saved: '\u00a3500+' or personal figure. The \u00a37 stat is the hook; the saving figure is the outcome."
+      },
+      {
+        "label": "Switching ease",
+        "desc": "Nous did the research, sorted all the faff, switching was easy."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "desc": "Calming home shot. Readable text."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "PRIMARY for this brief. '\u00a37/month phone bill' expert stat as hook. 'I was paying a lot more than that and thought it was just normal.'",
+      "No Experiment": "Default confessional about phone bills being too high without the expert stat framing."
+    }
+  },
+  "family_lifestyle_data_post3": {
+    "name": "Family & Lifestyle 2026 (Data/Stats variant) \u2014 Post 3",
+    "niche": "Family",
+    "seq": 3,
+    "goal": "Lead with 83% energy non-switcher stat + \u00a3250 overpay stat, then personal ease-of-use recommendation",
+    "checks": [
+      {
+        "label": "83% energy stat + \u00a3250 energy overpay stat",
+        "desc": "Must open with energy-specific stats. 'If you haven't changed your energy recently, you're probably overpaying by more than \u00a3250 a year' AND '83% of people haven't switched in the last year.' Both stats together."
+      },
+      {
+        "label": "Normalisation of not switching",
+        "desc": "Creator acknowledges they were never on top of switching \u2014 makes audience feel understood, not shamed."
+      },
+      {
+        "label": "Nous as effortless solution",
+        "desc": "'You answer a few questions and they figure out how much you're overpaying \u2014 then find you a better deal and do all the work of switching you.' Emphasise ease."
+      },
+      {
+        "label": "Savings claim",
+        "desc": "Mention savings outcome. 'I'm saving loads' or specific figure."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "desc": "Calming home shot. Readable text."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "PRIMARY for this brief. '83% of people haven't switched energy' + '\u00a3250/year energy overpay' as dual hook.",
+      "No Experiment": "Standard post 3 social proof outcome without stat hook."
+    }
+  },
+  "celebrity_post1": {
+    "name": "Celebrity 2026 \u2014 Post 1",
+    "niche": "Celebrity",
+    "seq": 1,
+    "goal": "Hook with strong emotional reaction to overpaying \u2014 'fuming', 'hate wasting money' \u2014 before Nous solution",
+    "checks": [
+      {
+        "label": "Strong emotional hook \u2014 money-conscious outrage",
+        "desc": "Opens with emotional reaction to wasting money: 'I honestly hate wasting money' / 'really fuming about this'. NOT a neutral/calm hook. Must feel like genuine personal indignation."
+      },
+      {
+        "label": "Confession of not checking",
+        "desc": "'I'll admit I hadn't actually checked if I could be paying less for energy, broadband or our phones.' Celebrity admits they cared but didn't check."
+      },
+      {
+        "label": "Nous reveals overpayment",
+        "desc": "Nous immediately showed they were paying way too much because contracts had rolled over."
+      },
+      {
+        "label": "Nous does all the switching work",
+        "desc": "Checked contracts, found better deals, did all the work to switch everything over."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Specific figure: 'hundreds of pounds a year' or specific \u00a3 amount. Satisfaction of knowing they're not wasting money."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Lifestyle visual",
+        "desc": "Lifestyle shot or selfie (not necessarily home \u2014 reflects busy celebrity life)."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Savings = guilt-free spending on something they value. Fits celebrity lifestyle if they have luxury purchases to reference.",
+      "Secret/Mystery": "Tease 'this tool' without naming Nous. Strong curious hook \u2014 'I found something that saved us hundreds, sharing the link'.",
+      "Startling Stats": "Lead with \u00a3781/year or 83% stat BEFORE the personal fuming reaction.",
+      "Must Have": "Position Nous as the must-have tool for anyone who hates wasting money.",
+      "Bargain": "Lead with the best money deal found ('I found the most satisfying money win').",
+      "No Experiment": "Standard fuming/revelation: 'I hadn't actually checked if I could be paying less. Then I started using @get_nous and straight away they figured out we were paying way too much.'"
+    }
+  },
+  "celebrity_post2": {
+    "name": "Celebrity 2026 \u2014 Post 2",
+    "niche": "Celebrity",
+    "seq": 2,
+    "goal": "Emphasise busy life left no time for bills \u2014 one less job on the to-do list, Nous handled everything",
+    "checks": [
+      {
+        "label": "Busy life hook",
+        "desc": "Opens with the 'too busy to deal with bills' problem \u2014 NOT a money hook (that's Post 1). 'Between family, work and everything else going on, life can end up feeling really hectic with zero time to spare.'"
+      },
+      {
+        "label": "Time cost of not acting",
+        "desc": "Not doing the admin was costing hundreds per year \u2014 links the time problem to the financial cost."
+      },
+      {
+        "label": "Too busy to sort it themselves",
+        "desc": "'I just couldn't face sitting on the phone for hours to sort it myself.' Celebrity-specific admission of avoidance."
+      },
+      {
+        "label": "Nous did absolutely everything",
+        "desc": "Handled all research, switching, everything. 'We've saved more than \u00a3500 and that's one less job on the to-do list.'"
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'More than \u00a3500 on energy, phone and internet' or equivalent specific figure."
+      },
+      {
+        "label": "Relief emotion",
+        "desc": "Win-win framing: money saved + job removed from list. 'One less job on the to-do list. Win win!'"
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Lifestyle visual",
+        "desc": "Lifestyle shot or selfie."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Time saved + money saved = the ultimate win for someone with a busy schedule.",
+      "Secret/Mystery": "Tease the time-saving discovery without naming Nous.",
+      "Startling Stats": "Lead with stat about how much time people waste managing bills, OR the \u00a3 cost of not doing it.",
+      "Must Have": "Position Nous as a must-have for anyone with a busy life who can't face bill admin.",
+      "Bargain": "The time saving is the bargain \u2014 getting your time AND money back.",
+      "No Experiment": "Busy life hook: 'Between family, work and everything else, life can feel really hectic with zero time to spare.' Then revelation that this was costing hundreds."
+    }
+  },
+  "celebrity_post3": {
+    "name": "Celebrity 2026 \u2014 Post 3",
+    "niche": "Celebrity",
+    "seq": 3,
+    "goal": "Lightbulb moment framing \u2014 retrospective shock at having overpaid, strong advocacy for followers to try it",
+    "checks": [
+      {
+        "label": "Lightbulb moment hook",
+        "desc": "Opens with reflection on a recent revelation: 'I had a bit of a lightbulb moment recently, but not necessarily in a good way.' Retrospective, not in-the-moment shock (differentiates from Post 1)."
+      },
+      {
+        "label": "Assumption of normality",
+        "desc": "'I just assumed everything had gone up and my energy, internet and phone costs were normal.' Explains WHY they overpaid \u2014 felt normal."
+      },
+      {
+        "label": "Nous wow moment",
+        "desc": "'I signed up to @get_nous and\u2026 wow. They showed me how much I was overpaying and sorted better deals straight away.'"
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'Already saved hundreds of pounds and didn't have to do anything except sign up and answer a few quick questions.'"
+      },
+      {
+        "label": "Strong advocacy close",
+        "desc": "'How did I not know about this already? If you're anything like me, you need this.' Direct, strong recommendation to followers."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Lifestyle visual",
+        "desc": "Lifestyle shot or selfie."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Retrospective savings = now justifies a treat. Lightbulb was that savings are achievable.",
+      "Secret/Mystery": "Tease the lightbulb discovery without naming Nous.",
+      "Startling Stats": "Lead with stat to set up the 'how did I not know this?' reaction.",
+      "Must Have": "'How did I not know about this already?' \u2014 positions Nous as something everyone should have.",
+      "Bargain": "The lightbulb is discovering the best bargain they've ever found.",
+      "No Experiment": "Reflective lightbulb: 'I discovered I'd been massively overpaying on my bills. I never had the time to check... I signed up to @get_nous and wow.' Strong 'you need this' advocacy close."
+    }
+  },
+  "home_post1": {
+    "name": "Home 2026 \u2014 Post 1",
+    "niche": "Home",
+    "seq": 1,
+    "goal": "Hook as a bargain find \u2014 creator who loves bargains has found an amazing new one in Nous",
+    "checks": [
+      {
+        "label": "Bargain-find OR must-have hook (version-dependent)",
+        "desc": "Version A: 'You know how much I love a bargain, and my latest discovery is honestly so good.' Version B: 'I've definitely found a new must-have for your home.' Must fit influencer's established home/interiors content style."
+      },
+      {
+        "label": "Overpaying revelation",
+        "desc": "Was overpaying because contracts had rolled over \u2014 'I'd basically let my contracts roll over.' Connects the bargain/tool to a real problem solved."
+      },
+      {
+        "label": "Nous checks all bills",
+        "desc": "Energy, broadband, phone \u2014 checked all bills and found better deals, switched everything over."
+      },
+      {
+        "label": "Specific deal prices (Home-specific)",
+        "desc": "Version A specifically includes: 'broadband is \u00a323 a month' and 'phone is \u00a37.' These specific benchmarks are unique to the Home brief and add credibility."
+      },
+      {
+        "label": "Satisfaction + admin removal",
+        "desc": "'Such a relief to have one less thing to do for the house.' Home admin angle \u2014 Nous removes a household task."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'Saving hundreds of pounds a year' or specific amount. Satisfaction of being on a good deal."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Home visual",
+        "desc": "Shot within the home \u2014 calming, fits home/interiors aesthetic."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Savings used for a home purchase \u2014 'my new [item] was basically free with what I saved'.",
+      "Secret/Mystery": "Tease the home bargain discovery without naming Nous.",
+      "Startling Stats": "Lead with \u00a3781/year or specific deals stat before the bargain revelation.",
+      "Must Have": "PRIMARY for Version B Post 1. 'I've definitely found a new must-have for your home.' Smart tool framing.",
+      "Bargain": "PRIMARY for Version A Post 1. 'You know how much I love a bargain, and my latest discovery is honestly so good.'",
+      "No Experiment": "Discovery of Nous as home tool \u2014 found out while trying to be smarter about home admin."
+    }
+  },
+  "home_post2": {
+    "name": "Home 2026 \u2014 Post 2",
+    "niche": "Home",
+    "seq": 2,
+    "goal": "Position Nous as a smart, must-have home tool that removes admin and saves money effortlessly",
+    "checks": [
+      {
+        "label": "Must-have OR bargain hook (version-dependent)",
+        "desc": "Version A: 'new must-have for your home' / smart tool framing. Version B: bargain discovery with specific prices (\u00a323 broadband, \u00a37 phone)."
+      },
+      {
+        "label": "Nous described as smart tool",
+        "desc": "'Super smart new tool that sorts your household bills for you and saves you so much money.' Tool description, not company description."
+      },
+      {
+        "label": "Overpaying discovery",
+        "desc": "'Found out we'd been overpaying on our bills for the house for ages.' Corroborates the tool's value."
+      },
+      {
+        "label": "Zero effort",
+        "desc": "'So easy, I did nothing and I've saved hundreds.' Effortlessness is key for Post 2."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'Saved hundreds of pounds' or specific amount."
+      },
+      {
+        "label": "Recommendation to try",
+        "desc": "'Honestly just feels like a smarter way of doing something everyone hates, really recommend you give it a try.'"
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Home visual",
+        "desc": "Calming home shot."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Smart home tool + savings = guilt-free home purchase.",
+      "Secret/Mystery": "Tease the must-have home tool without naming Nous.",
+      "Startling Stats": "Lead with a stat about how much people overpay on home bills before revealing the tool.",
+      "Must Have": "PRIMARY for Version A Post 2. 'I've definitely found a new must-have for your home.' Smart, effortless tool framing.",
+      "Bargain": "PRIMARY for Version B Post 2. Specific deal prices (\u00a323 broadband, \u00a37 phone) as proof of the bargain.",
+      "No Experiment": "Tool discovery: 'It's called @get_nous \u2014 a super smart new tool that sorts your household bills for you and saves you so much money.'"
+    }
+  },
+  "home_post3": {
+    "name": "Home 2026 \u2014 Post 3",
+    "niche": "Home",
+    "seq": 3,
+    "goal": "Show the outcome \u2014 saved \u00a3500+, admin removed, extra money now available for things that matter",
+    "checks": [
+      {
+        "label": "Self-aware hook \u2014 thought I was switched on",
+        "desc": "'I thought I was pretty switched on at saving money, but it turns out I've been paying way more than I need to on the bills for our home.' Unique Home Post 3 hook \u2014 self-deprecating from a savvy-shopper persona."
+      },
+      {
+        "label": "Nous checked all bills",
+        "desc": "'Checked all our bills (energy, broadband, phone), found better deals and switched me over.'"
+      },
+      {
+        "label": "\u00a3500+ savings claim",
+        "desc": "Post 3 specifically calls for \u00a3500+ figure. 'Saved more than \u00a3500 and I honestly didn't have to do anything.'"
+      },
+      {
+        "label": "Admin removed \u2014 relief",
+        "desc": "'Such a relief to have one less thing to do for the house.' Admin-removal angle maintained through to Post 3."
+      },
+      {
+        "label": "Extra cash for things that matter",
+        "desc": "'Some extra cash for things I actually care about instead of it all disappearing on bills.' Home-specific \u2014 money freed up for home/life."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Recent purchase visual (Home Post 3 specific)",
+        "desc": "Visual is a shot of a recent purchase IN the home \u2014 different from Posts 1 and 2 which use general home shots. This is explicitly stated in the brief."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Savings \u2192 guilt-free home purchase shown in visual. '\u00a3500+ saved = my new [item] was basically free.'",
+      "Secret/Mystery": "Tease the outcome savings without naming Nous.",
+      "Startling Stats": "Lead with how much people typically overpay before sharing personal \u00a3500+ outcome.",
+      "Must Have": "'Such a great little trick to save money' \u2014 positions result as proof of must-have status.",
+      "Bargain": "'I thought I was switched on at saving money' \u2014 the irony of finding a bigger bargain than expected.",
+      "No Experiment": "Retrospective: 'I thought I was pretty switched on, but turns out I was paying way more than I need to.' Outcome of \u00a3500+ and relief from admin."
+    }
+  },
+  "fashion_post1": {
+    "name": "Fashion 2026 \u2014 Post 1",
+    "niche": "Fashion",
+    "seq": 1,
+    "goal": "Hook with Girl Maths calculation \u2014 savings from Nous justify a recent haul/purchase",
+    "checks": [
+      {
+        "label": "Girl Maths / haul hook",
+        "desc": "'According to my maths my latest haul was basically free.' Must open with the Girl Maths framing \u2014 haul or purchase justified by savings. NOT a standard problem-aware hook."
+      },
+      {
+        "label": "Procrastination confession",
+        "desc": "'I'd let everything roll over and kept putting it off.' Casual admission of admin avoidance \u2014 relatable and non-judgemental."
+      },
+      {
+        "label": "Nous discovery and savings",
+        "desc": "Nous sorted checking, comparing, switching. Creator did basically nothing."
+      },
+      {
+        "label": "Savings claim \u2014 \u00a3600+ figure",
+        "desc": "Fashion brief specifically uses '\u00a3600+' figure. 'Nous has saved me more than \u00a3600.' Higher figure than other briefs \u2014 check this is used (not a lower figure)."
+      },
+      {
+        "label": "Guilt-free treat close",
+        "desc": "'Now I get to treat myself guilt free.' Connects the saving back to the haul/purchase \u2014 closes the Girl Maths loop."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "'Save with Nous' button at the BOTTOM. (Note: Fashion Frame 2 uses different CTA \u2014 this is Post 1 so 'Save with Nous' applies.)"
+      },
+      {
+        "label": "Haul / purchase visual",
+        "desc": "Visual is a shot of the latest haul or purchase \u2014 NOT a calming home shot. This is unique to Fashion niche."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "PRIMARY for Fashion Post 1. Haul was 'basically free' because Nous saved \u00a3600+. Guilt-free spending justified by bill savings.",
+      "Secret/Mystery": "Tease the 'hack' that made the haul guilt-free without naming Nous.",
+      "Startling Stats": "Lead with savings stat (\u00a3600, nearly \u00a3800) before the haul framing.",
+      "Must Have": "Less natural for Fashion Post 1 \u2014 haul framing is more authentic to niche.",
+      "Bargain": "Haul framed as achievable because of the money saved \u2014 bargain-finder angle.",
+      "No Experiment": "Haul post with Nous discovery \u2014 found out bills were overpaid while doing life admin."
+    }
+  },
+  "fashion_post2": {
+    "name": "Fashion 2026 \u2014 Post 2",
+    "niche": "Fashion",
+    "seq": 2,
+    "goal": "Ultra-short, intriguing post that drives curiosity \u2014 'did not see this coming but I just saved nearly \u00a3800 on bills'",
+    "checks": [
+      {
+        "label": "Short, intriguing text",
+        "desc": "Brief explicitly states: 'Keep text short \u2014 followers should be intrigued to find out more.' Post must be SHORT \u2014 not a full explanation. If post is long, flag it."
+      },
+      {
+        "label": "Adulting / life admin framing",
+        "desc": "'I've been taking some time for adulting and finally got round to doing my life admin.' Casual, self-deprecating framing."
+      },
+      {
+        "label": "Nearly \u00a3800 savings figure",
+        "desc": "'Did not see this coming but I just managed to save nearly \u00a3800 on bills?' \u2014 casual, surprised tone. The 'nearly \u00a3800' figure is specific to Fashion Post 2."
+      },
+      {
+        "label": "From phone / ease mention",
+        "desc": "'Literally did it from my phone in like five minutes.' Quick and easy, mobile-native."
+      },
+      {
+        "label": "Link share CTA",
+        "desc": "'Sharing the link so you can all check it out.' Simple, casual share \u2014 not a hard sell."
+      },
+      {
+        "label": "Start saving here! CTA button",
+        "desc": "CTA button text is 'Start saving here!' \u2014 NOT 'Save with Nous'. This is unique to Fashion Post 2 and is a compliance differentiator."
+      },
+      {
+        "label": "Lifestyle visual or selfie",
+        "desc": "Lifestyle shot or selfie. NOT a haul shot (that's Post 1) and NOT a home shot."
+      }
+    ],
+    "variants": {
+      "Secret/Mystery": "PRIMARY for Fashion Post 2. Do not over-explain \u2014 keep it short and intriguing. 'Sharing the link so you can all check it out.'",
+      "Girl Maths": "Short Girl Maths tease \u2014 could work as variant but Secret is the brief's intent.",
+      "No Experiment": "Short, punchy life admin post \u2014 just enough to intrigue, not full explanation."
+    }
+  },
+  "fashion_post3": {
+    "name": "Fashion 2026 \u2014 Post 3",
+    "niche": "Fashion",
+    "seq": 3,
+    "goal": "Reveal fuming reaction to overpaying \u2014 'normally I love a bargain so I was fuming' \u2014 then Nous solved it",
+    "checks": [
+      {
+        "label": "Bargain-lover fuming hook",
+        "desc": "'Normally I love a bargain, so I was pretty fuming recently when I found out I've been way overpaying on my bills.' Fashion-specific hook connecting the influencer's bargain identity to the overpaying outrage."
+      },
+      {
+        "label": "Assumption of normality",
+        "desc": "'I just assumed everything had gone up and my energy, internet and phone costs were normal.' Explains why they overpaid."
+      },
+      {
+        "label": "Nous wow moment",
+        "desc": "'I signed up to @get_nous because I wanted someone to sort it all for me and\u2026 wow. They showed me how much I was overpaying and sorted better deals straight away.'"
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'Already saved hundreds of pounds and didn't have to do anything except sign up and answer a few quick questions.'"
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "'Save with Nous' at the BOTTOM. (Back to standard CTA \u2014 Post 2 was the 'Start saving here!' anomaly.)"
+      },
+      {
+        "label": "Lifestyle visual or selfie",
+        "desc": "Lifestyle shot or selfie (not haul \u2014 that was Post 1)."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Fuming at overpaying \u2192 now guilt-free because Nous sorted it and savings justify spending.",
+      "Secret/Mystery": "Tease the fuming discovery without naming Nous.",
+      "Startling Stats": "Lead with stat about how much bargain-lovers are unknowingly wasting on bills.",
+      "Bargain": "PRIMARY angle \u2014 'normally I love a bargain, so I was fuming I'd been overpaying.' Bargain-hunter persona outraged.",
+      "No Experiment": "Fuming bargain-hunter: 'Normally I love a bargain, so I was pretty fuming recently when I found out I've been way overpaying on my bills.'"
+    }
+  },
+  "lifestyle_post1": {
+    "name": "Lifestyle 2026 \u2014 Post 1",
+    "niche": "Lifestyle",
+    "seq": 1,
+    "goal": "Hook with 'life lesson' framing \u2014 suppliers quietly raise prices unless you actively switch, Nous solves it",
+    "checks": [
+      {
+        "label": "Life lesson hook",
+        "desc": "'Life lesson incoming!' or equivalent. Opens with wisdom-sharing framing \u2014 positions the revelation as something worth knowing, not just personal shock."
+      },
+      {
+        "label": "Systemic explanation of price creep",
+        "desc": "Must explain WHY people overpay: 'suppliers just quietly creep up your bills, and unless you spend HOURS doing research and comparing everything yourself, you just keep paying more and more.' This educational element is unique to Lifestyle Post 1."
+      },
+      {
+        "label": "Personal corroboration",
+        "desc": "'I recently found out I'd been massively overpaying on my bills. And it turns out loads of us are in the same boat.' Personal story validates the systemic lesson."
+      },
+      {
+        "label": "Nous as the solution to the system",
+        "desc": "Nous checks bills, finds better deals, switches over \u2014 without the creator needing to spend HOURS researching."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'Saved me hundreds of pounds on energy, broadband and my phone.' Specific figure or 'hundreds'."
+      },
+      {
+        "label": "No time / no patience admission",
+        "desc": "'I do not have the time (or patience) for doing all that myself so it's such a win.' Personal admission reinforcing why the solution is needed."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Lifestyle visual or selfie",
+        "desc": "Lifestyle shot or selfie \u2014 not a home shot."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Life lesson = you can fund lifestyle spending by not wasting money on bills.",
+      "Secret/Mystery": "Tease the life lesson without naming Nous \u2014 'I've discovered something that changed how I think about bills'.",
+      "Startling Stats": "Lead with stat about how common price creep is / how many people are affected before the life lesson.",
+      "Must Have": "Life lesson: Nous is the must-have tool for anyone who wants to stop being passively overcharged.",
+      "Bargain": "Life lesson: the biggest bargain isn't a sale \u2014 it's not being overcharged on bills.",
+      "No Experiment": "Direct life lesson: 'What no one tells you is that suppliers just quietly creep up your bills, and unless you spend HOURS doing research, you just keep paying more.'"
+    }
+  },
+  "lifestyle_post2": {
+    "name": "Lifestyle 2026 \u2014 Post 2",
+    "niche": "Lifestyle",
+    "seq": 2,
+    "goal": "Lead with phone bill being a 'huge rip-off', validated by \u00a37/month expert benchmark stat",
+    "checks": [
+      {
+        "label": "Phone bill rip-off hook",
+        "desc": "'I've just found out my phone bill has basically been a huge rip-off.' Strong, personal indignation about phone bill specifically \u2014 not general bills."
+      },
+      {
+        "label": "\u00a37/month expert benchmark stat",
+        "desc": "'Loads of money experts say you shouldn't pay more than \u00a37 a month for your mobile.' Expert validation of overpaying \u2014 unique to this post."
+      },
+      {
+        "label": "Personal corroboration",
+        "desc": "'I was paying WAY more than that. Please tell me I'm not the only one who thought that was just normal??' Inclusive, audience-connecting confession."
+      },
+      {
+        "label": "Nous solution across all bills",
+        "desc": "'Saved me loads on my phone (plus our energy and internet).' Nous addressed phone PLUS other bills \u2014 breadth matters."
+      },
+      {
+        "label": "Ease of switching",
+        "desc": "'Did all the research and sorted all the faff of switching \u2014 it was super easy.'"
+      },
+      {
+        "label": "Price creep moral / Lifestyle-specific close",
+        "desc": "'Basically if you don't check this stuff the whole time and spend ages comparing deals, your prices just creep up and you end up overpaying.' Connects back to Post 1's systemic theme \u2014 unique to Lifestyle niche."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Lifestyle visual or selfie",
+        "desc": "Lifestyle shot or selfie."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "PRIMARY for Lifestyle Post 2. \u00a37/month expert benchmark + personal overpaying corroboration.",
+      "No Experiment": "Phone bill rip-off confession without leading with the expert stat.",
+      "Secret/Mystery": "Tease the phone bill revelation without naming Nous."
+    }
+  },
+  "lifestyle_post3": {
+    "name": "Lifestyle 2026 \u2014 Post 3",
+    "niche": "Lifestyle",
+    "seq": 3,
+    "goal": "Fuming at retrospective overpaying \u2014 Nous revealed and solved it \u2014 strong 'you need this' advocacy",
+    "checks": [
+      {
+        "label": "Present-tense fuming hook",
+        "desc": "'I'm still pretty fuming after I found out I've been massively overpaying on my bills.' Present-tense is intentional \u2014 ongoing indignation, not past shock. Different from Celebrity Post 3's retrospective 'lightbulb moment' framing."
+      },
+      {
+        "label": "Assumption of normality",
+        "desc": "'I just assumed everything had gone up, my energy, internet and phone costs included.' Explains why overpayment continued."
+      },
+      {
+        "label": "Nous wow moment",
+        "desc": "'I signed up to @get_nous because I wanted someone to sort it all for me and\u2026 wow. They showed me how much I was overpaying and sorted better deals straight away.'"
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "'Already saved hundreds of pounds and didn't have to do anything except sign up and answer a few quick questions.'"
+      },
+      {
+        "label": "Strong advocacy close",
+        "desc": "'How did I not know about this already? If you're anything like me, you need this.' Direct recommendation \u2014 matches the wisdom-sharing persona from Post 1."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Lifestyle visual or selfie",
+        "desc": "Lifestyle shot or selfie."
+      }
+    ],
+    "variants": {
+      "Girl Maths": "Savings from fuming revelation \u2192 guilt-free lifestyle spending.",
+      "Secret/Mystery": "Tease the fuming discovery without naming Nous.",
+      "Startling Stats": "Lead with a stat before the personal fuming reaction.",
+      "Bargain": "Fuming bargain-seeker discovers the biggest savings were hiding in plain sight on bills.",
+      "No Experiment": "Present-tense fuming: 'I'm still pretty fuming after I found out I've been massively overpaying.' Then Nous solution and strong advocacy."
+    }
+  },
+  "finance_lifestyle_post1": {
+    "name": "Finance/Lifestyle 2026 \u2014 Post 1",
+    "niche": "Finance",
+    "seq": 1,
+    "goal": "Finance/money-conscious hook \u2014 'you're probably overspending on bills' direct challenge, then Nous solution",
+    "checks": [
+      {
+        "label": "Direct overpaying challenge hook",
+        "desc": "Finance audience responds to more direct framing: 'You're probably overpaying on your bills right now' or stat-led challenge. Less confessional, more assertive than Family niche."
+      },
+      {
+        "label": "Stat or data hook (Finance-specific)",
+        "desc": "For Finance niche, lead with approved stat (\u00a3781/year, 83%) OR specific deal prices to establish credibility. Data-first approach."
+      },
+      {
+        "label": "Personal validation",
+        "desc": "Creator confirms they too were overpaying \u2014 validates the challenge with personal experience."
+      },
+      {
+        "label": "Nous as deal-finding tool",
+        "desc": "Position Nous as the tool that finds better deals automatically \u2014 deal-finding angle prominent for Finance audience."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Specific figure essential for Finance audience \u2014 'hundreds' is minimum; personal \u00a3 figure preferred."
+      },
+      {
+        "label": "Ease / zero effort",
+        "desc": "'Sign up, answer a few questions, done.' Finance audience may be more skeptical \u2014 emphasise simplicity."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text. Exception: Secret/Mystery."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Finance-appropriate visual",
+        "desc": "Lifestyle shot or selfie \u2014 should feel credible and relevant to a money/finance audience."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "PRIMARY for Finance niche. Lead with \u00a3781/year or 83% stat \u2014 finance audience responds to specific data.",
+      "Bargain": "Deal-finding angle: 'I found the best financial hack' / 'this is the easiest money win I've had.'",
+      "Girl Maths": "Finance + Girl Maths: savings justify a purchase, but frame it as smart money management.",
+      "Secret/Mystery": "Tease a money-saving tool without naming Nous \u2014 works well for finance audience who wants to discover it.",
+      "No Experiment": "Direct challenge: 'If you haven't checked your bills in the last year, you're probably overpaying. Here's what I found.'"
+    }
+  },
+  "finance_lifestyle_post2": {
+    "name": "Finance/Lifestyle 2026 \u2014 Post 2",
+    "niche": "Finance",
+    "seq": 2,
+    "goal": "Explain HOW Nous works for a finance-literate audience \u2014 deal-finding process, what's covered, ongoing management",
+    "checks": [
+      {
+        "label": "Process / mechanism explanation",
+        "desc": "For Finance Post 2, explain how Nous works: checks energy, broadband, phone; finds better deals; handles switching. Finance audience needs to trust the process."
+      },
+      {
+        "label": "Specificity of savings or deals",
+        "desc": "Finance audience responds to specific numbers. Use specific deal prices or personal savings amounts, not vague 'loads of money'."
+      },
+      {
+        "label": "Ease \u2014 but with credible framing",
+        "desc": "'Sign up, answer a few questions \u2014 it's free. They find you better deals and switch you over.' Finance audience is more skeptical, so ease claims need to feel grounded."
+      },
+      {
+        "label": "Savings claim with specific \u00a3 figure",
+        "desc": "Specific savings figure. Finance audience expects precision."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Finance-appropriate visual",
+        "desc": "Lifestyle shot or selfie."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "Lead with specific deal benchmarks (\u00a323 broadband, \u00a37 phone) as proof of what savings look like.",
+      "Bargain": "Position the deals Nous finds as the best deal-finding process for bills.",
+      "No Experiment": "How it works: 'You answer a few questions, Nous checks energy, broadband, mobile \u2014 finds you better deals and switches. Takes minutes. Free to start.'"
+    }
+  },
+  "finance_lifestyle_post3": {
+    "name": "Finance/Lifestyle 2026 \u2014 Post 3",
+    "niche": "Finance",
+    "seq": 3,
+    "goal": "Share specific outcome and advocate for followers to check their own bills \u2014 data-backed advocacy",
+    "checks": [
+      {
+        "label": "Specific outcome with \u00a3 figure",
+        "desc": "Finance Post 3 must lead with or prominently feature specific savings result. The outcome IS the hook for Post 3."
+      },
+      {
+        "label": "Trustpilot or credibility signal",
+        "desc": "Optional but strong for Finance audience \u2014 Trustpilot reference or other credibility signal adds trust for a money-skeptical audience."
+      },
+      {
+        "label": "Direct recommendation",
+        "desc": "'If you haven't checked your bills, you should.' More direct than Family niche advocacy \u2014 Finance audience appreciates directness."
+      },
+      {
+        "label": "Bills covered",
+        "desc": "Energy, broadband, mobile mentioned. Finance audience wants to know the scope."
+      },
+      {
+        "label": "Ongoing management",
+        "desc": "Nous keeps tracking \u2014 set and forget framing for a finance-savvy audience who wants to optimise once."
+      },
+      {
+        "label": "@get_nous tag",
+        "desc": "@get_nous in text."
+      },
+      {
+        "label": "Save with Nous CTA button",
+        "desc": "At the BOTTOM of the story."
+      },
+      {
+        "label": "Finance-appropriate visual",
+        "desc": "Lifestyle shot or selfie."
+      }
+    ],
+    "variants": {
+      "Startling Stats": "Lead with 83% / \u00a3781 stat to show outcome is scalable to audience.",
+      "Bargain": "Specific deal results as proof of the bargain found.",
+      "No Experiment": "Direct advocacy: 'I found out I was overpaying and Nous sorted it. Here are my results. If you haven't checked yours, you should.'"
+    }
+  }
+};
+
 const posts = [
   {
     id: "2efe4fd0-8136-80fb-a3ef-d3400aabbeb9",
@@ -5153,6 +6157,17 @@ function getMonthKey(p) {
   return parts.length >= 3 ? parts[1] + ' ' + parts[2] : p.date;
 }
 
+// ── BRIEF TYPE LOOKUP ─────────────────────────────────────────────────────────
+const NICHE_PREFIX = {
+  Family: 'family', Celebrity: 'celebrity', Home: 'home',
+  Fashion: 'fashion', Lifestyle: 'lifestyle', Finance: 'finance_lifestyle', Fitness: 'lifestyle'
+};
+function getBriefType(post) {
+  const prefix = NICHE_PREFIX[post.niche] || 'family';
+  const seq = post.post_sequence || 1;
+  return briefTypes[`${prefix}_post${seq}`] || null;
+}
+
 // eCAC from delegations only
 function postEcac(perf) {
   if (perf.post_fee && perf.delegations && perf.delegations > 0)
@@ -5342,6 +6357,34 @@ function renderMetaPage() {
     </tr>`;
   }).join('');
 
+  // Per-brief-type breakdown
+  const briefGroups = {};
+  past.forEach(p => {
+    const bt = getBriefType(p);
+    const key = bt ? bt.id : `${p.niche}_post${p.post_sequence}`;
+    const label = bt ? bt.name : `${p.niche} — Post ${p.post_sequence}`;
+    if (!briefGroups[key]) briefGroups[key] = { label, count: 0, ecacs: [], bf: 0 };
+    briefGroups[key].count++;
+    const e = postEcac(p.performance);
+    if (e != null && e > 0) briefGroups[key].ecacs.push(e);
+    const ex2 = postExtras[p.id] || {};
+    if (ex2.forecast_ac != null && p.performance.accounts_created >= ex2.forecast_ac) briefGroups[key].bf++;
+  });
+  const briefRows = Object.entries(briefGroups)
+    .sort((a,b) => a[0].localeCompare(b[0]))
+    .map(([k, d]) => {
+      const avg  = d.ecacs.length ? Math.round(d.ecacs.reduce((a,b)=>a+b,0)/d.ecacs.length) : null;
+      const best = d.ecacs.length ? Math.min(...d.ecacs) : null;
+      const rat  = eCAcRating(avg);
+      return `<tr style="border-top:1px solid var(--border)">
+        <td style="padding:7px 10px 7px 0;font-size:11px">${d.label}</td>
+        <td style="padding:7px 8px;font-size:11px;text-align:right">${d.count}</td>
+        <td style="padding:7px 8px;font-size:11px;text-align:right">${d.bf}</td>
+        <td style="padding:7px 8px;font-size:12px;text-align:right;font-weight:700;color:var(--${rat.cls})">${avg != null ? '£'+avg : '—'}</td>
+        <td style="padding:7px 0;font-size:11px;text-align:right;color:var(--muted)">${best != null ? '£'+best : '—'}</td>
+      </tr>`;
+    }).join('');
+
   // Top 10 by eCAC
   const ranked = past.map(p => ({ p, ecac: postEcac(p.performance) }))
     .filter(x => x.ecac != null && x.ecac > 0)
@@ -5409,6 +6452,22 @@ function renderMetaPage() {
       </div>
     </div>
 
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head">By brief type &amp; post sequence</div>
+      <div class="card-body" style="padding:0 18px">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">
+            <th style="text-align:left;padding:10px 10px 8px 0">Brief</th>
+            <th style="text-align:right;padding:10px 8px 8px">Posts</th>
+            <th style="text-align:right;padding:10px 8px 8px">Beat fc.</th>
+            <th style="text-align:right;padding:10px 8px 8px">Avg eCAC</th>
+            <th style="text-align:right;padding:10px 0 8px">Best</th>
+          </tr></thead>
+          <tbody>${briefRows}</tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="card">
       <div class="card-head">Top 10 posts by eCAC <span style="font-weight:400;color:var(--muted);font-size:11px;text-transform:none;letter-spacing:0">— click to view</span></div>
       <div class="card-body" style="padding:0 18px">
@@ -5445,6 +6504,10 @@ function renderPost(idx) {
   const totalCount = p.brief_compliance.length;
   const isStrong   = ecac != null && ecac < 70;
   const strongBadge = isStrong ? '<span class="strong-badge">★ Strong Post · eCAC &lt;£70</span>' : '';
+
+  // Brief type lookup
+  const bt = getBriefType(p);
+  const btGoalHtml = bt ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5"><strong style="color:var(--text)">Post ${p.post_sequence} goal:</strong> ${bt.goal}</div>` : '';
 
   const fac = ex.forecast_ac;
   const fcac = ex.forecast_cac;
@@ -5590,11 +6653,11 @@ function renderPost(idx) {
 
         <!-- Brief Compliance -->
         <div class="dash-card">
-          <div class="dash-head">Brief
+          <div class="dash-head">${bt ? bt.name : p.brief_info.niche_brief}
             <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">${passCount}/${totalCount}</span>
           </div>
           <div class="dash-body">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4">${p.brief_info.niche_brief}</div>
+            ${btGoalHtml}
             <div class="dash-mini-checks">${checkHtml}</div>
           </div>
         </div>
