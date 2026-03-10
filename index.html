@@ -14603,6 +14603,15 @@ function renderPost(idx) {
     return {dot:'🔴',cls:'red',label:'Low'};
   }
 
+
+
+  // Use Notion data directly for all performance metrics
+  const nAC   = notionAC(p);
+  const nDel  = notionDel(p);
+  const fcac  = notionFCac(p);
+  const postFee = p.performance.post_fee || 0;
+  const vpp = (cvRaw != null && postFee > 0) ? Math.round(cvRaw / postFee) : null;
+  const app_val = (nAC != null && postFee > 0) ? (nAC / postFee).toFixed(2) : null;
   const vppR = vppLight(vpp); const appR = appLight(app_val); const ctrR = ctrLight2(ctrRaw);
 
   const newMetricsHtml = (vpp || app_val || ctrRaw) ? `
@@ -14624,14 +14633,6 @@ function renderPost(idx) {
         <div style="font-size:9px;color:var(--muted)">${appR.label}</div>
       </div>` : '<div></div>'}
     </div>` : '';
-
-  // Use Notion data directly for all performance metrics
-  const nAC   = notionAC(p);
-  const nDel  = notionDel(p);
-  const fcac  = notionFCac(p);
-  const postFee = p.performance.post_fee || 0;
-  const vpp = (cvRaw != null && postFee > 0) ? Math.round(cvRaw / postFee) : null;
-  const app_val = (nAC != null && postFee > 0) ? (nAC / postFee).toFixed(2) : null;
   const fac   = ex.forecast_ac;  // keep for AC forecast comparison
   const acHit = fac != null && nAC != null
     ? Math.round(nAC / fac * 100) : null;
