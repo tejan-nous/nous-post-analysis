@@ -170,12 +170,11 @@
     .month-pill:hover { color: var(--text); border-color: var(--text); }
     .month-pill.active { background: var(--nous); border-color: var(--nous); color: #fff; font-weight: 600; }
     .month-pill-count { font-size: 10px; opacity: .75; }
-    .month-group { display: flex; align-items: center; gap: 2px; position: relative; }
+    .month-group { display: flex; align-items: center; gap: 2px; }
     .week-chevron { background: none; border: 1px solid var(--border); border-radius: 99px; padding: 4px 7px; font-size: 11px; cursor: pointer; color: var(--muted); line-height: 1; transition: all .15s; }
     .week-chevron:hover, .week-chevron.active { color: var(--nous); border-color: var(--nous); }
-    .week-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; z-index: 100; min-width: 130px; box-shadow: 0 4px 16px rgba(0,0,0,.18); flex-direction: column; gap: 2px; }
-    .week-dropdown.open { display: flex; }
-    .week-drop-item { background: none; border: none; border-radius: 6px; padding: 7px 10px; font-size: 12px; cursor: pointer; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background .1s; text-align: left; }
+    #week-drop-portal { display: none; position: absolute; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; z-index: 9999; min-width: 140px; box-shadow: 0 4px 20px rgba(0,0,0,.22); flex-direction: column; gap: 2px; }
+    .week-drop-item { background: none; border: none; border-radius: 6px; padding: 8px 12px; font-size: 12px; cursor: pointer; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: background .1s; text-align: left; width: 100%; }
     .week-drop-item:hover { background: var(--border); }
     .week-drop-item.active { background: var(--nous); color: #fff; font-weight: 600; }
     .week-drop-count { font-size: 10px; opacity: .65; }
@@ -237,6 +236,7 @@
 </header>
 
 <div class="month-nav" id="month-nav"></div>
+<div id="week-drop-portal"></div>
 
 <div id="back-to-meta" style="display:none;background:var(--nous-light);border-bottom:1px solid var(--nous);padding:8px 28px;align-items:center;gap:10px">
   <button onclick="backToMeta()" style="background:none;border:none;color:var(--nous);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0">← Back to Meta Analysis</button>
@@ -13993,7 +13993,7 @@ function computeBcRates(group) {
   const rates = {};
   if (!group.length) return rates;
   posts[0].brief_compliance.map(c => c.label).forEach(label => {
-    const passing = group.filter(p => p.brief_compliance.find(c => c.label === label && c.pass)).length;
+    const passing = group.filter(p => (p.brief_compliance||[]).find(c => c.label === label && c.pass)).length;
     rates[label] = { passing, total: group.length, pct: Math.round(passing / group.length * 100) };
   });
   return rates;
@@ -14141,34 +14141,50 @@ function renderMonthNav() {
     const isActive = ml === selectedMonthLabel;
     const activeWeek = isActive && selectedWeekLabel;
     const btnLabel = activeWeek ? ml + ' · ' + selectedWeekLabel : ml;
-    const dropdownItems = weeks.map(wk => {
-      const wkCount = displayPosts.filter(p => {
-        const wl = getWeekLabel(p.date);
-        if (!wl) return false;
-        const pml = recentLabels.includes(wl) ? 'Recent' : getMonthLabel(p.date);
-        return pml === ml && wl === wk;
-      }).length;
-      const wkActive = isActive && selectedWeekLabel === wk;
-      return `<button class="week-drop-item${wkActive?' active':''}" onclick="selectWeek('${ml}','${wk}');closeDropdowns()">${wk} <span class="week-drop-count">${wkCount}</span></button>`;
-    }).join('');
     const hasWeeks = weeks.length > 1;
-    return `<div class="month-group" id="mg-${ml.replace(' ','-')}">
+    const safeId = ml.replace(/\s+/g,'-');
+    return `<div class="month-group" id="mg-${safeId}">
       <button class="month-pill${isActive?' active':''}" onclick="selectMonthLabel('${ml}')">${btnLabel} <span class="month-pill-count">${monthCount}</span></button>
-      ${hasWeeks ? `<button class="week-chevron${isActive?' active':''}" onclick="toggleWeekDrop('${ml}')" title="Filter by week">▾</button>
-      <div class="week-dropdown" id="wd-${ml.replace(' ','-')}">${dropdownItems}</div>` : ''}
+      ${hasWeeks ? `<button class="week-chevron${isActive?' active':''}" id="chv-${safeId}" onclick="toggleWeekDrop(event,'${ml}')" title="Filter by week">&#9662;</button>` : ''}
     </div>`;
   }).join('');
 }
-function toggleWeekDrop(ml) {
-  closeDropdowns();
-  const el = document.getElementById('wd-' + ml.replace(' ','-'));
-  if (el) el.classList.toggle('open');
+function toggleWeekDrop(e, ml) {
+  e.stopPropagation();
+  const portal = document.getElementById('week-drop-portal');
+  if (!portal) return;
+  // If same dropdown already open, close it
+  if (portal._openMl === ml && portal.style.display !== 'none') {
+    closeDropdowns(); return;
+  }
+  const weeks = monthWeekMap[ml] || [];
+  const items = weeks.map(wk => {
+    const wkCount = displayPosts.filter(p => {
+      const wl = getWeekLabel(p.date);
+      if (!wl) return false;
+      const pml = recentLabels.includes(wl) ? 'Recent' : getMonthLabel(p.date);
+      return pml === ml && wl === wk;
+    }).length;
+    const wkActive = ml === selectedMonthLabel && selectedWeekLabel === wk;
+    return `<button class="week-drop-item${wkActive?' active':''}" onclick="selectWeek('${ml}','${wk}');closeDropdowns()">${wk} <span class="week-drop-count">${wkCount}</span></button>`;
+  }).join('');
+  portal.innerHTML = items;
+  portal._openMl = ml;
+  // Position under the chevron button
+  const btn = document.getElementById('chv-' + ml.replace(/\s+/g,'-'));
+  if (btn) {
+    const r = btn.getBoundingClientRect();
+    portal.style.top = (r.bottom + window.scrollY + 6) + 'px';
+    portal.style.left = r.left + 'px';
+  }
+  portal.style.display = 'flex';
 }
 function closeDropdowns() {
-  document.querySelectorAll('.week-dropdown.open').forEach(el => el.classList.remove('open'));
+  const portal = document.getElementById('week-drop-portal');
+  if (portal) { portal.style.display = 'none'; portal._openMl = null; }
 }
 document.addEventListener('click', e => {
-  if (!e.target.closest('.month-group')) closeDropdowns();
+  if (!e.target.closest('.month-group') && !e.target.closest('#week-drop-portal')) closeDropdowns();
 });
 function selectMonthLabel(ml) {
   selectedMonthLabel = ml; selectedWeekLabel = null;
@@ -14546,8 +14562,8 @@ function renderPost(idx) {
   // eCAC stitched (campaign-level: total fee / total delegations)
   const ecac = stitchedEcac(p);
   const rat  = eCAcRating(ecac);
-  const passCount  = p.brief_compliance.filter(c => c.pass).length;
-  const totalCount = p.brief_compliance.length;
+  const passCount  = (p.brief_compliance||[]).filter(c => c.pass).length;
+  const totalCount = (p.brief_compliance||[]).length;
   const isStrong   = ecac != null && ecac < 70;
   const strongBadge = isStrong ? '<span class="strong-badge">★ Strong Post · eCAC &lt;£70</span>' : '';
 
@@ -14702,7 +14718,7 @@ function renderPost(idx) {
     'Save with Nous CTA': 'Best posts use exact "Save with Nous" button text at the bottom. Posts using vague CTAs ("see how much you could save") consistently underperform.',
     'Calming/lifestyle visual': 'Best posts use a home/lifestyle shot with readable text overlay. Posts where the product screenshot dominates, or the image looks like an ad, perform worse.',
   };
-  const metaRows = p.brief_compliance.map(c => {
+  const metaRows = (p.brief_compliance||[]).map(c => {
     const rate = metaRates[c.label] || { pct: 0 };
     const cls  = c.pass ? 'this-pass' : 'this-fail';
     const tip  = CRITERION_TIPS[c.label] || '';
@@ -14716,7 +14732,7 @@ function renderPost(idx) {
     </div>`;
   }).join('');
 
-  const checkHtml = p.brief_compliance.map(c => `
+  const checkHtml = (p.brief_compliance||[]).map(c => `
     <div class="dash-mini-check ${c.pass ? 'pass' : 'fail'}">
       <span style="flex-shrink:0">${c.pass ? '✓' : '✗'}</span>${c.label}
     </div>`).join('');
