@@ -14039,7 +14039,8 @@ function getWeekLabel(dateStr) {
   const d = new Date(iso);
   const day = d.getDate(); const week = Math.floor((day - 1) / 7);
   const wStart = week * 7 + 1; const wEnd = Math.min(wStart + 6, new Date(d.getFullYear(), d.getMonth()+1, 0).getDate());
-  return `${wStart}–${wEnd}`;
+  function ord(n){const s=['th','st','nd','rd'];const v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+  return `${ord(wStart)}–${ord(wEnd)}`;
 }
 function monthOrder(label) {
   if (label === 'Recent') return '9999-99';
@@ -14752,9 +14753,9 @@ function renderPost(idx) {
     ).join('');
   }
 
-  const goodHtml   = (p.review_reflection.good || []).map(t =>
+  const goodHtml   = ((p.review_reflection||{}).good || []).map(t =>
     `<div class="reflection-row good"><span style="flex-shrink:0">✓</span><div>${t}</div></div>`).join('');
-  const missedHtml = (p.review_reflection.missed || []).map(t =>
+  const missedHtml = ((p.review_reflection||{}).missed || []).map(t =>
     `<div class="reflection-row missed"><span style="flex-shrink:0">△</span><div>${t}</div></div>`).join('');
   const hasReflection = goodHtml || missedHtml;
 
@@ -14811,7 +14812,7 @@ function renderPost(idx) {
           <span class="tag">${p.format}</span>
           <span class="tag">${p.niche}</span>
           <span class="tag">${p.date}</span>
-          <span class="tag">${p.brief_info.niche_brief}</span>
+          <span class="tag">${(p.brief_info||{}).niche_brief||""}</span>
         </div>
         ${timelineHtml}
       </div></div>
@@ -14854,7 +14855,7 @@ function renderPost(idx) {
 
         <!-- Brief Compliance -->
         <div class="dash-card">
-          <div class="dash-head">${bt ? bt.name : p.brief_info.niche_brief}
+          <div class="dash-head">${bt ? bt.name : (p.brief_info||{}).niche_brief||p.niche}
             <span style="color:var(--text);font-weight:600;text-transform:none;letter-spacing:0">${passCount}/${totalCount}</span>
           </div>
           <div class="dash-body">
