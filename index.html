@@ -173,9 +173,9 @@
     .month-group { display: flex; align-items: center; gap: 2px; }
     .week-chevron { background: none; border: 1px solid var(--border); border-radius: 99px; padding: 4px 7px; font-size: 11px; cursor: pointer; color: var(--muted); line-height: 1; transition: all .15s; }
     .week-chevron:hover, .week-chevron.active { color: var(--nous); border-color: var(--nous); }
-    #week-drop-portal { display: none; position: absolute; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; z-index: 9999; min-width: 140px; box-shadow: 0 4px 20px rgba(0,0,0,.22); flex-direction: column; gap: 2px; }
-    .week-drop-item { background: none; border: none; border-radius: 6px; padding: 8px 12px; font-size: 12px; cursor: pointer; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: background .1s; text-align: left; width: 100%; }
-    .week-drop-item:hover { background: var(--border); }
+    #week-drop-portal { display: none; position: absolute; background: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 10px; padding: 6px; z-index: 9999; min-width: 150px; box-shadow: 0 8px 32px rgba(0,0,0,.6); flex-direction: column; gap: 2px; }
+    .week-drop-item { background: none; border: none; border-radius: 6px; padding: 8px 12px; font-size: 12px; cursor: pointer; color: #e0e0e0; display: flex; justify-content: space-between; align-items: center; gap: 16px; transition: background .1s; text-align: left; width: 100%; }
+    .week-drop-item:hover { background: #2e2e2e; color: #fff; }
     .week-drop-item.active { background: var(--nous); color: #fff; font-weight: 600; }
     .week-drop-count { font-size: 10px; opacity: .65; }
     /* META STATS */
@@ -14376,7 +14376,7 @@ function renderTopPostsGallery(briefData, niche, frame) {
   const topCards = briefData.posts.map(p => {
     const r = eCAcRating(p.ecac);
     return `<div class="top-post-card" onclick="goToPost('${p.id}')">
-      <img class="top-post-thumb" src="${p.img}" alt="${p.name}" onerror="this.style.background='#1a1a1a'">
+      <img class="top-post-thumb" src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">
       <div class="top-post-info">
         <div class="top-post-ecac" style="color:var(--${r.cls})">${r.emoji} £${p.ecac}</div>
         <div class="top-post-name">${p.name}</div>
@@ -14787,7 +14787,7 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.img}" alt="${p.name}" onerror="this.style.background='#1a1a1a'">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'">
       </div>
       <div class="image-footer">
         <span>${p.format} · ${p.niche} · ${p.date}</span>
