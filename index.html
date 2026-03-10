@@ -238,10 +238,6 @@
 <div class="month-nav" id="month-nav"></div>
 <div id="week-drop-portal"></div>
 
-<div id="back-to-meta" style="display:none;background:var(--nous-light);border-bottom:1px solid var(--nous);padding:8px 28px;align-items:center;gap:10px">
-  <button onclick="backToMeta()" style="background:none;border:none;color:var(--nous);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0">← Back to Meta Analysis</button>
-  <span style="font-size:12px;color:var(--nous);opacity:.7">You navigated here from Meta Analysis</span>
-</div>
 
 <nav class="arrow-nav" id="arrow-nav">
   <button class="arrow-btn" id="btn-prev" onclick="prevPost()">← Prev</button>
@@ -14081,7 +14077,6 @@ let selectedMonthLabel = allMonthLabels[0] || '';
 let selectedWeekLabel  = null; // null = all weeks in month
 let selectedMonthKey   = allMonthKeys[0] || '';
 let currentIdx = 0;
-let fromMeta = false;
 
 function getPeriodPosts() {
   return displayPosts.filter(p => {
@@ -14123,9 +14118,6 @@ function updateArrowNav(idx) {
   document.getElementById('btn-prev').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === mp.length - 1;
   document.getElementById('header-count').textContent = displayPosts.length + ' posts';
-  // Show back button if came from meta
-  const bb = document.getElementById('back-to-meta');
-  if (bb) bb.style.display = fromMeta ? 'flex' : 'none';
 }
 
 // ── MONTH + WEEK NAV ──────────────────────────────────────────────────────────
@@ -14534,7 +14526,6 @@ function renderFullMetaStats() {
 
 
 function goToPost(id) {
-  fromMeta = true;  // came from meta analysis
   showPage('posts');
   const p = displayPosts.find(x => x.id === id);
   if (!p) return;
@@ -14544,12 +14535,7 @@ function goToPost(id) {
   const idx = getPeriodPosts().findIndex(x => x.id === id);
   if (idx >= 0) renderPost(idx);
   const gml = recentLabels.includes(pk) ? 'Recent' : getMonthLabel(p.date);
-  history.pushState({page:'posts',month:gml,week:pk,idx,fromMeta:true}, '', '#posts');
-}
-function backToMeta() {
-  fromMeta = false;
-  showPage('meta');
-  history.pushState({page:'meta'}, '', '#meta');
+  history.pushState({page:'posts',month:gml,week:pk,idx}, '', '#posts');
 }
 
 // ── RENDER POST ───────────────────────────────────────────────────────────────
