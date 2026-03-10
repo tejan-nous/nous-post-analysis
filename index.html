@@ -170,6 +170,11 @@
     .month-pill:hover { color: var(--text); border-color: var(--text); }
     .month-pill.active { background: var(--nous); border-color: var(--nous); color: #fff; font-weight: 600; }
     .month-pill-count { font-size: 10px; opacity: .75; }
+    .month-group { display: flex; flex-direction: column; gap: 4px; }
+    .week-pills { display: flex; gap: 6px; flex-wrap: wrap; padding: 4px 0 2px 12px; }
+    .week-pill { background: none; border: 1px solid var(--border); border-radius: 99px; padding: 3px 10px; font-size: 11px; cursor: pointer; color: var(--muted); display: flex; align-items: center; gap: 4px; transition: all .15s; white-space: nowrap; }
+    .week-pill:hover { color: var(--text); border-color: var(--text); }
+    .week-pill.active { background: var(--nous); border-color: var(--nous); color: #fff; font-weight: 600; opacity: .85; }
     /* META STATS */
     .meta-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .meta-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -14009,42 +14014,79 @@ posts.forEach(p => {
   campaignGroups[key].push(p);
 });
 
-// ── PERIOD GROUPING (7-day rolling windows + quick filters) ───────────────────
-function getPeriodLabel(dateStr) {
+// ── PERIOD GROUPING ───────────────────────────────────────────────────────────
+// Returns "Mar 2026", "Feb 2026" etc for month grouping
+function getMonthLabel(dateStr) {
   const iso = parseIsoDate(dateStr);
   if (!iso) return 'Unknown';
+  const d = new Date(iso);
+  const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return mn[d.getMonth()] + ' ' + d.getFullYear();
+}
+// Returns week label within a month: "1–7", "8–14", "15–21", "22–28", "29–31"
+// Also "Last 24h" and "Last 7 days" as special keys
+function getWeekLabel(dateStr) {
+  const iso = parseIsoDate(dateStr);
+  if (!iso) return null;
   const YDAY = new Date(Date.now() - 24*60*60*1000).toISOString().slice(0,10);
   const W7   = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
   if (iso >= YDAY) return 'Last 24h';
   if (iso >= W7)   return 'Last 7 days';
-  const d = new Date(iso); const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const yr = d.getFullYear(); const mo = mn[d.getMonth()];
+  const d = new Date(iso);
   const day = d.getDate(); const week = Math.floor((day - 1) / 7);
-  const wStart = week * 7 + 1; const wEnd = Math.min(wStart + 6, new Date(yr, d.getMonth()+1, 0).getDate());
-  return `${mo} ${wStart}–${wEnd} ${yr}`;
+  const wStart = week * 7 + 1; const wEnd = Math.min(wStart + 6, new Date(d.getFullYear(), d.getMonth()+1, 0).getDate());
+  return `${wStart}–${wEnd}`;
 }
-function periodOrder(label) {
-  if (label === 'Last 24h')    return '9999-99-99';
-  if (label === 'Last 7 days') return '9999-99-98';
+function monthOrder(label) {
+  if (label === 'Recent') return '9999-99';
   const mn = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
-  const m = label.match(/(\w{3}) (\d+)–\d+ (\d{4})/);
-  return m ? `${m[3]}-${mn[m[1]]||'00'}-${m[2].padStart(2,'0')}` : '0';
+  const m = label.match(/(\w{3}) (\d{4})/);
+  return m ? `${m[2]}-${mn[m[1]]||'00'}` : '0';
 }
-const allPeriodKeys = [];
+
+// Build month → weeks map
+const monthWeekMap = {}; // { 'Mar 2026': ['Last 24h','Last 7 days','1–7',...], ... }
+const recentLabels = ['Last 24h','Last 7 days'];
+const allMonthLabels = [];
 displayPosts.forEach(p => {
-  const pk = getPeriodLabel(p.date);
-  if (!allPeriodKeys.includes(pk)) allPeriodKeys.push(pk);
+  const wl = getWeekLabel(p.date);
+  if (!wl) return;
+  if (recentLabels.includes(wl)) {
+    if (!monthWeekMap['Recent']) { monthWeekMap['Recent'] = []; allMonthLabels.push('Recent'); }
+    if (!monthWeekMap['Recent'].includes(wl)) monthWeekMap['Recent'].push(wl);
+    return;
+  }
+  const ml = getMonthLabel(p.date);
+  if (!monthWeekMap[ml]) { monthWeekMap[ml] = []; allMonthLabels.push(ml); }
+  if (!monthWeekMap[ml].includes(wl)) monthWeekMap[ml].push(wl);
 });
-allPeriodKeys.sort((a,b) => periodOrder(b).localeCompare(periodOrder(a)));
+// Sort month labels descending
+allMonthLabels.sort((a,b) => monthOrder(b).localeCompare(monthOrder(a)));
+// Sort weeks within each month
+allMonthLabels.forEach(ml => {
+  if (ml === 'Recent') {
+    monthWeekMap[ml].sort((a,b) => (a==='Last 24h'?0:1) - (b==='Last 24h'?0:1));
+  } else {
+    monthWeekMap[ml].sort((a,b) => parseInt(b) - parseInt(a));
+  }
+});
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-let selectedPeriodKey = allPeriodKeys[0] || '';
-let selectedMonthKey  = allMonthKeys[0] || '';
+let selectedMonthLabel = allMonthLabels[0] || '';
+let selectedWeekLabel  = null; // null = all weeks in month
+let selectedMonthKey   = allMonthKeys[0] || '';
 let currentIdx = 0;
 let fromMeta = false;
 
 function getPeriodPosts() {
-  return displayPosts.filter(p => getPeriodLabel(p.date) === selectedPeriodKey);
+  return displayPosts.filter(p => {
+    const wl = getWeekLabel(p.date);
+    if (!wl) return false;
+    const ml = recentLabels.includes(wl) ? 'Recent' : getMonthLabel(p.date);
+    if (ml !== selectedMonthLabel) return false;
+    if (selectedWeekLabel && wl !== selectedWeekLabel) return false;
+    return true;
+  });
 }
 function getMonthPosts() { return getPeriodPosts(); }
 
@@ -14071,7 +14113,8 @@ function updateArrowNav(idx) {
   const mp = getPeriodPosts();
   const p = mp[idx];
   document.getElementById('arrow-name').textContent = p.name + ' — Post ' + p.post_sequence;
-  document.getElementById('arrow-counter').textContent = 'Post ' + (idx + 1) + ' of ' + mp.length + ' · ' + selectedPeriodKey;
+  const periodLabel = selectedWeekLabel ? selectedMonthLabel + ' · ' + selectedWeekLabel : selectedMonthLabel;
+  document.getElementById('arrow-counter').textContent = 'Post ' + (idx + 1) + ' of ' + mp.length + ' · ' + periodLabel;
   document.getElementById('btn-prev').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === mp.length - 1;
   document.getElementById('header-count').textContent = displayPosts.length + ' posts';
@@ -14080,23 +14123,46 @@ function updateArrowNav(idx) {
   if (bb) bb.style.display = fromMeta ? 'flex' : 'none';
 }
 
-// ── PERIOD PILLS ──────────────────────────────────────────────────────────────
+// ── MONTH + WEEK NAV ──────────────────────────────────────────────────────────
 function renderMonthNav() {
   const el = document.getElementById('month-nav');
   if (!el) return;
-  el.innerHTML = allPeriodKeys.map(pk => {
-    const count = displayPosts.filter(p => getPeriodLabel(p.date) === pk).length;
-    const active = pk === selectedPeriodKey ? 'active' : '';
-    return `<button class="month-pill ${active}" onclick="selectPeriod('${pk}')">${pk} <span class="month-pill-count">${count}</span></button>`;
+  el.innerHTML = allMonthLabels.map(ml => {
+    const weeks = monthWeekMap[ml] || [];
+    const monthCount = displayPosts.filter(p => {
+      const wl = getWeekLabel(p.date);
+      if (!wl) return false;
+      return (recentLabels.includes(wl) ? 'Recent' : getMonthLabel(p.date)) === ml;
+    }).length;
+    const isActive = ml === selectedMonthLabel;
+    const weekPills = weeks.map(wk => {
+      const wkCount = displayPosts.filter(p => {
+        const wl = getWeekLabel(p.date);
+        if (!wl) return false;
+        const pml = recentLabels.includes(wl) ? 'Recent' : getMonthLabel(p.date);
+        return pml === ml && wl === wk;
+      }).length;
+      const wkActive = isActive && selectedWeekLabel === wk;
+      return `<button class="week-pill${wkActive?' active':''}" onclick="selectWeek('${ml}','${wk}')">${wk} <span class="month-pill-count">${wkCount}</span></button>`;
+    }).join('');
+    return `<div class="month-group${isActive?' open':''}">
+      <button class="month-pill${isActive?' active':''}" onclick="selectMonthLabel('${ml}')">${ml} <span class="month-pill-count">${monthCount}</span></button>
+      ${isActive ? `<div class="week-pills">${weekPills}</div>` : ''}
+    </div>`;
   }).join('');
 }
-function selectMonth(mk) { selectPeriod(mk); }
-function selectPeriod(pk) {
-  selectedPeriodKey = pk;
-  renderMonthNav();
-  renderPost(0);
-  history.pushState({page:'posts',period:pk,idx:0}, '', '#posts');
+function selectMonthLabel(ml) {
+  selectedMonthLabel = ml; selectedWeekLabel = null;
+  renderMonthNav(); renderPost(0);
+  history.pushState({page:'posts',month:ml,week:null,idx:0}, '', '#posts');
 }
+function selectWeek(ml, wk) {
+  selectedMonthLabel = ml; selectedWeekLabel = wk;
+  renderMonthNav(); renderPost(0);
+  history.pushState({page:'posts',month:ml,week:wk,idx:0}, '', '#posts');
+}
+function selectMonth(mk) { selectMonthLabel(mk); }
+function selectPeriod(pk) { selectMonthLabel(pk); }
 
 // ── PAGE NAV + HISTORY ────────────────────────────────────────────────────────
 function showPage(page, pushState=true) {
@@ -14114,7 +14180,7 @@ window.addEventListener('popstate', e => {
   if (state.page === 'meta') { showPage('meta', false); }
   else {
     showPage('posts', false);
-    if (state.period) { selectedPeriodKey = state.period; renderMonthNav(); }
+    if (state.month) { selectedMonthLabel = state.month; selectedWeekLabel = state.week || null; renderMonthNav(); }
     if (state.idx != null) renderPost(state.idx);
   }
 });
@@ -14436,11 +14502,13 @@ function goToPost(id) {
   showPage('posts');
   const p = displayPosts.find(x => x.id === id);
   if (!p) return;
-  const pk = getPeriodLabel(p.date);
-  if (pk !== selectedPeriodKey) { selectedPeriodKey = pk; renderMonthNav(); }
+  const pk = getWeekLabel(p.date);
+  const gml2 = pk && recentLabels.includes(pk) ? 'Recent' : getMonthLabel(p.date);
+  if (gml2 !== selectedMonthLabel || pk !== selectedWeekLabel) { selectedMonthLabel = gml2; selectedWeekLabel = pk; renderMonthNav(); }
   const idx = getPeriodPosts().findIndex(x => x.id === id);
   if (idx >= 0) renderPost(idx);
-  history.pushState({page:'posts',period:pk,idx,fromMeta:true}, '', '#posts');
+  const gml = recentLabels.includes(pk) ? 'Recent' : getMonthLabel(p.date);
+  history.pushState({page:'posts',month:gml,week:pk,idx,fromMeta:true}, '', '#posts');
 }
 function backToMeta() {
   fromMeta = false;
@@ -14658,8 +14726,8 @@ function renderPost(idx) {
   // Top 5 improvements: failing items sorted by how often top posts pass them
   const briefKey = p.niche + '_' + p.post_sequence;
   const bData = topPostsByBrief[briefKey];
-  const passingLabels = new Set(p.brief_compliance.filter(c => c.pass).map(c => c.label));
-  const failing = p.brief_compliance
+  const passingLabels = new Set((p.brief_compliance||[]).filter(c => c.pass).map(c => c.label));
+  const failing = (p.brief_compliance||[])
     .filter(c => !c.pass)
     .map(c => ({
       label: c.label,
