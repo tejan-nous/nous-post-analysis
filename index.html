@@ -229,6 +229,11 @@
 
 <div class="month-nav" id="month-nav"></div>
 
+<div id="back-to-meta" style="display:none;background:var(--nous-light);border-bottom:1px solid var(--nous);padding:8px 28px;align-items:center;gap:10px">
+  <button onclick="backToMeta()" style="background:none;border:none;color:var(--nous);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0">← Back to Meta Analysis</button>
+  <span style="font-size:12px;color:var(--nous);opacity:.7">You navigated here from Meta Analysis</span>
+</div>
+
 <nav class="arrow-nav" id="arrow-nav">
   <button class="arrow-btn" id="btn-prev" onclick="prevPost()">← Prev</button>
   <div class="arrow-center">
@@ -14004,13 +14009,44 @@ posts.forEach(p => {
   campaignGroups[key].push(p);
 });
 
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let selectedMonthKey = allMonthKeys[0] || '';
-let currentIdx = 0;
-
-function getMonthPosts() {
-  return displayPosts.filter(p => getMonthKey(p) === selectedMonthKey);
+// ── PERIOD GROUPING (7-day rolling windows + quick filters) ───────────────────
+function getPeriodLabel(dateStr) {
+  const iso = parseIsoDate(dateStr);
+  if (!iso) return 'Unknown';
+  const YDAY = new Date(Date.now() - 24*60*60*1000).toISOString().slice(0,10);
+  const W7   = new Date(Date.now() - 7*24*60*60*1000).toISOString().slice(0,10);
+  if (iso >= YDAY) return 'Last 24h';
+  if (iso >= W7)   return 'Last 7 days';
+  const d = new Date(iso); const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const yr = d.getFullYear(); const mo = mn[d.getMonth()];
+  const day = d.getDate(); const week = Math.floor((day - 1) / 7);
+  const wStart = week * 7 + 1; const wEnd = Math.min(wStart + 6, new Date(yr, d.getMonth()+1, 0).getDate());
+  return `${mo} ${wStart}–${wEnd} ${yr}`;
 }
+function periodOrder(label) {
+  if (label === 'Last 24h')    return '9999-99-99';
+  if (label === 'Last 7 days') return '9999-99-98';
+  const mn = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  const m = label.match(/(\w{3}) (\d+)–\d+ (\d{4})/);
+  return m ? `${m[3]}-${mn[m[1]]||'00'}-${m[2].padStart(2,'0')}` : '0';
+}
+const allPeriodKeys = [];
+displayPosts.forEach(p => {
+  const pk = getPeriodLabel(p.date);
+  if (!allPeriodKeys.includes(pk)) allPeriodKeys.push(pk);
+});
+allPeriodKeys.sort((a,b) => periodOrder(b).localeCompare(periodOrder(a)));
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let selectedPeriodKey = allPeriodKeys[0] || '';
+let selectedMonthKey  = allMonthKeys[0] || '';
+let currentIdx = 0;
+let fromMeta = false;
+
+function getPeriodPosts() {
+  return displayPosts.filter(p => getPeriodLabel(p.date) === selectedPeriodKey);
+}
+function getMonthPosts() { return getPeriodPosts(); }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function eCAcRating(ecac) {
@@ -14024,7 +14060,7 @@ function eCAcRating(ecac) {
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 function prevPost() { if (currentIdx > 0) renderPost(currentIdx - 1); }
-function nextPost() { const mp = getMonthPosts(); if (currentIdx < mp.length - 1) renderPost(currentIdx + 1); }
+function nextPost() { const mp = getPeriodPosts(); if (currentIdx < mp.length - 1) renderPost(currentIdx + 1); }
 document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') prevPost();
   if (e.key === 'ArrowRight') nextPost();
@@ -14032,42 +14068,56 @@ document.addEventListener('keydown', e => {
 
 function updateArrowNav(idx) {
   currentIdx = idx;
-  const mp = getMonthPosts();
+  const mp = getPeriodPosts();
   const p = mp[idx];
   document.getElementById('arrow-name').textContent = p.name + ' — Post ' + p.post_sequence;
-  document.getElementById('arrow-counter').textContent = 'Post ' + (idx + 1) + ' of ' + mp.length + ' · ' + selectedMonthKey;
+  document.getElementById('arrow-counter').textContent = 'Post ' + (idx + 1) + ' of ' + mp.length + ' · ' + selectedPeriodKey;
   document.getElementById('btn-prev').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === mp.length - 1;
   document.getElementById('header-count').textContent = displayPosts.length + ' posts';
+  // Show back button if came from meta
+  const bb = document.getElementById('back-to-meta');
+  if (bb) bb.style.display = fromMeta ? 'flex' : 'none';
 }
 
-// ── MONTH PILLS ───────────────────────────────────────────────────────────────
+// ── PERIOD PILLS ──────────────────────────────────────────────────────────────
 function renderMonthNav() {
   const el = document.getElementById('month-nav');
   if (!el) return;
-  el.innerHTML = allMonthKeys.map(mk => {
-    const count = displayPosts.filter(p => getMonthKey(p) === mk).length;
-    const active = mk === selectedMonthKey ? 'active' : '';
-    return `<button class="month-pill ${active}" onclick="selectMonth('${mk}')">${mk} <span class="month-pill-count">${count}</span></button>`;
+  el.innerHTML = allPeriodKeys.map(pk => {
+    const count = displayPosts.filter(p => getPeriodLabel(p.date) === pk).length;
+    const active = pk === selectedPeriodKey ? 'active' : '';
+    return `<button class="month-pill ${active}" onclick="selectPeriod('${pk}')">${pk} <span class="month-pill-count">${count}</span></button>`;
   }).join('');
 }
-
-function selectMonth(mk) {
-  selectedMonthKey = mk;
+function selectMonth(mk) { selectPeriod(mk); }
+function selectPeriod(pk) {
+  selectedPeriodKey = pk;
   renderMonthNav();
   renderPost(0);
+  history.pushState({page:'posts',period:pk,idx:0}, '', '#posts');
 }
 
-// ── PAGE NAV ──────────────────────────────────────────────────────────────────
-function showPage(page) {
+// ── PAGE NAV + HISTORY ────────────────────────────────────────────────────────
+function showPage(page, pushState=true) {
   document.getElementById('posts-view').style.display = page === 'posts' ? '' : 'none';
   document.getElementById('meta-view').style.display  = page === 'meta'  ? '' : 'none';
   document.getElementById('month-nav').style.display  = page === 'posts' ? '' : 'none';
   document.getElementById('arrow-nav').style.display  = page === 'posts' ? '' : 'none';
   document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
   document.getElementById('tab-meta').classList.toggle('active',  page === 'meta');
-  if (page === 'meta') renderMetaPage();
+  if (page === 'meta') { fromMeta = false; renderMetaPage(); }
+  if (pushState) history.pushState({page}, '', '#' + page);
 }
+window.addEventListener('popstate', e => {
+  const state = e.state || {};
+  if (state.page === 'meta') { showPage('meta', false); }
+  else {
+    showPage('posts', false);
+    if (state.period) { selectedPeriodKey = state.period; renderMonthNav(); }
+    if (state.idx != null) renderPost(state.idx);
+  }
+});
 
 // ── META PAGE ─────────────────────────────────────────────────────────────────
 // State for meta filters
@@ -14382,13 +14432,20 @@ function renderFullMetaStats() {
 
 
 function goToPost(id) {
+  fromMeta = true;  // came from meta analysis
   showPage('posts');
   const p = displayPosts.find(x => x.id === id);
   if (!p) return;
-  const mk = getMonthKey(p);
-  if (mk !== selectedMonthKey) { selectedMonthKey = mk; renderMonthNav(); }
-  const idx = getMonthPosts().findIndex(x => x.id === id);
+  const pk = getPeriodLabel(p.date);
+  if (pk !== selectedPeriodKey) { selectedPeriodKey = pk; renderMonthNav(); }
+  const idx = getPeriodPosts().findIndex(x => x.id === id);
   if (idx >= 0) renderPost(idx);
+  history.pushState({page:'posts',period:pk,idx,fromMeta:true}, '', '#posts');
+}
+function backToMeta() {
+  fromMeta = false;
+  showPage('meta');
+  history.pushState({page:'meta'}, '', '#meta');
 }
 
 // ── RENDER POST ───────────────────────────────────────────────────────────────
@@ -14419,25 +14476,52 @@ function renderPost(idx) {
   const cvLight  = vcLight(cvRaw,  'views');
   const ccLight  = vcLight(ccRaw,  'clicks');
   const ctrLight = vcLight(ctrRaw, 'ctr');
-  const hasVC = cvRaw != null || ccRaw != null;
-  const vcHtml = hasVC ? `
+  // New metrics using Notion data
+  const postFee = p.performance.post_fee || 0;
+  const vpp = (cvRaw && postFee > 0) ? Math.round(cvRaw / postFee) : null;  // views per £
+  const app_val = (nAC && postFee > 0) ? (nAC / postFee).toFixed(2) : null; // accounts per £
+
+  // Traffic light helpers for new metrics
+  function vppLight(v) {
+    if (v == null) return null;
+    if (v >= 68) return {dot:'🟢',cls:'green',label:'Strong'};
+    if (v >= 32) return {dot:'🟡',cls:'amber',label:'OK'};
+    return {dot:'🔴',cls:'red',label:'Low'};
+  }
+  function appLight(v) {
+    if (v == null) return null;
+    const n = parseFloat(v);
+    if (n >= 0.19) return {dot:'🟢',cls:'green',label:'Strong'};
+    if (n >= 0.06) return {dot:'🟡',cls:'amber',label:'OK'};
+    return {dot:'🔴',cls:'red',label:'Low'};
+  }
+  function ctrLight2(v) {
+    if (v == null) return null;
+    if (v >= 1.5) return {dot:'🟢',cls:'green',label:'Strong'};
+    if (v >= 0.58) return {dot:'🟡',cls:'amber',label:'OK'};
+    return {dot:'🔴',cls:'red',label:'Low'};
+  }
+
+  const vppR = vppLight(vpp); const appR = appLight(app_val); const ctrR = ctrLight2(ctrRaw);
+
+  const newMetricsHtml = (vpp || app_val || ctrRaw) ? `
     <hr class="dash-divider">
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      ${cvRaw != null ? `<div style="flex:1;min-width:60px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Views</div>
-        <div style="font-size:16px;font-weight:800;color:var(--${cvLight.cls})">${cvLight.dot} ${cvRaw.toLocaleString()}</div>
-        <div style="font-size:10px;color:var(--muted)">${cvLight.label}</div>
-      </div>` : ''}
-      ${ccRaw != null ? `<div style="flex:1;min-width:60px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Clicks</div>
-        <div style="font-size:16px;font-weight:800;color:var(--${ccLight.cls})">${ccLight.dot} ${ccRaw.toLocaleString()}</div>
-        <div style="font-size:10px;color:var(--muted)">${ccLight.label}</div>
-      </div>` : ''}
-      ${ctrRaw != null ? `<div style="flex:1;min-width:60px">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">CTR</div>
-        <div style="font-size:16px;font-weight:800;color:var(--${ctrLight.cls})">${ctrLight.dot} ${ctrRaw}%</div>
-        <div style="font-size:10px;color:var(--muted)">${ctrLight.label}</div>
-      </div>` : ''}
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+      ${vpp != null ? `<div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px">Views/£</div>
+        <div style="font-size:18px;font-weight:800;color:var(--${vppR.cls})">${vppR.dot} ${vpp}</div>
+        <div style="font-size:9px;color:var(--muted)">${vppR.label} · ${cvRaw.toLocaleString()} views</div>
+      </div>` : '<div></div>'}
+      ${ctrRaw != null ? `<div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px">CTR</div>
+        <div style="font-size:18px;font-weight:800;color:var(--${ctrR.cls})">${ctrR.dot} ${ctrRaw}%</div>
+        <div style="font-size:9px;color:var(--muted)">${ctrR.label} · ${ccRaw} clicks</div>
+      </div>` : '<div></div>'}
+      ${app_val != null ? `<div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px">AC/£</div>
+        <div style="font-size:18px;font-weight:800;color:var(--${appR.cls})">${appR.dot} ${app_val}</div>
+        <div style="font-size:9px;color:var(--muted)">${appR.label}</div>
+      </div>` : '<div></div>'}
     </div>` : '';
 
   // Use Notion data directly for all performance metrics
@@ -14571,6 +14655,31 @@ function renderPost(idx) {
     `<div class="reflection-row missed"><span style="flex-shrink:0">△</span><div>${t}</div></div>`).join('');
   const hasReflection = goodHtml || missedHtml;
 
+  // Top 5 improvements: failing items sorted by how often top posts pass them
+  const briefKey = p.niche + '_' + p.post_sequence;
+  const bData = topPostsByBrief[briefKey];
+  const passingLabels = new Set(p.brief_compliance.filter(c => c.pass).map(c => c.label));
+  const failing = p.brief_compliance
+    .filter(c => !c.pass)
+    .map(c => ({
+      label: c.label,
+      topRate: bData ? (bData.passRates[c.label] || 0) : 0,
+      tip: CRITERION_TIPS[c.label] || ''
+    }))
+    .sort((a,b) => b.topRate - a.topRate)
+    .slice(0, 5);
+
+  const improvementsHtml = failing.length ? failing.map((item, i) => `
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;${i>0?'border-top:1px solid var(--border)':''}">
+      <div style="font-size:20px;font-weight:900;color:var(--amber);flex-shrink:0;line-height:1;width:20px">${i+1}</div>
+      <div>
+        <div style="font-weight:600;font-size:13px;margin-bottom:3px">${item.label}</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">${item.tip}</div>
+        ${item.topRate > 0 ? `<div style="font-size:10px;color:var(--amber);margin-top:4px;font-weight:600">${item.topRate}% of top posts pass this</div>` : ''}
+      </div>
+    </div>`).join('')
+    : '<div style="color:var(--green);font-size:13px">✓ All checklist items pass for this brief/frame</div>';
+
   document.getElementById('main-content').innerHTML = `
     <!-- IMAGE PANEL -->
     <div class="image-panel">
@@ -14633,10 +14742,9 @@ function renderPost(idx) {
               </div>
               <hr class="dash-divider">
               <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
-                <span>${acVal} AC created</span>
-                <span>${lpvVal ? lpvVal+' LPVs' : ''}</span>
+                <span>${delVal} del. · ${acVal} AC</span>
               </div>
-              ${vcHtml}
+              ${newMetricsHtml}
             </div>
           </div>
         </div>
@@ -14678,6 +14786,15 @@ function renderPost(idx) {
           </div>` : ''}
           ${!whatWeSaidHtml && !hasReflection ? `<div style="padding:18px;color:var(--muted);font-size:13px">No review notes recorded.</div>` : ''}
         </div>
+      </div>
+
+      <!-- TOP 5 TO IMPROVE -->
+      <div class="card">
+        <div class="card-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber)">
+          <span style="color:var(--amber)">▲ Top things to improve</span>
+          <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">${bt ? bt.brief+' — Frame '+p.post_sequence : ''}</span>
+        </div>
+        <div class="card-body">${improvementsHtml}</div>
       </div>
 
     </div><!-- analysis -->
