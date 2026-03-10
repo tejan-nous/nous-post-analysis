@@ -14476,10 +14476,7 @@ function renderPost(idx) {
   const cvLight  = vcLight(cvRaw,  'views');
   const ccLight  = vcLight(ccRaw,  'clicks');
   const ctrLight = vcLight(ctrRaw, 'ctr');
-  // New metrics using Notion data
-  const postFee = p.performance.post_fee || 0;
-  const vpp = (cvRaw && postFee > 0) ? Math.round(cvRaw / postFee) : null;  // views per £
-  const app_val = (nAC && postFee > 0) ? (nAC / postFee).toFixed(2) : null; // accounts per £
+
 
   // Traffic light helpers for new metrics
   function vppLight(v) {
@@ -14528,6 +14525,9 @@ function renderPost(idx) {
   const nAC   = notionAC(p);
   const nDel  = notionDel(p);
   const fcac  = notionFCac(p);
+  const postFee = p.performance.post_fee || 0;
+  const vpp = (cvRaw != null && postFee > 0) ? Math.round(cvRaw / postFee) : null;
+  const app_val = (nAC != null && postFee > 0) ? (nAC / postFee).toFixed(2) : null;
   const fac   = ex.forecast_ac;  // keep for AC forecast comparison
   const acHit = fac != null && nAC != null
     ? Math.round(nAC / fac * 100) : null;
