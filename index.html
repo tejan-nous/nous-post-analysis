@@ -6206,19 +6206,26 @@ function getBriefType(post) {
   return briefTypes[`${prefix}_post${seq}`] || null;
 }
 
-// eCAC from delegations only
+// eCAC stitched: total campaign fee / total campaign delegations
+// Falls back to per-post fee / delegations when campaign data unavailable
+function stitchedEcac(post) {
+  // campaignGroups built after this function is defined — called at render time
+  const siblings = (typeof campaignGroups !== 'undefined' && campaignGroups[post.name]) || [post];
+  const totalFee = siblings.reduce((s, x) => s + (x.performance.post_fee || 0), 0);
+  const totalDel = siblings.reduce((s, x) => s + (x.performance.delegations || 0), 0);
+  if (totalFee > 0 && totalDel > 0) return Math.round(totalFee / totalDel);
+  return null;
+}
+
+// Keep postEcac for internal use (timeline dots, meta stats)
 function postEcac(perf) {
   if (perf.post_fee && perf.delegations && perf.delegations > 0)
     return Math.round(perf.post_fee / perf.delegations);
   return null;
 }
 
-// Only past posts with computable eCAC (delegations > 0 and post_fee > 0)
-const displayPosts = posts.filter(p => {
-  if (parseIsoDate(p.date) > TODAY_STR) return false;
-  const perf = p.performance;
-  return perf.delegations && perf.delegations > 0 && perf.post_fee && perf.post_fee > 0;
-});
+// Only past posts (future posts excluded; eCAC shown as — when no data)
+const displayPosts = posts.filter(p => parseIsoDate(p.date) <= TODAY_STR);
 
 // Unique month keys, most recent first (preserving array order)
 const allMonthKeys = [];
@@ -6323,7 +6330,7 @@ function renderMetaPage() {
   if (!container) return;
 
   const past = displayPosts;
-  const ecacs = past.map(p => postEcac(p.performance)).filter(e => e != null && e > 0);
+  const ecacs = past.map(p => stitchedEcac(p)).filter(e => e != null && e > 0);
   const avgEcac = ecacs.length ? Math.round(ecacs.reduce((a,b) => a+b,0) / ecacs.length) : null;
   const under70 = ecacs.filter(e => e < 70).length;
   const under40 = ecacs.filter(e => e < 40).length;
@@ -6367,7 +6374,7 @@ function renderMetaPage() {
   past.forEach(p => {
     if (!niches[p.niche]) niches[p.niche] = { count: 0, ecacs: [], bf: 0 };
     niches[p.niche].count++;
-    const e = postEcac(p.performance);
+    const e = stitchedEcac(p);
     if (e != null && e > 0) niches[p.niche].ecacs.push(e);
     const ex = postExtras[p.id] || {};
     if (ex.forecast_ac != null && p.performance.accounts_created >= ex.forecast_ac) niches[p.niche].bf++;
@@ -6390,7 +6397,7 @@ function renderMetaPage() {
     const s = p.post_sequence || '?';
     if (!seqs[s]) seqs[s] = { count: 0, ecacs: [] };
     seqs[s].count++;
-    const e = postEcac(p.performance);
+    const e = stitchedEcac(p);
     if (e != null && e > 0) seqs[s].ecacs.push(e);
   });
   const seqRows = Object.entries(seqs).sort((a,b) => +a[0]-(+b[0])).map(([s,d]) => {
@@ -6410,7 +6417,7 @@ function renderMetaPage() {
     const label = bt ? bt.name : `${p.niche} — Post ${p.post_sequence}`;
     if (!briefGroups[key]) briefGroups[key] = { label, count: 0, ecacs: [], bf: 0 };
     briefGroups[key].count++;
-    const e = postEcac(p.performance);
+    const e = stitchedEcac(p);
     if (e != null && e > 0) briefGroups[key].ecacs.push(e);
     const ex2 = postExtras[p.id] || {};
     if (ex2.forecast_ac != null && p.performance.accounts_created >= ex2.forecast_ac) briefGroups[key].bf++;
@@ -6431,7 +6438,7 @@ function renderMetaPage() {
     }).join('');
 
   // Top 10 by eCAC
-  const ranked = past.map(p => ({ p, ecac: postEcac(p.performance) }))
+  const ranked = past.map(p => ({ p, ecac: stitchedEcac(p) }))
     .filter(x => x.ecac != null && x.ecac > 0)
     .sort((a,b) => a.ecac - b.ecac).slice(0,10);
   const topRows = ranked.map((x, i) => {
@@ -6449,7 +6456,7 @@ function renderMetaPage() {
     <div class="meta-grid-3" style="margin-bottom:20px">
       <div class="meta-stat-card"><div class="meta-stat-val">${past.length}</div><div class="meta-stat-label">Posts analysed</div></div>
       <div class="meta-stat-card"><div class="meta-stat-val" style="color:var(--green)">${beatForecastPosts.length}</div><div class="meta-stat-label">Beat forecast (${past.length ? Math.round(beatForecastPosts.length/past.length*100) : 0}%)</div></div>
-      <div class="meta-stat-card"><div class="meta-stat-val">${avgEcac != null ? '£'+avgEcac : '—'}</div><div class="meta-stat-label">Avg eCAC (from delegations)</div></div>
+      <div class="meta-stat-card"><div class="meta-stat-val">${avgEcac != null ? '£'+avgEcac : '—'}</div><div class="meta-stat-label">Avg eCAC stitched</div></div>
       <div class="meta-stat-card"><div class="meta-stat-val" style="color:var(--gold)">${under40}</div><div class="meta-stat-label">eCAC under £40 🤑</div></div>
       <div class="meta-stat-card"><div class="meta-stat-val" style="color:var(--green)">${under70}</div><div class="meta-stat-label">eCAC under £70 ★</div></div>
       <div class="meta-stat-card"><div class="meta-stat-val">${ecacs.length ? '£'+Math.min(...ecacs) : '—'}</div><div class="meta-stat-label">Best single post eCAC</div></div>
@@ -6457,7 +6464,7 @@ function renderMetaPage() {
 
     <div class="meta-grid-2" style="margin-bottom:16px">
       <div class="card">
-        <div class="card-head">eCAC distribution (from delegations)</div>
+        <div class="card-head">eCAC stitched distribution</div>
         <div class="card-body">${tierBars}</div>
       </div>
       <div class="card">
@@ -6542,8 +6549,8 @@ function renderPost(idx) {
   const ex   = postExtras[p.id] || {};
   const perf = p.performance;
 
-  // eCAC from delegations
-  const ecac = postEcac(perf);
+  // eCAC stitched (campaign-level: total fee / total delegations)
+  const ecac = stitchedEcac(p);
   const rat  = eCAcRating(ecac);
   const passCount  = p.brief_compliance.filter(c => c.pass).length;
   const totalCount = p.brief_compliance.length;
@@ -6593,7 +6600,7 @@ function renderPost(idx) {
   // Campaign timeline — built dynamically from posts array grouped by name
   let timelineHtml = '';
   const siblings = (campaignGroups[p.name] || []).slice().sort((a,b) => (a.post_sequence||0)-(b.post_sequence||0));
-  if (siblings.length > 1) {
+  if (siblings.length >= 1) {
     const items = siblings.map((s, i) => {
       const isCurrent = s.id === p.id;
       const isoDate   = s.date ? parseIsoDate(s.date) : '';
@@ -6723,8 +6730,8 @@ function renderPost(idx) {
               <div class="dash-ecac">
                 <span class="dash-ecac-emoji">${rat.emoji}</span>
                 <div>
-                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal} implied eCAC</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px">from ${delVal} delegations · Forecast CAC: ${fcacVal}</div>
+                  <div style="font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1">${ecacVal} eCAC stitched</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px">campaign total · Forecast CAC: ${fcacVal}</div>
                 </div>
               </div>
               <hr class="dash-divider">
