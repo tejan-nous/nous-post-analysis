@@ -219,6 +219,21 @@
     .dash-card { overflow: visible; }
     .tip-box strong { display: block; margin-bottom: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
     .tip-wrap:hover .tip-box { display: block; }
+    /* UPLOAD TAB BUTTON */
+    .tab-btn { background:none;border:none;padding:0 18px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;height:100%;display:flex;align-items:center;color:var(--muted);transition:color .15s;font-family:inherit; }
+    .tab-btn:hover { color:var(--text); }
+    .tab-btn.active { color:var(--nous);border-bottom-color:var(--nous);font-weight:600; }
+    /* UPLOAD VIEW */
+    .ul-verdict-good { background:#e8f5e9;border:1px solid #4caf50;border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px }
+    .ul-verdict-bad  { background:#fff3e0;border:1px solid var(--amber);border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px }
+    .ul-crit-group { margin-bottom:16px }
+    .ul-crit-parent { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px }
+    .ul-sub { display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13px }
+    .ul-sub-pass { color:var(--green) }
+    .ul-sub-fail { color:#e53935 }
+    .ul-email-box { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;white-space:pre-wrap;color:var(--text);font-family:inherit;margin-top:8px }
+    .ul-copy-btn { background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;color:var(--muted);transition:all .15s }
+    .ul-copy-btn:hover { border-color:var(--text);color:var(--text) }
   </style>
 </head>
 <body>
@@ -231,6 +246,7 @@
   <div class="page-tabs">
     <div class="page-tab active" onclick="showPage('posts')" id="tab-posts">Posts</div>
     <div class="page-tab" onclick="showPage('meta')" id="tab-meta">Meta Analysis</div>
+    <button class="tab-btn" id="tab-upload" onclick="showPage('upload')">↑ Upload</button>
   </div>
   <div class="header-right" id="header-count"></div>
 </header>
@@ -254,6 +270,64 @@
 
 <div id="meta-view" style="display:none; padding: 24px 28px; max-width: 1280px; margin: 0 auto;">
   <div id="meta-content"></div>
+</div>
+
+<div id="upload-view" style="display:none;max-width:900px;margin:0 auto;padding:32px 28px">
+  <!-- HEADER -->
+  <div style="margin-bottom:28px">
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:6px">Story Review</h2>
+    <p style="color:var(--muted);font-size:14px">Upload a story image to get instant brief compliance feedback</p>
+  </div>
+
+  <!-- INPUT CARD -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+        <!-- Brief dropdown -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Brief</label>
+          <select id="ul-brief" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+            <option value="">Select brief...</option>
+          </select>
+        </div>
+        <!-- Frame dropdown -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame / Post #</label>
+          <select id="ul-frame" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+            <option value="1">Post 1 (Hook)</option>
+            <option value="2">Post 2 (Discovery)</option>
+            <option value="3">Post 3 (Outcome)</option>
+          </select>
+        </div>
+        <!-- Influencer name -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name <span style="font-weight:400;opacity:.6">(optional)</span></label>
+          <input id="ul-name" type="text" placeholder="e.g. Lucy Hall" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+        </div>
+        <!-- Agent name -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Your name <span style="font-weight:400;opacity:.6">(for emails)</span></label>
+          <input id="ul-agent" type="text" placeholder="Nous Team" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+        </div>
+      </div>
+
+      <!-- Drop zone -->
+      <div id="ul-dropzone" style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface)" onclick="document.getElementById('ul-file').click()" ondragover="ulDragOver(event)" ondragleave="ulDragLeave(event)" ondrop="ulDrop(event)">
+        <div id="ul-drop-content">
+          <div style="font-size:32px;margin-bottom:10px">📸</div>
+          <div style="font-weight:600;margin-bottom:4px">Drop story image here</div>
+          <div style="font-size:12px;color:var(--muted)">or click to browse · JPEG, PNG, WebP</div>
+        </div>
+        <img id="ul-preview" style="display:none;max-height:300px;max-width:100%;border-radius:8px;margin-top:12px">
+        <input id="ul-file" type="file" accept="image/*" style="display:none" onchange="ulFileSelected(event)">
+      </div>
+
+      <button id="ul-btn" onclick="ulAnalyse()" style="width:100%;margin-top:16px;padding:12px;background:var(--nous);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s" disabled>Analyse Story</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="ul-results" style="display:none"></div>
 </div>
 
 <script>
@@ -14198,6 +14272,8 @@ function showPage(page, pushState=true) {
   document.getElementById('meta-view').style.display  = page === 'meta'  ? '' : 'none';
   document.getElementById('month-nav').style.display  = page === 'posts' ? '' : 'none';
   document.getElementById('arrow-nav').style.display  = page === 'posts' ? '' : 'none';
+  document.getElementById('upload-view').style.display = page === 'upload' ? '' : 'none';
+  document.getElementById('tab-upload').classList.toggle('active', page === 'upload');
   document.getElementById('tab-posts').classList.toggle('active', page === 'posts');
   document.getElementById('tab-meta').classList.toggle('active',  page === 'meta');
   if (page === 'meta') { fromMeta = false; renderMetaPage(); }
@@ -14552,6 +14628,7 @@ function renderPost(idx) {
   const passCount  = (p.brief_compliance||[]).filter(c => c.pass).length;
   const totalCount = (p.brief_compliance||[]).length;
   const isStrong   = ecac != null && ecac < 70;
+  const isPast     = (parseIsoDate(p.date) || '') <= TODAY_STR;
   const strongBadge = isStrong ? '<span class="strong-badge">★ Strong Post · eCAC &lt;£70</span>' : '';
 
   // Brief type lookup
@@ -14695,16 +14772,77 @@ function renderPost(idx) {
   const lpvVal  = perf.landing_page_views != null ? perf.landing_page_views : '—';
   const feeVal  = perf.post_fee != null ? `£${perf.post_fee}` : '—';
 
-  // Criterion-level tips: what best posts do on each item
+  // Criterion-level tips: what best posts do on each item (grounded in docs + Slack feedback)
   const CRITERION_TIPS = {
-    'Problem-aware hook': 'Best posts open with a personal confession of never checking bills, or shock at a specific stat, before Nous is mentioned. "I never thought to check" and "I assumed bills just cost what they cost" outperform generic hooks.',
-    'Discovery moment': 'Best posts show a genuine revelation — "I found out I was overpaying by £XXX" — framed as a personal story, not a product pitch. Specific amounts make it feel real.',
-    'What Nous does': 'Best posts name all three products (energy, broadband, mobile) and say Nous "finds AND switches" — not just compares. "They sorted it all for me" outperforms "it helps you find deals".',
-    'Savings claim': 'Best posts use a specific £ figure (e.g. £470, £600+, £1,185) over vague "hundreds". Posts showing a Nous savings screenshot alongside the figure convert best.',
-    'Sign-up ease': '"2 minutes from my phone" and "just answer a few questions" are the strongest ease signals. "Completely free" is essential — many posts miss this.',
-    '@get_nous tag': 'Best posts tag @get_nous in the body copy, not just the header. Standalone tags like "Thanks to @get_nous" tend to underperform vs tags embedded mid-sentence.',
-    'Save with Nous CTA': 'Best posts use exact "Save with Nous" button text at the bottom. Posts using vague CTAs ("see how much you could save") consistently underperform.',
-    'Calming/lifestyle visual': 'Best posts use a home/lifestyle shot with readable text overlay. Posts where the product screenshot dominates, or the image looks like an ad, perform worse.',
+    "Problem-aware hook": "The strongest posts open with a personal confession of ignorance or a shocking stat — never with the brand name — because the problem must land before the solution is credible.",
+    "Discovery moment": "Best posts make discovery feel organic ('I stumbled across this tool') and prove the creator signed up themselves, using 'tool' rather than 'company' to keep the tone low-key.",
+    "What Nous does": "Top posts clearly cover all three product areas (energy, broadband, phone), never claim Nous finds the cheapest deal on the whole market, and emphasise that Nous handles the switching so the user does nothing.",
+    "Savings claim": "Every approved post includes a specific £ figure — either a personal saving or an approved stat — because vague language like 'save loads' is consistently sent back by the team for amendment.",
+    "Sign-up ease": "The best posts explicitly say it takes minutes ('from my phone in like five minutes'), mention it's free, and reference 'just a few quick questions' — making the barrier feel near-zero.",
+    "@get_nous tag": "The tag is required in every post but must not appear in the opening line; the one exception is the Fashion Secret/Teaser frame where both '@get_nous' and the Nous name must be fully omitted.",
+    "Save with Nous CTA": "The best posts have a single 'Save with Nous' button with the 🔗 emoji, clear contrast, no AD text inside the button, and no competing poll or vote stickers.",
+    "Calming/lifestyle visual": "Approved posts use calming home or lifestyle shots that match the brief's niche expectation for that frame, with the AD label placed below the product — never covering the image.",
+    "Button placement": "The single most common rejection reason is a button that is not at the bottom of the story — it must be at the bottom, unobscured, every time.",
+    "Text readability": "The best posts use a large font or a background block behind text, break long copy into multiple blocks, and never place text over busy image areas or faces.",
+  };
+
+  // Granular sub-checks per criterion (used in upload analysis + VS. BEST POSTS tooltips)
+  const SUB_CRITERIA = {
+    "Problem-aware hook": [
+      { id:"hook_no_brand_first",    label:"Doesn't open with brand name", tip:"Never start with '@get_nous' or 'I\'ve been using Nous'" },
+      { id:"hook_problem_led",       label:"Opens with personal problem or shock stat", tip:"'Turns out I\'d been overpaying...', 'I never checked my bills...', or a £ stat first" },
+      { id:"hook_no_herd",           label:"No 'loads of people posting about Nous'", tip:"Herd-following language signals a paid wave — use 'a friend mentioned it' instead" },
+      { id:"hook_confessional",      label:"Confessional/self-deprecating tone, not corporate", tip:"'Adulting fail', 'I\'ve been ostriching' outperform polished ad-speak" },
+    ],
+    "Discovery moment": [
+      { id:"disc_natural",           label:"Discovery feels natural, not scripted", tip:"'I stumbled across this tool' not 'Nous asked me to share this'" },
+      { id:"disc_tool_not_company",  label:"Nous called a 'tool', not a 'company'", tip:"'This new tool' feels less salesy than 'this company called Nous'" },
+      { id:"disc_no_legit",          label:"No 'I promise it\'s totally legit'", tip:"This phrase always creates distrust — it\'s always flagged and rewritten" },
+      { id:"disc_tried_it",          label:"Creator has clearly used Nous themselves", tip:"'I found out I\'d been overpaying' is the authentic discovery signal" },
+    ],
+    "What Nous does": [
+      { id:"what_three_products",    label:"All three areas covered (energy, broadband, phone)", tip:"Missing one product area is a common gap" },
+      { id:"what_no_cheapest",       label:"No 'cheapest deal on the whole market' claim", tip:"Nous finds better deals, not necessarily the cheapest — this is an accuracy issue" },
+      { id:"what_no_reminders",      label:"No 'reminds you when contracts end' claim", tip:"Nous doesn\'t do this yet — always flagged for removal" },
+      { id:"what_handles_switching", label:"Makes clear Nous does all the work", tip:"'Nous checked all our bills and switched everything over' — zero effort is core" },
+    ],
+    "Savings claim": [
+      { id:"savings_specific",       label:"Specific £ figure (personal or approved stat)", tip:"Approved stats: £781/yr, £250 energy, £7/mo phone, £500+, 'nearly £800'" },
+      { id:"savings_no_vague",       label:"No vague 'save loads' language", tip:"Every vague post gets sent back — always insert a real number" },
+      { id:"savings_no_cheapest",    label:"No 'cheapest deal' claim", tip:"Accuracy issue — Nous finds better deals, not necessarily cheapest" },
+    ],
+    "Sign-up ease": [
+      { id:"ease_time",              label:"Mentions how quick it is", tip:"'2 minutes from my phone' — explicit timing reduces friction" },
+      { id:"ease_free",              label:"Mentions Nous is free", tip:"'Free to get started' — this frequently drops out of posts and must be added back" },
+      { id:"ease_few_questions",     label:"'Just a few quick questions' or equivalent", tip:"Simplicity must be explicit, not implied" },
+    ],
+    "@get_nous tag": [
+      { id:"tag_present",            label:"@get_nous present in body text", tip:"Required in all briefs (except Fashion Secret/Teaser frame)" },
+      { id:"tag_not_opening",        label:"@get_nous not in the opening line", tip:"Frame 3 briefs explicitly list this as a must-NOT" },
+    ],
+    "Save with Nous CTA": [
+      { id:"cta_present",            label:"CTA button present", tip:"Missing button is one of the most cited rejection reasons" },
+      { id:"cta_correct_text",       label:"'Save with Nous' button text", tip:"Standard is '🔗 Save with Nous'. Fashion Frame 2 only: 'Start saving here!'" },
+      { id:"cta_no_ad_inside",       label:"No 'AD' text inside the button", tip:"AD disclosure should be separate — not inside the Save with Nous button" },
+      { id:"cta_link_emoji",         label:"🔗 emoji present", tip:"Standard format is 🔗 Save with Nous" },
+      { id:"cta_readable",           label:"Button text readable — good contrast", tip:"Low contrast makes the CTA functionally invisible" },
+      { id:"cta_no_poll",            label:"No vote/poll sticker competing with CTA", tip:"Poll stickers destroy link clicks — hard rule" },
+    ],
+    "Button placement": [
+      { id:"btn_bottom",             label:"Button at BOTTOM of story", tip:"Single most common rejection reason — no exceptions" },
+      { id:"btn_unobscured",         label:"Button not covered by AD label or stickers", tip:"AD label, text or stickers should not overlap the button" },
+      { id:"btn_single",             label:"Only one CTA button", tip:"Multiple buttons split click intent" },
+    ],
+    "Calming/lifestyle visual": [
+      { id:"vis_calming",            label:"Visual is calming — not busy or cluttered", tip:"All briefs specify calming home/lifestyle shot — chaos undermines the Nous brand feel" },
+      { id:"vis_niche_match",        label:"Visual matches niche expectation for this frame", tip:"Home: interior. Fashion F1: haul. Fashion F3: lifestyle/selfie. F3 Home: recent purchase shot" },
+      { id:"vis_ad_placement",       label:"AD label below product shot, not covering image", tip:"AD sticker over the main visual is one of the most cited layout complaints" },
+    ],
+    "Text readability": [
+      { id:"text_large",             label:"Font large enough to read on phone", tip:"Brief requirement: 'large font' or background behind text. Small text always flagged" },
+      { id:"text_contrast",          label:"Strong contrast against background", tip:"Low contrast is routinely flagged — use a text background block if in doubt" },
+      { id:"text_blocks",            label:"Long copy broken into multiple blocks", tip:"Stories are read fast — walls of text always sent back for splitting" },
+    ],
   };
   const metaRows = (p.brief_compliance||[]).map(c => {
     const rate = metaRates[c.label] || { pct: 0 };
@@ -14804,6 +14942,16 @@ function renderPost(idx) {
         ${timelineHtml}
       </div></div>
 
+      <!-- TOP 5 TO IMPROVE -->
+      <div class="card">
+        <div class="card-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber)">
+          <span style="color:var(--amber)">${isPast ? '↩ How could this post have done better?' : '▲ Top things to improve'}</span>
+          <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">${bt ? bt.name+' — Frame '+p.post_sequence : p.niche+' — Frame '+p.post_sequence}</span>
+        </div>
+        <div class="card-body">${improvementsHtml}</div>
+      </div>
+
+
       <!-- DASHBOARD ROW -->
       <div class="dashboard-row">
 
@@ -14879,17 +15027,162 @@ function renderPost(idx) {
         </div>
       </div>
 
-      <!-- TOP 5 TO IMPROVE -->
-      <div class="card">
-        <div class="card-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber)">
-          <span style="color:var(--amber)">▲ Top things to improve</span>
-          <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">${bt ? bt.brief+' — Frame '+p.post_sequence : ''}</span>
-        </div>
-        <div class="card-body">${improvementsHtml}</div>
-      </div>
 
     </div><!-- analysis -->
   `;
+}
+
+// ── UPLOAD / ANALYSE ──────────────────────────────────────────────────────────
+const UL_SERVER = 'http://localhost:8765';
+let ulImageBase64 = null;
+
+// Populate brief dropdown on load
+fetch(UL_SERVER + '/briefs').then(r => r.json()).then(data => {
+  const sel = document.getElementById('ul-brief');
+  if (!sel) return;
+  (data.briefs || []).forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.brief;
+    opt.textContent = b.brief;
+    sel.appendChild(opt);
+  });
+}).catch(() => {}); // server may not be running yet
+
+function ulDragOver(e) { e.preventDefault(); document.getElementById('ul-dropzone').style.borderColor = 'var(--nous)'; }
+function ulDragLeave(e) { document.getElementById('ul-dropzone').style.borderColor = 'var(--border)'; }
+function ulDrop(e) {
+  e.preventDefault();
+  ulDragLeave(e);
+  const file = e.dataTransfer.files[0];
+  if (file) ulLoadFile(file);
+}
+function ulFileSelected(e) { if (e.target.files[0]) ulLoadFile(e.target.files[0]); }
+function ulLoadFile(file) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const dataUrl = ev.target.result;
+    // Strip data URL prefix to get pure base64
+    ulImageBase64 = dataUrl.split(',')[1];
+    const preview = document.getElementById('ul-preview');
+    preview.src = dataUrl;
+    preview.style.display = 'block';
+    document.getElementById('ul-drop-content').style.display = 'none';
+    document.getElementById('ul-btn').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function ulAnalyse() {
+  const brief = document.getElementById('ul-brief').value;
+  const frame = parseInt(document.getElementById('ul-frame').value);
+  const name  = document.getElementById('ul-name').value.trim();
+  const agent = document.getElementById('ul-agent').value.trim();
+
+  if (!ulImageBase64) { alert('Please upload an image first'); return; }
+  if (!brief) { alert('Please select a brief'); return; }
+
+  const btn = document.getElementById('ul-btn');
+  btn.textContent = 'Analysing\u2026';
+  btn.disabled = true;
+
+  document.getElementById('ul-results').style.display = 'none';
+
+  try {
+    const res = await fetch(UL_SERVER + '/analyse', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent || 'Nous Team' })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Server error');
+    ulRenderResults(data, brief, frame, name);
+  } catch(e) {
+    document.getElementById('ul-results').style.display = 'block';
+    document.getElementById('ul-results').innerHTML = `<div class="card"><div class="card-body" style="color:#e53935">\u26a0 ${e.message}<br><span style="font-size:12px;color:var(--muted)">Make sure the local server is running: <code>./start_server.sh</code></span></div></div>`;
+  } finally {
+    btn.textContent = 'Analyse Story';
+    btn.disabled = false;
+  }
+}
+
+function ulRenderResults(d, brief, frame, name) {
+  const good = d.overall === 'good_to_go';
+
+  // Group criteria by parent label
+  const groups = {};
+  (d.criteria || []).forEach(c => {
+    if (!groups[c.label]) groups[c.label] = [];
+    groups[c.label].push(c);
+  });
+
+  const criteriaHtml = Object.entries(groups).map(([label, subs]) => {
+    const allPass = subs.every(s => s.pass);
+    const subHtml = subs.map(s => `
+      <div class="ul-sub">
+        <span class="${s.pass ? 'ul-sub-pass' : 'ul-sub-fail'}" style="flex-shrink:0;font-weight:700">${s.pass ? '\u2713' : '\u2717'}</span>
+        <div>
+          <div style="font-weight:500">${s.sub_label}</div>
+          ${s.note ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${s.note}</div>` : ''}
+        </div>
+      </div>`).join('');
+    return `<div class="ul-crit-group">
+      <div class="ul-crit-parent">${label} <span style="font-weight:400;opacity:.7">${allPass ? '\u2713 all pass' : subs.filter(s=>s.pass).length+'/'+subs.length+' pass'}</span></div>
+      ${subHtml}
+    </div>`;
+  }).join('');
+
+  const html = `
+    <!-- VERDICT -->
+    <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}">
+      <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
+      <div>
+        <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
+        <div style="font-size:13px;margin-top:2px">${d.score}/${d.total} criteria pass \u00b7 ${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 '+name : ''}</div>
+        ${d.summary ? `<div style="font-size:13px;margin-top:8px;line-height:1.5">${d.summary}</div>` : ''}
+      </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-head">Checklist</div>
+      <div class="card-body">${criteriaHtml}</div>
+    </div>
+
+    <!-- EMAILS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card">
+        <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Email to influencer</span>
+          <button class="ul-copy-btn" onclick="ulCopy('ul-email-inf')">Copy</button>
+        </div>
+        <div class="card-body">
+          <div id="ul-email-inf" class="ul-email-box">${d.email_influencer || ''}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Email to agent</span>
+          <button class="ul-copy-btn" onclick="ulCopy('ul-email-agt')">Copy</button>
+        </div>
+        <div class="card-body">
+          <div id="ul-email-agt" class="ul-email-box">${d.email_agent || ''}</div>
+        </div>
+      </div>
+    </div>`;
+
+  const el = document.getElementById('ul-results');
+  el.innerHTML = html;
+  el.style.display = 'block';
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function ulCopy(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    // Brief flash feedback
+    const btns = document.querySelectorAll('.ul-copy-btn');
+    btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) { b.textContent = 'Copied!'; setTimeout(()=>b.textContent='Copy',1500); }});
+  });
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
