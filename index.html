@@ -12870,7 +12870,10 @@ function postEcac(perf) {
 }
 
 // Only past posts (future posts excluded; eCAC shown as — when no data)
-const displayPosts = posts.filter(p => parseIsoDate(p.date) <= TODAY_STR);
+const displayPosts = posts.filter(p =>
+  parseIsoDate(p.date) <= TODAY_STR &&
+  !p.name.toLowerCase().includes('links in bio')
+);
 
 // Unique month keys, most recent first (preserving array order)
 const allMonthKeys = [];
