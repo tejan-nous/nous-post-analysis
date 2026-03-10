@@ -13215,6 +13215,7 @@ function renderPost(idx) {
   const btGoalHtml = bt ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5"><strong style="color:var(--text)">Post ${p.post_sequence} goal:</strong> ${bt.goal}</div>` : '';
 
   // Views / Clicks from Notion (nPerf cv/cc fields)
+  const _np = nPerf[p.id] || {};
   const cvRaw = (_np.cv != null) ? _np.cv : null;
   const ccRaw = (_np.cc != null) ? _np.cc : null;
   const ctrRaw = (cvRaw && ccRaw) ? Math.round(ccRaw / cvRaw * 1000) / 10 : null;
