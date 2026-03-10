@@ -170,11 +170,15 @@
     .month-pill:hover { color: var(--text); border-color: var(--text); }
     .month-pill.active { background: var(--nous); border-color: var(--nous); color: #fff; font-weight: 600; }
     .month-pill-count { font-size: 10px; opacity: .75; }
-    .month-group { display: flex; flex-direction: column; gap: 4px; }
-    .week-pills { display: flex; gap: 6px; flex-wrap: wrap; padding: 4px 0 2px 12px; }
-    .week-pill { background: none; border: 1px solid var(--border); border-radius: 99px; padding: 3px 10px; font-size: 11px; cursor: pointer; color: var(--muted); display: flex; align-items: center; gap: 4px; transition: all .15s; white-space: nowrap; }
-    .week-pill:hover { color: var(--text); border-color: var(--text); }
-    .week-pill.active { background: var(--nous); border-color: var(--nous); color: #fff; font-weight: 600; opacity: .85; }
+    .month-group { display: flex; align-items: center; gap: 2px; position: relative; }
+    .week-chevron { background: none; border: 1px solid var(--border); border-radius: 99px; padding: 4px 7px; font-size: 11px; cursor: pointer; color: var(--muted); line-height: 1; transition: all .15s; }
+    .week-chevron:hover, .week-chevron.active { color: var(--nous); border-color: var(--nous); }
+    .week-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; z-index: 100; min-width: 130px; box-shadow: 0 4px 16px rgba(0,0,0,.18); flex-direction: column; gap: 2px; }
+    .week-dropdown.open { display: flex; }
+    .week-drop-item { background: none; border: none; border-radius: 6px; padding: 7px 10px; font-size: 12px; cursor: pointer; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background .1s; text-align: left; }
+    .week-drop-item:hover { background: var(--border); }
+    .week-drop-item.active { background: var(--nous); color: #fff; font-weight: 600; }
+    .week-drop-count { font-size: 10px; opacity: .65; }
     /* META STATS */
     .meta-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .meta-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -14135,7 +14139,9 @@ function renderMonthNav() {
       return (recentLabels.includes(wl) ? 'Recent' : getMonthLabel(p.date)) === ml;
     }).length;
     const isActive = ml === selectedMonthLabel;
-    const weekPills = weeks.map(wk => {
+    const activeWeek = isActive && selectedWeekLabel;
+    const btnLabel = activeWeek ? ml + ' · ' + selectedWeekLabel : ml;
+    const dropdownItems = weeks.map(wk => {
       const wkCount = displayPosts.filter(p => {
         const wl = getWeekLabel(p.date);
         if (!wl) return false;
@@ -14143,14 +14149,27 @@ function renderMonthNav() {
         return pml === ml && wl === wk;
       }).length;
       const wkActive = isActive && selectedWeekLabel === wk;
-      return `<button class="week-pill${wkActive?' active':''}" onclick="selectWeek('${ml}','${wk}')">${wk} <span class="month-pill-count">${wkCount}</span></button>`;
+      return `<button class="week-drop-item${wkActive?' active':''}" onclick="selectWeek('${ml}','${wk}');closeDropdowns()">${wk} <span class="week-drop-count">${wkCount}</span></button>`;
     }).join('');
-    return `<div class="month-group${isActive?' open':''}">
-      <button class="month-pill${isActive?' active':''}" onclick="selectMonthLabel('${ml}')">${ml} <span class="month-pill-count">${monthCount}</span></button>
-      ${isActive ? `<div class="week-pills">${weekPills}</div>` : ''}
+    const hasWeeks = weeks.length > 1;
+    return `<div class="month-group" id="mg-${ml.replace(' ','-')}">
+      <button class="month-pill${isActive?' active':''}" onclick="selectMonthLabel('${ml}')">${btnLabel} <span class="month-pill-count">${monthCount}</span></button>
+      ${hasWeeks ? `<button class="week-chevron${isActive?' active':''}" onclick="toggleWeekDrop('${ml}')" title="Filter by week">▾</button>
+      <div class="week-dropdown" id="wd-${ml.replace(' ','-')}">${dropdownItems}</div>` : ''}
     </div>`;
   }).join('');
 }
+function toggleWeekDrop(ml) {
+  closeDropdowns();
+  const el = document.getElementById('wd-' + ml.replace(' ','-'));
+  if (el) el.classList.toggle('open');
+}
+function closeDropdowns() {
+  document.querySelectorAll('.week-dropdown.open').forEach(el => el.classList.remove('open'));
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.month-group')) closeDropdowns();
+});
 function selectMonthLabel(ml) {
   selectedMonthLabel = ml; selectedWeekLabel = null;
   renderMonthNav(); renderPost(0);
@@ -14752,7 +14771,7 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#1a1a1a'">
+        <img src="${p.img}" alt="${p.name}" onerror="this.style.background='#1a1a1a'">
       </div>
       <div class="image-footer">
         <span>${p.format} · ${p.niche} · ${p.date}</span>
