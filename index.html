@@ -6245,6 +6245,13 @@ const beatForecastPosts = displayPosts.filter(p => {
 const metaPosts = beatForecastPosts.length >= 5 ? beatForecastPosts : displayPosts;
 const metaRates = computeBcRates(metaPosts);
 
+// ── CAMPAIGN GROUPS (built from posts array, grouped by name) ─────────────────
+const campaignGroups = {};
+posts.forEach(p => {
+  if (!campaignGroups[p.name]) campaignGroups[p.name] = [];
+  campaignGroups[p.name].push(p);
+});
+
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let selectedMonthKey = allMonthKeys[0] || '';
 let currentIdx = 0;
@@ -6583,24 +6590,35 @@ function renderPost(idx) {
   const beatFc  = acHit != null && acHit >= 100;
   const hitStr  = acHit != null ? acHit + '%' : '—';
 
-  // Campaign timeline
+  // Campaign timeline — built dynamically from posts array grouped by name
   let timelineHtml = '';
-  if (p.campaign_timeline && p.campaign_timeline.length > 0) {
-    const items = p.campaign_timeline.map((t, i) => {
-      const conn    = i === 0 ? '' : '<div class="campaign-tl-connector"></div>';
-      const dateStr = t.date ? t.date.slice(5).replace('-', '/') : '—';
-      return `${conn}<div class="campaign-tl-item">
-        <div class="campaign-tl-dot ${t.status}"></div>
+  const siblings = (campaignGroups[p.name] || []).slice().sort((a,b) => (a.post_sequence||0)-(b.post_sequence||0));
+  if (siblings.length > 1) {
+    const items = siblings.map((s, i) => {
+      const isCurrent = s.id === p.id;
+      const isoDate   = s.date ? parseIsoDate(s.date) : '';
+      const status    = isCurrent ? 'current' : (isoDate <= TODAY_STR ? 'past' : 'future');
+      const dateStr   = isoDate ? isoDate.slice(5).replace('-', '/') : '—';
+      const ac        = s.performance.accounts_created;
+      const fee       = s.performance.post_fee;
+      const ecacS     = postEcac(s.performance);
+      const detail    = [
+        ac != null ? ac + ' AC' : null,
+        ecacS != null ? '£' + ecacS + ' eCAC' : null,
+      ].filter(Boolean).join(' · ');
+      const conn = i === 0 ? '' : '<div class="campaign-tl-connector"></div>';
+      return `${conn}<div class="campaign-tl-item" style="cursor:${isCurrent?'default':'pointer'}" onclick="${isCurrent?'':(`goToPost('${s.id}')`)}">
+        <div class="campaign-tl-dot ${status}"></div>
         <div class="campaign-tl-info">
-          <div class="campaign-tl-label ${t.status}">${t.label}</div>
-          ${t.date ? `<div class="campaign-tl-date">${dateStr}</div>` : ''}
-          <div class="campaign-tl-detail">${t.detail}</div>
-          ${t.status === 'current' ? '<div class="campaign-tl-now">▲ This post</div>' : ''}
+          <div class="campaign-tl-label ${status}">Post ${s.post_sequence||'?'}</div>
+          <div class="campaign-tl-date">${dateStr}</div>
+          <div class="campaign-tl-detail">${detail}</div>
+          ${isCurrent ? '<div class="campaign-tl-now">▲ This post</div>' : ''}
         </div>
       </div>`;
     }).join('');
     timelineHtml = `<div class="campaign-timeline">
-      <div class="campaign-tl-header">Campaign</div>
+      <div class="campaign-tl-header">Campaign (${siblings.length} posts)</div>
       <div class="campaign-tl-track">${items}</div>
     </div>`;
   }
