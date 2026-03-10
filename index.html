@@ -178,6 +178,12 @@
     .meta-stat-label { font-size: 11px; color: var(--muted); margin-top: 5px; }
     /* REVIEW SECTION */
     .review-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
+    /* TOOLTIP */
+    .tip-wrap { position: relative; display: inline-flex; }
+    .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); color: var(--muted); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-left: 4px; }
+    .tip-box { display: none; position: absolute; left: 20px; top: -4px; width: 220px; background: var(--text); color: #fff; border-radius: 8px; padding: 10px 12px; font-size: 11px; line-height: 1.5; z-index: 200; pointer-events: none; }
+    .tip-box strong { display: block; margin-bottom: 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+    .tip-wrap:hover .tip-box { display: block; }
   </style>
 </head>
 <body>
@@ -12082,11 +12088,17 @@ function getBriefType(post) {
 // eCAC stitched: total campaign fee / total campaign delegations
 // Falls back to per-post fee / delegations when campaign data unavailable
 function stitchedEcac(post) {
-  // campaignGroups built after this function is defined — called at render time
-  const siblings = (typeof campaignGroups !== 'undefined' && campaignGroups[post.name]) || [post];
+  const key = typeof normaliseName !== 'undefined' ? normaliseName(post.name) : post.name;
+  const siblings = (typeof campaignGroups !== 'undefined' && campaignGroups[key]) || [post];
   const totalFee = siblings.reduce((s, x) => s + (x.performance.post_fee || 0), 0);
   const totalDel = siblings.reduce((s, x) => s + (x.performance.delegations || 0), 0);
   if (totalFee > 0 && totalDel > 0) return Math.round(totalFee / totalDel);
+  // Fallback: single-post implied eCAC from delegations
+  if (post.performance.post_fee && post.performance.delegations > 0)
+    return Math.round(post.performance.post_fee / post.performance.delegations);
+  // Last resort: fee / accounts_created
+  if (post.performance.post_fee && post.performance.accounts_created > 0)
+    return Math.round(post.performance.post_fee / post.performance.accounts_created);
   return null;
 }
 
@@ -12125,11 +12137,15 @@ const beatForecastPosts = displayPosts.filter(p => {
 const metaPosts = beatForecastPosts.length >= 5 ? beatForecastPosts : displayPosts;
 const metaRates = computeBcRates(metaPosts);
 
-// ── CAMPAIGN GROUPS (built from posts array, grouped by name) ─────────────────
+// ── CAMPAIGN GROUPS (grouped by normalised name — strips "- post N" suffix) ───
+function normaliseName(n) {
+  return n.replace(/\s*-\s*post\s*\d+$/i, '').trim();
+}
 const campaignGroups = {};
 posts.forEach(p => {
-  if (!campaignGroups[p.name]) campaignGroups[p.name] = [];
-  campaignGroups[p.name].push(p);
+  const key = normaliseName(p.name);
+  if (!campaignGroups[key]) campaignGroups[key] = [];
+  campaignGroups[key].push(p);
 });
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -12472,7 +12488,7 @@ function renderPost(idx) {
 
   // Campaign timeline — built dynamically from posts array grouped by name
   let timelineHtml = '';
-  const siblings = (campaignGroups[p.name] || []).slice().sort((a,b) => (a.post_sequence||0)-(b.post_sequence||0));
+  const siblings = (campaignGroups[normaliseName(p.name)] || []).slice().sort((a,b) => (a.post_sequence||0)-(b.post_sequence||0));
   if (siblings.length >= 1) {
     const items = siblings.map((s, i) => {
       const isCurrent = s.id === p.id;
@@ -12511,13 +12527,28 @@ function renderPost(idx) {
   const lpvVal  = perf.landing_page_views != null ? perf.landing_page_views : '—';
   const feeVal  = perf.post_fee != null ? `£${perf.post_fee}` : '—';
 
+  // Criterion-level tips: what best posts do on each item
+  const CRITERION_TIPS = {
+    'Problem-aware hook': 'Best posts open with a personal confession of never checking bills, or shock at a specific stat, before Nous is mentioned. "I never thought to check" and "I assumed bills just cost what they cost" outperform generic hooks.',
+    'Discovery moment': 'Best posts show a genuine revelation — "I found out I was overpaying by £XXX" — framed as a personal story, not a product pitch. Specific amounts make it feel real.',
+    'What Nous does': 'Best posts name all three products (energy, broadband, mobile) and say Nous "finds AND switches" — not just compares. "They sorted it all for me" outperforms "it helps you find deals".',
+    'Savings claim': 'Best posts use a specific £ figure (e.g. £470, £600+, £1,185) over vague "hundreds". Posts showing a Nous savings screenshot alongside the figure convert best.',
+    'Sign-up ease': '"2 minutes from my phone" and "just answer a few questions" are the strongest ease signals. "Completely free" is essential — many posts miss this.',
+    '@get_nous tag': 'Best posts tag @get_nous in the body copy, not just the header. Standalone tags like "Thanks to @get_nous" tend to underperform vs tags embedded mid-sentence.',
+    'Save with Nous CTA': 'Best posts use exact "Save with Nous" button text at the bottom. Posts using vague CTAs ("see how much you could save") consistently underperform.',
+    'Calming/lifestyle visual': 'Best posts use a home/lifestyle shot with readable text overlay. Posts where the product screenshot dominates, or the image looks like an ad, perform worse.',
+  };
   const metaRows = p.brief_compliance.map(c => {
     const rate = metaRates[c.label] || { pct: 0 };
     const cls  = c.pass ? 'this-pass' : 'this-fail';
+    const tip  = CRITERION_TIPS[c.label] || '';
     return `<div class="dash-meta-dim ${cls}">
       <span class="dash-meta-this">${c.pass ? '✓' : '✗'}</span>
       <span class="dash-meta-label">${c.label}</span>
-      <span class="dash-meta-pct">${rate.pct}% of best</span>
+      <span style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <span class="dash-meta-pct">${rate.pct}% of best</span>
+        ${tip ? `<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box"><strong>What works</strong>${tip}</span></span>` : ''}
+      </span>
     </div>`;
   }).join('');
 
