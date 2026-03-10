@@ -214,6 +214,20 @@
 </div>
 
 <script>
+const postVC = {
+  "30ae4fd0-8136-80a6-b69f-f5e69888d891": {cv:78002, cc:485},
+  "309e4fd0-8136-803f-a5a3-f0a63c268766": {cv:23637, cc:231},
+  "306e4fd0-8136-801a-822f-e42033e8ec0e": {cv:16267, cc:430},
+  "303e4fd0-8136-808b-8101-db535e50a372": {cv:7573, cc:60},
+  "2a8e4fd0-8136-8041-a28b-def450698d06": {cv:5353, cc:62},
+  "2a4e4fd0-8136-8091-b3bb-dde22c72b051": {cv:136013, cc:1828},
+  "254e4fd0-8136-8019-9d6d-d17126bd9536": {cv:46697, cc:null},
+  "279e4fd0-8136-809e-92f7-d1d34fc69f26": {cv:88000, cc:null},
+  "25de4fd0-8136-80df-b101-d981ee2b0924": {cv:8011, cc:65},
+  "268e4fd0-8136-80bd-8ea8-cc5a9bd1955c": {cv:null, cc:270},
+  "278e4fd0-8136-8093-82bc-ef28feea1d68": {cv:null, cc:69}
+};
+
 const briefTypes = {
   "family_post1": {
     "name": "Family & Lifestyle 2026 \u2014 Post 1",
@@ -6158,6 +6172,29 @@ function getMonthKey(p) {
   return parts.length >= 3 ? parts[1] + ' ' + parts[2] : p.date;
 }
 
+// ── TRAFFIC LIGHTS FOR VIEWS / CLICKS ────────────────────────────────────────
+// Thresholds from percentile distribution of 22 posts with data:
+//   Views:  p25=10k  p75=35k   Clicks: p25=90  p75=350   CTR: p25=0.74%  p75=1.45%
+function vcLight(value, type) {
+  if (value == null) return null;
+  if (type === 'views') {
+    if (value >= 35000) return { dot: '🟢', label: 'Strong', cls: 'green' };
+    if (value >= 10000) return { dot: '🟡', label: 'OK',     cls: 'amber' };
+    return                     { dot: '🔴', label: 'Low',    cls: 'red'   };
+  }
+  if (type === 'clicks') {
+    if (value >= 350) return { dot: '🟢', label: 'Strong', cls: 'green' };
+    if (value >= 90)  return { dot: '🟡', label: 'OK',     cls: 'amber' };
+    return                   { dot: '🔴', label: 'Low',    cls: 'red'   };
+  }
+  if (type === 'ctr') { // value is % e.g. 1.2
+    if (value >= 1.5) return { dot: '🟢', label: 'Strong', cls: 'green' };
+    if (value >= 0.75) return { dot: '🟡', label: 'OK',    cls: 'amber' };
+    return                    { dot: '🔴', label: 'Low',   cls: 'red'   };
+  }
+  return null;
+}
+
 // ── BRIEF TYPE LOOKUP ─────────────────────────────────────────────────────────
 const NICHE_PREFIX = {
   Family: 'family', Celebrity: 'celebrity', Home: 'home',
@@ -6510,6 +6547,35 @@ function renderPost(idx) {
   const bt = getBriefType(p);
   const btGoalHtml = bt ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5"><strong style="color:var(--text)">Post ${p.post_sequence} goal:</strong> ${bt.goal}</div>` : '';
 
+  // Views / Clicks traffic lights
+  const vc  = postVC[p.id] || {};
+  const cvRaw = vc.cv || null;
+  const ccRaw = vc.cc || null;
+  const ctrRaw = (cvRaw && ccRaw) ? Math.round(ccRaw / cvRaw * 1000) / 10 : null;
+  const cvLight  = vcLight(cvRaw,  'views');
+  const ccLight  = vcLight(ccRaw,  'clicks');
+  const ctrLight = vcLight(ctrRaw, 'ctr');
+  const hasVC = cvRaw != null || ccRaw != null;
+  const vcHtml = hasVC ? `
+    <hr class="dash-divider">
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      ${cvRaw != null ? `<div style="flex:1;min-width:60px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Views</div>
+        <div style="font-size:16px;font-weight:800;color:var(--${cvLight.cls})">${cvLight.dot} ${cvRaw.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--muted)">${cvLight.label}</div>
+      </div>` : ''}
+      ${ccRaw != null ? `<div style="flex:1;min-width:60px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Clicks</div>
+        <div style="font-size:16px;font-weight:800;color:var(--${ccLight.cls})">${ccLight.dot} ${ccRaw.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--muted)">${ccLight.label}</div>
+      </div>` : ''}
+      ${ctrRaw != null ? `<div style="flex:1;min-width:60px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">CTR</div>
+        <div style="font-size:16px;font-weight:800;color:var(--${ctrLight.cls})">${ctrLight.dot} ${ctrRaw}%</div>
+        <div style="font-size:10px;color:var(--muted)">${ctrLight.label}</div>
+      </div>` : ''}
+    </div>` : '';
+
   const fac = ex.forecast_ac;
   const fcac = ex.forecast_cac;
   const acHit = fac != null && perf.accounts_created != null
@@ -6648,6 +6714,7 @@ function renderPost(idx) {
                 <span>${acVal} AC created</span>
                 <span>${lpvVal ? lpvVal+' LPVs' : ''}</span>
               </div>
+              ${vcHtml}
             </div>
           </div>
         </div>
