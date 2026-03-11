@@ -88,8 +88,8 @@
 
     /* DASHBOARD ROW */
     .dashboard-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-    .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+    .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: visible; }
+    .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); border-radius: 14px 14px 0 0; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
     .dash-body { padding: 14px; }
 
     /* Performance card */
@@ -14992,7 +14992,7 @@ function renderPost(idx) {
       </div><!-- /side-by-side -->
 
       <!-- DASHBOARD ROW (brief compliance + vs best) -->
-      <div class="dashboard-row" style="grid-template-columns:1fr 1fr">
+      <div class="dashboard-row">
 
         <!-- Brief Compliance -->
         <div class="dash-card">
@@ -15084,7 +15084,7 @@ async function ulAnalyse() {
   const brief = document.getElementById('ul-brief').value;
   const frame = parseInt(document.getElementById('ul-frame').value);
   const name  = document.getElementById('ul-name').value.trim();
-  const agent = document.getElementById('ul-agent').value.trim();
+  const agent = document.getElementById('ul-agent').value.trim() || '';
 
   if (!ulImageBase64) { alert('Please upload an image first'); return; }
   if (!brief) { alert('Please select a brief'); return; }
@@ -15099,7 +15099,7 @@ async function ulAnalyse() {
     const res = await fetch(UL_SERVER + '/analyse', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent || 'Nous Team' })
+      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekky' })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Server error');
@@ -15156,25 +15156,14 @@ function ulRenderResults(d, brief, frame, name) {
       <div class="card-body">${criteriaHtml}</div>
     </div>
 
-    <!-- EMAILS -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div class="card">
-        <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-          <span>Email to influencer</span>
-          <button class="ul-copy-btn" onclick="ulCopy('ul-email-inf')">Copy</button>
-        </div>
-        <div class="card-body">
-          <div id="ul-email-inf" class="ul-email-box">${d.email_influencer || ''}</div>
-        </div>
+    <!-- EMAIL TO AGENT -->
+    <div class="card">
+      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Email to agent${agent ? ' ('+agent+')' : ''}</span>
+        <button class="ul-copy-btn" onclick="ulCopy('ul-email-agt')">Copy</button>
       </div>
-      <div class="card">
-        <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-          <span>Email to agent</span>
-          <button class="ul-copy-btn" onclick="ulCopy('ul-email-agt')">Copy</button>
-        </div>
-        <div class="card-body">
-          <div id="ul-email-agt" class="ul-email-box">${d.email_agent || ''}</div>
-        </div>
+      <div class="card-body">
+        <div id="ul-email-agt" class="ul-email-box">${d.email_agent || ''}</div>
       </div>
     </div>`;
 
