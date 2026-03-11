@@ -14714,7 +14714,7 @@ function renderPost(idx) {
     if (useNotion) {
       items = notionSiblings.map((s, i) => {
         const isCurrent = s.id === p.id;
-        const dateStr   = s.date ? s.date.slice(5).replace('-', '/') : '—';
+        const dateStr   = s.date ? s.date.split('-').slice(1).reverse().join('/') : '—';
         const status    = isCurrent ? 'current' : s.status;
         const np2       = nPerf[s.id] || {};
         const ac2       = np2.a != null ? np2.a : s.ac;
@@ -14740,7 +14740,7 @@ function renderPost(idx) {
         const isCurrent = s.id === p.id;
         const isoDate   = s.date ? parseIsoDate(s.date) : '';
         const status    = isCurrent ? 'current' : (isoDate <= TODAY_STR ? 'past' : 'future');
-        const dateStr   = isoDate ? isoDate.slice(5).replace('-', '/') : '—';
+        const dateStr   = isoDate ? isoDate.split('-').slice(1).reverse().join('/') : '—';
         const np2       = nPerf[s.id] || {};
         const ac2       = np2.a != null ? np2.a : null;
         const ecac2     = np2.e != null ? Math.round(np2.e) : null;
@@ -14942,21 +14942,21 @@ function renderPost(idx) {
         ${timelineHtml}
       </div></div>
 
-      <!-- TOP 5 TO IMPROVE -->
-      <div class="card">
-        <div class="card-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber)">
-          <span style="color:var(--amber)">${isPast ? '↩ How could this post have done better?' : '▲ Top things to improve'}</span>
-          <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">${bt ? bt.name+' — Frame '+p.post_sequence : p.niche+' — Frame '+p.post_sequence}</span>
+      <!-- SIDE BY SIDE: IMPROVEMENTS + PERFORMANCE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+        <!-- TOP 5 TO IMPROVE (left) -->
+        <div class="card" style="height:100%">
+          <div class="card-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber)">
+            <span style="color:var(--amber)">${isPast ? '↩ How could this post have done better?' : '▲ Top things to improve'}</span>
+            <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">${bt ? bt.name+' — Frame '+p.post_sequence : p.niche+' — Frame '+p.post_sequence}</span>
+          </div>
+          <div class="card-body">${improvementsHtml}</div>
         </div>
-        <div class="card-body">${improvementsHtml}</div>
-      </div>
 
+        <!-- PERFORMANCE (right) -->
+        <div class="dash-card" style="height:100%">
 
-      <!-- DASHBOARD ROW -->
-      <div class="dashboard-row">
-
-        <!-- Performance -->
-        <div class="dash-card">
           <div class="dash-head">Performance</div>
           <div class="dash-body">
             <div class="dash-kpi-pair">
@@ -14987,6 +14987,12 @@ function renderPost(idx) {
             </div>
           </div>
         </div>
+        </div>
+
+      </div><!-- /side-by-side -->
+
+      <!-- DASHBOARD ROW (brief compliance + vs best) -->
+      <div class="dashboard-row" style="grid-template-columns:1fr 1fr">
 
         <!-- Brief Compliance -->
         <div class="dash-card">
@@ -15010,6 +15016,8 @@ function renderPost(idx) {
         </div>
 
       </div><!-- dashboard-row -->
+
+      </div><!-- /dashboard-row -->
 
       <!-- COMBINED REVIEW -->
       <div class="card">
