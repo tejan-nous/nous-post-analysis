@@ -49,12 +49,12 @@
 
     /* IMAGE PANEL */
     .image-panel { position: sticky; top: 80px; }
-    .story-frame { width: 100%; aspect-ratio: 9/16; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,.14); background: #111; }
+    .story-frame { width: 100%; aspect-ratio: 9/16; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,.14); background: #111; position: relative; }
     .story-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .story-frame-wrap { position: relative; }
-    .story-frame-wrap .quality-tip { display: none; position: absolute; top: 8px; right: 8px; z-index: 10; background: rgba(0,0,0,.88); color: #fff; border-radius: 10px; padding: 10px 12px; font-size: 11px; line-height: 1.6; max-width: 220px; pointer-events: none; }
-    .story-frame-wrap:hover .quality-tip { display: block; }
-    .quality-tip strong { display: block; font-size: 12px; margin-bottom: 6px; color: #fff; }
+    .story-frame-guide { position: absolute; inset: 0; background: rgba(0,0,0,.78); color: #fff; padding: 18px 16px; overflow-y: auto; opacity: 0; transition: opacity .2s; pointer-events: none; font-size: 11px; line-height: 1.5; }
+    .story-frame:hover .story-frame-guide { opacity: 1; pointer-events: auto; }
+    .story-frame-guide h4 { font-size: 12px; font-weight: 800; margin: 0 0 10px; color: #fff; letter-spacing: .03em; }
+    .story-frame-guide li { margin-bottom: 5px; }
     .image-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
     .notion-link { color: var(--muted); text-decoration: none; font-size: 12px; }
     .notion-link:hover { color: var(--text); }
@@ -311,18 +311,7 @@
         <!-- Agent name -->
         <div>
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
-          <input id="ul-agent" type="text" placeholder="e.g. Sophie" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
-        </div>
-      </div>
-      <!-- Settings row: server URL + password -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
-        <div>
-          <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px">Server URL</label>
-          <input id="ul-server-url" type="text" placeholder="https://your-app.up.railway.app" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_server_url', this.value)">
-        </div>
-        <div>
-          <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px">Access password</label>
-          <input id="ul-password" type="password" placeholder="Enter password" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_password', this.value)">
+          <input id="ul-agent" type="text" placeholder="e.g. Sarah at Gleam" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
         </div>
       </div>
 
@@ -340,6 +329,25 @@
       <button id="ul-btn" onclick="ulAnalyse()" style="width:100%;margin-top:16px;padding:12px;background:var(--nous);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s" disabled>Generate Feedback</button>
     </div>
   </div>
+
+  <!-- SETTINGS -->
+  <details style="margin-bottom:20px">
+    <summary style="cursor:pointer;font-size:12px;color:var(--muted);user-select:none">⚙ Server settings</summary>
+    <div class="card" style="margin-top:10px">
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Server URL</label>
+            <input id="ul-server-url" type="text" placeholder="https://nous-post-analysis-production.up.railway.app" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_server_url',this.value)">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Access password</label>
+            <input id="ul-password" type="password" placeholder="Leave blank if not set" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_password',this.value)">
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
 
   <!-- RESULTS -->
   <div id="ul-results" style="display:none"></div>
@@ -14796,7 +14804,7 @@ function renderPost(idx) {
     "Sign-up ease": "The best posts explicitly say it takes minutes ('from my phone in like five minutes'), mention it's free, and reference 'just a few quick questions' — making the barrier feel near-zero.",
     "@get_nous tag": "The tag is required in every post but must not appear in the opening line; the one exception is the Fashion Secret/Teaser frame where both '@get_nous' and the Nous name must be fully omitted.",
     "Save with Nous CTA": "The best posts have a single 'Save with Nous' button with the 🔗 emoji, clear contrast, no AD text inside the button, and no competing poll or vote stickers.",
-    "Visual type & effectiveness": "People and faces consistently outperform empty rooms or product-only shots. Image should suit the niche (home interior, lifestyle, fashion haul) and the AD label must be placed below the product, never covering the image.",
+    "Visual type & effectiveness": "People and faces tend to drive stronger engagement than empty rooms or product shots alone. Visuals should match the brief's niche (family lifestyle, home interior, fashion haul, celebrity setting), with the AD label placed below the product — never covering the image.",
     "Button placement": "The single most common rejection reason is a button that is not at the bottom of the story — it must be at the bottom, unobscured, every time.",
     "Text readability": "The best posts use a large font or a background block behind text, break long copy into multiple blocks, and never place text over busy image areas or faces.",
   };
@@ -14927,11 +14935,21 @@ function renderPost(idx) {
   document.getElementById('main-content').innerHTML = `
     <!-- IMAGE PANEL -->
     <div class="image-panel">
-      <div class="story-frame-wrap">
-        <div class="story-frame">
-          <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'">
+      <div class="story-frame">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'">
+        <div class="story-frame-guide">
+          <h4>📋 Quick quality guide</h4>
+          <ul style="margin:0;padding-left:16px">
+            <li><strong>Hook</strong>: confession or stat first — never open with @get_nous or brand name</li>
+            <li><strong>Savings</strong>: specific £ figure required (personal or approved stat)</li>
+            <li><strong>Button</strong>: "Save with Nous" at the BOTTOM, 🔗 emoji, good contrast</li>
+            <li><strong>Button text</strong>: no AD text inside the button itself</li>
+            <li><strong>Text</strong>: large enough to read on a phone, broken into blocks, not over faces</li>
+            <li><strong>Visual</strong>: people/faces outperform empty rooms — match brief niche</li>
+            <li><strong>@get_nous</strong>: in body text but NOT in the opening line</li>
+            <li><strong>No poll/vote stickers</strong> competing with the CTA</li>
+          </ul>
         </div>
-        <div class="quality-tip"><strong>📋 Visual quality guide</strong>Button: large enough to tap easily, at the very bottom<br>Text: readable font size, strong contrast against background<br>Layout: text not over faces or busy image areas<br>Image: well-lit, clear, focused — avoid dark or blurry shots<br>People tend to outperform empty rooms or product-only shots</div>
       </div>
       <div class="image-footer">
         <span>${p.format} · ${p.niche} · ${p.date}</span>
@@ -15056,7 +15074,7 @@ function renderPost(idx) {
 }
 
 // ── UPLOAD / ANALYSE ──────────────────────────────────────────────────────────
-const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://YOUR-RAILWAY-URL.up.railway.app';
+const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app';
 let ulImageBase64 = null;
 
 // Populate brief dropdown — hardcoded so it works without the server
@@ -15085,6 +15103,11 @@ const UL_BRIEFS = [
     opt.value = b; opt.textContent = b;
     sel.appendChild(opt);
   });
+  // Restore settings from localStorage
+  const su = document.getElementById('ul-server-url');
+  const pw = document.getElementById('ul-password');
+  if (su) su.value = localStorage.getItem('ul_server_url') || '';
+  if (pw) pw.value = localStorage.getItem('ul_password') || '';
 })();
 
 // Pre-populate saved settings
@@ -15196,13 +15219,24 @@ function ulRenderResults(d, brief, frame, name, agent) {
     </div>
 
     <!-- EMAIL TO AGENT -->
-    <div class="card">
+    <div class="card" style="margin-bottom:16px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
         <span>Email to agent${agent ? ' ('+agent+')' : ''}</span>
         <button class="ul-copy-btn" onclick="ulCopy('ul-email-agt')">Copy</button>
       </div>
       <div class="card-body">
         <div id="ul-email-agt" class="ul-email-box">${d.email_agent || ''}</div>
+      </div>
+    </div>
+
+    <!-- SLACK MESSAGE -->
+    <div class="card">
+      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Slack message</span>
+        <button class="ul-copy-btn" onclick="ulCopyText('ul-slack-msg')">Copy</button>
+      </div>
+      <div class="card-body">
+        <div id="ul-slack-msg" class="ul-email-box" style="white-space:pre-wrap">${ulBuildSlack(d, brief, frame, name)}</div>
       </div>
     </div>`;
 
@@ -15243,18 +15277,33 @@ function ulRenderResults(d, brief, frame, name, agent) {
 function ulCopy(id) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
-    // Brief flash feedback
     const btns = document.querySelectorAll('.ul-copy-btn');
     btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) { b.textContent = 'Copied!'; setTimeout(()=>b.textContent='Copy',1500); }});
   });
 }
 
 function ulCopyText(id) {
-  const text = document.getElementById(id).textContent;
+  const text = document.getElementById(id).innerText;
   navigator.clipboard.writeText(text).then(() => {
     const btns = document.querySelectorAll('.ul-copy-btn');
     btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) { b.textContent = 'Copied!'; setTimeout(()=>b.textContent='Copy',1500); }});
   });
+}
+
+function ulBuildSlack(d, brief, frame, name) {
+  const good = d.overall === 'good_to_go';
+  const verdict = good ? '✅ Good to go' : '⚠️ Needs work';
+  const score = `${d.score}/${d.total} criteria pass`;
+  const who = name ? ` — ${name}` : '';
+  const fails = (d.criteria || []).filter(c => !c.pass);
+  let msg = `*${verdict}* · ${brief} · Frame ${frame}${who}\n${score}\n`;
+  if (!good && fails.length) {
+    msg += '\n*Changes needed:*\n';
+    fails.forEach(f => { msg += `• *${f.sub_label}*: ${f.note || 'See checklist'}\n`; });
+  }
+  if (d.summary) msg += `\n${d.summary}`;
+  msg += '\n\n— Bekki';
+  return msg;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
