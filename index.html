@@ -90,10 +90,10 @@
     .dashboard-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: visible; }
     .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); border-radius: 14px 14px 0 0; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
-    .dash-body { padding: 14px; }
+    .dash-body { padding: 12px 14px; }
 
     /* Performance card */
-    .dash-kpi-pair { display: flex; flex-direction: column; gap: 10px; }
+    .dash-kpi-pair { display: flex; flex-direction: column; gap: 8px; }
     .dash-kpi { display: flex; align-items: baseline; gap: 6px; }
     .dash-kpi-val { font-size: 28px; font-weight: 900; line-height: 1; letter-spacing: -.03em; }
     .dash-kpi-val.green { color: var(--green); } .dash-kpi-val.amber { color: var(--amber); } .dash-kpi-val.red { color: var(--red); }
@@ -14679,20 +14679,20 @@ function renderPost(idx) {
 
   const newMetricsHtml = (vpp || app_val || ctrRaw) ? `
     <hr class="dash-divider">
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
-      ${vpp != null ? `<div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px">Views/£</div>
-        <div style="font-size:18px;font-weight:800;color:var(--${vppR.cls})">${vppR.dot} ${vpp}</div>
-        <div style="font-size:9px;color:var(--muted)">${vppR.label} · ${cvRaw.toLocaleString()} views</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center">
+      ${vpp != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">Views/£</div>
+        <div style="font-size:15px;font-weight:800;color:var(--${vppR.cls})">${vppR.dot} ${vpp}</div>
+        <div style="font-size:9px;color:var(--muted)">${cvRaw.toLocaleString()} views</div>
       </div>` : '<div></div>'}
-      ${ctrRaw != null ? `<div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px">CTR</div>
-        <div style="font-size:18px;font-weight:800;color:var(--${ctrR.cls})">${ctrR.dot} ${ctrRaw}%</div>
-        <div style="font-size:9px;color:var(--muted)">${ctrR.label} · ${ccRaw} clicks</div>
+      ${ctrRaw != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">CTR</div>
+        <div style="font-size:15px;font-weight:800;color:var(--${ctrR.cls})">${ctrR.dot} ${ctrRaw}%</div>
+        <div style="font-size:9px;color:var(--muted)">${ccRaw} clicks</div>
       </div>` : '<div></div>'}
-      ${app_val != null ? `<div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px">AC/£</div>
-        <div style="font-size:18px;font-weight:800;color:var(--${appR.cls})">${appR.dot} ${app_val}</div>
+      ${app_val != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">AC/£</div>
+        <div style="font-size:15px;font-weight:800;color:var(--${appR.cls})">${appR.dot} ${app_val}</div>
         <div style="font-size:9px;color:var(--muted)">${appR.label}</div>
       </div>` : '<div></div>'}
     </div>` : '';
@@ -14943,7 +14943,7 @@ function renderPost(idx) {
       </div></div>
 
       <!-- SIDE BY SIDE: IMPROVEMENTS + PERFORMANCE -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
 
         <!-- TOP 5 TO IMPROVE (left) -->
         <div class="card">
