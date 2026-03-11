@@ -15044,17 +15044,23 @@ function renderPost(idx) {
 const UL_SERVER = 'http://localhost:8765';
 let ulImageBase64 = null;
 
-// Populate brief dropdown on load
-fetch(UL_SERVER + '/briefs').then(r => r.json()).then(data => {
+// Populate brief dropdown — hardcoded so it works without the server
+const UL_BRIEFS = [
+  'Family/Lifestyle Brief 1','Family/Lifestyle Brief 2',
+  'Home Brief 1','Home Brief 2',
+  'Celebrity Brief 1','Celebrity Brief 2',
+  'Fashion Brief 1','Fashion Brief 2',
+  'Lifestyle Brief 1',
+];
+(function() {
   const sel = document.getElementById('ul-brief');
   if (!sel) return;
-  (data.briefs || []).forEach(b => {
+  UL_BRIEFS.forEach(b => {
     const opt = document.createElement('option');
-    opt.value = b.brief;
-    opt.textContent = b.brief;
+    opt.value = b; opt.textContent = b;
     sel.appendChild(opt);
   });
-}).catch(() => {}); // server may not be running yet
+})();
 
 function ulDragOver(e) { e.preventDefault(); document.getElementById('ul-dropzone').style.borderColor = 'var(--nous)'; }
 function ulDragLeave(e) { document.getElementById('ul-dropzone').style.borderColor = 'var(--border)'; }

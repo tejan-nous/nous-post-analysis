@@ -122,30 +122,32 @@ Context:
 - Brief: {brief}
 - Frame number: {frame}
 - Influencer: {influencer_name}
-- Reviewer signing off as: {agent_name}
+- Agent (email recipient): {agent_name}
+- Reviewer signing off as: {reviewer_name}
 
-Email guidance:
+Write ONE short email addressed to the agent. Set "email_influencer" to an empty string.
 
-If overall = "needs_work":
-  - Influencer email: Warm and friendly. Start with what's good. List 2-3 specific changes needed based on failed criteria. Sign off as {agent_name}. Tone: collaborative, not critical.
-  - Agent email: Professional and concise. Bullet-pointed changes needed. State which criteria failed and why. Ask agent to pass feedback to influencer. Signed {agent_name}.
+Opening: "Hi {agent_name}," (if no agent name provided, just "Hi,")
 
 If overall = "good_to_go":
-  - Influencer email: Short and enthusiastic. "Just reviewed your post and it looks great! Happy for this to go live." Signed {agent_name}.
-  - Agent email: "Reviewed {influencer_name}'s post — all looks good. Happy to approve." Signed {agent_name}.
+  Short and warm. E.g. "Hi {agent_name}, looks good — thanks for sending over! Happy for this to go live. Best, {reviewer_name}"
 
-In both emails, reference the specific brief ({brief}, Frame {frame}) and the influencer's name ({influencer_name}).
+If overall = "needs_work":
+  Friendly and collaborative. Start with something positive. Then suggest 2-3 specific changes based on what you can see failing in the image. Ask the agent to pass feedback to {influencer_name}. End "Best, {reviewer_name}". Keep to 6-8 sentences max.
+
+Always reference {influencer_name}, {brief} and Frame {frame}.
 
 Now evaluate the image and return ONLY the JSON object described above.
 """
 
 
-def build_prompt(brief, frame, influencer_name, agent_name):
+def build_prompt(brief, frame, influencer_name, agent_name, reviewer_name="Bekky"):
     return CRITERIA_PROMPT.format(
         brief=brief,
         frame=frame,
         influencer_name=influencer_name or "the influencer",
-        agent_name=agent_name or "Nous Team",
+        agent_name=agent_name or "",
+        reviewer_name=reviewer_name or "Bekky",
     )
 
 
@@ -172,7 +174,8 @@ def analyse():
     brief = data.get("brief")
     frame = data.get("frame")
     influencer_name = data.get("influencer_name", "")
-    agent_name = data.get("agent_name", "Nous Team")
+    agent_name = data.get("agent_name", "")
+    reviewer_name = data.get("reviewer_name", "Bekky")
 
     if not image_base64:
         return jsonify({"error": "image_base64 is required"}), 400
@@ -192,7 +195,7 @@ def analyse():
     elif image_base64.startswith("UklGR"):
         media_type = "image/webp"
 
-    prompt_text = build_prompt(brief, frame, influencer_name, agent_name)
+    prompt_text = build_prompt(brief, frame, influencer_name, agent_name, reviewer_name)
 
     try:
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
