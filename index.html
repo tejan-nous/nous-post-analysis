@@ -87,7 +87,7 @@
     .campaign-tl-now    { font-size: 9px; font-weight: 700; color: var(--nous); text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
 
     /* DASHBOARD ROW */
-    .dashboard-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .dashboard-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .dash-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: visible; }
     .dash-head { padding: 10px 14px; border-bottom: 1px solid var(--border); border-radius: 14px 14px 0 0; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
     .dash-body { padding: 14px; }
@@ -14943,10 +14943,10 @@ function renderPost(idx) {
       </div></div>
 
       <!-- SIDE BY SIDE: IMPROVEMENTS + PERFORMANCE -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
 
         <!-- TOP 5 TO IMPROVE (left) -->
-        <div class="card" style="height:100%">
+        <div class="card">
           <div class="card-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber)">
             <span style="color:var(--amber)">${isPast ? '↩ How could this post have done better?' : '▲ Top things to improve'}</span>
             <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">${bt ? bt.name+' — Frame '+p.post_sequence : p.niche+' — Frame '+p.post_sequence}</span>
@@ -14955,7 +14955,7 @@ function renderPost(idx) {
         </div>
 
         <!-- PERFORMANCE (right) -->
-        <div class="dash-card" style="height:100%">
+        <div class="dash-card">
 
           <div class="dash-head">Performance</div>
           <div class="dash-body">
