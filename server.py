@@ -12,20 +12,27 @@ from flask_cors import CORS
 import anthropic
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://tejan-nous.github.io", "http://localhost:8080", "http://127.0.0.1:8080", "null"])
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+ACCESS_PASSWORD = os.environ.get("ACCESS_PASSWORD", "")
 
 BRIEFS = [
-    {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
-    {"brief": "Family/Lifestyle Brief 2", "frames": [1, 2, 3]},
-    {"brief": "Home Brief 1", "frames": [1, 2, 3]},
-    {"brief": "Home Brief 2", "frames": [1, 2, 3]},
-    {"brief": "Celebrity Brief 1", "frames": [1, 2, 3]},
-    {"brief": "Celebrity Brief 2", "frames": [1, 2, 3]},
-    {"brief": "Fashion Brief 1", "frames": [1, 2, 3]},
-    {"brief": "Fashion Brief 2", "frames": [1, 2, 3]},
-    {"brief": "Lifestyle Brief 1", "frames": [1, 2, 3]},
+    {"brief": "👗 Fashion Exp: Secret first", "frames": [1, 2, 3]},
+    {"brief": "💃 Fashion Exp: Girl Maths first", "frames": [1, 2, 3]},
+    {"brief": "⭐ Celebrity Exp: Hate Waste first", "frames": [1, 2, 3]},
+    {"brief": "👑 Celebrity Exp: Supermom first", "frames": [1, 2, 3]},
+    {"brief": "🏠 Home Exp: Bargain first", "frames": [1, 2, 3]},
+    {"brief": "🏡 Home Exp: Must Have first", "frames": [1, 2, 3]},
+    {"brief": "🔄 Repeat Exp: OG brief (post level)", "frames": [1, 2, 3]},
+    {"brief": "📊 Repeat Exp: Startling Stats", "frames": [1, 2, 3]},
+    {"brief": "👨‍👩‍👧 New Family Exp: Identical message", "frames": [1, 2, 3]},
+    {"brief": "📏 Message Length Exp: Short first", "frames": [1, 2, 3]},
+    {"brief": "📝 Message Length Exp: Long first", "frames": [1, 2, 3]},
+    {"brief": "📬 New Visuals: Follower DM first", "frames": [1, 2, 3]},
+    {"brief": "⬜ New Visuals: Blank background first", "frames": [1, 2, 3]},
+    {"brief": "🌿 Lifestyle Exp: Life Lesson first", "frames": [1, 2, 3]},
+    {"brief": "📱 Lifestyle Exp: Mobile Savings first", "frames": [1, 2, 3]},
 ]
 
 SYSTEM_PROMPT = """You are a content quality reviewer for Nous, a UK utility-switching service that saves users £500+ by switching energy, broadband, and mortgage providers.
@@ -107,9 +114,9 @@ CRITERIA TO CHECK:
    b. Button is not obscured by AD label, stickers or text blocks
    c. Only one CTA button — no competing links
 
-9. Calming/lifestyle visual
-   a. Visual is calming — not busy, cluttered or high-contrast
-   b. Visual matches niche expectation for this frame (home interior, lifestyle shot, etc.)
+9. Visual type & effectiveness
+   a. Image type suits the brief — people/faces tend to drive stronger engagement than empty rooms or product shots alone
+   b. Visual is appropriate to the niche — e.g. family lifestyle, home interior, fashion haul, celebrity setting
    c. AD label is placed below the product shot, not covering the image
 
 10. Text readability
@@ -141,13 +148,13 @@ Now evaluate the image and return ONLY the JSON object described above.
 """
 
 
-def build_prompt(brief, frame, influencer_name, agent_name, reviewer_name="Bekky"):
+def build_prompt(brief, frame, influencer_name, agent_name, reviewer_name="Bekki"):
     return CRITERIA_PROMPT.format(
         brief=brief,
         frame=frame,
         influencer_name=influencer_name or "the influencer",
         agent_name=agent_name or "",
-        reviewer_name=reviewer_name or "Bekky",
+        reviewer_name=reviewer_name or "Bekki",
     )
 
 
@@ -170,12 +177,17 @@ def analyse():
     if not data:
         return jsonify({"error": "Invalid or missing JSON body"}), 400
 
+    if ACCESS_PASSWORD:
+        auth = request.headers.get("X-Access-Password", "")
+        if auth != ACCESS_PASSWORD:
+            return jsonify({"error": "Unauthorised"}), 401
+
     image_base64 = data.get("image_base64")
     brief = data.get("brief")
     frame = data.get("frame")
     influencer_name = data.get("influencer_name", "")
     agent_name = data.get("agent_name", "")
-    reviewer_name = data.get("reviewer_name", "Bekky")
+    reviewer_name = data.get("reviewer_name", "Bekki")
 
     if not image_base64:
         return jsonify({"error": "image_base64 is required"}), 400
