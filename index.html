@@ -15158,7 +15158,8 @@ async function ulAnalyse() {
   document.getElementById('ul-results').style.display = 'none';
 
   try {
-    const res = await fetch(UL_SERVER + '/analyse', {
+    const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+    const res = await fetch(serverUrl + '/analyse', {
       method: 'POST',
       headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
       body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki' })
