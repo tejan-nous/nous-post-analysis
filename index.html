@@ -51,6 +51,10 @@
     .image-panel { position: sticky; top: 80px; }
     .story-frame { width: 100%; aspect-ratio: 9/16; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,.14); background: #111; }
     .story-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .story-frame-wrap { position: relative; }
+    .story-frame-wrap .quality-tip { display: none; position: absolute; top: 8px; right: 8px; z-index: 10; background: rgba(0,0,0,.88); color: #fff; border-radius: 10px; padding: 10px 12px; font-size: 11px; line-height: 1.6; max-width: 220px; pointer-events: none; }
+    .story-frame-wrap:hover .quality-tip { display: block; }
+    .quality-tip strong { display: block; font-size: 12px; margin-bottom: 6px; color: #fff; }
     .image-footer { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
     .notion-link { color: var(--muted); text-decoration: none; font-size: 12px; }
     .notion-link:hover { color: var(--text); }
@@ -292,11 +296,11 @@
         </div>
         <!-- Frame dropdown -->
         <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame / Post #</label>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame</label>
           <select id="ul-frame" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
-            <option value="1">Post 1 (Hook)</option>
-            <option value="2">Post 2 (Discovery)</option>
-            <option value="3">Post 3 (Outcome)</option>
+            <option value="1">Frame 1</option>
+            <option value="2">Frame 2</option>
+            <option value="3">Frame 3</option>
           </select>
         </div>
         <!-- Influencer name -->
@@ -306,8 +310,19 @@
         </div>
         <!-- Agent name -->
         <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Your name <span style="font-weight:400;opacity:.6">(for emails)</span></label>
-          <input id="ul-agent" type="text" placeholder="Nous Team" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
+          <input id="ul-agent" type="text" placeholder="e.g. Sophie" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+        </div>
+      </div>
+      <!-- Settings row: server URL + password -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border)">
+        <div>
+          <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px">Server URL</label>
+          <input id="ul-server-url" type="text" placeholder="https://your-app.up.railway.app" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_server_url', this.value)">
+        </div>
+        <div>
+          <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px">Access password</label>
+          <input id="ul-password" type="password" placeholder="Enter password" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_password', this.value)">
         </div>
       </div>
 
@@ -322,7 +337,7 @@
         <input id="ul-file" type="file" accept="image/*" style="display:none" onchange="ulFileSelected(event)">
       </div>
 
-      <button id="ul-btn" onclick="ulAnalyse()" style="width:100%;margin-top:16px;padding:12px;background:var(--nous);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s" disabled>Analyse Story</button>
+      <button id="ul-btn" onclick="ulAnalyse()" style="width:100%;margin-top:16px;padding:12px;background:var(--nous);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s" disabled>Generate Feedback</button>
     </div>
   </div>
 
@@ -14781,7 +14796,7 @@ function renderPost(idx) {
     "Sign-up ease": "The best posts explicitly say it takes minutes ('from my phone in like five minutes'), mention it's free, and reference 'just a few quick questions' — making the barrier feel near-zero.",
     "@get_nous tag": "The tag is required in every post but must not appear in the opening line; the one exception is the Fashion Secret/Teaser frame where both '@get_nous' and the Nous name must be fully omitted.",
     "Save with Nous CTA": "The best posts have a single 'Save with Nous' button with the 🔗 emoji, clear contrast, no AD text inside the button, and no competing poll or vote stickers.",
-    "Calming/lifestyle visual": "Approved posts use calming home or lifestyle shots that match the brief's niche expectation for that frame, with the AD label placed below the product — never covering the image.",
+    "Visual type & effectiveness": "People and faces consistently outperform empty rooms or product-only shots. Image should suit the niche (home interior, lifestyle, fashion haul) and the AD label must be placed below the product, never covering the image.",
     "Button placement": "The single most common rejection reason is a button that is not at the bottom of the story — it must be at the bottom, unobscured, every time.",
     "Text readability": "The best posts use a large font or a background block behind text, break long copy into multiple blocks, and never place text over busy image areas or faces.",
   };
@@ -14912,8 +14927,11 @@ function renderPost(idx) {
   document.getElementById('main-content').innerHTML = `
     <!-- IMAGE PANEL -->
     <div class="image-panel">
-      <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'">
+      <div class="story-frame-wrap">
+        <div class="story-frame">
+          <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'">
+        </div>
+        <div class="quality-tip"><strong>📋 Visual quality guide</strong>Button: large enough to tap easily, at the very bottom<br>Text: readable font size, strong contrast against background<br>Layout: text not over faces or busy image areas<br>Image: well-lit, clear, focused — avoid dark or blurry shots<br>People tend to outperform empty rooms or product-only shots</div>
       </div>
       <div class="image-footer">
         <span>${p.format} · ${p.niche} · ${p.date}</span>
@@ -14961,7 +14979,7 @@ function renderPost(idx) {
           <div class="dash-body">
             <div class="dash-kpi-pair">
               <div class="dash-kpi">
-                <div class="dash-kpi-val ${beatFc ? 'green' : ''}">${acVal}</div>
+                <div class="dash-kpi-val ${beatFc ? 'green' : ''}">${appR ? appR.dot + ' ' : ''}${acVal}</div>
                 <div class="dash-kpi-meta">
                   <span class="dash-kpi-label">Accounts Created</span>
                   <span class="dash-kpi-sub">Forecast: ${facVal}</span>
@@ -15038,16 +15056,26 @@ function renderPost(idx) {
 }
 
 // ── UPLOAD / ANALYSE ──────────────────────────────────────────────────────────
-const UL_SERVER = 'http://localhost:8765';
+const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://YOUR-RAILWAY-URL.up.railway.app';
 let ulImageBase64 = null;
 
 // Populate brief dropdown — hardcoded so it works without the server
 const UL_BRIEFS = [
-  'Family/Lifestyle Brief 1','Family/Lifestyle Brief 2',
-  'Home Brief 1','Home Brief 2',
-  'Celebrity Brief 1','Celebrity Brief 2',
-  'Fashion Brief 1','Fashion Brief 2',
-  'Lifestyle Brief 1',
+  '👗 Fashion Exp: Secret first',
+  '💃 Fashion Exp: Girl Maths first',
+  '⭐ Celebrity Exp: Hate Waste first',
+  '👑 Celebrity Exp: Supermom first',
+  '🏠 Home Exp: Bargain first',
+  '🏡 Home Exp: Must Have first',
+  '🔄 Repeat Exp: OG brief (post level)',
+  '📊 Repeat Exp: Startling Stats',
+  '👨‍👩‍👧 New Family Exp: Identical message',
+  '📏 Message Length Exp: Short first',
+  '📝 Message Length Exp: Long first',
+  '📬 New Visuals: Follower DM first',
+  '⬜ New Visuals: Blank background first',
+  '🌿 Lifestyle Exp: Life Lesson first',
+  '📱 Lifestyle Exp: Mobile Savings first',
 ];
 (function() {
   const sel = document.getElementById('ul-brief');
@@ -15057,6 +15085,14 @@ const UL_BRIEFS = [
     opt.value = b; opt.textContent = b;
     sel.appendChild(opt);
   });
+})();
+
+// Pre-populate saved settings
+(function() {
+  const savedUrl = localStorage.getItem('ul_server_url');
+  const savedPwd = localStorage.getItem('ul_password');
+  if (savedUrl) { const el = document.getElementById('ul-server-url'); if(el) el.value = savedUrl; }
+  if (savedPwd) { const el = document.getElementById('ul-password'); if(el) el.value = savedPwd; }
 })();
 
 function ulDragOver(e) { e.preventDefault(); document.getElementById('ul-dropzone').style.borderColor = 'var(--nous)'; }
@@ -15101,22 +15137,22 @@ async function ulAnalyse() {
   try {
     const res = await fetch(UL_SERVER + '/analyse', {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekky' })
+      headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
+      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki' })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Server error');
-    ulRenderResults(data, brief, frame, name);
+    ulRenderResults(data, brief, frame, name, agent);
   } catch(e) {
     document.getElementById('ul-results').style.display = 'block';
-    document.getElementById('ul-results').innerHTML = `<div class="card"><div class="card-body" style="color:#e53935">\u26a0 ${e.message}<br><span style="font-size:12px;color:var(--muted)">Make sure the local server is running: <code>./start_server.sh</code></span></div></div>`;
+    document.getElementById('ul-results').innerHTML = `<div class="card"><div class="card-body" style="color:#e53935">\u26a0 ${e.message}<br><span style="font-size:12px;color:var(--muted)">Check the server URL and password in the settings above.</span></div></div>`;
   } finally {
-    btn.textContent = 'Analyse Story';
+    btn.textContent = 'Generate Feedback';
     btn.disabled = false;
   }
 }
 
-function ulRenderResults(d, brief, frame, name) {
+function ulRenderResults(d, brief, frame, name, agent) {
   const good = d.overall === 'good_to_go';
 
   // Group criteria by parent label
@@ -15170,8 +15206,36 @@ function ulRenderResults(d, brief, frame, name) {
       </div>
     </div>`;
 
+  // Build Slack output
+  const slackLines = [
+    `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
+    good ? ':white_check_mark: *Good to go* — ' + d.score + '/' + d.total + ' checks pass' : ':warning: *Needs work* — ' + d.score + '/' + d.total + ' checks pass',
+    '',
+  ];
+  if (d.summary) slackLines.push(d.summary, '');
+  const fails = (d.criteria||[]).filter(c => !c.pass);
+  if (fails.length) {
+    slackLines.push('*Issues to fix:*');
+    fails.forEach(c => slackLines.push('• ' + c.sub_label + (c.note ? ' — ' + c.note : '')));
+    slackLines.push('');
+  }
+  slackLines.push('— Bekki');
+  const slackText = slackLines.join('\n');
+
+  const slackHtml = `
+    <!-- SLACK OUTPUT -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Slack message</span>
+        <button class="ul-copy-btn" onclick="ulCopyText('ul-slack-out')">Copy</button>
+      </div>
+      <div class="card-body">
+        <pre id="ul-slack-out" style="white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.6;color:var(--text);margin:0">${slackText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
+      </div>
+    </div>`;
+
   const el = document.getElementById('ul-results');
-  el.innerHTML = html;
+  el.innerHTML = html + slackHtml;
   el.style.display = 'block';
   el.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -15180,6 +15244,14 @@ function ulCopy(id) {
   const text = document.getElementById(id).textContent;
   navigator.clipboard.writeText(text).then(() => {
     // Brief flash feedback
+    const btns = document.querySelectorAll('.ul-copy-btn');
+    btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) { b.textContent = 'Copied!'; setTimeout(()=>b.textContent='Copy',1500); }});
+  });
+}
+
+function ulCopyText(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
     const btns = document.querySelectorAll('.ul-copy-btn');
     btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) { b.textContent = 'Copied!'; setTimeout(()=>b.textContent='Copy',1500); }});
   });
