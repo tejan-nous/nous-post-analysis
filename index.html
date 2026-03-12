@@ -286,6 +286,16 @@
     <p style="color:var(--muted);font-size:14px">Upload a story image to get instant brief compliance feedback</p>
   </div>
 
+  <!-- REVIEW TYPE TOGGLE -->
+  <div style="display:flex;gap:10px;margin-bottom:20px">
+    <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:2px solid var(--nous);background:var(--nous-light);cursor:pointer;font-size:13px;font-weight:600">
+      <input type="radio" name="ul-review-type" value="first" checked style="accent-color:var(--nous)"> First review
+    </label>
+    <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:2px solid var(--border);cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)">
+      <input type="radio" name="ul-review-type" value="second" style="accent-color:var(--nous)"> Final review
+    </label>
+  </div>
+
   <!-- INPUT CARD -->
   <div class="card" style="margin-bottom:24px">
     <div class="card-body">
@@ -15201,6 +15211,40 @@ const UL_BRIEFS = [
   if (savedPwd) { const el = document.getElementById('ul-password'); if(el) el.value = savedPwd; }
 })();
 
+// Build hall-of-fame loading facts from real post data
+(function() {
+  const facts = [];
+  let bestAC = null, bestACName = '', bestCTR = null, bestCTRName = '', bestECAC = null, bestECACName = '';
+  displayPosts.forEach(p => {
+    const np = nPerf[p.id] || {};
+    const ac = np.a != null ? np.a : null;
+    const cv = np.cv != null ? np.cv : null;
+    const cc = np.cc != null ? np.cc : null;
+    const ecac = np.e != null ? np.e : null;
+    const ctr = (cv && cc) ? Math.round(cc / cv * 1000) / 10 : null;
+    const first = p.name.split(' - ')[0].trim();
+    if (ac != null && (bestAC == null || ac > bestAC)) { bestAC = ac; bestACName = first; }
+    if (ctr != null && (bestCTR == null || ctr > bestCTR)) { bestCTR = ctr; bestCTRName = first; }
+    if (ecac != null && (bestECAC == null || ecac < bestECAC)) { bestECAC = Math.round(ecac); bestECACName = first; }
+  });
+  if (bestACName && bestAC) facts.push(`🏆 Did you know? ${bestACName}'s post generated ${bestAC.toLocaleString()} accounts — our all-time best`);
+  if (bestCTRName && bestCTR) facts.push(`🎯 Did you know? ${bestCTRName} had our best ever CTR at ${bestCTR}%`);
+  if (bestECACName && bestECAC) facts.push(`💚 Did you know? ${bestECACName} hit our lowest ever eCAC at £${bestECAC}`);
+  facts.forEach(f => UL_LOADING_MSGS.push(f));
+})();
+
+// Style review type toggle on change
+document.querySelectorAll('input[name="ul-review-type"]').forEach(r => {
+  r.addEventListener('change', () => {
+    document.querySelectorAll('input[name="ul-review-type"]').forEach(rb => {
+      const lbl = rb.closest('label');
+      lbl.style.borderColor = rb.checked ? 'var(--nous)' : 'var(--border)';
+      lbl.style.background  = rb.checked ? 'var(--nous-light)' : '';
+      lbl.style.color       = rb.checked ? '' : 'var(--muted)';
+    });
+  });
+});
+
 function ulDragOver(e) { e.preventDefault(); document.getElementById('ul-dropzone').style.borderColor = 'var(--nous)'; }
 function ulDragLeave(e) { document.getElementById('ul-dropzone').style.borderColor = 'var(--border)'; }
 function ulDrop(e) {
@@ -15231,6 +15275,8 @@ async function ulAnalyse() {
   const name  = document.getElementById('ul-name').value.trim();
   const agent = document.getElementById('ul-agent').value.trim() || '';
 
+  const firstReview = document.querySelector('input[name="ul-review-type"]:checked')?.value !== 'second';
+
   if (!ulImageBase64) { alert('Please upload an image first'); return; }
   if (!brief) { alert('Please select a brief'); return; }
 
@@ -15245,7 +15291,7 @@ async function ulAnalyse() {
     const res = await fetch(serverUrl + '/analyse', {
       method: 'POST',
       headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
-      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki' })
+      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki', first_review: firstReview })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Server error');
@@ -15294,13 +15340,16 @@ function ulRenderResults(d, brief, frame, name, agent) {
   _ulEmailText = d.email_agent || '';
 
   const html = `
-    <!-- VERDICT -->
-    <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}">
-      <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
-      <div>
-        <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
-        <div style="font-size:13px;margin-top:2px">${d.score}/${d.total} criteria pass \u00b7 ${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 '+name : ''}</div>
+    <!-- VERDICT + IMAGE -->
+    <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:16px">
+      <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}" style="margin-bottom:0">
+        <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
+        <div>
+          <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
+          <div style="font-size:13px;margin-top:2px">${d.score}/${d.total} criteria pass \u00b7 ${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 '+name : ''}</div>
+        </div>
       </div>
+      <img src="data:image/jpeg;base64,${ulImageBase64}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16">
     </div>
 
     <!-- ISSUES ONLY -->
@@ -15312,7 +15361,7 @@ function ulRenderResults(d, brief, frame, name, agent) {
     <!-- SLACK OUTPUT -->
     <div class="card" style="margin-bottom:16px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>💬 Slack message</span>
+        <span>💬 Slack — #approving-content</span>
         <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-slack-area', this)">Copy</button>
       </div>
       <div class="card-body">

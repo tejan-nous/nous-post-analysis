@@ -140,7 +140,8 @@ If overall = "good_to_go":
   One warm sentence. E.g. "Hi {agent_name}, looks good — happy for this to go live. Best, {reviewer_name}"
 
 If overall = "needs_work":
-  One warm opening sentence (something specific that works). Then 2-3 bullet point changes using • character, each one specific and actionable. Ask the agent to pass to {influencer_name}. End "Best, {reviewer_name}".
+  One warm opening sentence (something specific that works). Then 2-3 bullet point changes using • character, each one specific and actionable. Ask the agent to pass to {influencer_name}.
+  {review_sign_off}
 
 Always reference {influencer_name}, {brief} and Frame {frame}.
 
@@ -148,13 +149,19 @@ Now evaluate the image and return ONLY the JSON object described above.
 """
 
 
-def build_prompt(brief, frame, influencer_name, agent_name, reviewer_name="Bekki"):
+def build_prompt(brief, frame, influencer_name, agent_name, reviewer_name="Bekki", first_review=True):
+    sign_off = (
+        f'End with: "Once {influencer_name or "they"} has made the changes, please send back for a final review before it goes live. Best, {reviewer_name or "Bekki"}"'
+        if first_review else
+        f'End "Best, {reviewer_name or "Bekki"}"'
+    )
     return CRITERIA_PROMPT.format(
         brief=brief,
         frame=frame,
         influencer_name=influencer_name or "the influencer",
         agent_name=agent_name or "",
         reviewer_name=reviewer_name or "Bekki",
+        review_sign_off=sign_off,
     )
 
 
@@ -188,6 +195,7 @@ def analyse():
     influencer_name = data.get("influencer_name", "")
     agent_name = data.get("agent_name", "")
     reviewer_name = data.get("reviewer_name", "Bekki")
+    first_review = data.get("first_review", True)
 
     if not image_base64:
         return jsonify({"error": "image_base64 is required"}), 400
@@ -207,7 +215,7 @@ def analyse():
     elif image_base64.startswith("UklGR"):
         media_type = "image/webp"
 
-    prompt_text = build_prompt(brief, frame, influencer_name, agent_name, reviewer_name)
+    prompt_text = build_prompt(brief, frame, influencer_name, agent_name, reviewer_name, first_review)
 
     try:
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
