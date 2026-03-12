@@ -237,6 +237,7 @@
     .ul-sub-fail { color:#e53935 }
     .ul-email-box { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;white-space:pre-wrap;color:var(--text);font-family:inherit;margin-top:8px }
     .ul-copy-btn { background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;color:var(--muted);transition:all .15s }
+    @keyframes ul-spin { from { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.2); } to { transform: rotate(360deg) scale(1); } }
     .ul-copy-btn:hover { border-color:var(--text);color:var(--text) }
     .ul-action-btn { width:100%;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text);transition:all .15s;text-align:center }
     .ul-action-btn:hover { border-color:var(--nous);color:var(--nous) }
@@ -353,6 +354,13 @@
 
   <!-- RESULTS -->
   <div id="ul-results" style="display:none"></div>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div id="ul-loading" style="display:none;position:fixed;inset:0;z-index:999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px">
+  <div style="font-size:48px;animation:ul-spin 2s linear infinite">✨</div>
+  <div id="ul-loading-msg" style="font-size:18px;font-weight:600;color:var(--text);text-align:center;max-width:360px;min-height:28px"></div>
+  <div style="font-size:13px;color:var(--muted)">Analysing your story frame…</div>
 </div>
 
 <script>
@@ -15093,30 +15101,53 @@ let ulImageBase64 = null;
 
 const UL_LOADING_MSGS = [
   "Consulting Meg Brackpool…",
-  "Asking Steph Elswood…",
-  "Checking with Sevda Cataltas…",
-  "Running this by Liv Guy…",
-  "Getting Sophie Price's take…",
+  "Messaging Steph Elswood…",
+  "Checking with Bethany Swancott…",
+  "Running this past Natasha Sandhu…",
+  "Borrowing Lauren Pack's brain…",
+  "Getting Mia Rose's take…",
+  "Looping in Laura Anderson…",
+  "Seeing what Liv Guy thinks…",
+  "Gathering thoughts from Emma Stephenson…",
+  "Getting notes from Sophie Price…",
   "Asking Victoria Emes…",
-  "Checking with Mia Rose…",
+  "Pulling insight from Brogan Cole…",
+  "Getting feedback from Lauren Elizabeth Adamson…",
+  "Checking with Scarlett Hannah B…",
+  "Calling Jennie Winlots…",
+  "Running it by Laura Louise…",
+  "Picking Alexandra Wren's brain…",
+  "Getting the honest take from Girl in Debt…",
+  "Checking ideas with Jade Darlington…",
+  "Getting a verdict from Anne-Marie…",
+  "Seeing what Chloe Patton would tweak…",
+  "Reviewing with Emily Lucy Rajch…",
+  "Gathering tips from Sevda Cataltas…",
+  "Getting pointers from Sophie Hawkins…",
 ];
 let _twTimer = null;
 function ulStartTypewriter(btn) {
+  // Show full-screen loading overlay
+  const overlay = document.getElementById('ul-loading');
+  const msgEl = document.getElementById('ul-loading-msg');
+  overlay.style.display = 'flex';
+  btn.textContent = 'Generating…';
+
   let msgIdx = Math.floor(Math.random() * UL_LOADING_MSGS.length);
   let charIdx = 0;
   let pauseTicks = 0;
   let phase = 'typing';
-  btn.textContent = '';
+  msgEl.textContent = '';
   _twTimer = setInterval(() => {
     if (phase === 'typing') {
       const msg = UL_LOADING_MSGS[msgIdx];
-      if (charIdx < msg.length) { btn.textContent += msg[charIdx++]; }
+      if (charIdx < msg.length) { msgEl.textContent += msg[charIdx++]; }
       else { phase = 'pause'; pauseTicks = 0; }
     } else {
-      if (++pauseTicks > 35) {
+      if (++pauseTicks > 40) {
         msgIdx = (msgIdx + 1) % UL_LOADING_MSGS.length;
         charIdx = 0;
-        btn.textContent = '';
+        msgEl.textContent = '';
         phase = 'typing';
       }
     }
@@ -15124,6 +15155,7 @@ function ulStartTypewriter(btn) {
 }
 function ulStopTypewriter(btn) {
   if (_twTimer) clearInterval(_twTimer);
+  document.getElementById('ul-loading').style.display = 'none';
   btn.textContent = 'Generate Feedback';
   btn.disabled = false;
 }
