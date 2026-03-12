@@ -70,6 +70,10 @@
     .tag { background: var(--bg); border-radius: 6px; padding: 3px 9px; font-size: 12px; color: var(--muted); }
     .ig-link { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 500; color: var(--muted); text-decoration: none; padding: 4px 10px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); transition: all .15s; white-space: nowrap; flex-shrink: 0; }
     .ig-link:hover { color: #c13584; border-color: #c13584; }
+    /* LIGHTBOX */
+    #img-lightbox { display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;cursor:zoom-out; }
+    #img-lightbox.open { display:flex; }
+    #img-lightbox img { max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.6); }
 
     /* CAMPAIGN TIMELINE */
     .campaign-timeline { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
@@ -78,17 +82,17 @@
     .campaign-tl-connector { flex: 1; height: 2px; background: var(--border); margin-top: 4px; align-self: flex-start; }
     .campaign-tl-item { display: flex; flex-direction: column; align-items: center; min-width: 72px; }
     .campaign-tl-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); flex-shrink: 0; }
-    .campaign-tl-dot.current  { background: var(--nous); border-color: var(--nous); box-shadow: 0 0 0 3px var(--nous-light); }
+    .campaign-tl-dot.current  { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 3px var(--green-bg); }
     .campaign-tl-dot.past     { background: var(--green); border-color: var(--green); }
     .campaign-tl-dot.future   { background: var(--surface); border-color: var(--border); }
     .campaign-tl-dot.missing  { background: var(--bg); border-color: var(--border); }
     .campaign-tl-info { margin-top: 8px; text-align: center; }
     .campaign-tl-label { font-size: 11px; font-weight: 600; color: var(--muted); }
-    .campaign-tl-label.current  { color: var(--nous); }
+    .campaign-tl-label.current  { color: var(--green); }
     .campaign-tl-label.past     { color: var(--green); }
     .campaign-tl-date   { font-size: 10px; color: var(--muted); margin-top: 1px; }
     .campaign-tl-detail { font-size: 10px; color: var(--muted); margin-top: 1px; }
-    .campaign-tl-now    { font-size: 9px; font-weight: 700; color: var(--nous); text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
+    .campaign-tl-now    { font-size: 9px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .04em; margin-top: 3px; }
 
     /* DASHBOARD ROW */
     .dashboard-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -241,6 +245,26 @@
     .ul-copy-btn:hover { border-color:var(--text);color:var(--text) }
     .ul-action-btn { width:100%;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text);transition:all .15s;text-align:center }
     .ul-action-btn:hover { border-color:var(--nous);color:var(--nous) }
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 768px) {
+      body { padding: 0; }
+      header { padding: 8px 12px; flex-wrap: wrap; gap: 6px; }
+      .page-tabs { gap: 4px; }
+      .main-layout { flex-direction: column; }
+      .sidebar { width: 100% !important; max-height: 200px; overflow-y: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      #main-content { padding: 12px; }
+      .image-panel { width: 100% !important; margin-bottom: 16px; }
+      .story-frame img { max-height: 50vh; }
+      .analysis { width: 100%; }
+      .dashboard-row { grid-template-columns: 1fr !important; }
+      .meta-grid-2, .meta-grid-3 { grid-template-columns: 1fr !important; }
+      .campaign-tl-item { min-width: 52px; }
+    }
+    @media (max-width: 480px) {
+      .dash-kpi-val { font-size: 22px; }
+      .post-name { font-size: 16px; }
+      .page-tab, .tab-btn { font-size: 11px; padding: 6px 8px; }
+    }
   </style>
 </head>
 <body>
@@ -367,6 +391,7 @@
 </div>
 
 <!-- LOADING OVERLAY -->
+<div id="img-lightbox" onclick="this.classList.remove('open')"><img id="img-lightbox-img" src="" alt=""></div>
 <div id="ul-loading" style="display:none;position:fixed;inset:0;z-index:999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px">
   <div style="font-size:48px;animation:ul-spin 2s linear infinite">✨</div>
   <div id="ul-loading-msg" style="font-size:18px;font-weight:600;color:var(--text);text-align:center;max-width:360px;min-height:28px"></div>
@@ -14488,7 +14513,7 @@ function renderTopPostsGallery(briefData, niche, frame) {
   const topCards = briefData.posts.map(p => {
     const r = eCAcRating(p.ecac);
     return `<div class="top-post-card" onclick="goToPost('${p.id}')">
-      <img class="top-post-thumb" src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">
+      <img class="top-post-thumb" src="${p.image}" alt="${p.name}" onerror="this.style.display='none'" onclick="event.stopPropagation();if(this.src)openLightbox(this.src)" style="cursor:zoom-in">
       <div class="top-post-info">
         <div class="top-post-ecac" style="color:var(--${r.cls})">${r.emoji} £${p.ecac}</div>
         <div class="top-post-name">${p.name}</div>
@@ -14727,16 +14752,19 @@ function renderPost(idx) {
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">Views/£</div>
         <div style="font-size:15px;font-weight:800;color:var(--${vppR.cls})">${vppR.dot} ${vpp}</div>
         <div style="font-size:9px;color:var(--muted)">${cvRaw.toLocaleString()} views</div>
+        <div style="font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4">🟢≥68 · 🟡≥32 · 🔴&lt;32</div>
       </div>` : '<div></div>'}
       ${ctrRaw != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">CTR</div>
         <div style="font-size:15px;font-weight:800;color:var(--${ctrR.cls})">${ctrR.dot} ${ctrRaw}%</div>
         <div style="font-size:9px;color:var(--muted)">${ccRaw} clicks</div>
+        <div style="font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4">🟢≥1.5% · 🟡≥0.58% · 🔴&lt;0.58%</div>
       </div>` : '<div></div>'}
       ${app_val != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">AC/£</div>
         <div style="font-size:15px;font-weight:800;color:var(--${appR.cls})">${appR.dot} ${app_val}</div>
         <div style="font-size:9px;color:var(--muted)">${appR.label}</div>
+        <div style="font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4">🟢≥0.19 · 🟡≥0.06 · 🔴&lt;0.06</div>
       </div>` : '<div></div>'}
     </div>` : '';
 
@@ -14783,7 +14811,7 @@ function renderPost(idx) {
         return `${conn}<div class="campaign-tl-item" style="cursor:${canClick?'pointer':'default'}" onclick="${canClick?`goToPost('${s.id}')`:''}" >
           <div class="campaign-tl-dot ${status}"></div>
           <div class="campaign-tl-info">
-            <div class="campaign-tl-label ${status}">Post ${s.seq||'?'}</div>
+            <div class="campaign-tl-label ${status}">Post ${i+1}</div>
             <div class="campaign-tl-date">${dateStr}</div>
             <div class="campaign-tl-detail">${detail}${status==='future'?' · scheduled':''}</div>
             ${isCurrent ? '<div class="campaign-tl-now">▲ This post</div>' : ''}
@@ -14791,7 +14819,7 @@ function renderPost(idx) {
         </div>`;
       }).join('');
     } else {
-      items = nameSiblings.sort((a,b)=>(a.post_sequence||0)-(b.post_sequence||0)).map((s,i) => {
+      items = nameSiblings.sort((a,b)=>(a.date||'').localeCompare(b.date||'')).map((s,i) => {
         const isCurrent = s.id === p.id;
         const isoDate   = s.date ? parseIsoDate(s.date) : '';
         const status    = isCurrent ? 'current' : (isoDate <= TODAY_STR ? 'past' : 'future');
@@ -14804,7 +14832,7 @@ function renderPost(idx) {
         return `${conn}<div class="campaign-tl-item" style="cursor:${isCurrent?'default':'pointer'}" onclick="${isCurrent?'':(`goToPost('${s.id}')`)}">
           <div class="campaign-tl-dot ${status}"></div>
           <div class="campaign-tl-info">
-            <div class="campaign-tl-label ${status}">Post ${s.post_sequence||'?'}</div>
+            <div class="campaign-tl-label ${status}">Post ${i+1}</div>
             <div class="campaign-tl-date">${dateStr}</div>
             <div class="campaign-tl-detail">${detail}</div>
             ${isCurrent?'<div class="campaign-tl-now">▲ This post</div>':''}
@@ -14836,7 +14864,8 @@ function renderPost(idx) {
     "Sign-up ease": "The best posts explicitly say it takes minutes ('from my phone in like five minutes'), mention it's free, and reference 'just a few quick questions' — making the barrier feel near-zero.",
     "@get_nous tag": "The tag is required in every post but must not appear in the opening line; the one exception is the Fashion Secret/Teaser frame where both '@get_nous' and the Nous name must be fully omitted.",
     "Save with Nous CTA": "The best posts have a single 'Save with Nous' button with the 🔗 emoji, clear contrast, no AD text inside the button, and no competing poll or vote stickers.",
-    "Visual type & effectiveness": "People and faces tend to drive stronger engagement than empty rooms or product shots alone. Visuals should match the brief's niche (family lifestyle, home interior, fashion haul, celebrity setting), with the AD label placed below the product — never covering the image.",
+    "Visual type & effectiveness": "Posts with <strong>people and faces</strong> tend to outperform empty rooms or product-only shots. Match the brief niche: family = cosy lifestyle/home, fashion = haul or outfit, celebrity = aspirational. AD label must sit below — never covering the image. One of the harder things to fix retrospectively.",
+    "Calming/lifestyle visual": "Posts with <strong>people and faces</strong> tend to outperform empty rooms or product-only shots. Match the brief niche: family = cosy lifestyle/home, fashion = haul or outfit, celebrity = aspirational. AD label must sit below — never covering the image.",
     "Button placement": "The single most common rejection reason is a button that is not at the bottom of the story — it must be at the bottom, unobscured, every time.",
     "Text readability": "The best posts use a large font or a background block behind text, break long copy into multiple blocks, and never place text over busy image areas or faces.",
   };
@@ -14968,7 +14997,7 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
         <div class="story-frame-guide">
           <h4>📋 Quick quality guide</h4>
           <ul style="margin:0;padding-left:16px">
@@ -15003,9 +15032,9 @@ function renderPost(idx) {
         </div>
         <div class="post-tags" style="margin-top:8px">
           <span class="tag">${p.format}</span>
-          <span class="tag">${p.niche}</span>
+          <span class="tag">Niche: ${p.niche}</span>
           <span class="tag">${p.date}</span>
-          <span class="tag">${(p.brief_info||{}).niche_brief||""}</span>
+          ${(()=>{const _bUrl=getExperimentUrl(p);const _bLabel=(p.brief_info||{}).niche_brief||'';return _bLabel?(_bUrl?`<a href="${_bUrl}" target="_blank" class="tag" style="text-decoration:none;color:var(--nous)">${_bLabel} ↗</a>`:`<span class="tag">${_bLabel}</span>`):'';})()}
         </div>
         ${timelineHtml}
       </div></div>
@@ -15069,6 +15098,7 @@ function renderPost(idx) {
           </div>
           <div class="dash-body">
             ${btGoalHtml}
+            ${(()=>{const _pct=totalCount>0?Math.round(passCount/totalCount*100):0;const _cls=_pct>=80?'green':_pct>=60?'amber':'red';return `<div style="margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;font-weight:700;color:var(--${_cls})">${_pct}% compliance</span><span style="font-size:10px;color:var(--muted)">≥80% = good to post</span></div><div style="background:var(--bg);border-radius:99px;height:6px;overflow:hidden"><div style="width:${_pct}%;height:100%;background:var(--${_cls});border-radius:99px"></div></div></div>`;})()}
             <div class="dash-mini-checks">${checkHtml}</div>
           </div>
         </div>
@@ -15079,11 +15109,17 @@ function renderPost(idx) {
             <span style="color:var(--muted);font-size:10px;text-transform:none;letter-spacing:0">(${metaPosts.length} beat fc.)</span>
           </div>
           <div class="dash-body">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);line-height:1.5">
+              <strong style="color:var(--text)">What is a best post?</strong> Posts that beat their forecast accounts created.
+              <span style="display:block;margin-top:3px">Priority: Hook · CTA · @get_nous · Specific £ figure · Text in blocks. <a href="https://www.notion.so/309e4fd0813680dd855bc91ff3f4113d" target="_blank" style="color:var(--nous);text-decoration:none">Meg Brackpool example ↗</a></span>
+            </div>
             <div class="dash-meta-dims">${metaRows}</div>
           </div>
         </div>
 
       </div><!-- /dashboard-row -->
+
+      ${(()=>{const _pct2=totalCount>0?Math.round(passCount/totalCount*100):0;if(_pct2>=80&&ecac!=null&&ecac>100&&isPast){return `<div class="card" style="border-left:3px solid var(--amber)"><div class="card-head" style="color:var(--amber)">⚠ High compliance but eCAC above target — things to consider</div><div class="card-body" style="font-size:12px;color:var(--muted);line-height:1.8"><div>• <strong style="color:var(--text)">Audience fit</strong>: the audience may not match the Nous user profile (UK families, bill-paying households)</div><div>• <strong style="color:var(--text)">Creator trust</strong>: good copy needs an audience that trusts the creator on money topics</div><div>• <strong style="color:var(--text)">Story views</strong>: low views = limited reach regardless of content — check the view count</div><div>• <strong style="color:var(--text)">Posting time</strong>: late-evening or weekend stories typically see fewer link clicks</div><div>• <strong style="color:var(--text)">Niche fit</strong>: fashion/beauty audiences may be less motivated by bill savings than family/home niches</div></div></div>`;}return '';})()}
 
       <!-- COMBINED REVIEW -->
       <div class="card">
@@ -15107,6 +15143,33 @@ function renderPost(idx) {
 }
 
 // ── UPLOAD / ANALYSE ──────────────────────────────────────────────────────────
+// Experiment brief Notion URLs — keyed by lowercase keywords found in slack_matched
+const EXPERIMENT_URLS = {
+  'secret':            'https://www.notion.so/2fbe4fd0813680f6998bff47b4913607',
+  'girl maths':        'https://www.notion.so/2fbe4fd08136804891a8e98c9be4e976',
+  'hate waste':        'https://www.notion.so/2fbe4fd0813680619a1de62b25461eac',
+  'supermom':          'https://www.notion.so/2fbe4fd08136805c8ad3ca070bc3de5d',
+  'bargain':           'https://www.notion.so/2fbe4fd0813680be812ef1c2e6152389',
+  'must have':         'https://www.notion.so/2fbe4fd08136806e9334f6b755108ff2',
+  'startling stats':   'https://www.notion.so/2fbe4fd0813680759da4c93f8090614c',
+  'identical message': 'https://www.notion.so/30de4fd081368002b8fae35ea39c3a71',
+  'short first':       'https://www.notion.so/313e4fd0813680c3b198e8664a9047aa',
+  'long first':        'https://www.notion.so/313e4fd08136801a9fc9ecf0ad4bc560',
+  'follower dm':       'https://www.notion.so/313e4fd081368059a324f1a55119748c',
+  'blank background':  'https://www.notion.so/313e4fd08136800fb052e6747cc0f608',
+  'life lesson':       'https://www.notion.so/319e4fd0813680fc9e9ed817b681d30d',
+  'mobile savings':    'https://www.notion.so/319e4fd0813680c78c8cdb5efb185dbc',
+  'og brief':          'https://www.notion.so/2fbe4fd081368032aa7ceab09ac479f9',
+};
+function getExperimentUrl(p) {
+  const ex = postExtras[p.id] || {};
+  const matched = (ex.slack_matched || '').toLowerCase();
+  for (const [kw, url] of Object.entries(EXPERIMENT_URLS)) {
+    if (matched.includes(kw)) return url;
+  }
+  return null;
+}
+
 const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app';
 let ulImageBase64 = null;
 
@@ -15257,6 +15320,11 @@ document.querySelectorAll('input[name="ul-review-type"]').forEach(r => {
   });
 });
 
+function openLightbox(src) {
+  const lb = document.getElementById('img-lightbox');
+  document.getElementById('img-lightbox-img').src = src;
+  lb.classList.add('open');
+}
 function ulDragOver(e) { e.preventDefault(); document.getElementById('ul-dropzone').style.borderColor = 'var(--nous)'; }
 function ulDragLeave(e) { document.getElementById('ul-dropzone').style.borderColor = 'var(--border)'; }
 function ulDrop(e) {
