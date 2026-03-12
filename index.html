@@ -14749,22 +14749,19 @@ function renderPost(idx) {
     <hr class="dash-divider">
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;text-align:center">
       ${vpp != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">Views/£</div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px;display:flex;align-items:center;justify-content:center;gap:3px">Views/£<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box">🟢 Strong ≥68 · 🟡 OK ≥32 · 🔴 Low &lt;32<br>Story views ÷ post fee</span></span></div>
         <div style="font-size:15px;font-weight:800;color:var(--${vppR.cls})">${vppR.dot} ${vpp}</div>
         <div style="font-size:9px;color:var(--muted)">${cvRaw.toLocaleString()} views</div>
-        <div style="font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4">🟢≥68 · 🟡≥32 · 🔴&lt;32</div>
       </div>` : '<div></div>'}
       ${ctrRaw != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">CTR</div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px;display:flex;align-items:center;justify-content:center;gap:3px">CTR<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box">🟢 Strong ≥1.5% · 🟡 OK ≥0.58% · 🔴 Low &lt;0.58%<br>Link clicks ÷ story views</span></span></div>
         <div style="font-size:15px;font-weight:800;color:var(--${ctrR.cls})">${ctrR.dot} ${ctrRaw}%</div>
         <div style="font-size:9px;color:var(--muted)">${ccRaw} clicks</div>
-        <div style="font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4">🟢≥1.5% · 🟡≥0.58% · 🔴&lt;0.58%</div>
       </div>` : '<div></div>'}
       ${app_val != null ? `<div style="background:var(--bg);border-radius:6px;padding:6px 4px">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px">AC/£</div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:1px;display:flex;align-items:center;justify-content:center;gap:3px">AC/£<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box">🟢 Strong ≥0.19 · 🟡 OK ≥0.06 · 🔴 Low &lt;0.06<br>Accounts created ÷ post fee</span></span></div>
         <div style="font-size:15px;font-weight:800;color:var(--${appR.cls})">${appR.dot} ${app_val}</div>
         <div style="font-size:9px;color:var(--muted)">${appR.label}</div>
-        <div style="font-size:8px;color:var(--muted);margin-top:3px;line-height:1.4">🟢≥0.19 · 🟡≥0.06 · 🔴&lt;0.06</div>
       </div>` : '<div></div>'}
     </div>` : '';
 
