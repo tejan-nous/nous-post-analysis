@@ -15311,29 +15311,37 @@ let _ulSlackText = '';
 
 function ulRenderResults(d, brief, frame, name, agent) {
   const good = d.overall === 'good_to_go';
-  const fails = (d.criteria || []).filter(c => !c.pass);
 
-  // Condensed checklist — only show fails
-  const failsHtml = fails.length === 0
-    ? `<div style="color:var(--green);font-size:13px;padding:4px 0">\u2713 All criteria pass</div>`
-    : fails.map(f => `
-        <div class="ul-sub">
-          <span class="ul-sub-fail" style="flex-shrink:0;font-weight:700">\u2717</span>
-          <div>
-            <div style="font-weight:500;font-size:13px">${f.sub_label}</div>
-            ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
-          </div>
-        </div>`).join('');
+  function itemsHtml(items) {
+    if (!items || items.length === 0) return `<div style="color:var(--green);font-size:13px">\u2713 All clear</div>`;
+    return items.map(f => `
+      <div class="ul-sub">
+        <span class="${f.pass ? 'ul-sub-pass' : 'ul-sub-fail'}" style="flex-shrink:0;font-weight:700">${f.pass ? '\u2713' : '\u2717'}</span>
+        <div>
+          <div style="font-weight:500;font-size:13px">${f.label}</div>
+          ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
+  const briefFails = (d.brief_fit || []).filter(x => !x.pass);
+  const allFails  = [...obvFails, ...briefFails];
 
   // Build Slack text
   const slackLines = [
     `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
-    good ? ':white_check_mark: *Good to go* — ' + d.score + '/' + d.total + ' checks pass'
-         : ':warning: *Needs work* — ' + d.score + '/' + d.total + ' checks pass',
+    good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
   ];
-  if (!good && fails.length) {
-    slackLines.push('');
-    fails.forEach(c => slackLines.push('• ' + c.sub_label + (c.note ? ' — ' + c.note : '')));
+  if (!good) {
+    if (obvFails.length) {
+      slackLines.push('', '*Obvious tweaks:*');
+      obvFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
+    }
+    if (briefFails.length) {
+      slackLines.push('', '*Fitting the brief:*');
+      briefFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
+    }
   }
   slackLines.push('', '— Bekki');
   _ulSlackText = slackLines.join('\n');
@@ -15346,17 +15354,23 @@ function ulRenderResults(d, brief, frame, name, agent) {
         <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
         <div>
           <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
-          <div style="font-size:13px;margin-top:2px">${d.score}/${d.total} criteria pass \u00b7 ${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 '+name : ''}</div>
+          <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
         </div>
       </div>
       <img src="data:image/jpeg;base64,${ulImageBase64}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16">
     </div>
 
-    <!-- ISSUES ONLY -->
-    ${fails.length > 0 ? `<div class="card" style="margin-bottom:16px">
-      <div class="card-head">Issues to fix (${fails.length})</div>
-      <div class="card-body">${failsHtml}</div>
-    </div>` : `<div style="color:var(--green);font-size:13px;padding:8px 0 16px">\u2713 All criteria pass</div>`}
+    <!-- TWO CATEGORY CARDS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="card">
+        <div class="card-head" style="font-size:12px">🔧 Obvious tweaks${obvFails.length ? ' ('+obvFails.length+' issue'+(obvFails.length>1?'s':'')+')' : ' ✓'}</div>
+        <div class="card-body">${itemsHtml(d.obvious_tweaks || [])}</div>
+      </div>
+      <div class="card">
+        <div class="card-head" style="font-size:12px">📋 Fitting the brief${briefFails.length ? ' ('+briefFails.length+' issue'+(briefFails.length>1?'s':'')+')' : ' ✓'}</div>
+        <div class="card-body">${itemsHtml(d.brief_fit || [])}</div>
+      </div>
+    </div>
 
     <!-- SLACK OUTPUT -->
     <div class="card" style="margin-bottom:16px">
@@ -15365,7 +15379,7 @@ function ulRenderResults(d, brief, frame, name, agent) {
         <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-slack-area', this)">Copy</button>
       </div>
       <div class="card-body">
-        <textarea id="ul-slack-area" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${_ulSlackText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="ul-slack-area" style="width:100%;min-height:100px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${_ulSlackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
@@ -15376,7 +15390,7 @@ function ulRenderResults(d, brief, frame, name, agent) {
         <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-email-area', this)">Copy</button>
       </div>
       <div class="card-body">
-        <textarea id="ul-email-area" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${(_ulEmailText).replace(/</g,'&lt;')}</textarea>
+        <textarea id="ul-email-area" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${_ulEmailText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>`;
 
