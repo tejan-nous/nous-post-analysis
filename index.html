@@ -14721,6 +14721,17 @@ function renderPost(idx) {
         <div style="font-size:9px;color:var(--muted)">${appR.label}</div>
       </div>` : '<div></div>'}
     </div>` : '';
+
+  // Chase-for-stats note when story views are missing
+  const chaseEmail = `Hi,\n\nHope you're well! We don't have story views data for your recent Nous post yet — could you share a quick screenshot of the story insights (views + link clicks) when you get a chance?\n\nThanks so much!\nBekki`;
+  const chaseStatsHtml = cvRaw == null ? `
+    <hr class="dash-divider">
+    <div style="background:var(--bg);border-radius:8px;padding:10px 12px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">📊 No story views data yet</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.5">We haven't received story views for this post. Send a quick chase to get the stats.</div>
+      <button onclick="navigator.clipboard.writeText(${JSON.stringify(chaseEmail)}).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='📋 Copy chase email',1500)})" style="font-size:11px;padding:5px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;color:var(--text)">📋 Copy chase email</button>
+    </div>` : '';
+
   const fac   = ex.forecast_ac;  // keep for AC forecast comparison
   const acHit = fac != null && nAC != null
     ? Math.round(nAC / fac * 100) : null;
@@ -15022,6 +15033,7 @@ function renderPost(idx) {
                 <span>${delVal} del. · ${acVal} AC</span>
               </div>
               ${newMetricsHtml}
+              ${chaseStatsHtml}
             </div>
           </div>
         </div>
