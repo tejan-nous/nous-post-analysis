@@ -15119,13 +15119,25 @@ const UL_LOADING_MSGS = [
 ];
 let _twTimer = null;
 function ulStartTypewriter(btn) {
-  const msg = UL_LOADING_MSGS[Math.floor(Math.random() * UL_LOADING_MSGS.length)];
-  let i = 0;
+  let msgIdx = Math.floor(Math.random() * UL_LOADING_MSGS.length);
+  let charIdx = 0;
+  let pauseTicks = 0;
+  let phase = 'typing';
   btn.textContent = '';
   _twTimer = setInterval(() => {
-    if (i < msg.length) { btn.textContent += msg[i++]; }
-    else { clearInterval(_twTimer); }
-  }, 28);
+    if (phase === 'typing') {
+      const msg = UL_LOADING_MSGS[msgIdx];
+      if (charIdx < msg.length) { btn.textContent += msg[charIdx++]; }
+      else { phase = 'pause'; pauseTicks = 0; }
+    } else {
+      if (++pauseTicks > 35) {
+        msgIdx = (msgIdx + 1) % UL_LOADING_MSGS.length;
+        charIdx = 0;
+        btn.textContent = '';
+        phase = 'typing';
+      }
+    }
+  }, 30);
 }
 function ulStopTypewriter(btn) {
   if (_twTimer) clearInterval(_twTimer);
@@ -15282,10 +15294,26 @@ function ulRenderResults(d, brief, frame, name, agent) {
       <div class="card-body">${failsHtml}</div>
     </div>` : `<div style="color:var(--green);font-size:13px;padding:8px 0 16px">\u2713 All criteria pass</div>`}
 
-    <!-- COPY ACTIONS -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <button class="ul-action-btn" onclick="ulCopyStored('slack', this)">💬 Copy Slack message</button>
-      <button class="ul-action-btn" onclick="ulCopyStored('email', this)">📧 Copy email${agent ? ' to ' + agent : ''}</button>
+    <!-- SLACK OUTPUT -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+        <span>💬 Slack message</span>
+        <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-slack-area', this)">Copy</button>
+      </div>
+      <div class="card-body">
+        <textarea id="ul-slack-area" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${_ulSlackText.replace(/</g,'&lt;')}</textarea>
+      </div>
+    </div>
+
+    <!-- EMAIL OUTPUT -->
+    <div class="card">
+      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
+        <span>📧 Email${agent ? ' to ' + agent : ''}</span>
+        <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-email-area', this)">Copy</button>
+      </div>
+      <div class="card-body">
+        <textarea id="ul-email-area" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${(_ulEmailText).replace(/</g,'&lt;')}</textarea>
+      </div>
     </div>`;
 
   const el = document.getElementById('ul-results');
@@ -15310,9 +15338,9 @@ function ulCopyText(id) {
   });
 }
 
-function ulCopyStored(type, btn) {
-  const text = type === 'slack' ? _ulSlackText : _ulEmailText;
-  navigator.clipboard.writeText(text).then(() => {
+function ulCopyFromArea(id, btn) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value).then(() => {
     const orig = btn.textContent;
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = orig, 1500);
