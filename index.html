@@ -238,6 +238,8 @@
     .ul-email-box { background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;white-space:pre-wrap;color:var(--text);font-family:inherit;margin-top:8px }
     .ul-copy-btn { background:none;border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:11px;cursor:pointer;color:var(--muted);transition:all .15s }
     .ul-copy-btn:hover { border-color:var(--text);color:var(--text) }
+    .ul-action-btn { width:100%;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text);transition:all .15s;text-align:center }
+    .ul-action-btn:hover { border-color:var(--nous);color:var(--nous) }
   </style>
 </head>
 <body>
@@ -15077,6 +15079,48 @@ function renderPost(idx) {
 const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app';
 let ulImageBase64 = null;
 
+const UL_LOADING_MSGS = [
+  "Asking Meg Brackpool for the real tea on great content… ☕",
+  "Just DM'd Steph Elswood for her top posting tips…",
+  "Getting Bethany Swancott to sense-check this feedback…",
+  "Asking Natasha Sandhu what she'd tweak here…",
+  "Borrowing Lauren Pack's content brain for a sec…",
+  "Checking how Mia Rose would polish this…",
+  "Running this past Laura Anderson…",
+  "Asking Liv Guy what she'd do differently…",
+  "Seeing how Emma Stephenson would frame this…",
+  "Getting Sophie Price's honest opinion…",
+  "Asking Victoria Emes for the witty take…",
+  "Checking the strategy with Brogan Cole…",
+  "Asking Lauren Elizabeth Adamson for her thoughts…",
+  "Seeing how Scarlett Hannah B would improve this…",
+  "Asking Jennie Winlots (I Am Mum Bum) for her verdict…",
+  "Getting Laura Louise to sense-check…",
+  "Running this by Alexandra Wren…",
+  "Asking Megan F (Girl in Debt) for the realistic take…",
+  "Checking what Jade Darlington would tweak…",
+  "Asking Anne-Marie for the final touch…",
+  "Seeing how Chloe Patton would optimise this…",
+  "Asking Emily Lucy Rajch for her thoughts…",
+  "Getting Sevda Cataltas to weigh in…",
+  "Asking Sophie Hawkins for her tips…",
+];
+let _twTimer = null;
+function ulStartTypewriter(btn) {
+  const msg = UL_LOADING_MSGS[Math.floor(Math.random() * UL_LOADING_MSGS.length)];
+  let i = 0;
+  btn.textContent = '';
+  _twTimer = setInterval(() => {
+    if (i < msg.length) { btn.textContent += msg[i++]; }
+    else { clearInterval(_twTimer); }
+  }, 28);
+}
+function ulStopTypewriter(btn) {
+  if (_twTimer) clearInterval(_twTimer);
+  btn.textContent = 'Generate Feedback';
+  btn.disabled = false;
+}
+
 // Populate brief dropdown — hardcoded so it works without the server
 const UL_BRIEFS = [
   '👗 Fashion Exp: Secret first',
@@ -15152,8 +15196,8 @@ async function ulAnalyse() {
   if (!brief) { alert('Please select a brief'); return; }
 
   const btn = document.getElementById('ul-btn');
-  btn.textContent = 'Analysing\u2026';
   btn.disabled = true;
+  ulStartTypewriter(btn);
 
   document.getElementById('ul-results').style.display = 'none';
 
@@ -15172,36 +15216,43 @@ async function ulAnalyse() {
     document.getElementById('ul-results').style.display = 'block';
     document.getElementById('ul-results').innerHTML = `<div class="card"><div class="card-body" style="color:#e53935">\u26a0 ${e.message}<br><span style="font-size:12px;color:var(--muted)">URL used: ${usedUrl}</span></div></div>`;
   } finally {
-    btn.textContent = 'Generate Feedback';
-    btn.disabled = false;
+    ulStopTypewriter(btn);
   }
 }
 
+// Stored outputs for copy buttons
+let _ulEmailText = '';
+let _ulSlackText = '';
+
 function ulRenderResults(d, brief, frame, name, agent) {
   const good = d.overall === 'good_to_go';
+  const fails = (d.criteria || []).filter(c => !c.pass);
 
-  // Group criteria by parent label
-  const groups = {};
-  (d.criteria || []).forEach(c => {
-    if (!groups[c.label]) groups[c.label] = [];
-    groups[c.label].push(c);
-  });
+  // Condensed checklist — only show fails
+  const failsHtml = fails.length === 0
+    ? `<div style="color:var(--green);font-size:13px;padding:4px 0">\u2713 All criteria pass</div>`
+    : fails.map(f => `
+        <div class="ul-sub">
+          <span class="ul-sub-fail" style="flex-shrink:0;font-weight:700">\u2717</span>
+          <div>
+            <div style="font-weight:500;font-size:13px">${f.sub_label}</div>
+            ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
+          </div>
+        </div>`).join('');
 
-  const criteriaHtml = Object.entries(groups).map(([label, subs]) => {
-    const allPass = subs.every(s => s.pass);
-    const subHtml = subs.map(s => `
-      <div class="ul-sub">
-        <span class="${s.pass ? 'ul-sub-pass' : 'ul-sub-fail'}" style="flex-shrink:0;font-weight:700">${s.pass ? '\u2713' : '\u2717'}</span>
-        <div>
-          <div style="font-weight:500">${s.sub_label}</div>
-          ${s.note ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${s.note}</div>` : ''}
-        </div>
-      </div>`).join('');
-    return `<div class="ul-crit-group">
-      <div class="ul-crit-parent">${label} <span style="font-weight:400;opacity:.7">${allPass ? '\u2713 all pass' : subs.filter(s=>s.pass).length+'/'+subs.length+' pass'}</span></div>
-      ${subHtml}
-    </div>`;
-  }).join('');
+  // Build Slack text
+  const slackLines = [
+    `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
+    good ? ':white_check_mark: *Good to go* — ' + d.score + '/' + d.total + ' checks pass'
+         : ':warning: *Needs work* — ' + d.score + '/' + d.total + ' checks pass',
+  ];
+  if (!good && fails.length) {
+    slackLines.push('');
+    fails.forEach(c => slackLines.push('• ' + c.sub_label + (c.note ? ' — ' + c.note : '')));
+  }
+  slackLines.push('', '— Bekki');
+  _ulSlackText = slackLines.join('\n');
+  _ulEmailText = d.email_agent || '';
 
   const html = `
     <!-- VERDICT -->
@@ -15210,68 +15261,23 @@ function ulRenderResults(d, brief, frame, name, agent) {
       <div>
         <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
         <div style="font-size:13px;margin-top:2px">${d.score}/${d.total} criteria pass \u00b7 ${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 '+name : ''}</div>
-        ${d.summary ? `<div style="font-size:13px;margin-top:8px;line-height:1.5">${d.summary}</div>` : ''}
       </div>
     </div>
 
-    <!-- CHECKLIST -->
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-head">Checklist</div>
-      <div class="card-body">${criteriaHtml}</div>
-    </div>
+    <!-- ISSUES ONLY -->
+    ${fails.length > 0 ? `<div class="card" style="margin-bottom:16px">
+      <div class="card-head">Issues to fix (${fails.length})</div>
+      <div class="card-body">${failsHtml}</div>
+    </div>` : `<div style="color:var(--green);font-size:13px;padding:8px 0 16px">\u2713 All criteria pass</div>`}
 
-    <!-- EMAIL TO AGENT -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>Email to agent${agent ? ' ('+agent+')' : ''}</span>
-        <button class="ul-copy-btn" onclick="ulCopy('ul-email-agt')">Copy</button>
-      </div>
-      <div class="card-body">
-        <div id="ul-email-agt" class="ul-email-box">${d.email_agent || ''}</div>
-      </div>
-    </div>
-
-    <!-- SLACK MESSAGE -->
-    <div class="card">
-      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>Slack message</span>
-        <button class="ul-copy-btn" onclick="ulCopyText('ul-slack-msg')">Copy</button>
-      </div>
-      <div class="card-body">
-        <div id="ul-slack-msg" class="ul-email-box" style="white-space:pre-wrap">${ulBuildSlack(d, brief, frame, name)}</div>
-      </div>
-    </div>`;
-
-  // Build Slack output
-  const slackLines = [
-    `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
-    good ? ':white_check_mark: *Good to go* — ' + d.score + '/' + d.total + ' checks pass' : ':warning: *Needs work* — ' + d.score + '/' + d.total + ' checks pass',
-    '',
-  ];
-  if (d.summary) slackLines.push(d.summary, '');
-  const fails = (d.criteria||[]).filter(c => !c.pass);
-  if (fails.length) {
-    slackLines.push('*Issues to fix:*');
-    fails.forEach(c => slackLines.push('• ' + c.sub_label + (c.note ? ' — ' + c.note : '')));
-    slackLines.push('');
-  }
-  slackLines.push('— Bekki');
-  const slackText = slackLines.join('\n');
-
-  const slackHtml = `
-    <!-- SLACK OUTPUT -->
-    <div class="card" style="margin-top:16px">
-      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>Slack message</span>
-        <button class="ul-copy-btn" onclick="ulCopyText('ul-slack-out')">Copy</button>
-      </div>
-      <div class="card-body">
-        <pre id="ul-slack-out" style="white-space:pre-wrap;font-family:inherit;font-size:12px;line-height:1.6;color:var(--text);margin:0">${slackText.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>
-      </div>
+    <!-- COPY ACTIONS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <button class="ul-action-btn" onclick="ulCopyStored('slack', this)">💬 Copy Slack message</button>
+      <button class="ul-action-btn" onclick="ulCopyStored('email', this)">📧 Copy email${agent ? ' to ' + agent : ''}</button>
     </div>`;
 
   const el = document.getElementById('ul-results');
-  el.innerHTML = html + slackHtml;
+  el.innerHTML = html;
   el.style.display = 'block';
   el.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -15292,20 +15298,13 @@ function ulCopyText(id) {
   });
 }
 
-function ulBuildSlack(d, brief, frame, name) {
-  const good = d.overall === 'good_to_go';
-  const verdict = good ? '✅ Good to go' : '⚠️ Needs work';
-  const score = `${d.score}/${d.total} criteria pass`;
-  const who = name ? ` — ${name}` : '';
-  const fails = (d.criteria || []).filter(c => !c.pass);
-  let msg = `*${verdict}* · ${brief} · Frame ${frame}${who}\n${score}\n`;
-  if (!good && fails.length) {
-    msg += '\n*Changes needed:*\n';
-    fails.forEach(f => { msg += `• *${f.sub_label}*: ${f.note || 'See checklist'}\n`; });
-  }
-  if (d.summary) msg += `\n${d.summary}`;
-  msg += '\n\n— Bekki';
-  return msg;
+function ulCopyStored(type, btn) {
+  const text = type === 'slack' ? _ulSlackText : _ulEmailText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────

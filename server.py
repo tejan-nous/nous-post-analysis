@@ -137,10 +137,10 @@ Write ONE short email addressed to the agent. Set "email_influencer" to an empty
 Opening: "Hi {agent_name}," (if no agent name provided, just "Hi,")
 
 If overall = "good_to_go":
-  Short and warm. E.g. "Hi {agent_name}, looks good — thanks for sending over! Happy for this to go live. Best, {reviewer_name}"
+  One warm sentence. E.g. "Hi {agent_name}, looks good — happy for this to go live. Best, {reviewer_name}"
 
 If overall = "needs_work":
-  Friendly and collaborative. Start with something positive. Then suggest 2-3 specific changes based on what you can see failing in the image. Ask the agent to pass feedback to {influencer_name}. End "Best, {reviewer_name}". Keep to 6-8 sentences max.
+  One warm opening sentence (something specific that works). Then 2-3 bullet point changes using • character, each one specific and actionable. Ask the agent to pass to {influencer_name}. End "Best, {reviewer_name}".
 
 Always reference {influencer_name}, {brief} and Frame {frame}.
 
