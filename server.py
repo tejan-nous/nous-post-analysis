@@ -33,6 +33,7 @@ BRIEFS = [
     {"brief": "⬜ New Visuals: Blank background first", "frames": [1, 2, 3]},
     {"brief": "🌿 Lifestyle Exp: Life Lesson first", "frames": [1, 2, 3]},
     {"brief": "📱 Lifestyle Exp: Mobile Savings first", "frames": [1, 2, 3]},
+    {"brief": "👨‍👩‍👧‍👦 Family: No experiment", "frames": [1, 2, 3]},
 ]
 
 SYSTEM_PROMPT = """You are a content quality reviewer for Nous, a UK utility-switching service that saves users £500+ by switching energy, broadband, and mortgage providers.

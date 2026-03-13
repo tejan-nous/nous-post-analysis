@@ -356,12 +356,12 @@
       <div id="ul-dropzone" style="border:2px dashed var(--border);border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface)" onclick="document.getElementById('ul-file').click()" ondragover="ulDragOver(event)" ondragleave="ulDragLeave(event)" ondrop="ulDrop(event)">
         <div id="ul-drop-content">
           <div style="font-size:32px;margin-bottom:10px">📸</div>
-          <div style="font-weight:600;margin-bottom:4px">Drop story image here</div>
-          <div style="font-size:12px;color:var(--muted)">or click to browse · JPEG, PNG, WebP</div>
+          <div style="font-weight:600;margin-bottom:4px">Drop story images here</div>
+          <div style="font-size:12px;color:var(--muted)">or click to browse · JPEG, PNG, WebP · multiple allowed</div>
         </div>
-        <img id="ul-preview" style="display:none;max-height:300px;max-width:100%;border-radius:8px;margin-top:12px">
-        <input id="ul-file" type="file" accept="image/*" style="display:none" onchange="ulFileSelected(event)">
+        <input id="ul-file" type="file" accept="image/*" multiple style="display:none" onchange="ulFileSelected(event)">
       </div>
+      <div id="ul-queue"></div>
 
       <button id="ul-btn" onclick="ulAnalyse()" style="width:100%;margin-top:16px;padding:12px;background:var(--nous);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s" disabled>Generate Feedback</button>
     </div>
@@ -15142,21 +15142,22 @@ function renderPost(idx) {
 // ── UPLOAD / ANALYSE ──────────────────────────────────────────────────────────
 // Experiment brief Notion URLs — keyed by lowercase keywords found in slack_matched
 const EXPERIMENT_URLS = {
-  'secret':            'https://www.notion.so/2fbe4fd0813680f6998bff47b4913607',
-  'girl maths':        'https://www.notion.so/2fbe4fd08136804891a8e98c9be4e976',
-  'hate waste':        'https://www.notion.so/2fbe4fd0813680619a1de62b25461eac',
-  'supermom':          'https://www.notion.so/2fbe4fd08136805c8ad3ca070bc3de5d',
-  'bargain':           'https://www.notion.so/2fbe4fd0813680be812ef1c2e6152389',
-  'must have':         'https://www.notion.so/2fbe4fd08136806e9334f6b755108ff2',
-  'startling stats':   'https://www.notion.so/2fbe4fd0813680759da4c93f8090614c',
-  'identical message': 'https://www.notion.so/30de4fd081368002b8fae35ea39c3a71',
-  'short first':       'https://www.notion.so/313e4fd0813680c3b198e8664a9047aa',
-  'long first':        'https://www.notion.so/313e4fd08136801a9fc9ecf0ad4bc560',
-  'follower dm':       'https://www.notion.so/313e4fd081368059a324f1a55119748c',
-  'blank background':  'https://www.notion.so/313e4fd08136800fb052e6747cc0f608',
-  'life lesson':       'https://www.notion.so/319e4fd0813680fc9e9ed817b681d30d',
-  'mobile savings':    'https://www.notion.so/319e4fd0813680c78c8cdb5efb185dbc',
-  'og brief':          'https://www.notion.so/2fbe4fd081368032aa7ceab09ac479f9',
+  'secret':            'https://nousforyourhouse.notion.site/Fashion-influencers-Feb-2026-2fde4fd08136805d830cf9b0f2299e20',
+  'girl maths':        'https://nousforyourhouse.notion.site/Fashion-influencers-Feb-2026-2fee4fd0813680ff9a75c11e0ece00ec',
+  'hate waste':        'https://nousforyourhouse.notion.site/Celebrity-influencer-brief-Feb-2026-2fce4fd081368001bda0f248c705e24d',
+  'supermom':          'https://nousforyourhouse.notion.site/Celebrity-influencer-brief-Feb-2026-2fee4fd08136807ab9e0e3be233845ae',
+  'bargain':           'https://nousforyourhouse.notion.site/Home-influencer-brief-Feb-2026-2fbe4fd08136808592ffd90591722fad',
+  'must have':         'https://nousforyourhouse.notion.site/Home-influencer-brief-Feb-2026-2fee4fd0813680bca2afd2bccefdffc5',
+  'og brief':          'https://nousforyourhouse.notion.site/Family-2026-repeat-campaign-2cce4fd081368096bd88ce50d4025e46',
+  'startling stats':   'https://nousforyourhouse.notion.site/Family-2026-repeat-campaign-2cce4fd081368096bd88ce50d4025e46',
+  'identical message': 'https://nousforyourhouse.notion.site/Influencer-brief-2026-1st-campaign-319e4fd08136807d8563ce820493b157',
+  'short first':       'https://nousforyourhouse.notion.site/Influencer-brief-2026-1st-campaign-319e4fd08136809e86f8e9d1e69310e3',
+  'long first':        'https://nousforyourhouse.notion.site/Influencer-brief-2026-1st-campaign-31ae4fd08136800085c5cabae2281ff9',
+  'follower dm':       'https://nousforyourhouse.notion.site/Nous-influencers-MA-arch-2026-31ae4fd081368048abd1f493ec0ad690',
+  'blank background':  'https://nousforyourhouse.notion.site/Nous-influencers-March-2026-322e4fd0813680d69c82e39277097cfa',
+  'life lesson':       'https://nousforyourhouse.notion.site/Lifestyle-influencers-Feb-2026-312e4fd0813680f49f74f073a98e68f5',
+  'mobile savings':    'https://nousforyourhouse.notion.site/Lifestyle-influencers-Feb-2026-312e4fd0813680f49f74f073a98e68f5',
+  'no experiment':     'https://nousforyourhouse.notion.site/Family-Lifestyle-2026-1st-campaign-2cbe4fd081368061933bccb3c086b1f6',
 };
 function getExperimentUrl(p) {
   const ex = postExtras[p.id] || {};
@@ -15168,7 +15169,7 @@ function getExperimentUrl(p) {
 }
 
 const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app';
-let ulImageBase64 = null;
+let ulImageQueue = []; // {base64, filename, dataUrl}
 
 const UL_LOADING_MSGS = [
   "Consulting Meg Brackpool…",
@@ -15259,6 +15260,7 @@ const UL_BRIEFS = [
   '⬜ New Visuals: Blank background first',
   '🌿 Lifestyle Exp: Life Lesson first',
   '📱 Lifestyle Exp: Mobile Savings first',
+  '👨‍👩‍👧‍👦 Family: No experiment',
 ];
 (function() {
   const sel = document.getElementById('ul-brief');
@@ -15327,23 +15329,47 @@ function ulDragLeave(e) { document.getElementById('ul-dropzone').style.borderCol
 function ulDrop(e) {
   e.preventDefault();
   ulDragLeave(e);
-  const file = e.dataTransfer.files[0];
-  if (file) ulLoadFile(file);
+  Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')).forEach(f => ulLoadFile(f));
 }
-function ulFileSelected(e) { if (e.target.files[0]) ulLoadFile(e.target.files[0]); }
+function ulFileSelected(e) {
+  Array.from(e.target.files).forEach(f => ulLoadFile(f));
+  e.target.value = '';
+}
 function ulLoadFile(file) {
   const reader = new FileReader();
   reader.onload = ev => {
     const dataUrl = ev.target.result;
-    // Strip data URL prefix to get pure base64
-    ulImageBase64 = dataUrl.split(',')[1];
-    const preview = document.getElementById('ul-preview');
-    preview.src = dataUrl;
-    preview.style.display = 'block';
-    document.getElementById('ul-drop-content').style.display = 'none';
-    document.getElementById('ul-btn').disabled = false;
+    ulImageQueue.push({base64: dataUrl.split(',')[1], filename: file.name, dataUrl});
+    ulRenderQueue();
   };
   reader.readAsDataURL(file);
+}
+function ulRenderQueue() {
+  const qEl = document.getElementById('ul-queue');
+  if (!qEl) return;
+  if (!ulImageQueue.length) {
+    qEl.innerHTML = '';
+    document.getElementById('ul-drop-content').style.display = '';
+    document.getElementById('ul-btn').disabled = true;
+    document.getElementById('ul-btn').textContent = 'Generate Feedback';
+    return;
+  }
+  document.getElementById('ul-drop-content').style.display = 'none';
+  qEl.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding:0 4px">
+    ${ulImageQueue.map((item, i) => `
+      <div style="position:relative;text-align:center">
+        <img src="${item.dataUrl}" style="height:72px;width:54px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block">
+        <button onclick="ulRemoveFromQueue(${i})" style="position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;line-height:1;padding:0">×</button>
+        <div style="font-size:8px;color:var(--muted);margin-top:2px;max-width:54px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.filename}</div>
+      </div>`).join('')}
+  </div>
+  <div style="font-size:11px;color:var(--muted);margin-top:6px;padding-left:4px">${ulImageQueue.length} image${ulImageQueue.length > 1 ? 's' : ''} queued</div>`;
+  document.getElementById('ul-btn').disabled = false;
+  document.getElementById('ul-btn').textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
+}
+function ulRemoveFromQueue(idx) {
+  ulImageQueue.splice(idx, 1);
+  ulRenderQueue();
 }
 
 async function ulAnalyse() {
@@ -15354,39 +15380,52 @@ async function ulAnalyse() {
 
   const firstReview = document.querySelector('input[name="ul-review-type"]:checked')?.value !== 'second';
 
-  if (!ulImageBase64) { alert('Please upload an image first'); return; }
+  if (!ulImageQueue.length) { alert('Please upload at least one image first'); return; }
   if (!brief) { alert('Please select a brief'); return; }
 
   const btn = document.getElementById('ul-btn');
   btn.disabled = true;
-  ulStartTypewriter(btn);
 
-  document.getElementById('ul-results').style.display = 'none';
+  const resultsEl = document.getElementById('ul-results');
+  resultsEl.innerHTML = '';
+  resultsEl.style.display = 'block';
 
-  try {
-    const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
-    const res = await fetch(serverUrl + '/analyse', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
-      body: JSON.stringify({ image_base64: ulImageBase64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki', first_review: firstReview })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Server error');
-    ulRenderResults(data, brief, frame, name, agent);
-  } catch(e) {
-    const usedUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
-    document.getElementById('ul-results').style.display = 'block';
-    document.getElementById('ul-results').innerHTML = `<div class="card"><div class="card-body" style="color:#e53935">\u26a0 ${e.message}<br><span style="font-size:12px;color:var(--muted)">URL used: ${usedUrl}</span></div></div>`;
-  } finally {
-    ulStopTypewriter(btn);
+  const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+
+  for (let i = 0; i < ulImageQueue.length; i++) {
+    const item = ulImageQueue[i];
+    ulStartTypewriter(btn);
+    try {
+      const res = await fetch(serverUrl + '/analyse', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
+        body: JSON.stringify({ image_base64: item.base64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki', first_review: firstReview })
+      });
+      ulStopTypewriter(btn);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Server error');
+      const wrapper = document.createElement('div');
+      if (ulImageQueue.length > 1) {
+        wrapper.innerHTML = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:${i>0?'24px':0} 0 8px">Image ${i+1} of ${ulImageQueue.length} — ${item.filename}</div>`;
+      }
+      const inner = document.createElement('div');
+      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, item.dataUrl, i);
+      wrapper.appendChild(inner);
+      resultsEl.appendChild(wrapper);
+      if (i === 0) resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
+    } catch(e) {
+      ulStopTypewriter(btn);
+      const errDiv = document.createElement('div');
+      errDiv.innerHTML = `<div class="card" style="margin-bottom:12px"><div class="card-body" style="color:#e53935">⚠ ${e.message} (${item.filename})<br><span style="font-size:12px;color:var(--muted)">URL: ${serverUrl}</span></div></div>`;
+      resultsEl.appendChild(errDiv);
+    }
   }
+  btn.disabled = false;
+  btn.textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
 }
 
-// Stored outputs for copy buttons
-let _ulEmailText = '';
-let _ulSlackText = '';
-
-function ulRenderResults(d, brief, frame, name, agent) {
+function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
+  idx = idx || 0;
   const good = d.overall === 'good_to_go';
 
   function itemsHtml(items) {
@@ -15421,10 +15460,12 @@ function ulRenderResults(d, brief, frame, name, agent) {
     }
   }
   slackLines.push('', '— Bekki');
-  _ulSlackText = slackLines.join('\n');
-  _ulEmailText = d.email_agent || '';
+  const slackText = slackLines.join('\n');
+  const emailText = d.email_agent || '';
+  const slackId = `ul-slack-area-${idx}`;
+  const emailId = `ul-email-area-${idx}`;
 
-  const html = `
+  return `
     <!-- VERDICT + IMAGE -->
     <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:16px">
       <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}" style="margin-bottom:0">
@@ -15434,7 +15475,7 @@ function ulRenderResults(d, brief, frame, name, agent) {
           <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
         </div>
       </div>
-      <img src="data:image/jpeg;base64,${ulImageBase64}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16">
+      ${dataUrl ? `<img src="${dataUrl}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
     </div>
 
     <!-- TWO CATEGORY CARDS -->
@@ -15453,28 +15494,23 @@ function ulRenderResults(d, brief, frame, name, agent) {
     <div class="card" style="margin-bottom:16px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
         <span>💬 Slack — #approving-content</span>
-        <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-slack-area', this)">Copy</button>
+        <button class="ul-copy-btn" onclick="ulCopyFromArea('${slackId}', this)">Copy</button>
       </div>
       <div class="card-body">
-        <textarea id="ul-slack-area" style="width:100%;min-height:100px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${_ulSlackText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${slackId}" style="width:100%;min-height:100px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
     <!-- EMAIL OUTPUT -->
-    <div class="card">
+    <div class="card" style="margin-bottom:24px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
         <span>📧 Email${agent ? ' to ' + agent : ''}</span>
-        <button class="ul-copy-btn" onclick="ulCopyFromArea('ul-email-area', this)">Copy</button>
+        <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
       </div>
       <div class="card-body">
-        <textarea id="ul-email-area" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${_ulEmailText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${emailId}" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>`;
-
-  const el = document.getElementById('ul-results');
-  el.innerHTML = html;
-  el.style.display = 'block';
-  el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function ulCopy(id) {
