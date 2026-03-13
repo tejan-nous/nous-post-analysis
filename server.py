@@ -16,6 +16,8 @@ CORS(app, origins=["https://tejan-nous.github.io", "http://localhost:8080", "htt
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 ACCESS_PASSWORD = os.environ.get("ACCESS_PASSWORD", "")
+SLACK_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
+SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL_ID", "C0A9VNNMTU7")  # #approving-content
 
 BRIEFS = [
     {"brief": "👗 Fashion Exp: Secret first", "frames": [1, 2, 3]},
@@ -38,56 +40,54 @@ BRIEFS = [
 
 SYSTEM_PROMPT = """You are a content quality reviewer for Nous, a UK utility-switching service that saves users £500+ by switching energy, broadband, and mortgage providers.
 
-You review Instagram Story images posted by influencers promoting Nous. Your job is to assess each story frame and return structured feedback in two categories: obvious formatting issues, and brief compliance.
+You review Instagram Story images posted by influencers promoting Nous. Your job is to assess each story frame and return structured feedback.
 
 You MUST respond ONLY with valid JSON — no preamble, no markdown, no explanation outside the JSON object. Your entire response must be parseable by Python's json.loads().
 
 The JSON structure must be exactly:
 {
   "overall": "good_to_go" or "needs_work",
-  "obvious_tweaks": [
+  "tweaks": [
     {
-      "label": "<what the issue is>",
-      "pass": <true or false>,
-      "note": "<one specific observation from the image>"
+      "label": "<short actionable fix>",
+      "note": "<one specific observation — what to change and why>"
     }
   ],
-  "brief_fit": [
+  "strengths": [
     {
-      "label": "<what the issue is>",
-      "pass": <true or false>,
-      "note": "<one specific observation from the image>"
+      "label": "<what works well>",
+      "note": "<brief positive observation>"
     }
   ],
-  "email_influencer": "",
+  "slack_bullets": ["<short punchy bullet>", "<another bullet>"],
   "email_agent": "<email text>"
 }
 
-Use "good_to_go" when ALL obvious_tweaks pass AND no more than 1 brief_fit item fails. Otherwise "needs_work".
-Keep obvious_tweaks to the 4-5 hard formatting rules. Keep brief_fit to the top 3 things that matter most for this brief and frame — do not list everything, only the most important.
+Rules:
+- "tweaks" = everything that needs fixing (formatting AND brief compliance). Only list things that FAIL. Be specific and actionable.
+- "strengths" = what this post does well. 2-4 genuine positives.
+- "slack_bullets" = ultra-short bullet points for Slack. Each bullet is a quick instruction like "Break up text" or "Change X to Y". No full sentences — just the action. Max 4-5 bullets. If good_to_go, just ["Looks good — happy for this to go live"].
+- Use "good_to_go" when there are 0-1 minor tweaks. Use "needs_work" when there are real issues.
 """
 
 CRITERIA_PROMPT = """
-Review this Instagram Story image. Return feedback in two categories:
+Review this Instagram Story image.
 
-─── CATEGORY 1: OBVIOUS TWEAKS ───
-These are hard formatting rules. Check all of them:
+Context:
+- Brief: {brief}
+- Frame: {frame}
+- Influencer: {influencer_name}
 
+─── CHECK THESE (only add to "tweaks" if they FAIL) ───
+
+Formatting rules:
 1. Text is broken into multiple short blocks — NOT one long paragraph of copy
 2. "Save with Nous" CTA button is at the BOTTOM of the story
 3. No "AD" text inside the button itself (AD label can appear elsewhere on the story)
 4. @get_nous tag is present in the body (skip this check if this is a Fashion Secret/Teaser frame)
 5. No competing poll/vote sticker that distracts from the CTA
 
-─── CATEGORY 2: FITTING THE BRIEF ───
-Context:
-- Brief: {brief}
-- Frame: {frame}
-- Influencer: {influencer_name}
-
-For this specific brief and frame, identify the TOP 3 most important things to check — things that are core to whether this post is actually following the brief. Do not try to check everything. Focus on what matters most.
-
-Key rules to draw from (use your judgement on which 3 apply most to this brief/frame):
+Brief compliance rules (use your judgement on which apply most to this brief/frame):
 - Hook must open with a personal problem, confession, or shock stat — NEVER with @get_nous or "I've been using Nous"
 - No "loads of people posting about Nous" or herd-following language
 - Must include a specific £ figure (personal saving OR approved stat: £781/yr, £250 energy, £7/mo phone, £500+) — no vague "save loads"
@@ -98,8 +98,18 @@ Key rules to draw from (use your judgement on which 3 apply most to this brief/f
 - Sign-up described as quick and free (2 minutes, zero effort)
 - Copy and tone match the brief pattern (e.g. Girl Maths logic, Secret/mystery reveal, Startling stat opener, etc.)
 
+─── STRENGTHS ───
+Note 2-4 genuine things this post does well — tone, layout, specific wording, etc.
+
+─── SLACK BULLETS ───
+Write ultra-short action bullets for a Slack message. Think of how a reviewer would quickly jot down feedback:
+  "Break up text"
+  "Change sentence one to be: 'with the way the world is going...'"
+  "Move CTA button to bottom"
+Each bullet = one quick instruction, not a full explanation. If good_to_go, just: "Looks good — happy for this to go live"
+
 ─── EMAIL ───
-Write ONE short email to the agent. Set "email_influencer" to "".
+Write ONE short email to the agent.
 Opening: "Hi {agent_name}," (or "Hi," if no agent name)
 
 If overall = "good_to_go": one warm sentence, e.g. "Hi {agent_name}, looks good — happy for this to go live. Best, {reviewer_name}"
@@ -239,6 +249,90 @@ def analyse():
             "error": "Internal server error",
             "detail": str(e),
         }), 500
+
+
+@app.route("/slack", methods=["POST"])
+def send_to_slack():
+    if ACCESS_PASSWORD:
+        auth = request.headers.get("X-Access-Password", "")
+        if auth != ACCESS_PASSWORD:
+            return jsonify({"error": "Unauthorised"}), 401
+
+    if not SLACK_TOKEN:
+        return jsonify({"error": "SLACK_BOT_TOKEN not configured on the server"}), 500
+
+    channel = SLACK_CHANNEL
+    if not channel:
+        return jsonify({"error": "SLACK_CHANNEL_ID not configured on the server"}), 500
+
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
+
+    message_text = data.get("message", "")
+    image_base64 = data.get("image_base64", "")
+    filename = data.get("filename", "story.jpg")
+
+    if not message_text:
+        return jsonify({"error": "message is required"}), 400
+
+    import requests as http_requests
+
+    headers = {"Authorization": f"Bearer {SLACK_TOKEN}"}
+
+    try:
+        # If image provided, upload it first then post with the file
+        if image_base64:
+            image_bytes = base64.b64decode(image_base64)
+
+            # Step 1: Get upload URL
+            upload_resp = http_requests.post(
+                "https://slack.com/api/files.getUploadURLExternal",
+                headers=headers,
+                data={"filename": filename, "length": len(image_bytes)},
+            )
+            upload_data = upload_resp.json()
+            if not upload_data.get("ok"):
+                return jsonify({"error": "Slack upload URL failed", "detail": upload_data.get("error", "")}), 502
+
+            # Step 2: Upload the file
+            http_requests.post(
+                upload_data["upload_url"],
+                files={"file": (filename, image_bytes)},
+            )
+
+            # Step 3: Complete upload with channel + message
+            complete_resp = http_requests.post(
+                "https://slack.com/api/files.completeUploadExternal",
+                headers={**headers, "Content-Type": "application/json"},
+                json={
+                    "files": [{"id": upload_data["file_id"]}],
+                    "channel_id": channel,
+                    "initial_comment": message_text,
+                },
+            )
+            complete_data = complete_resp.json()
+            if not complete_data.get("ok"):
+                return jsonify({"error": "Slack complete upload failed", "detail": complete_data.get("error", "")}), 502
+
+            return jsonify({"ok": True, "method": "file_upload"})
+
+        else:
+            # Text-only message
+            resp = http_requests.post(
+                "https://slack.com/api/chat.postMessage",
+                headers={**headers, "Content-Type": "application/json"},
+                json={"channel": channel, "text": message_text},
+            )
+            resp_data = resp.json()
+            if not resp_data.get("ok"):
+                return jsonify({"error": "Slack post failed", "detail": resp_data.get("error", "")}), 502
+
+            return jsonify({"ok": True, "method": "chat_post"})
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": "Slack send failed", "detail": str(e)}), 500
 
 
 if __name__ == "__main__":
