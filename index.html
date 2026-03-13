@@ -350,6 +350,16 @@
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
           <input id="ul-agent" type="text" placeholder="e.g. Sarah at Gleam" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
         </div>
+        <!-- Agent email -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent email <span style="font-weight:400;opacity:.6">(optional)</span></label>
+          <input id="ul-agent-email" type="email" placeholder="e.g. sarah@gleam.io" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+        </div>
+        <!-- Post date -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Post date <span style="font-weight:400;opacity:.6">(scheduled)</span></label>
+          <input id="ul-post-date" type="date" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+        </div>
       </div>
 
       <!-- Drop zone -->
@@ -15377,6 +15387,8 @@ async function ulAnalyse() {
   const frame = parseInt(document.getElementById('ul-frame').value);
   const name  = document.getElementById('ul-name').value.trim();
   const agent = document.getElementById('ul-agent').value.trim() || '';
+  const agentEmail = document.getElementById('ul-agent-email').value.trim() || '';
+  const postDate = document.getElementById('ul-post-date').value || '';
 
   const firstReview = document.querySelector('input[name="ul-review-type"]:checked')?.value !== 'second';
 
@@ -15409,7 +15421,7 @@ async function ulAnalyse() {
         wrapper.innerHTML = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:${i>0?'24px':0} 0 8px">Image ${i+1} of ${ulImageQueue.length} — ${item.filename}</div>`;
       }
       const inner = document.createElement('div');
-      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, item.dataUrl, i);
+      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, agentEmail, postDate, item.dataUrl, i);
       wrapper.appendChild(inner);
       resultsEl.appendChild(wrapper);
       if (i === 0) resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
@@ -15424,7 +15436,7 @@ async function ulAnalyse() {
   btn.textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
 }
 
-function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
+function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dataUrl, idx) {
   idx = idx || 0;
   const good = d.overall === 'good_to_go';
 
@@ -15455,10 +15467,17 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   const tweaks = d.tweaks || [];
   const strengths = d.strengths || [];
 
-  // Build Slack text from Claude's short bullets
+  // Format date nicely
+  const dateStr = postDate ? new Date(postDate + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) : '';
+
+  // Build Slack text — header with all context, then short bullets
   const slackBullets = d.slack_bullets || [];
+  const headerParts = [name || 'Influencer', brief, `Frame ${frame}`];
+  if (agent) headerParts.push(`via ${agent}`);
+  if (dateStr) headerParts.push(`posting ${dateStr}`);
+
   const slackLines = [
-    `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
+    `*${headerParts.join(' \u00b7 ')}*`,
     good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
   ];
   if (slackBullets.length && !good) {
@@ -15477,6 +15496,10 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   window._ulSlackData = window._ulSlackData || {};
   window._ulSlackData[idx] = { slackId, dataUrl, brief, frame, name, agent };
 
+  // Build mailto link
+  const emailSubject = encodeURIComponent(`Nous story review \u2014 ${name || 'Influencer'} \u2014 ${brief} Frame ${frame}`);
+  const mailtoHref = agentEmail ? `mailto:${agentEmail}?subject=${emailSubject}&body=${encodeURIComponent(emailText)}` : '';
+
   return `
     <!-- VERDICT + IMAGE -->
     <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:16px">
@@ -15484,7 +15507,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
         <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
         <div>
           <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
-          <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
+          <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${dateStr ? ' \u00b7 ' + dateStr : ''}</div>
         </div>
       </div>
       ${dataUrl ? `<img src="${dataUrl}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
@@ -15520,7 +15543,10 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
     <div class="card" style="margin-bottom:24px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
         <span>\ud83d\udce7 Email${agent ? ' to ' + agent : ''}</span>
-        <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
+        <div style="display:flex;gap:6px">
+          <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
+          ${mailtoHref ? `<a href="${mailtoHref}" class="ul-copy-btn" style="background:var(--nous);color:#fff;border-color:var(--nous);text-decoration:none;display:inline-flex;align-items:center">Send email</a>` : ''}
+        </div>
       </div>
       <div class="card-body">
         <textarea id="${emailId}" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
