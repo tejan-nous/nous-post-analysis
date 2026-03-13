@@ -15428,11 +15428,11 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   idx = idx || 0;
   const good = d.overall === 'good_to_go';
 
-  function itemsHtml(items) {
-    if (!items || items.length === 0) return `<div style="color:var(--green);font-size:13px">\u2713 All clear</div>`;
+  function tweakItemsHtml(items) {
+    if (!items || items.length === 0) return `<div style="color:var(--green);font-size:13px">\u2713 Nothing to fix</div>`;
     return items.map(f => `
       <div class="ul-sub">
-        <span class="${f.pass ? 'ul-sub-pass' : 'ul-sub-fail'}" style="flex-shrink:0;font-weight:700">${f.pass ? '\u2713' : '\u2717'}</span>
+        <span class="ul-sub-fail" style="flex-shrink:0;font-weight:700">\u2717</span>
         <div>
           <div style="font-weight:500;font-size:13px">${f.label}</div>
           ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
@@ -15440,30 +15440,42 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       </div>`).join('');
   }
 
-  const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
-  const briefFails = (d.brief_fit || []).filter(x => !x.pass);
-  const allFails  = [...obvFails, ...briefFails];
+  function strengthItemsHtml(items) {
+    if (!items || items.length === 0) return `<div style="color:var(--muted);font-size:13px">No specific strengths noted</div>`;
+    return items.map(f => `
+      <div class="ul-sub">
+        <span class="ul-sub-pass" style="flex-shrink:0;font-weight:700">\u2713</span>
+        <div>
+          <div style="font-weight:500;font-size:13px">${f.label}</div>
+          ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
 
-  // Build Slack text
+  const tweaks = d.tweaks || [];
+  const strengths = d.strengths || [];
+
+  // Build Slack text from Claude's short bullets
+  const slackBullets = d.slack_bullets || [];
   const slackLines = [
-    `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
+    `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
     good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
   ];
-  if (!good) {
-    if (obvFails.length) {
-      slackLines.push('', '*Obvious tweaks:*');
-      obvFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
-    }
-    if (briefFails.length) {
-      slackLines.push('', '*Fitting the brief:*');
-      briefFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
-    }
+  if (slackBullets.length && !good) {
+    slackBullets.forEach(b => slackLines.push('\u2022 ' + b));
+  } else if (slackBullets.length && good) {
+    slackBullets.forEach(b => slackLines.push(b));
   }
-  slackLines.push('', '— Bekki');
+  slackLines.push('', '\u2014 Bekki');
   const slackText = slackLines.join('\n');
   const emailText = d.email_agent || '';
   const slackId = `ul-slack-area-${idx}`;
   const emailId = `ul-email-area-${idx}`;
+  const slackBtnId = `ul-slack-send-${idx}`;
+
+  // Store data for Slack send
+  window._ulSlackData = window._ulSlackData || {};
+  window._ulSlackData[idx] = { slackId, dataUrl, brief, frame, name, agent };
 
   return `
     <!-- VERDICT + IMAGE -->
@@ -15481,36 +15493,93 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
     <!-- TWO CATEGORY CARDS -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
       <div class="card">
-        <div class="card-head" style="font-size:12px">🔧 Obvious tweaks${obvFails.length ? ' ('+obvFails.length+' issue'+(obvFails.length>1?'s':'')+')' : ' ✓'}</div>
-        <div class="card-body">${itemsHtml(d.obvious_tweaks || [])}</div>
+        <div class="card-head" style="font-size:12px">\ud83d\udee0 Tweaks needed${tweaks.length ? ' ('+tweaks.length+')' : ''}</div>
+        <div class="card-body">${tweakItemsHtml(tweaks)}</div>
       </div>
       <div class="card">
-        <div class="card-head" style="font-size:12px">📋 Fitting the brief${briefFails.length ? ' ('+briefFails.length+' issue'+(briefFails.length>1?'s':'')+')' : ' ✓'}</div>
-        <div class="card-body">${itemsHtml(d.brief_fit || [])}</div>
+        <div class="card-head" style="font-size:12px">\u2728 What this does well</div>
+        <div class="card-body">${strengthItemsHtml(strengths)}</div>
       </div>
     </div>
 
     <!-- SLACK OUTPUT -->
     <div class="card" style="margin-bottom:16px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>💬 Slack — #approving-content</span>
-        <button class="ul-copy-btn" onclick="ulCopyFromArea('${slackId}', this)">Copy</button>
+        <span>\ud83d\udcac Slack \u2014 #approving-content</span>
+        <div style="display:flex;gap:6px">
+          <button class="ul-copy-btn" onclick="ulCopyFromArea('${slackId}', this)">Copy</button>
+          <button class="ul-copy-btn" id="${slackBtnId}" onclick="ulSendToSlack(${idx}, this)" style="background:var(--nous);color:#fff;border-color:var(--nous)">Send to Slack</button>
+        </div>
       </div>
       <div class="card-body">
-        <textarea id="${slackId}" style="width:100%;min-height:100px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${slackId}" style="width:100%;min-height:80px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
     <!-- EMAIL OUTPUT -->
     <div class="card" style="margin-bottom:24px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>📧 Email${agent ? ' to ' + agent : ''}</span>
+        <span>\ud83d\udce7 Email${agent ? ' to ' + agent : ''}</span>
         <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
       </div>
       <div class="card-body">
         <textarea id="${emailId}" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>`;
+}
+
+async function ulSendToSlack(idx, btn) {
+  const data = (window._ulSlackData || {})[idx];
+  if (!data) return;
+  const textarea = document.getElementById(data.slackId);
+  const message = textarea.value;
+  if (!message.trim()) { alert('Slack message is empty'); return; }
+
+  const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+
+  btn.disabled = true;
+  btn.textContent = 'Sending\u2026';
+
+  try {
+    // Extract base64 from dataUrl if present
+    let imageBase64 = '';
+    if (data.dataUrl && data.dataUrl.startsWith('data:')) {
+      imageBase64 = data.dataUrl.split(',')[1];
+    }
+
+    const res = await fetch(serverUrl + '/slack', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
+      body: JSON.stringify({
+        message: message,
+        image_base64: imageBase64,
+        filename: `${(data.name || 'story').replace(/\s+/g,'_')}_frame${data.frame}.jpg`
+      })
+    });
+    const resp = await res.json();
+    if (!res.ok) throw new Error(resp.error || 'Failed to send');
+
+    btn.textContent = 'Sent \u2713';
+    btn.style.background = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    setTimeout(() => {
+      btn.textContent = 'Send to Slack';
+      btn.style.background = 'var(--nous)';
+      btn.style.borderColor = 'var(--nous)';
+      btn.disabled = false;
+    }, 3000);
+  } catch(e) {
+    btn.textContent = 'Failed';
+    btn.style.background = 'var(--red)';
+    btn.style.borderColor = 'var(--red)';
+    alert('Slack send failed: ' + e.message);
+    setTimeout(() => {
+      btn.textContent = 'Send to Slack';
+      btn.style.background = 'var(--nous)';
+      btn.style.borderColor = 'var(--nous)';
+      btn.disabled = false;
+    }, 2000);
+  }
 }
 
 function ulCopy(id) {
