@@ -255,7 +255,7 @@ def analyse():
 
 @app.route("/lookup", methods=["GET"])
 def lookup():
-    notion_token = os.environ.get("NOTION_API_KEY", "") or NOTION_TOKEN
+    notion_token = (os.environ.get("NOTION_API_KEY", "") or NOTION_TOKEN).strip()
     if not notion_token:
         return jsonify({"error": "NOTION_API_KEY not configured"}), 500
 
