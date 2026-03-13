@@ -15253,6 +15253,25 @@ function ulStopTypewriter(btn) {
   btn.disabled = false;
 }
 
+// Brief → Notion URL map
+const UL_BRIEF_URLS = {
+  '👗 Fashion Exp: Secret first': 'https://www.notion.so/2fbe4fd0813680eb96c6d96789d84932',
+  '💃 Fashion Exp: Girl Maths first': 'https://www.notion.so/2fbe4fd0813680eb96c6d96789d84932',
+  '⭐ Celebrity Exp: Hate Waste first': 'https://www.notion.so/60be4fd08136830a9ef801575e6aac1d',
+  '👑 Celebrity Exp: Supermom first': 'https://www.notion.so/60be4fd08136830a9ef801575e6aac1d',
+  '🏠 Home Exp: Bargain first': 'https://www.notion.so/2f8e4fd0813680c29f23d1fc13959c4c',
+  '🏡 Home Exp: Must Have first': 'https://www.notion.so/2f8e4fd0813680c29f23d1fc13959c4c',
+  '🔄 Repeat Exp: OG brief (post level)': 'https://www.notion.so/2f6e4fd0813680cab446c5d9a581ed3e',
+  '📊 Repeat Exp: Startling Stats': 'https://www.notion.so/2f6e4fd0813680cab446c5d9a581ed3e',
+  '👨‍👩‍👧 New Family Exp: Identical message': 'https://www.notion.so/312e4fd081368067bfa7fb6a66adb4ed',
+  '📏 Message Length Exp: Short first': 'https://www.notion.so/312e4fd081368020ad22e100ba28531d',
+  '📝 Message Length Exp: Long first': 'https://www.notion.so/312e4fd081368020ad22e100ba28531d',
+  '📬 New Visuals: Follower DM first': 'https://www.notion.so/312e4fd08136809595bde9bd723c0a25',
+  '⬜ New Visuals: Blank background first': 'https://www.notion.so/312e4fd08136809595bde9bd723c0a25',
+  '🌿 Lifestyle Exp: Life Lesson first': 'https://www.notion.so/319e4fd081368098a7acf3aa6b9d8a0e',
+  '📱 Lifestyle Exp: Mobile Savings first': 'https://www.notion.so/319e4fd081368098a7acf3aa6b9d8a0e',
+};
+
 // Populate brief dropdown — hardcoded so it works without the server
 const UL_BRIEFS = [
   '👗 Fashion Exp: Secret first',
@@ -15293,6 +15312,59 @@ const UL_BRIEFS = [
   const savedPwd = localStorage.getItem('ul_password');
   if (savedUrl) { const el = document.getElementById('ul-server-url'); if(el) el.value = savedUrl; }
   if (savedPwd) { const el = document.getElementById('ul-password'); if(el) el.value = savedPwd; }
+})();
+
+// Influencer name autocomplete from Notion
+(function() {
+  const nameInput = document.getElementById('ul-name');
+  if (!nameInput) return;
+  let _acTimer = null;
+  let _acEl = null;
+
+  // Create dropdown
+  _acEl = document.createElement('div');
+  _acEl.style.cssText = 'display:none;position:absolute;left:0;right:0;top:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:999;max-height:200px;overflow-y:auto;margin-top:2px';
+  nameInput.parentElement.style.position = 'relative';
+  nameInput.parentElement.appendChild(_acEl);
+
+  nameInput.addEventListener('input', () => {
+    clearTimeout(_acTimer);
+    const q = nameInput.value.trim();
+    if (q.length < 2) { _acEl.style.display = 'none'; return; }
+    _acTimer = setTimeout(async () => {
+      const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+      try {
+        const res = await fetch(serverUrl + '/lookup?q=' + encodeURIComponent(q), {
+          headers: {'X-Access-Password': localStorage.getItem('ul_password') || ''}
+        });
+        const data = await res.json();
+        if (!data.results || !data.results.length) { _acEl.style.display = 'none'; return; }
+        _acEl.innerHTML = data.results.map((r, i) => `
+          <div data-idx="${i}" style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s"
+               onmouseenter="this.style.background='var(--bg)'" onmouseleave="this.style.background=''">
+            <div style="font-weight:600">${r.name}</div>
+            ${r.agency ? `<div style="font-size:11px;color:var(--muted)">${r.agency}${r.agent_email ? ' · ' + r.agent_email : ''}</div>` : ''}
+          </div>`).join('');
+        _acEl.style.display = 'block';
+
+        // Click handler
+        _acEl.querySelectorAll('[data-idx]').forEach(el => {
+          el.addEventListener('click', () => {
+            const r = data.results[parseInt(el.dataset.idx)];
+            nameInput.value = r.name;
+            const agentEl = document.getElementById('ul-agent');
+            const emailEl = document.getElementById('ul-agent-email');
+            if (agentEl && r.agency) agentEl.value = r.agency;
+            if (emailEl && r.agent_email) emailEl.value = r.agent_email;
+            _acEl.style.display = 'none';
+          });
+        });
+      } catch(e) { _acEl.style.display = 'none'; }
+    }, 300);
+  });
+
+  // Hide on blur (with delay for click)
+  nameInput.addEventListener('blur', () => setTimeout(() => _acEl.style.display = 'none', 200));
 })();
 
 // Build hall-of-fame loading facts from real post data
@@ -15472,7 +15544,9 @@ function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dat
 
   // Build Slack text — header with all context, then short bullets
   const slackBullets = d.slack_bullets || [];
-  const headerParts = [name || 'Influencer', brief, `Frame ${frame}`];
+  const briefUrl = UL_BRIEF_URLS[brief];
+  const briefLabel = briefUrl ? `<${briefUrl}|${brief}>` : brief;
+  const headerParts = [name || 'Influencer', briefLabel, `Frame ${frame}`];
   if (agent) headerParts.push(`via ${agent}`);
   if (dateStr) headerParts.push(`posting ${dateStr}`);
 
@@ -15485,7 +15559,6 @@ function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dat
   } else if (slackBullets.length && good) {
     slackBullets.forEach(b => slackLines.push(b));
   }
-  slackLines.push('', '\u2014 Bekki');
   const slackText = slackLines.join('\n');
   const emailText = d.email_agent || '';
   const slackId = `ul-slack-area-${idx}`;

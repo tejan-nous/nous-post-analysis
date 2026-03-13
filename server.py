@@ -18,6 +18,8 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 ACCESS_PASSWORD = os.environ.get("ACCESS_PASSWORD", "")
 SLACK_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL_ID", "C0A9VNNMTU7")  # #approving-content
+NOTION_TOKEN = os.environ.get("NOTION_API_KEY", "")
+NOTION_INFLUENCERS_DB = "1f8e4fd0-8136-8094-b03d-fffe5b42de1a"  # I.Influencers
 
 BRIEFS = [
     {"brief": "👗 Fashion Exp: Secret first", "frames": [1, 2, 3]},
@@ -249,6 +251,74 @@ def analyse():
             "error": "Internal server error",
             "detail": str(e),
         }), 500
+
+
+@app.route("/lookup", methods=["GET"])
+def lookup():
+    notion_token = os.environ.get("NOTION_API_KEY", "") or NOTION_TOKEN
+    if not notion_token:
+        return jsonify({"error": "NOTION_API_KEY not configured"}), 500
+
+    q = request.args.get("q", "").strip()
+    if not q or len(q) < 2:
+        return jsonify({"results": []})
+
+    import requests as http_requests
+
+    headers = {
+        "Authorization": f"Bearer {notion_token}",
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+    }
+
+    # Search I.Influencers by name (contains filter)
+    body = {
+        "database_id": NOTION_INFLUENCERS_DB,
+        "filter": {
+            "property": "Name",
+            "title": {"contains": q},
+        },
+        "page_size": 10,
+    }
+
+    try:
+        resp = http_requests.post(
+            "https://api.notion.com/v1/databases/" + NOTION_INFLUENCERS_DB + "/query",
+            headers=headers,
+            json=body,
+        )
+        data = resp.json()
+        if not data.get("results"):
+            return jsonify({"results": []})
+
+        results = []
+        for page in data["results"]:
+            props = page.get("properties", {})
+
+            def get_title(p):
+                t = props.get(p, {}).get("title", [])
+                return t[0]["plain_text"] if t else ""
+
+            def get_text(p):
+                rt = props.get(p, {}).get("rich_text", [])
+                return rt[0]["plain_text"] if rt else ""
+
+            def get_email(p):
+                return props.get(p, {}).get("email", "") or get_text(p)
+
+            results.append({
+                "name": get_title("Name"),
+                "agency": get_text("Agency"),
+                "agent_email": get_email("Agent email"),
+                "influencer_email": get_email("Influencer email"),
+                "url": page.get("url", ""),
+            })
+
+        return jsonify({"results": results})
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/slack", methods=["POST"])
