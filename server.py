@@ -258,10 +258,12 @@ def send_to_slack():
         if auth != ACCESS_PASSWORD:
             return jsonify({"error": "Unauthorised"}), 401
 
-    if not SLACK_TOKEN:
+    # Read at request time so Railway env var changes take effect without redeploy
+    slack_token = os.environ.get("SLACK_BOT_TOKEN", "") or SLACK_TOKEN
+    if not slack_token:
         return jsonify({"error": "SLACK_BOT_TOKEN not configured on the server"}), 500
 
-    channel = SLACK_CHANNEL
+    channel = os.environ.get("SLACK_CHANNEL_ID", "") or SLACK_CHANNEL
     if not channel:
         return jsonify({"error": "SLACK_CHANNEL_ID not configured on the server"}), 500
 
@@ -278,7 +280,7 @@ def send_to_slack():
 
     import requests as http_requests
 
-    headers = {"Authorization": f"Bearer {SLACK_TOKEN}"}
+    headers = {"Authorization": f"Bearer {slack_token}"}
 
     try:
         # If image provided, upload it first then post with the file
