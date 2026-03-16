@@ -186,7 +186,6 @@ def search_posts():
             "title": {"contains": q},
         },
         "page_size": 10,
-        "sorts": [{"property": "Post date", "direction": "descending"}],
     }
 
     try:
