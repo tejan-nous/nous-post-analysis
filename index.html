@@ -51,8 +51,6 @@
     .image-panel { position: sticky; top: 80px; }
     .story-frame { width: 100%; aspect-ratio: 9/16; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 24px rgba(0,0,0,.14); background: #111; position: relative; }
     .story-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .video-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,.85); color: #aaa; font-size: 13px; pointer-events: none; }
-    .video-overlay svg { width: 48px; height: 48px; margin-bottom: 8px; opacity: .5; }
     .story-frame-guide { position: absolute; inset: 0; background: rgba(0,0,0,.78); color: #fff; padding: 18px 16px; overflow-y: auto; opacity: 0; transition: opacity .2s; pointer-events: none; font-size: 11px; line-height: 1.5; }
     .story-frame:hover .story-frame-guide { opacity: 1; pointer-events: auto; }
     .story-frame-guide h4 { font-size: 12px; font-weight: 800; margin: 0 0 10px; color: #fff; letter-spacing: .03em; }
@@ -312,28 +310,47 @@
     <p style="color:var(--muted);font-size:14px">Upload a story image to get instant brief compliance feedback</p>
   </div>
 
-  <!-- REVIEW TYPE TOGGLE -->
-  <div style="display:flex;gap:10px;margin-bottom:20px">
-    <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:2px solid var(--nous);background:var(--nous-light);cursor:pointer;font-size:13px;font-weight:600">
-      <input type="radio" name="ul-review-type" value="first" checked style="accent-color:var(--nous)"> First review
-    </label>
-    <label style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;border:2px solid var(--border);cursor:pointer;font-size:13px;font-weight:600;color:var(--muted)">
-      <input type="radio" name="ul-review-type" value="second" style="accent-color:var(--nous)"> Final review
-    </label>
+  <!-- POST SEARCH -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Find post in Notion</span>
+        <span style="font-size:10px;color:var(--muted);opacity:.7">— auto-fills brief, frame &amp; influencer name</span>
+      </div>
+      <div style="position:relative">
+        <input id="ul-post-search" type="text" placeholder="Type influencer or post name..." autocomplete="off" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px 10px 34px;font-size:14px;color:var(--text);box-sizing:border-box">
+        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5">🔍</span>
+        <div id="ul-search-results" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-top:4px;max-height:280px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12)"></div>
+      </div>
+      <div id="ul-search-selected" style="display:none;margin-top:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--nous);border-radius:8px;font-size:13px;color:var(--text)"></div>
+    </div>
   </div>
 
   <!-- INPUT CARD -->
   <div class="card" style="margin-bottom:24px">
     <div class="card-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
-        <!-- Brief dropdown -->
+      <!-- Defaults header -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Defaults for new images</span>
+        <span style="font-size:10px;color:var(--muted);opacity:.7">— each image can be overridden below</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
+        <!-- Default review type -->
+        <div>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Review type</label>
+          <select id="ul-default-review" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+            <option value="first">First review</option>
+            <option value="second">Final review</option>
+          </select>
+        </div>
+        <!-- Default brief -->
         <div>
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Brief</label>
           <select id="ul-brief" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
             <option value="">Select brief...</option>
           </select>
         </div>
-        <!-- Frame dropdown -->
+        <!-- Default frame -->
         <div>
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame</label>
           <select id="ul-frame" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
@@ -342,6 +359,8 @@
             <option value="3">Frame 3</option>
           </select>
         </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
         <!-- Influencer name -->
         <div>
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name <span style="font-weight:400;opacity:.6">(optional)</span></label>
@@ -351,16 +370,6 @@
         <div>
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
           <input id="ul-agent" type="text" placeholder="e.g. Sarah at Gleam" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
-        </div>
-        <!-- Agent email -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent email <span style="font-weight:400;opacity:.6">(optional)</span></label>
-          <input id="ul-agent-email" type="email" placeholder="e.g. sarah@gleam.io" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
-        </div>
-        <!-- Post date -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Post date <span style="font-weight:400;opacity:.6">(scheduled)</span></label>
-          <input id="ul-post-date" type="date" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
         </div>
       </div>
 
@@ -14525,7 +14534,7 @@ function renderTopPostsGallery(briefData, niche, frame) {
   const topCards = briefData.posts.map(p => {
     const r = eCAcRating(p.ecac);
     return `<div class="top-post-card" onclick="goToPost('${p.id}')">
-      <img class="top-post-thumb" src="${p.image}" alt="${p.name}" onerror="this.style.display='none'" onload="checkIfVideo(this)" onclick="event.stopPropagation();if(this.src)openLightbox(this.src)" style="cursor:zoom-in">
+      <img class="top-post-thumb" src="${p.image}" alt="${p.name}" onerror="this.style.display='none'" onclick="event.stopPropagation();if(this.src)openLightbox(this.src)" style="cursor:zoom-in">
       <div class="top-post-info">
         <div class="top-post-ecac" style="color:var(--${r.cls})">${r.emoji} £${p.ecac}</div>
         <div class="top-post-name">${p.name}</div>
@@ -15006,13 +15015,19 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onload="checkIfVideo(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
         <div class="story-frame-guide">
-          <h4>📋 Brief compliance</h4>
+          <h4>📋 Quick quality guide</h4>
           <ul style="margin:0;padding-left:16px">
-            ${(p.brief_compliance||[]).map(c => `<li>${c.pass ? '✅' : '❌'} ${c.label}</li>`).join('')}
+            <li><strong>Hook</strong>: confession or stat first — never open with @get_nous or brand name</li>
+            <li><strong>Savings</strong>: specific £ figure required (personal or approved stat)</li>
+            <li><strong>Button</strong>: "Save with Nous" at the BOTTOM, 🔗 emoji, good contrast</li>
+            <li><strong>Button text</strong>: no AD text inside the button itself</li>
+            <li><strong>Text</strong>: large enough to read on a phone, broken into blocks, not over faces</li>
+            <li><strong>Visual</strong>: people/faces outperform empty rooms — match brief niche</li>
+            <li><strong>@get_nous</strong>: in body text but NOT in the opening line</li>
+            <li><strong>No poll/vote stickers</strong> competing with the CTA</li>
           </ul>
-          ${failing.length ? `<h4 style="margin-top:12px">🔧 Top improvements</h4><ul style="margin:0;padding-left:16px">${failing.map(f => `<li>${f.label}</li>`).join('')}</ul>` : '<div style="margin-top:12px;color:#4ade80">✓ All checks pass</div>'}
         </div>
       </div>
       <div class="image-footer">
@@ -15249,25 +15264,6 @@ function ulStopTypewriter(btn) {
   btn.disabled = false;
 }
 
-// Brief → Notion URL map
-const UL_BRIEF_URLS = {
-  '👗 Fashion Exp: Secret first': 'https://www.notion.so/2fbe4fd0813680eb96c6d96789d84932',
-  '💃 Fashion Exp: Girl Maths first': 'https://www.notion.so/2fbe4fd0813680eb96c6d96789d84932',
-  '⭐ Celebrity Exp: Hate Waste first': 'https://www.notion.so/60be4fd08136830a9ef801575e6aac1d',
-  '👑 Celebrity Exp: Supermom first': 'https://www.notion.so/60be4fd08136830a9ef801575e6aac1d',
-  '🏠 Home Exp: Bargain first': 'https://www.notion.so/2f8e4fd0813680c29f23d1fc13959c4c',
-  '🏡 Home Exp: Must Have first': 'https://www.notion.so/2f8e4fd0813680c29f23d1fc13959c4c',
-  '🔄 Repeat Exp: OG brief (post level)': 'https://www.notion.so/2f6e4fd0813680cab446c5d9a581ed3e',
-  '📊 Repeat Exp: Startling Stats': 'https://www.notion.so/2f6e4fd0813680cab446c5d9a581ed3e',
-  '👨‍👩‍👧 New Family Exp: Identical message': 'https://www.notion.so/312e4fd081368067bfa7fb6a66adb4ed',
-  '📏 Message Length Exp: Short first': 'https://www.notion.so/312e4fd081368020ad22e100ba28531d',
-  '📝 Message Length Exp: Long first': 'https://www.notion.so/312e4fd081368020ad22e100ba28531d',
-  '📬 New Visuals: Follower DM first': 'https://www.notion.so/312e4fd08136809595bde9bd723c0a25',
-  '⬜ New Visuals: Blank background first': 'https://www.notion.so/312e4fd08136809595bde9bd723c0a25',
-  '🌿 Lifestyle Exp: Life Lesson first': 'https://www.notion.so/319e4fd081368098a7acf3aa6b9d8a0e',
-  '📱 Lifestyle Exp: Mobile Savings first': 'https://www.notion.so/319e4fd081368098a7acf3aa6b9d8a0e',
-};
-
 // Populate brief dropdown — hardcoded so it works without the server
 const UL_BRIEFS = [
   '👗 Fashion Exp: Secret first',
@@ -15310,58 +15306,182 @@ const UL_BRIEFS = [
   if (savedPwd) { const el = document.getElementById('ul-password'); if(el) el.value = savedPwd; }
 })();
 
-// Influencer name autocomplete from Notion
+// --- Notion post search ---
 (function() {
-  const nameInput = document.getElementById('ul-name');
-  if (!nameInput) return;
-  let _acTimer = null;
-  let _acEl = null;
+  const searchInput = document.getElementById('ul-post-search');
+  const resultsDiv = document.getElementById('ul-search-results');
+  const selectedDiv = document.getElementById('ul-search-selected');
+  if (!searchInput) return;
 
-  // Create dropdown
-  _acEl = document.createElement('div');
-  _acEl.style.cssText = 'display:none;position:absolute;left:0;right:0;top:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:999;max-height:200px;overflow-y:auto;margin-top:2px';
-  nameInput.parentElement.style.position = 'relative';
-  nameInput.parentElement.appendChild(_acEl);
+  let debounceTimer = null;
 
-  nameInput.addEventListener('input', () => {
-    clearTimeout(_acTimer);
-    const q = nameInput.value.trim();
-    if (q.length < 2) { _acEl.style.display = 'none'; return; }
-    _acTimer = setTimeout(async () => {
-      const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
-      try {
-        const res = await fetch(serverUrl + '/lookup?q=' + encodeURIComponent(q), {
-          headers: {'X-Access-Password': localStorage.getItem('ul_password') || ''}
-        });
-        const data = await res.json();
-        if (!data.results || !data.results.length) { _acEl.style.display = 'none'; return; }
-        _acEl.innerHTML = data.results.map((r, i) => `
-          <div data-idx="${i}" style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s"
-               onmouseenter="this.style.background='var(--bg)'" onmouseleave="this.style.background=''">
-            <div style="font-weight:600">${r.name}</div>
-            ${r.agency ? `<div style="font-size:11px;color:var(--muted)">${r.agency}${r.agent_email ? ' · ' + r.agent_email : ''}</div>` : ''}
-          </div>`).join('');
-        _acEl.style.display = 'block';
-
-        // Click handler
-        _acEl.querySelectorAll('[data-idx]').forEach(el => {
-          el.addEventListener('click', () => {
-            const r = data.results[parseInt(el.dataset.idx)];
-            nameInput.value = r.name;
-            const agentEl = document.getElementById('ul-agent');
-            const emailEl = document.getElementById('ul-agent-email');
-            if (agentEl && r.agency) agentEl.value = r.agency;
-            if (emailEl && r.agent_email) emailEl.value = r.agent_email;
-            _acEl.style.display = 'none';
-          });
-        });
-      } catch(e) { _acEl.style.display = 'none'; }
-    }, 300);
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    const q = this.value.trim();
+    if (q.length < 2) {
+      resultsDiv.style.display = 'none';
+      return;
+    }
+    debounceTimer = setTimeout(() => ulSearchNotion(q), 350);
   });
 
-  // Hide on blur (with delay for click)
-  nameInput.addEventListener('blur', () => setTimeout(() => _acEl.style.display = 'none', 200));
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !resultsDiv.contains(e.target)) {
+      resultsDiv.style.display = 'none';
+    }
+  });
+
+  // Re-open on focus if there are results
+  searchInput.addEventListener('focus', function() {
+    if (resultsDiv.children.length > 0 && this.value.trim().length >= 2) {
+      resultsDiv.style.display = '';
+    }
+  });
 })();
+
+async function ulSearchNotion(query) {
+  const resultsDiv = document.getElementById('ul-search-results');
+  const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+
+  resultsDiv.innerHTML = '<div style="padding:12px 14px;font-size:12px;color:var(--muted)">Searching...</div>';
+  resultsDiv.style.display = '';
+
+  try {
+    const res = await fetch(serverUrl + '/search-posts?q=' + encodeURIComponent(query), {
+      headers: {'X-Access-Password': localStorage.getItem('ul_password') || ''}
+    });
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'Search failed');
+
+    if (!data.results || data.results.length === 0) {
+      resultsDiv.innerHTML = '<div style="padding:12px 14px;font-size:12px;color:var(--muted)">No posts found</div>';
+      return;
+    }
+
+    resultsDiv.innerHTML = '';
+    data.results.forEach(post => {
+      const row = document.createElement('div');
+      row.style.cssText = 'padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s';
+      row.onmouseenter = () => row.style.background = 'var(--surface)';
+      row.onmouseleave = () => row.style.background = '';
+      row.onclick = () => ulSelectPost(post);
+
+      const title = document.createElement('div');
+      title.style.cssText = 'font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px';
+      title.textContent = post.title;
+      row.appendChild(title);
+
+      const meta = document.createElement('div');
+      meta.style.cssText = 'font-size:11px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap';
+      const parts = [];
+      if (post.brief_frame) parts.push(post.brief_frame);
+      if (post.influencer) parts.push('👤 ' + post.influencer);
+      if (post.post_date) parts.push('📅 ' + post.post_date);
+      meta.textContent = parts.join('  ·  ');
+      row.appendChild(meta);
+
+      resultsDiv.appendChild(row);
+    });
+  } catch(e) {
+    resultsDiv.innerHTML = '<div style="padding:12px 14px;font-size:12px;color:#e53935">' + e.message + '</div>';
+  }
+}
+
+function ulSelectPost(post) {
+  const resultsDiv = document.getElementById('ul-search-results');
+  const selectedDiv = document.getElementById('ul-search-selected');
+  const searchInput = document.getElementById('ul-post-search');
+
+  resultsDiv.style.display = 'none';
+  searchInput.value = post.title;
+
+  // Show selected post info
+  selectedDiv.style.display = '';
+  selectedDiv.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center">' +
+    '<div><strong>' + post.title + '</strong>' +
+    (post.brief_frame ? '<span style="margin-left:10px;font-size:12px;color:var(--muted)">' + post.brief_frame + '</span>' : '') +
+    '</div>' +
+    '<button onclick="ulClearPostSearch()" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted);padding:0 4px" title="Clear">&times;</button></div>';
+
+  // Auto-fill influencer name
+  if (post.influencer) {
+    const nameEl = document.getElementById('ul-name');
+    if (nameEl) nameEl.value = post.influencer;
+  }
+
+  // Auto-fill brief from brief_frame text
+  if (post.brief_frame) {
+    const briefEl = document.getElementById('ul-brief');
+    if (briefEl) {
+      // Try to match the brief_frame text to one of the brief options
+      const bf = post.brief_frame.toLowerCase();
+      let matched = false;
+      for (const opt of briefEl.options) {
+        if (opt.value && bf.includes(opt.value.toLowerCase().replace(/^[^\w]+/, '').split(':')[0].trim())) {
+          briefEl.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+      // If no match, try matching experiment name keywords
+      if (!matched) {
+        const keywords = {
+          'secret': 'Secret first',
+          'girl maths': 'Girl Maths first',
+          'hate waste': 'Hate Waste first',
+          'supermom': 'Supermom first',
+          'bargain': 'Bargain first',
+          'must have': 'Must Have first',
+          'og brief': 'OG brief',
+          'startling': 'Startling Stats',
+          'identical': 'Identical message',
+          'short': 'Short first',
+          'long': 'Long first',
+          'follower dm': 'Follower DM first',
+          'blank': 'Blank background first',
+          'life lesson': 'Life Lesson first',
+          'mobile savings': 'Mobile Savings first',
+          'no experiment': 'No experiment',
+        };
+        for (const [kw, briefMatch] of Object.entries(keywords)) {
+          if (bf.includes(kw)) {
+            for (const opt of briefEl.options) {
+              if (opt.value.includes(briefMatch)) {
+                briefEl.value = opt.value;
+                matched = true;
+                break;
+              }
+            }
+            if (matched) break;
+          }
+        }
+      }
+    }
+
+    // Try to extract frame number from brief_frame text (e.g. "Frame 2" or "F2")
+    const frameMatch = post.brief_frame.match(/frame\s*(\d)/i) || post.brief_frame.match(/f(\d)/i);
+    if (frameMatch) {
+      const frameEl = document.getElementById('ul-frame');
+      if (frameEl) frameEl.value = frameMatch[1];
+    }
+  }
+
+  // Fallback: use post_sequence for frame if no frame found in brief_frame
+  if (post.post_sequence && !post.brief_frame?.match(/frame\s*\d/i)) {
+    const frameEl = document.getElementById('ul-frame');
+    if (frameEl && [1, 2, 3].includes(post.post_sequence)) {
+      frameEl.value = post.post_sequence;
+    }
+  }
+}
+
+function ulClearPostSearch() {
+  document.getElementById('ul-post-search').value = '';
+  document.getElementById('ul-search-results').style.display = 'none';
+  document.getElementById('ul-search-selected').style.display = 'none';
+}
 
 // Build hall-of-fame loading facts from real post data
 (function() {
@@ -15385,42 +15505,8 @@ const UL_BRIEFS = [
   facts.forEach(f => UL_LOADING_MSGS.push(f));
 })();
 
-// Style review type toggle on change
-document.querySelectorAll('input[name="ul-review-type"]').forEach(r => {
-  r.addEventListener('change', () => {
-    document.querySelectorAll('input[name="ul-review-type"]').forEach(rb => {
-      const lbl = rb.closest('label');
-      lbl.style.borderColor = rb.checked ? 'var(--nous)' : 'var(--border)';
-      lbl.style.background  = rb.checked ? 'var(--nous-light)' : '';
-      lbl.style.color       = rb.checked ? '' : 'var(--muted)';
-    });
-  });
-});
+// No longer needed — review type is per-image dropdown
 
-function checkIfVideo(img) {
-  try {
-    const c = document.createElement('canvas');
-    const sz = 50;
-    c.width = sz; c.height = sz;
-    const ctx = c.getContext('2d');
-    ctx.drawImage(img, 0, 0, sz, sz);
-    const data = ctx.getImageData(0, 0, sz, sz).data;
-    let dark = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      if (data[i] < 15 && data[i+1] < 15 && data[i+2] < 15) dark++;
-    }
-    if (dark / (sz * sz) > 0.85) {
-      const parent = img.closest('.story-frame') || img.parentElement;
-      if (parent && !parent.querySelector('.video-overlay')) {
-        const ov = document.createElement('div');
-        ov.className = 'video-overlay';
-        ov.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg><span>Probably a video</span>';
-        parent.style.position = 'relative';
-        parent.appendChild(ov);
-      }
-    }
-  } catch(e) {}
-}
 function openLightbox(src) {
   const lb = document.getElementById('img-lightbox');
   document.getElementById('img-lightbox-img').src = src;
@@ -15441,10 +15527,27 @@ function ulLoadFile(file) {
   const reader = new FileReader();
   reader.onload = ev => {
     const dataUrl = ev.target.result;
-    ulImageQueue.push({base64: dataUrl.split(',')[1], filename: file.name, dataUrl});
+    ulImageQueue.push({
+      base64: dataUrl.split(',')[1],
+      filename: file.name,
+      dataUrl,
+      brief: document.getElementById('ul-brief').value,
+      frame: document.getElementById('ul-frame').value,
+      reviewType: document.getElementById('ul-default-review').value
+    });
     ulRenderQueue();
   };
   reader.readAsDataURL(file);
+}
+function ulBriefOptions(selected) {
+  return `<option value="">Select brief...</option>` +
+    UL_BRIEFS.map(b => `<option value="${b}"${b === selected ? ' selected' : ''}>${b}</option>`).join('');
+}
+function ulFrameOptions(selected) {
+  return [1,2,3].map(f => `<option value="${f}"${String(f) === String(selected) ? ' selected' : ''}>Frame ${f}</option>`).join('');
+}
+function ulUpdateQueueItem(idx, field, value) {
+  if (ulImageQueue[idx]) ulImageQueue[idx][field] = value;
 }
 function ulRenderQueue() {
   const qEl = document.getElementById('ul-queue');
@@ -15457,15 +15560,60 @@ function ulRenderQueue() {
     return;
   }
   document.getElementById('ul-drop-content').style.display = 'none';
-  qEl.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;padding:0 4px">
-    ${ulImageQueue.map((item, i) => `
-      <div style="position:relative;text-align:center">
-        <img src="${item.dataUrl}" style="height:72px;width:54px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block">
-        <button onclick="ulRemoveFromQueue(${i})" style="position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;line-height:1;padding:0">×</button>
-        <div style="font-size:8px;color:var(--muted);margin-top:2px;max-width:54px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.filename}</div>
-      </div>`).join('')}
-  </div>
-  <div style="font-size:11px;color:var(--muted);margin-top:6px;padding-left:4px">${ulImageQueue.length} image${ulImageQueue.length > 1 ? 's' : ''} queued</div>`;
+  const container = document.createElement('div');
+  container.style.cssText = 'display:flex;flex-direction:column;gap:10px;margin-top:14px';
+  ulImageQueue.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;position:relative';
+
+    const thumb = document.createElement('img');
+    thumb.src = item.dataUrl;
+    thumb.style.cssText = 'height:72px;width:54px;object-fit:cover;border-radius:6px;border:1px solid var(--border);flex-shrink:0;cursor:zoom-in';
+    thumb.onclick = () => openLightbox(item.dataUrl);
+    row.appendChild(thumb);
+
+    const controls = document.createElement('div');
+    controls.style.cssText = 'flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;min-width:0';
+    controls.innerHTML = `
+      <div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Review</div>
+        <select data-idx="${i}" data-field="reviewType" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text)">
+          <option value="first"${item.reviewType === 'first' ? ' selected' : ''}>First review</option>
+          <option value="second"${item.reviewType === 'second' ? ' selected' : ''}>Final review</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Brief</div>
+        <select data-idx="${i}" data-field="brief" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text)">${ulBriefOptions(item.brief)}</select>
+      </div>
+      <div>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Frame</div>
+        <select data-idx="${i}" data-field="frame" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text)">${ulFrameOptions(item.frame)}</select>
+      </div>`;
+    controls.querySelectorAll('select[data-idx]').forEach(sel => {
+      sel.addEventListener('change', () => ulUpdateQueueItem(+sel.dataset.idx, sel.dataset.field, sel.value));
+    });
+    row.appendChild(controls);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = '\u00d7';
+    removeBtn.style.cssText = 'position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1;padding:0';
+    removeBtn.onclick = () => ulRemoveFromQueue(i);
+    row.appendChild(removeBtn);
+
+    const fname = document.createElement('div');
+    fname.style.cssText = 'position:absolute;bottom:4px;left:68px;font-size:8px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+    fname.textContent = item.filename;
+    row.appendChild(fname);
+
+    container.appendChild(row);
+  });
+  qEl.innerHTML = '';
+  qEl.appendChild(container);
+  const countDiv = document.createElement('div');
+  countDiv.style.cssText = 'font-size:11px;color:var(--muted);margin-top:8px;padding-left:4px';
+  countDiv.textContent = `${ulImageQueue.length} image${ulImageQueue.length > 1 ? 's' : ''} queued`;
+  qEl.appendChild(countDiv);
   document.getElementById('ul-btn').disabled = false;
   document.getElementById('ul-btn').textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
 }
@@ -15475,17 +15623,18 @@ function ulRemoveFromQueue(idx) {
 }
 
 async function ulAnalyse() {
-  const brief = document.getElementById('ul-brief').value;
-  const frame = parseInt(document.getElementById('ul-frame').value);
   const name  = document.getElementById('ul-name').value.trim();
   const agent = document.getElementById('ul-agent').value.trim() || '';
-  const agentEmail = document.getElementById('ul-agent-email').value.trim() || '';
-  const postDate = document.getElementById('ul-post-date').value || '';
-
-  const firstReview = document.querySelector('input[name="ul-review-type"]:checked')?.value !== 'second';
 
   if (!ulImageQueue.length) { alert('Please upload at least one image first'); return; }
-  if (!brief) { alert('Please select a brief'); return; }
+
+  // Validate each image has a brief selected
+  for (let i = 0; i < ulImageQueue.length; i++) {
+    if (!ulImageQueue[i].brief) {
+      alert(`Please select a brief for image ${i + 1} (${ulImageQueue[i].filename})`);
+      return;
+    }
+  }
 
   const btn = document.getElementById('ul-btn');
   btn.disabled = true;
@@ -15498,6 +15647,10 @@ async function ulAnalyse() {
 
   for (let i = 0; i < ulImageQueue.length; i++) {
     const item = ulImageQueue[i];
+    const brief = item.brief;
+    const frame = parseInt(item.frame);
+    const firstReview = item.reviewType !== 'second';
+
     ulStartTypewriter(btn);
     try {
       const res = await fetch(serverUrl + '/analyse', {
@@ -15513,7 +15666,7 @@ async function ulAnalyse() {
         wrapper.innerHTML = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:${i>0?'24px':0} 0 8px">Image ${i+1} of ${ulImageQueue.length} — ${item.filename}</div>`;
       }
       const inner = document.createElement('div');
-      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, agentEmail, postDate, item.dataUrl, i);
+      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, item.dataUrl, i);
       wrapper.appendChild(inner);
       resultsEl.appendChild(wrapper);
       if (i === 0) resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
@@ -15528,15 +15681,15 @@ async function ulAnalyse() {
   btn.textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
 }
 
-function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dataUrl, idx) {
+function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   idx = idx || 0;
   const good = d.overall === 'good_to_go';
 
-  function tweakItemsHtml(items) {
-    if (!items || items.length === 0) return `<div style="color:var(--green);font-size:13px">\u2713 Nothing to fix</div>`;
+  function itemsHtml(items) {
+    if (!items || items.length === 0) return `<div style="color:var(--green);font-size:13px">\u2713 All clear</div>`;
     return items.map(f => `
       <div class="ul-sub">
-        <span class="ul-sub-fail" style="flex-shrink:0;font-weight:700">\u2717</span>
+        <span class="${f.pass ? 'ul-sub-pass' : 'ul-sub-fail'}" style="flex-shrink:0;font-weight:700">${f.pass ? '\u2713' : '\u2717'}</span>
         <div>
           <div style="font-weight:500;font-size:13px">${f.label}</div>
           ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
@@ -15544,54 +15697,30 @@ function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dat
       </div>`).join('');
   }
 
-  function strengthItemsHtml(items) {
-    if (!items || items.length === 0) return `<div style="color:var(--muted);font-size:13px">No specific strengths noted</div>`;
-    return items.map(f => `
-      <div class="ul-sub">
-        <span class="ul-sub-pass" style="flex-shrink:0;font-weight:700">\u2713</span>
-        <div>
-          <div style="font-weight:500;font-size:13px">${f.label}</div>
-          ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
-        </div>
-      </div>`).join('');
-  }
+  const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
+  const briefFails = (d.brief_fit || []).filter(x => !x.pass);
+  const allFails  = [...obvFails, ...briefFails];
 
-  const tweaks = d.tweaks || [];
-  const strengths = d.strengths || [];
-
-  // Format date nicely
-  const dateStr = postDate ? new Date(postDate + 'T00:00:00').toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) : '';
-
-  // Build Slack text — header with all context, then short bullets
-  const slackBullets = d.slack_bullets || [];
-  const briefUrl = UL_BRIEF_URLS[brief];
-  const briefLabel = briefUrl ? `<${briefUrl}|${brief}>` : brief;
-  const headerParts = [name || 'Influencer', briefLabel, `Frame ${frame}`];
-  if (agent) headerParts.push(`via ${agent}`);
-  if (dateStr) headerParts.push(`posting ${dateStr}`);
-
+  // Build Slack text
   const slackLines = [
-    `*${headerParts.join(' \u00b7 ')}*`,
+    `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
     good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
   ];
-  if (slackBullets.length && !good) {
-    slackBullets.forEach(b => slackLines.push('\u2022 ' + b));
-  } else if (slackBullets.length && good) {
-    slackBullets.forEach(b => slackLines.push(b));
+  if (!good) {
+    if (obvFails.length) {
+      slackLines.push('', '*Obvious tweaks:*');
+      obvFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
+    }
+    if (briefFails.length) {
+      slackLines.push('', '*Fitting the brief:*');
+      briefFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
+    }
   }
+  slackLines.push('', '— Bekki');
   const slackText = slackLines.join('\n');
   const emailText = d.email_agent || '';
   const slackId = `ul-slack-area-${idx}`;
   const emailId = `ul-email-area-${idx}`;
-  const slackBtnId = `ul-slack-send-${idx}`;
-
-  // Store data for Slack send
-  window._ulSlackData = window._ulSlackData || {};
-  window._ulSlackData[idx] = { slackId, dataUrl, brief, frame, name, agent };
-
-  // Build mailto link
-  const emailSubject = encodeURIComponent(`Nous story review \u2014 ${name || 'Influencer'} \u2014 ${brief} Frame ${frame}`);
-  const mailtoHref = agentEmail ? `mailto:${agentEmail}?subject=${emailSubject}&body=${encodeURIComponent(emailText)}` : '';
 
   return `
     <!-- VERDICT + IMAGE -->
@@ -15600,7 +15729,7 @@ function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dat
         <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
         <div>
           <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
-          <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${dateStr ? ' \u00b7 ' + dateStr : ''}</div>
+          <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
         </div>
       </div>
       ${dataUrl ? `<img src="${dataUrl}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
@@ -15609,96 +15738,36 @@ function ulRenderResults(d, brief, frame, name, agent, agentEmail, postDate, dat
     <!-- TWO CATEGORY CARDS -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
       <div class="card">
-        <div class="card-head" style="font-size:12px">\ud83d\udee0 Tweaks needed${tweaks.length ? ' ('+tweaks.length+')' : ''}</div>
-        <div class="card-body">${tweakItemsHtml(tweaks)}</div>
+        <div class="card-head" style="font-size:12px">🔧 Obvious tweaks${obvFails.length ? ' ('+obvFails.length+' issue'+(obvFails.length>1?'s':'')+')' : ' ✓'}</div>
+        <div class="card-body">${itemsHtml(d.obvious_tweaks || [])}</div>
       </div>
       <div class="card">
-        <div class="card-head" style="font-size:12px">\u2728 What this does well</div>
-        <div class="card-body">${strengthItemsHtml(strengths)}</div>
+        <div class="card-head" style="font-size:12px">📋 Fitting the brief${briefFails.length ? ' ('+briefFails.length+' issue'+(briefFails.length>1?'s':'')+')' : ' ✓'}</div>
+        <div class="card-body">${itemsHtml(d.brief_fit || [])}</div>
       </div>
     </div>
 
     <!-- SLACK OUTPUT -->
     <div class="card" style="margin-bottom:16px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>\ud83d\udcac Slack \u2014 #approving-content</span>
-        <div style="display:flex;gap:6px">
-          <button class="ul-copy-btn" onclick="ulCopyFromArea('${slackId}', this)">Copy</button>
-          <button class="ul-copy-btn" id="${slackBtnId}" onclick="ulSendToSlack(${idx}, this)" style="background:var(--nous);color:#fff;border-color:var(--nous)">Send to Slack</button>
-        </div>
+        <span>💬 Slack — #approving-content</span>
+        <button class="ul-copy-btn" onclick="ulCopyFromArea('${slackId}', this)">Copy</button>
       </div>
       <div class="card-body">
-        <textarea id="${slackId}" style="width:100%;min-height:80px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${slackId}" style="width:100%;min-height:100px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
     <!-- EMAIL OUTPUT -->
     <div class="card" style="margin-bottom:24px">
       <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>\ud83d\udce7 Email${agent ? ' to ' + agent : ''}</span>
-        <div style="display:flex;gap:6px">
-          <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
-          ${mailtoHref ? `<a href="${mailtoHref}" class="ul-copy-btn" style="background:var(--nous);color:#fff;border-color:var(--nous);text-decoration:none;display:inline-flex;align-items:center">Send email</a>` : ''}
-        </div>
+        <span>📧 Email${agent ? ' to ' + agent : ''}</span>
+        <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
       </div>
       <div class="card-body">
         <textarea id="${emailId}" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>`;
-}
-
-async function ulSendToSlack(idx, btn) {
-  const data = (window._ulSlackData || {})[idx];
-  if (!data) return;
-  const textarea = document.getElementById(data.slackId);
-  const message = textarea.value;
-  if (!message.trim()) { alert('Slack message is empty'); return; }
-
-  const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
-
-  btn.disabled = true;
-  btn.textContent = 'Sending\u2026';
-
-  try {
-    // Extract base64 from dataUrl if present
-    let imageBase64 = '';
-    if (data.dataUrl && data.dataUrl.startsWith('data:')) {
-      imageBase64 = data.dataUrl.split(',')[1];
-    }
-
-    const res = await fetch(serverUrl + '/slack', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
-      body: JSON.stringify({
-        message: message,
-        image_base64: imageBase64,
-        filename: `${(data.name || 'story').replace(/\s+/g,'_')}_frame${data.frame}.jpg`
-      })
-    });
-    const resp = await res.json();
-    if (!res.ok) throw new Error(resp.error || 'Failed to send');
-
-    btn.textContent = 'Sent \u2713';
-    btn.style.background = 'var(--green)';
-    btn.style.borderColor = 'var(--green)';
-    setTimeout(() => {
-      btn.textContent = 'Send to Slack';
-      btn.style.background = 'var(--nous)';
-      btn.style.borderColor = 'var(--nous)';
-      btn.disabled = false;
-    }, 3000);
-  } catch(e) {
-    btn.textContent = 'Failed';
-    btn.style.background = 'var(--red)';
-    btn.style.borderColor = 'var(--red)';
-    alert('Slack send failed: ' + e.message);
-    setTimeout(() => {
-      btn.textContent = 'Send to Slack';
-      btn.style.background = 'var(--nous)';
-      btn.style.borderColor = 'var(--nous)';
-      btn.disabled = false;
-    }, 2000);
-  }
 }
 
 function ulCopy(id) {
