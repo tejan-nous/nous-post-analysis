@@ -182,7 +182,7 @@ def search_posts():
     body = {
         "database_id": NOTION_POSTS_DB,
         "filter": {
-            "property": "title",
+            "property": "I.Posts",
             "title": {"contains": q},
         },
         "page_size": 10,
@@ -195,7 +195,9 @@ def search_posts():
             json=body,
             timeout=10,
         )
-        resp.raise_for_status()
+        if not resp.ok:
+            err = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {"message": resp.text}
+            return jsonify({"error": f"Notion API {resp.status_code}: {err.get('message', resp.text)}"}), 502
         data = resp.json()
 
         results = []
