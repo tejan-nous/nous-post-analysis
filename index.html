@@ -15008,17 +15008,11 @@ function renderPost(idx) {
       <div class="story-frame">
         <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onload="checkIfVideo(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
         <div class="story-frame-guide">
-          <h4>📋 Quick quality guide</h4>
+          <h4>📋 Brief compliance</h4>
           <ul style="margin:0;padding-left:16px">
-            <li><strong>Hook</strong>: confession or stat first — never open with @get_nous or brand name</li>
-            <li><strong>Savings</strong>: specific £ figure required (personal or approved stat)</li>
-            <li><strong>Button</strong>: "Save with Nous" at the BOTTOM, 🔗 emoji, good contrast</li>
-            <li><strong>Button text</strong>: no AD text inside the button itself</li>
-            <li><strong>Text</strong>: large enough to read on a phone, broken into blocks, not over faces</li>
-            <li><strong>Visual</strong>: people/faces outperform empty rooms — match brief niche</li>
-            <li><strong>@get_nous</strong>: in body text but NOT in the opening line</li>
-            <li><strong>No poll/vote stickers</strong> competing with the CTA</li>
+            ${(p.brief_compliance||[]).map(c => `<li>${c.pass ? '✅' : '❌'} ${c.label}</li>`).join('')}
           </ul>
+          ${failing.length ? `<h4 style="margin-top:12px">🔧 Top improvements</h4><ul style="margin:0;padding-left:16px">${failing.map(f => `<li>${f.label}</li>`).join('')}</ul>` : '<div style="margin-top:12px;color:#4ade80">✓ All checks pass</div>'}
         </div>
       </div>
       <div class="image-footer">

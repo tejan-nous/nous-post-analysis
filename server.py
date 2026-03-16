@@ -19,7 +19,7 @@ ACCESS_PASSWORD = os.environ.get("ACCESS_PASSWORD", "")
 SLACK_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 SLACK_CHANNEL = os.environ.get("SLACK_CHANNEL_ID", "C0A9VNNMTU7")  # #approving-content
 NOTION_TOKEN = os.environ.get("NOTION_API_KEY", "")
-NOTION_INFLUENCERS_DB = "1f8e4fd0-8136-8094-b03d-fffe5b42de1a"  # I.Influencers
+NOTION_INFLUENCERS_DB = "1f8e4fd0-8136-802e-90b6-dfdc8e1fa7b5"  # I.Influencers
 
 BRIEFS = [
     {"brief": "👗 Fashion Exp: Secret first", "frames": [1, 2, 3]},
