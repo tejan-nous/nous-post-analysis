@@ -180,7 +180,6 @@ def search_posts():
 
     # Query I.Posts DB filtering by title containing the search string
     body = {
-        "database_id": NOTION_POSTS_DB,
         "filter": {
             "property": "I.Posts",
             "title": {"contains": q},
