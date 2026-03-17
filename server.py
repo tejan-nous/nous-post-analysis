@@ -190,8 +190,7 @@ def search_posts():
                 {"property": "Post date", "date": {"on_or_before": two_weeks_ahead}},
             ]
         },
-        "page_size": 100,
-        "sorts": [{"property": "Post date", "direction": "descending"}],
+        "page_size": 50,
     }
 
     try:
@@ -199,7 +198,7 @@ def search_posts():
             f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query",
             headers=headers,
             json=body,
-            timeout=15,
+            timeout=30,
         )
         if not resp.ok:
             err = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {"message": resp.text}
