@@ -15716,7 +15716,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       briefFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
     }
   }
-  slackLines.push('', '— Bekki');
+  slackLines.push('');
   const slackText = slackLines.join('\n');
   const emailText = d.email_agent || '';
   const slackId = `ul-slack-area-${idx}`;
