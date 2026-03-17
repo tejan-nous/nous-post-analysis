@@ -181,7 +181,7 @@ def search_posts():
     # Query I.Posts DB filtering by title containing the search string
     body = {
         "filter": {
-            "property": "I.Posts",
+            "property": "id",
             "title": {"contains": q},
         },
         "page_size": 10,
@@ -204,7 +204,7 @@ def search_posts():
             props = page.get("properties", {})
 
             # Extract title
-            title_prop = props.get("I.Posts", {})
+            title_prop = props.get("id", {})
             title_arr = title_prop.get("title", [])
             title = "".join(t.get("plain_text", "") for t in title_arr) if title_arr else ""
 
