@@ -15015,7 +15015,7 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
+        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onload="ulCheckBlackImage(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
         <div class="story-frame-guide">
           <h4>📋 Quick quality guide</h4>
           <ul style="margin:0;padding-left:16px">
@@ -15793,6 +15793,31 @@ function ulCopyFromArea(id, btn) {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = orig, 1500);
   });
+}
+
+// Detect mostly-black images (likely video screenshots)
+function ulCheckBlackImage(img) {
+  try {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 50; canvas.height = 50;
+    ctx.drawImage(img, 0, 0, 50, 50);
+    const data = ctx.getImageData(0, 0, 50, 50).data;
+    let darkPixels = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      if (data[i] < 30 && data[i+1] < 30 && data[i+2] < 30) darkPixels++;
+    }
+    if (darkPixels / (50*50) > 0.85) {
+      const notice = img.parentElement.querySelector('.black-image-notice');
+      if (!notice) {
+        const div = document.createElement('div');
+        div.className = 'black-image-notice';
+        div.style.cssText = 'position:absolute;bottom:8px;left:8px;right:8px;background:rgba(255,200,0,.95);color:#333;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:600;text-align:center;z-index:5';
+        div.textContent = 'This is probably a video — image may not be representative';
+        img.parentElement.appendChild(div);
+      }
+    }
+  } catch(e) { /* cross-origin or other error — ignore */ }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
