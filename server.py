@@ -40,21 +40,30 @@ You MUST respond ONLY with valid JSON — no preamble, no markdown, no explanati
 The JSON structure must be exactly:
 {
   "overall": "good_to_go" or "needs_work",
-  "score": <integer, number of criteria that pass>,
-  "total": <integer, total number of criteria checked>,
-  "criteria": [
+  "obvious_tweaks": [
     {
-      "label": "<parent criterion name>",
-      "sub_label": "<specific sub-criterion>",
+      "label": "<issue description>",
       "pass": <true or false>,
-      "note": "<brief specific observation about this image, 1-2 sentences>"
-    },
-    ...
+      "note": "<brief specific observation, 1-2 sentences>"
+    }
+  ],
+  "brief_fit": [
+    {
+      "label": "<issue description>",
+      "pass": <true or false>,
+      "note": "<brief specific observation, 1-2 sentences>"
+    }
   ],
   "summary": "<2-3 sentence summary of overall quality, referencing specific details visible in the image>",
   "email_influencer": "<full email text to send to the influencer>",
   "email_agent": "<full email text to send to the talent agent>"
 }
+
+"obvious_tweaks" covers visual/technical issues: text readability, button placement, button text, CTA visibility, image quality, AD label placement, font size, contrast, text layout.
+
+"brief_fit" covers content/messaging issues: hook quality, discovery moment, what Nous does, savings claims, sign-up ease, @get_nous tag usage, tone.
+
+IMPORTANT: Always include ALL items in both arrays — both passing AND failing criteria. Do not omit items just because they pass. The frontend needs the full list to show what was checked.
 
 Use "good_to_go" when score >= 80% of total criteria pass. Otherwise use "needs_work".
 """
