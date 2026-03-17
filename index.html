@@ -15015,7 +15015,7 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" onerror="this.style.background='#111'" onload="ulCheckBlackImage(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
+        <img src="${p.image}" alt="${p.name}" crossorigin="anonymous" onerror="this.style.background='#111'" onload="ulCheckBlackImage(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
         <div class="story-frame-guide">
           <h4>📋 Quick quality guide</h4>
           <ul style="margin:0;padding-left:16px">
