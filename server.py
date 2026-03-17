@@ -180,12 +180,15 @@ def search_posts():
 
     # Fetch posts from the last 2 weeks, then filter client-side by query
     from datetime import datetime, timedelta
-    two_weeks_ago = (datetime.utcnow() - timedelta(days=14)).strftime("%Y-%m-%d")
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    two_weeks_ahead = (datetime.utcnow() + timedelta(days=14)).strftime("%Y-%m-%d")
 
     body = {
         "filter": {
-            "property": "Post date",
-            "date": {"on_or_after": two_weeks_ago},
+            "and": [
+                {"property": "Post date", "date": {"on_or_after": today}},
+                {"property": "Post date", "date": {"on_or_before": two_weeks_ahead}},
+            ]
         },
         "page_size": 100,
         "sorts": [{"property": "Post date", "direction": "descending"}],
