@@ -168,7 +168,7 @@ def search_posts():
     if not NOTION_API_KEY:
         return jsonify({"error": "NOTION_API_KEY environment variable not set"}), 500
 
-    q = request.args.get("q", "").strip().lower()
+    q = request.args.get("q", "").strip()
     if not q or len(q) < 2:
         return jsonify({"results": []})
 
@@ -178,27 +178,31 @@ def search_posts():
         "Content-Type": "application/json",
     }
 
-    # Fetch posts from the last 2 weeks, then filter client-side by query
-    from datetime import datetime, timedelta
-    today = datetime.utcnow().strftime("%Y-%m-%d")
-    two_weeks_ahead = (datetime.utcnow() + timedelta(days=14)).strftime("%Y-%m-%d")
-
     body = {
         "filter": {
-            "and": [
-                {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": two_weeks_ahead}},
-            ]
+            "property": "id",
+            "title": {"contains": q},
         },
-        "page_size": 50,
+        "page_size": 10,
     }
+
+    # filter_properties as URL params to only return the 5 fields we need
+    # (DB has 232 properties — without this, responses are huge and timeout)
+    prop_params = "&".join([
+        "filter_properties=title",       # post title
+        "filter_properties=DMQ%2560",    # Brief & Frame
+        "filter_properties=%253EG%255D%255D",  # Post date
+        "filter_properties=W%255C%255C~",      # Influencer (string)
+        "filter_properties=dvkA",        # Post Sequence
+    ])
+    query_url = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query?{prop_params}"
 
     try:
         resp = http_requests.post(
-            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query",
+            query_url,
             headers=headers,
             json=body,
-            timeout=30,
+            timeout=15,
         )
         if not resp.ok:
             err = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {"message": resp.text}
@@ -239,11 +243,6 @@ def search_posts():
             if pd_prop.get("type") == "date" and pd_prop.get("date"):
                 post_date = pd_prop["date"].get("start", "")
 
-            # Filter: match query against title or influencer name
-            searchable = f"{title} {influencer}".lower()
-            if q not in searchable:
-                continue
-
             results.append({
                 "id": page["id"],
                 "title": title,
@@ -253,7 +252,7 @@ def search_posts():
                 "post_date": post_date,
             })
 
-        return jsonify({"results": results[:10]})
+        return jsonify({"results": results})
 
     except http_requests.RequestException as e:
         return jsonify({"error": f"Notion API error: {str(e)}"}), 502
