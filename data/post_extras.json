@@ -1,0 +1,3792 @@
+{
+  "2efe4fd0-8136-80fb-a3ef-d3400aabbeb9": {
+    "forecast_ac": 96,
+    "forecast_cac": 113.5,
+    "slack_notes": [
+      "think we just need to ask to move the \"ad\" tag to below the button"
+    ],
+    "slack_matched": "Sophie Hawkins - No Experiment - Post 3 - *Today*",
+    "slack_confidence": "high"
+  },
+  "2fee4fd0-8136-802f-baee-d56ade25d96a": {
+    "forecast_ac": 31,
+    "forecast_cac": 228.6,
+    "slack_notes": [
+      "argh, surely prefer static",
+      "yeah for sure",
+      "I think having a look over the thread we might need to agree to a video for this one as that's what we sort of said when signed, that she could try one of these out. We can see how it runs.\n\nHer static first post wasn't amazing TBH.\n\nThoughts?",
+      "her talking stories were much better than her statics in her first campaign",
+      "i think her doing video stories is probs better",
+      "yeah seems fair",
+      "I think it needs a quick line on what Nous is. Suggestion:\n\nOkay, money chat… I recently found out loads of experts say we probably shouldn’t be paying more than about £7 for our phone bill. I was paying WAY more than that :sweat_smile:.\n\nThankfully I've been using Nous, which is basically this really simple tool that saves you money on your bills and does all the work for you.\n\nThey checked my bills…phone, energy, broadband, everything…and honestly I didn’t realise how much I was overpaying until they actually checked it properly.\n\nThen found better deals so now I'm saving hundreds of pounds a year!\n\nIf your bills feel a bit chaotic or expensive, it might be worth letting them take a look. Worst case you learn something, best case you save money!!!",
+      "Thanks <@U04SZAJ5J0J> going back!",
+      "<@U04SZAJ5J0J>"
+    ],
+    "slack_matched": "Alexandra Teasdale - Repeat Experiment Startling Stats - Feb 27th - Video concept",
+    "slack_confidence": "high"
+  },
+  "2f8e4fd0-8136-802d-9d8b-c55a64c73a21": {
+    "forecast_ac": 174,
+    "forecast_cac": 91.2,
+    "slack_notes": [
+      "• Better contrast between text background and text\n• Clearer button\n• I quite like the copy",
+      "'today I learnt that no one needs to be paying more than £7 a month for their phone. I was paying waaaay more than that!!'",
+      "Amends - I think much better"
+    ],
+    "slack_matched": "Georgia Beecroft - Post 2 for Feb 23 - Startling Stats",
+    "slack_confidence": "medium"
+  },
+  "2f8e4fd0-8136-804f-8f22-f5fa684b5dfd": {
+    "forecast_ac": 17,
+    "forecast_cac": 354.8,
+    "slack_notes": [
+      "will try and work out some alternative copy after the various stand ups",
+      "<@U02BW0MQ62Y> keen to get your take - do you think we should try and squeeze into one post or if they're up for doing 3 and counting it as 1, should we do that? wanted to check if we have a stance before clarifying with them",
+      "so what they've sent through is for three single-frame stories right? i.e. they are planning to post these on different dates?",
+      "well they read like they should go back to back because they would make even less sense if they're in isolation; so i'll go back to them and clarify, but i wanted to check before doing that if we'd prefer if they squeezed them into one post, or if they're happy to post 3 stories on the same day and count it as 1, then if we'd prefer that? lmk if that makes sense",
+      "oh, i read them as three separate posts",
+      "they're not very good, but i can see how they make sense as 3 single frames",
+      "ok cool let's assume that and i'll write up recommendations for each now",
+      "yeah, for the one that starts ...'and my 4th dad tech tip' i think he's probably doing them as part of a wider set of stories and then slotting a mention of nous in there to make it look more organic",
+      "ok so first\n\n'_PSA_\n_We've shared a few mistakes we've made with the cottage, but a big one we've not really talked about is that we didn't spend time hunting for the best deals on our bills, which means we've been overpaying without even realising it._ \n\n_I was really excited when I heard about get_nous, they search for the best deals on energy, broadband and mobile, and handle the admin of switching, so you get to save loads of money, without even having to think about it_\n\n_All I had to do was answer a few quick questions about our bills, and they sorted it - only took 5 minutes, and saved us £600!'_",
+      "Dad tip one\n\n_'...and my 4th 'Dad tech tip' - get_nous, and I don't even need to download an app! You just tell them a bit about your bills (energy, WiFi and mobile), and they'll switch you to a better deal, saving you loads of time and money.'_\n\nit's a bit short - but think it gets the point across!",
+      "and the most confusing one\n\n'So many of you have sent messages saying you're loving using get_nous, so thought I'd do a quick refresh for anyone who missed it.\n\nI started using get_nous so they'd sort our bills for us and switch us to better deals, saving us loads of time and £600! Only takes 5 minutes to sign up, and Alex didn't have to do anything, which she loved (in fact I'm not even sure she knows we use it!), and a great way to be saving some pennies!'",
+      "<@U04SZAJ5J0J> when you have a mo - this is due to go out today, so keen to send feedback asap!",
+      "Post 1 - think it could be tightened up a tiny bit more - could they split into multiple boxes too just to break it up?\n\n'_PSA_\n_We've shared a few mistakes we've made with the cottage, but a big one we've not really talked about is that we didn't spend time hunting for deals on our bills, which means we've been overpaying without even realising it._ \n\n_I tried get_nous because I head that they search for the best deals on energy, broadband and mobile, and handle the admin of switching, so you get to save loads of money, without even having to think about it_\n\n_All I had to do was answer a few quick questions about our bills, and they sorted it - only took 5 minutes, and saved us £600!'_",
+      "On the tech tip, I don't think not having to download an app is a great selling point so I wouldn't go with that tbh.\n\nMaybe something like\n\n'...and my 4th 'Dad tech tip' try get_nous to save money with honestly so little effort!\n\nYou just tell them a bit about your bills (energy, WiFi and mobile), and they figure out where you're overpaying, which was a bit of a shock to see... Then they switch you to a better deal, saving you loads of time and money. We've saved hundreds and they did all the work for us!",
+      "ok cool will go back with those - happy with the last one?",
+      "yep looks good to me!",
+      "they've made all the edits but said they don't feel like it sounds very 'them' - do we think that's a problem? bit worried if it's not their usual tone it'll get lower engagement",
+      "hmm probs best if we can find something in the middle - are they happy to give it another shot using some of ours and some of their language?",
+      "yeah i thought that would be the case - let me go back"
+    ],
+    "slack_matched": "riverside dream have sent through a very confusing set of stories, including the 3rd one which i just don't understand what they could possibly be going for",
+    "slack_confidence": "low"
+  },
+  "304e4fd0-8136-8042-88c1-e721fad7e7ba": {
+    "forecast_ac": 28,
+    "forecast_cac": 122,
+    "slack_notes": [
+      "I think this looks good, wish the button was on the right though",
+      "What do you think <@U0A1LAXQQ83>?",
+      "Yeah nice agree again"
+    ],
+    "slack_matched": "Tori Gaynor - Fashion (girls maths)  - post 2 - feb 5th",
+    "slack_confidence": "high"
+  },
+  "313e4fd0-8136-800a-8e94-f77edcce067f": {
+    "forecast_ac": 164,
+    "forecast_cac": 55.2,
+    "slack_notes": [
+      "lols the line about her bf leaving her",
+      "it's quite wordy",
+      "I knew our bills had gone up recently, but I just assumed things were more expensive now :woman-shrugging:\n\nAndy deals with all the bills (should probably learn how to do this stuff incase he leaves :rolling_on_the_floor_laughing:) and he occasionally checks if we can get better deals for Sky, gas etc...\n\nBut after hearing a few people rave about get_nous we thought we'd sign up to see if we could save anything.\n\nTurns out we'd been really overpaying on a few things, so they found us better deals and switched us over. I've saved hundreds and me (and Andy lol) haven't had to do a thing!\n\nAnnoyed at myself for not checking before!! If you haven't checked your bills in ages, this is your sign :eyes:",
+      "damn, maybe ask if she can tweak but point out we have kept in lots of her additional lines!?",
+      "then put the button at the bottom?"
+    ],
+    "slack_matched": "Scarlett Hannah B - No Experiment - post 1 - 5th march",
+    "slack_confidence": "high"
+  },
+  "314e4fd0-8136-8072-ae64-d6b6b20b76bd": {
+    "forecast_ac": 82,
+    "forecast_cac": 55.2,
+    "slack_notes": [
+      "Interesting, it's not particularly in line with the brief but I do think it's good and she has framed in within a wider discussion which is kind of the right vibe",
+      "I love this one but isn't at all the experiment",
+      "Ok, I think we let her run these and pull her from the experiment. If we can't fill the experiment without her then the category isn't worth pursuing anyways",
+      "Only amend is to swap the button and the screenshot"
+    ],
+    "slack_matched": "Lauren Smith - Post 1 - 5th March - Life Lesson",
+    "slack_confidence": "high"
+  },
+  "312e4fd0-8136-8057-91fd-fbe4de498de5": {
+    "forecast_ac": 213,
+    "forecast_cac": 51.8,
+    "slack_notes": [
+      "Looks good to me but again button could be better\n\nSave with Nous / Start saving!"
+    ],
+    "slack_matched": "Brandese - Startling Stats - Post 2 of campaign Apr 4th",
+    "slack_confidence": "medium"
+  },
+  "311e4fd0-8136-8094-af9a-f40d0f9f827a": {
+    "forecast_ac": 215,
+    "forecast_cac": 33.2,
+    "slack_notes": [
+      "we love the brief",
+      "Can't complain"
+    ],
+    "slack_matched": "Chloe Lewis - Post 1 - *Today* - Secret",
+    "slack_confidence": "high"
+  },
+  "303e4fd0-8136-8054-b251-c2c4eecc9c74": {
+    "forecast_ac": 19,
+    "forecast_cac": 80,
+    "slack_notes": [
+      "Hi <@U04SZAJ5J0J> / <@U08LM17R4A1> can I get thoughts on this please? / What's the update on content due out today.",
+      "business as usual",
+      "I like the copy, just need to bring the final paragraph up and put the link below it",
+      "Great, thank you"
+    ],
+    "slack_matched": "Ella Crazy Mumma - Startling Stats - Post 2 - *Today*",
+    "slack_confidence": "high"
+  },
+  "311e4fd0-8136-8030-aceb-e4a3a8a07d16": {
+    "forecast_ac": 110,
+    "forecast_cac": 55.7,
+    "slack_notes": [
+      "This is the brief!",
+      "Any more thoughts should get this back asap <@U02BW0MQ62Y> <@U04SZAJ5J0J> <@U08LM17R4A1>",
+      "Happy with this copy and paste job!",
+      "few tweaks to fit her personality might have been nice, but happy enough with it!",
+      "Agreed! Thanks team"
+    ],
+    "slack_matched": "Alice Rose Buttery - Post 1 - No experiment - *today*",
+    "slack_confidence": "high"
+  },
+  "311e4fd0-8136-80ee-b3bd-dc111666e169": {
+    "forecast_ac": 44,
+    "forecast_cac": 76.8,
+    "slack_notes": [
+      "I think a big no no to the voting box, we want people clicking on our link not answering qs about her blazer :laughing:",
+      "Girl maths = splurging on a new blazer because you just saved loads of money by switching your bills! I signed up to this new tool called @get_nous that finds you better deals on your energy, mobile, broadband etc – took me 2 minutes to sign up and I'm already saving hundreds, so good!",
+      "hmm still don't love this <@U04SZAJ5J0J> any better?",
+      "Ha yeah the vote would destroy link clicks. How about\n\nGirl maths = feeling like your new suede blazer was free because you just saved so much money on your bills!\n\nI signed up to this new tool called @get_nous that finds you better deals on your energy, mobile, broadband etc – took me 2 minutes to sign up and I'm already saving hundreds, so good! Perfect excuse to treat myself guilt-free",
+      "*Amend -* Just putting this back as quite a bitty one. Thoughts?",
+      "hmm wonder why she's gone for the 'kept seeing everyone talk about it' angle",
+      "Turns out she wanted it aligned with her tone of voice so kept it as is <@U02BW0MQ62Y> do you think it's ok?",
+      "i think we think the 'kept seeing everyone talk about it' line doesn't work that well",
+      "could she change to 'kept hearing about this new tool' ?"
+    ],
+    "slack_matched": "Emily Rose - Post 1 - Family (no experiment) - March 3rd.",
+    "slack_confidence": "high"
+  },
+  "2f4e4fd0-8136-80e0-84e1-ce805fa49d37": {
+    "forecast_ac": 48,
+    "forecast_cac": 130.7,
+    "slack_notes": [
+      "I think this is good, maybe font could be clearer. Any thoughts <@U02BW0MQ62Y> <@U08LM17R4A1> <@U04SZAJ5J0J>",
+      "think we can make the intro tighter",
+      "like a bit of a random jump",
+      "Happy face because I've been buying accessories for rooms in the new house :laughing: Can't wait to show you! I had a little splurge using the extra money that I saved with get_nous wooo. I've told you guys before they've saved us so much on our household bills!! So pleased we decided to sign up cos I had no idea that we'd been paying too much :woman-shrugging: Less admin &amp; saving money, two very good things in my eyes :laughing: Hopefully more homesense trips on the horizon! Just enter your postcode below to see what it says for you!"
+    ],
+    "slack_matched": "Chess Johnson - Post 3 - Family - *today*",
+    "slack_confidence": "high"
+  },
+  "2fae4fd0-8136-80b2-8836-e55fe7db0839": {
+    "forecast_ac": 0,
+    "forecast_cac": null,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ce4fd0-8136-80c6-b317-eea68a141446": {
+    "forecast_ac": 102,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Of two minds on whether or not to tighten up paragraph 1",
+      "Not totally ideal composition - you reckon it'd be weird to swap the text and the product shot?",
+      "Otherwise I think copy is fine",
+      "Great thanks",
+      "I quite like the copy"
+    ],
+    "slack_matched": "Steph Elswood - Frame 3 - Family / No experiment - March 26th",
+    "slack_confidence": "medium"
+  },
+  "30de4fd0-8136-80f7-8198-fe2f3972fd16": {
+    "forecast_ac": 119,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "Just to kick things off, I don't like the dm at an angle",
+      "I like the dm format though ode to the next experiment <@U02BW0MQ62Y>",
+      "Agreed, hate the dm angle + having ad right below it\n\nchange sentence 1 to: \"With everything going up, you need to check if you're overpaying on household bills\"",
+      "I adore 'that's so amazing babe'"
+    ],
+    "slack_matched": "Rach part time working mummy - startling stats - post 1 - feb 28th",
+    "slack_confidence": "high"
+  },
+  "2f1e4fd0-8136-8054-8372-cf0708dbbb97": {
+    "forecast_ac": 13,
+    "forecast_cac": 13,
+    "slack_notes": [
+      "• Cut \"so you all know\" in sentence 1\n•  Cut \"did you know\" in sentence 2",
+      "Amend!\n\nFrom Meg - 'Conscious Lucy has another sponsored story AD [today] and keen to keep them 24 hours apart'. Do we want to post today or delay till tomorrow?\n\nI think we should push for today.",
+      "I'd prefer to run tomorrow, as long as we have it approved there isn't any extra effort for us",
+      "Like the amend!",
+      "Do you think the other AD being first will hamper our chances?",
+      "If she posts the other AD at 6pm say.",
+      "I don't think it will make a huge difference but there isn't any reason to run it today instead of tomorrow",
+      "Cool, I'll push to tomorrow then."
+    ],
+    "slack_matched": "Lucy Hall - Post 3 - No experiment - Posting 24th feb",
+    "slack_confidence": "high"
+  },
+  "2ffe4fd0-8136-80be-b63c-e7e65d28e018": {
+    "forecast_ac": 33,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Looks like this is the original repeat campaign brief",
+      "Just need to move the button down but think we need to change the experiment tag too",
+      "Ah my bad, it's no experiment!",
+      "Amend, think we're good to go here!"
+    ],
+    "slack_matched": "Katie Hayes - Post 5 - Startling No experiment - Feb 27th",
+    "slack_confidence": "high"
+  },
+  "30ce4fd0-8136-8099-826e-f6cab242148c": {
+    "forecast_ac": 69,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "what's with the medieval font?",
+      "here ye here ye",
+      "wtf are those emojis",
+      "like the copy though"
+    ],
+    "slack_matched": "Danielle Lloyd - Frame 1 - Celebrity: supermom - Feb 27th",
+    "slack_confidence": "medium"
+  },
+  "30ce4fd0-8136-80af-8dc0-fe3dbb5540e1": {
+    "forecast_ac": 85,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "like how she's taken the brief but randomly added the word girls twice",
+      "I think good though, nice post"
+    ],
+    "slack_matched": "Sophie Westbrooke - Post 1 - No experiment - feb 27th",
+    "slack_confidence": "medium"
+  },
+  "2f8e4fd0-8136-80e3-bcfd-d04b62a4cd2c": {
+    "forecast_ac": 165,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "10/10 from me"
+    ],
+    "slack_matched": "Alysha Devon - Post 2 - Startling Stats - Thursday 26th",
+    "slack_confidence": "medium"
+  },
+  "2fee4fd0-8136-80a4-8b27-f899c4f72ddd": {
+    "forecast_ac": 22,
+    "forecast_cac": 30,
+    "slack_notes": [
+      "Feel like she's done girl maths here",
+      "Yeah definitely has",
+      "Can just swap the experiment tags and run it I think",
+      "\"I had been ostriching for a while\" what?",
+      "oh: <https://en.wikipedia.org/wiki/Ostrich_effect>",
+      "also those are Os not zeroes in \"£3OO\", right?",
+      "not a tweak that matters tbf",
+      "Sophistication"
+    ],
+    "slack_matched": "Isabelle Handley Allen - Post 1 - Fashion Secret First - Feb 26th *today* ",
+    "slack_confidence": "high"
+  },
+  "2fee4fd0-8136-80a8-8941-fc598b227d91": {
+    "forecast_ac": 15,
+    "forecast_cac": 16,
+    "slack_notes": [
+      "Think the copy here is very good, just needs to pop the button at the bottom"
+    ],
+    "slack_matched": "Georgie Elizabeth - Hate wasting money - Post 2 - *Feb 26th today*",
+    "slack_confidence": "medium"
+  },
+  "2ffe4fd0-8136-80ca-83ff-f77e5f993545": {
+    "forecast_ac": 105,
+    "forecast_cac": 3,
+    "slack_notes": [
+      "Love this post",
+      "lololol this haul is sickening",
+      "but yeah like it! assume button below the text"
+    ],
+    "slack_matched": "Jade Darlington - Post 2 - Secret First - Feb 26th",
+    "slack_confidence": "medium"
+  },
+  "30be4fd0-8136-80d3-a482-cdec73bcd2ba": {
+    "forecast_ac": 45,
+    "forecast_cac": 3,
+    "slack_notes": [
+      "think it looks good tbh"
+    ],
+    "slack_matched": "Emily Backhouse - Post 1 - 26/02 - Startling Stats",
+    "slack_confidence": "medium"
+  },
+  "30ae4fd0-8136-80a6-b69f-f5e69888d891": {
+    "forecast_ac": 102,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Who is she calling? Her friends now she doesn't have to deal with her bills?",
+      "what's the brief for this? feels like she's kinda phoned it in :sob:",
+      "Hate waste first!",
+      "Shall I just come back to her with the brief then? <@U04SZAJ5J0J> <@U08LM17R4A1>",
+      "Ah sorry I can tap out a suggestion, just gotta finish writing something for press then head into the office so I can look at 11!",
+      "No worries I can do this one!",
+      "Maybe...\n\nOkay so I’m not being dramatic… but I was actually a bit horrified when I realised how much we’d been overpaying on our bills :melting_face:\n\nI’m so on top of everything with work / mum life &amp; everything in between... but broadband and energy?  Apparently I just let them quietly roll over and rob me in the background :upside_down_face:\n\nI started using @get_nous and within minutes they’d worked out we were paying way more than we needed to (because of course I hadn’t shopped around).\n\nThey checked all our contracts, found better deals and handled the switching We’re now saving hundreds of pounds a year which,I will absolutely take :clap:\n\nIf you’re like me and haven’t checked your bills in… a while… I genuinely recommend giving @get_nous a go. It’s free and it saves so much faff :white_heart:",
+      "maybe delete the second @get_nous?",
+      "do you think it's 'hate waste' enough?",
+      "Okay so I’m not being dramatic… but I was actually a bit horrified when I realised how much we’d been overpaying on our bills :melting_face:\n\nI honestly hate wasting money, and I’m usually so on top of life admin ... but broadband and energy?  Apparently I just let them quietly roll over and rob me in the background :upside_down_face:\n\nI started using this new tool called @get_nous and within minutes they’d worked out we were paying way more than we needed to.\n\nThey checked all our contracts, found better deals and handled the switching. We’re now saving hundreds of pounds a year, which I will absolutely take :clap:\n\nIf you’re like me and haven’t checked your bills in… a while… I genuinely recommend giving Nous a go. It’s free and it saves so much faff :white_heart:",
+      "Amend! Might need a second eyes on this!",
+      "Maybe\n\n• Button right \n• Text slightly bigger",
+      "lol did we ask her to put all the text in one column? so all over the place haha",
+      "No unfortunately not!",
+      "I like the content but the skipping around is quite stressy",
+      "if it could all be aligned I do think that's better"
+    ],
+    "slack_matched": "Laura Anderson - Celeb - Post 1 - Feb 26th",
+    "slack_confidence": "medium"
+  },
+  "30ce4fd0-8136-80ac-bf99-ecb103611c3e": {
+    "forecast_ac": 261,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "Change sentence 1 to \"Everyone must be saving money by sorting their finances out...\"\n\nMove button to bottom",
+      "the last line is fun",
+      "haha yeah agreed",
+      "Looks lovely, link is a bit off center but otherwise good - can ask to center it but no need to resend I think"
+    ],
+    "slack_matched": "Lauren Elizabeth Adamson - Post 2 - No experiment - 12th March",
+    "slack_confidence": "high"
+  },
+  "305e4fd0-8136-8092-b0d3-d7bfe99dcc0a": {
+    "forecast_ac": 71,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "This is interesting, basically a finance influencer",
+      "<@U02BW0MQ62Y> recognize we didn't write a lot of it down but did we have a preferred message for finance people?",
+      "Think we need to amp up sentences 1 and 2 either way:\n\n\"If you aren't checking your bills before they renew, you're overspending on them.\n\nLuckily there's a website called Nous that can save you so much money\"",
+      "its kinda weird that it starts off sounding like she hasn't used it, and then quitely mentions we've saved her hundreds",
+      "her account is literally all about deals so i wonder if we lean into that a bit more",
+      "she's finding some amazing deals (unironically)",
+      "i can have a whack at drafting something",
+      "this was our best static finance post, so reckon we pull some of this language in",
+      "How about:\n\nYou're probably all aware that the cost of bills have skyrocketed over the last couple of years... Which is why finding the best deals is so important right now! :moneybag:\n\nYou can shop around yourself, or you can sign up to a free tool like Nous that does it all for you. I signed up and straight away they showed me I could be saving hundreds across my energy, mobile and broadband!\n\nThey show you exactly where you're overpaying, find you better deals and even switch you to them to help you save money :money_with_wings:  It's genuinely one of those \"I wish I found it sooner\" tools.\n\nSo if you want cheaper bills without spending time searching for them yourself, it's worth signing up for @get_nous!",
+      "Perhaps need to explain that her first version was fine, but after looking at her account in more detail we think this angle would work better for her?"
+    ],
+    "slack_matched": "Chloe's Deal Club - Post 1 - No experiment - *Today!*",
+    "slack_confidence": "high"
+  },
+  "303e4fd0-8136-8089-bd33-cd3adbd9bcea": {
+    "forecast_ac": 115,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "GIRLS I have to share what I signed up to last week whilst I was away! ITS SO GOOD. I had unknowingly been paying too much for a few of my bills :upside_down_face: So I signed up to get_nous and they checked everything for me (energy, broadband, mobile) and switched me to better deals!! I'm already saving hundreds and it took 2 minutes to sign up.  Why did no one tell me that it's so easy to get way cheaper bills?? If you're lazy like me it's genuinely one of the easiest money wins I've ever had :money_with_wings: If you've never checked your bills either make sure you do!",
+      "*Amends- today - today*",
+      "Looks good to me? <@U02BW0MQ62Y> <@U08LM17R4A1> <@U02BW0MQ62Y>",
+      "yeye looks good - process wise do we need a 2nd person to approve the 2nd amends?",
+      "in most cases are they fine?"
+    ],
+    "slack_matched": "Amanda Raine - Post 1 - Family - No experiment",
+    "slack_confidence": "medium"
+  },
+  "30ae4fd0-8136-8074-87a7-da9ecae9de53": {
+    "forecast_ac": 57,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Feels like she's trying not to lie, but I don't think the third par makes sense as is.\n\nwe were overpaying &gt;&gt; they've sorted it &gt;&gt; but they haven't switched us yet\n\ndoesn't really work imo",
+      "could she do something like\n\nLuckily they've sorted it all for me! They're switching us over to better deals and we're going to save hundreds of pounds overall with no effort. Hooray!",
+      "<@U04SZAJ5J0J> push back on this",
+      "So maybe as is <@U04SZAJ5J0J>? Maybe my current expensive contracts are done?"
+    ],
+    "slack_matched": "Emma C (brummy mummy) - Startling stats - Post 7 - tomorrow (25th)",
+    "slack_confidence": "high"
+  },
+  "30ae4fd0-8136-8097-90de-f8a2ce9ad7c3": {
+    "forecast_ac": 43,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "think good to go"
+    ],
+    "slack_matched": "Abigail Stacey - Post 2 for Mar 11\n\nalso a copy paste of the brief!",
+    "slack_confidence": "high"
+  },
+  "30ae4fd0-8136-80b2-a73f-d679e70adbc2": {
+    "forecast_ac": 54,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "<https://getnous.slack.com/archives/C0A9VNNMTU7/p1771860611104589>",
+      "used our amends word for word, nice"
+    ],
+    "slack_matched": "Sophia Nikolaides - Post 2 - amends",
+    "slack_confidence": "high"
+  },
+  "30be4fd0-8136-8071-89c7-dbbdd9f2e955": {
+    "forecast_ac": 44,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Which hook is this meant to be?",
+      "it's kinda mystery plus girl maths",
+      "I quite like it but it doesn't fir in the experiment currently",
+      "Sorry <@U04SZAJ5J0J> it's Girl maths!",
+      "Tbh I like it and we have so many posts booked for the experiment!\n\nI'd leave it as it is but remove it from the experiment"
+    ],
+    "slack_matched": "Sophie Collis - Girls Maths - Post 1 - 25th Feb",
+    "slack_confidence": "medium"
+  },
+  "30de4fd0-8136-8079-855b-d38ac8f07185": {
+    "forecast_ac": 100,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "move the button to the end",
+      "\"so we spent 5 minutes using Nous – and they showed us so many areas we could save money!\"",
+      "<@U04SZAJ5J0J> was that one of the screenshots you added to the brief? or has she actually signed up ha",
+      "Replying about this now"
+    ],
+    "slack_matched": "Emily Jackman - Post 1 - Friday 27th - No experiment",
+    "slack_confidence": "high"
+  },
+  "2f1e4fd0-8136-8005-a84d-c939595f750c": {
+    "forecast_ac": 22,
+    "forecast_cac": 8,
+    "slack_notes": [
+      "the only tweak on this one was to move the #ad - I think it looks good to go"
+    ],
+    "slack_matched": "Some Sophie Price content through - this is Frame 1 for today",
+    "slack_confidence": "medium"
+  },
+  "2fce4fd0-8136-8038-a5e1-fa4985fcec95": {
+    "forecast_ac": 39,
+    "forecast_cac": 16,
+    "slack_notes": [
+      "Did the brief, no tweaks!",
+      "<@U02BW0MQ62Y> worth going back over WA?",
+      "wonder where she is going to put the link?",
+      "i've said copy looks great, can she move text higher so there is space for a button at the bottom",
+      "Please also apologize for my comment on the baby",
+      "FYI Talia is changing the image, but the text looks the same",
+      "\"she can post asap\"",
+      ":lightning-fast:",
+      "okaaay she posted and then she deleted",
+      "damn painful :disappointed:",
+      "rip engagement",
+      "looks like she forgot the button",
+      "Might not be a big deal"
+    ],
+    "slack_matched": "Talia Oatway - Celebrity hate waste - post 2 - *today!!!!!!*",
+    "slack_confidence": "medium"
+  },
+  "2fee4fd0-8136-8040-9b89-dd3395aa6e27": {
+    "forecast_ac": 44,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "absolutely bizarre photo, I love it",
+      "She's completely ignored the brief",
+      "Needs a rewrite:\n\nI found out something quite shocking about bills – if you haven’t changed your energy recently, you’re probably overpaying by more than £250 a year! :exploding_head: :sob:\n\nAnd one thing about me is I'll moan about my electric bill, but have every possible form of light on for comfort :melting-face:\n\nSo @get_nous has been a saving grace!!\"\n\nand then the rest",
+      "Needs to actually make the \":melting-face\" into the emoji!",
+      "real amend!",
+      "\"shocking\" runs right into the light in an unpleasant way but probably not a real problem",
+      "I could say a touch down but good to go",
+      "Yeah, think that's good"
+    ],
+    "slack_matched": "Mia Rose - Post 5 - Startling Stats - posting tomorrow 24th",
+    "slack_confidence": "medium"
+  },
+  "309e4fd0-8136-803f-a5a3-f0a63c268766": {
+    "forecast_ac": 51,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "FYI this is second amends",
+      "I think good to go"
+    ],
+    "slack_matched": "Sophie Harris - Post 4 - Repeat campaign startling stats - tuesday 24th",
+    "slack_confidence": "medium"
+  },
+  "309e4fd0-8136-80dd-855b-c91ff3f4113d": {
+    "forecast_ac": 117,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "Think good, just need to cut the references to Nous",
+      "agree, apart from the Nous ref it's good!",
+      "Hmm, hasn't removed the Nous reference",
+      "needs to take out 'with get_nous'"
+    ],
+    "slack_matched": "Meg Brackpool - Post 2 for 10 Mar - Secret",
+    "slack_confidence": "high"
+  },
+  "309e4fd0-8136-80f3-a755-f9efd6ba1034": {
+    "forecast_ac": 131,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "Jen Rothbury - Post 2 for 10 Mar - Must Have First experiment",
+    "slack_confidence": "high"
+  },
+  "309e4fd0-8136-8019-adc2-dbf1f6b34226": {
+    "forecast_ac": 65,
+    "forecast_cac": 3,
+    "slack_notes": [
+      "Looks like brief paste!",
+      "(complimentary)",
+      "smashing that cntrl c, happy with that!"
+    ],
+    "slack_matched": "Stephanie Larbey - Startling Stats - Post 1 - Posting Today!",
+    "slack_confidence": "high"
+  },
+  "309e4fd0-8136-801b-af23-eaac827b12fd": {
+    "forecast_ac": 78,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "this feels a little bit lost",
+      "it's confusing to me because it just screams an ad for neom :joy:",
+      "\"I don't normally let myself have a splurge as we still have so much of the house to finish but I've had a little windfall in the form of get_nous. A simple check on Nous showed I'd been overpaying on my bills for months, so they got right to work finding me better deals and switching me over and I saved hundreds. So girl math means that my beauty haul is pretty much free right?\"",
+      "Amended! Katie woods",
+      "like this a lot !"
+    ],
+    "slack_matched": "Katie Woods - Girth Maths - Post 1 - Tuesday *tomorrow -* :large_orange_circle: Waiting for amends",
+    "slack_confidence": "high"
+  },
+  "309e4fd0-8136-801c-8ad5-e5f5d6ce355d": {
+    "forecast_ac": 85,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Think the 'must-have' element should be the hook. So becomes\n\nI've found the easiest tool that does all the hard work of saving money for you!\n\nIt's called @get_nous, and they worked out we were overpaying on our energy, mobile and broadband by £649, I was so shocked to see how much it was!\n\nAnd get what? Nous handles all the hassle of switching suppliers!\n\nIt's so easy and I did nothing!\n\nSave money, time and stress here!",
+      "<@U08LM17R4A1> lmk what you think and I'll go back asap",
+      "Agreed - I think actually the other hook is better but... we're running an experiment!"
+    ],
+    "slack_matched": "Jennifer Mccready - Post 1 - Home must have first - *posting today!!*",
+    "slack_confidence": "high"
+  },
+  "309e4fd0-8136-806c-b204-d19a9b4a751d": {
+    "forecast_ac": 79,
+    "forecast_cac": 73,
+    "slack_notes": [
+      "I like this, I'd just move the button to the bottom",
+      "assembly line",
+      "I mean that bag costs like 4 grand but the post is still good I think",
+      "it cost 4 grand and Henry and Glen both wore one to the christmas party???",
+      "Yeah I think just move the text to just below the product shot, and then move the button to below the text",
+      "Or any other re-arrangement",
+      "agreed, I'll go back on this one <@U0A1LAXQQ83>",
+      "Think she just needs a full stop after @get_nous so it doesn't run into the next sentence",
+      "it's a bit confusing without",
+      "yeah agreed"
+    ],
+    "slack_matched": "MORE!\n\nHollie Mina - Girl maths - tomorrow",
+    "slack_confidence": "medium"
+  },
+  "2ede4fd0-8136-806d-8d0f-e256d5d72606": {
+    "forecast_ac": 26,
+    "forecast_cac": 19,
+    "slack_notes": [
+      "add \"on my bills\" after \"HUNDREDS\" in para 2",
+      "U-turns all over the place",
+      "Think a whole rewrite",
+      "Rewrite to :\n\n\"Everyone keeps saying how impossible it is to save ANY money these days :sob:\n\nBUT I have saved hundreds on my bills the last few months :money_mouth_face::money_mouth_face:\n\n@get_nous has been amazing for me. They found savings on my bills I didn’t even know were possible and now they handle everything.\n\nIt's so good that I don’t need to think about bills anymore, I’m just saving money in the background.\n\nDefinitely one of those services where once you try it, you end up telling everyone else about it too\"",
+      "BUT I've found a new tool that has saved me hundreds on my bills the last few months...",
+      "Daisy Richmond Amends posting today :rotating_light:",
+      "Looks good to me"
+    ],
+    "slack_matched": "Daisy Richmond - Post 3 for today - no experiment",
+    "slack_confidence": "high"
+  },
+  "2f8e4fd0-8136-80cd-9f63-c8473a4bae94": {
+    "forecast_ac": 126,
+    "forecast_cac": 9,
+    "slack_notes": [
+      "I'd just add a quite line in the last par that we're saving her money -\n\n\"They showed me how much I was overpaying and sorted better deals straight away, I'm already saving so much!\"\nJust sign up and answer a few quick questions it's super easy - thank me later :clap::skin-tone-2::clap::skin-tone-2::clap::skin-tone-2:\"",
+      "Like the overall confessional tone :two_hearts:",
+      "I think the second paragraph is a bit clunky (in an effort to reference having already posted about this) - could amend to:\n\n\"Stupidly I've never thought to check if there were better deals until I looked the other day and realized I could save nearly £1000!!!\"\n\nWhat do you think <@U04SZAJ5J0J>?",
+      "yep like that",
+      "better flow",
+      "she was the mystery post, so vvvvvvv intrigued how this one will do"
+    ],
+    "slack_matched": "Emily Lucy Rajch - Frame 1 - 6th Feb",
+    "slack_confidence": "high"
+  },
+  "309e4fd0-8136-8045-895b-e1de2a750af9": {
+    "forecast_ac": 84,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "don't love the 'excited to see what we can save' as is low on personal experience",
+      "Yeah - it also just doesn't follow the brief!",
+      "Yeah reckon you just ask her to re-write and stick to the brief",
+      "she could still start with \"Reno life feels like a killer on the wallet at the mo, but luckily i've found a new must-have for your home that sorts your bills and saves you so much\"",
+      "grr this is an annoying second draft",
+      "I think probs fine tho!"
+    ],
+    "slack_matched": "Martha Kate Lewis - Post 1 for 23 Feb - Must Have for Home experiment",
+    "slack_confidence": "medium"
+  },
+  "309e4fd0-8136-80a9-bc36-c281620228e4": {
+    "forecast_ac": 71,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "more space for nappies?",
+      "I like the first 2 sentences, think the third can be tighter",
+      "Anyone else in shock over the price of bills right now? Ours have almost doubled in the time we've lived here! I did some digging to see if we could save and stumbled across Nous. They look at your bills and switch you over, and we've already saved £100s without lifting a finger :clap: I was overpaying so much, but now we have more to spend on family days out etc!",
+      "Cool - and reformat so button is at bottom presumably?"
+    ],
+    "slack_matched": "Kirsty Jones - Post 1 for 23 Feb - no experiment",
+    "slack_confidence": "medium"
+  },
+  "309e4fd0-8136-80c7-bb4c-e4095c292388": {
+    "forecast_ac": 166,
+    "forecast_cac": 3,
+    "slack_notes": [
+      "amended as we asked, going back to approve",
+      "great thank you!"
+    ],
+    "slack_matched": "Amends from lauren stobart for today",
+    "slack_confidence": "medium"
+  },
+  "306e4fd0-8136-801a-822f-e42033e8ec0e": {
+    "forecast_ac": 71,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "Basically impossible to read",
+      "is this her usual font?",
+      "i don't understand why anyone would pick that font",
+      "The copy looks OK from what I can make out but crucial thing is for the text to be a bit darker",
+      "not sure about 'better deals on your outgoings' - change to 'better deals on your household bills'?"
+    ],
+    "slack_matched": "Katie Fearnehough - post 1 - no experiment",
+    "slack_confidence": "medium"
+  },
+  "304e4fd0-8136-8040-b69b-d22932f743a9": {
+    "forecast_ac": 48,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "I think this looks good, wish the button was on the right though",
+      "What do you think <@U0A1LAXQQ83>?",
+      "Yeah nice agree again"
+    ],
+    "slack_matched": "Tori Gaynor - Fashion (girls maths)  - post 2 - feb 5th",
+    "slack_confidence": "high"
+  },
+  "306e4fd0-8136-80fb-bfb4-d2be6857a827": {
+    "forecast_ac": 72,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "I think good, just need to put the sticker at the bottom",
+      "Maybe... 'How much control you give it'\n\nSeems more tool based than giving  control off to a company?\n\nOther than that great!",
+      "maybe - I think better to keep it a company/implied set of people?"
+    ],
+    "slack_matched": "Cheralyn Hitcham - Post 1 for 20th Feb - Girl Maths experiment",
+    "slack_confidence": "medium"
+  },
+  "306e4fd0-8136-80c5-b638-d9796f8342aa": {
+    "forecast_ac": 57,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "I bet we could trim the brief so we hit problem awareness in the first sentence",
+      "I would cut the last paragraph but otherwise looks good",
+      "Oh i quite like the last par I think it's more chatty",
+      "maybe move above the button?",
+      "yeh move the button to the bottom to make it more obv",
+      "what do you think of adult life chat?",
+      "then the button's way at the bottom!",
+      "can squidge everything up a bit",
+      "I think we can ask to shuffle thing up a bit",
+      "amended version",
+      "I think good to go!",
+      "loads nicer shuffled up!"
+    ],
+    "slack_matched": "Yasmin Lauren, family, post 1 no experiment",
+    "slack_confidence": "high"
+  },
+  "303e4fd0-8136-808b-8101-db535e50a372": {
+    "forecast_ac": 59,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "this is mental i'm obsessed",
+      "Yeah this is bonkers",
+      "Think we keep the insane first paragraph tbh. But happy to be voted down. Should change the second paragraph to something like the brief:\n\n\"But it turns out I’ve been paying way more than I need to on the bills for our home :exploding_head::house_with_garden: Thankfully I’ve found such a great little trick to save money and make all the house admin so much easier.\n\nI’ve signed up to @get_nous and they checked all our bills (energy, broadband, phone), found better deals and switched me over – I’ve saved more than £500 I honestly didn’t have to do anything.\"\n\nThen para three",
+      "Like the edits. I wonder if we could end with more sauna for me!"
+    ],
+    "slack_matched": "And Joanna Fletcher Frame 3 for Mar 20th!",
+    "slack_confidence": "medium"
+  },
+  "2f7e4fd0-8136-80e7-8b1e-eb612a7e88a8": {
+    "forecast_ac": 349,
+    "forecast_cac": 2,
+    "slack_notes": [
+      "I think perfect _and_ I think we're going to miss forecast on this one because secret is better",
+      "but who knows",
+      "Yes looks good! Text might be a tiny bit hard to read but it looks good!"
+    ],
+    "slack_matched": "Ruby Holley 2nd post - for Thursday - Girl Maths experiment",
+    "slack_confidence": "medium"
+  },
+  "305e4fd0-8136-8020-ac59-f40e49a27b5a": {
+    "forecast_ac": 289,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "they're a bit repetitive, she talks about 'sharing this with you girls' about 15 times, but I think they're pretty good and she's very enthusiastic!"
+    ],
+    "slack_matched": "The aforementioned Hannah Brown story vids",
+    "slack_confidence": "medium"
+  },
+  "2fee4fd0-8136-807b-aeaf-f8a056f5b1cd": {
+    "forecast_ac": 66,
+    "forecast_cac": 4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-805e-9fb3-cbce97d5213d": {
+    "forecast_ac": 57,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-8012-baa4-d4fbce150a3e": {
+    "forecast_ac": 53,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "Are we tagging the experiment brief they were given or the specific message they're trying to hit?",
+      "e.g. if they were given secret first here then this should be girl maths",
+      "Sorry yes have been tagging the experiment so far. This is girl maths.",
+      "damn she's secreting hard",
+      "I mean it's good but it's mystery not girl maths",
+      "Cool. Shall we leave it then?",
+      "We should go back with a rewrite which is more or less the girl maths brief"
+    ],
+    "slack_matched": "Sarah Roberts - Fashion secret first - Feb 26th - Post 2",
+    "slack_confidence": "high"
+  },
+  "2ffe4fd0-8136-80fe-9f97-efb59e414433": {
+    "forecast_ac": 31,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Looks like this is the original repeat campaign brief",
+      "Just need to move the button down but think we need to change the experiment tag too",
+      "Ah my bad, it's no experiment!",
+      "Amend, think we're good to go here!"
+    ],
+    "slack_matched": "Katie Hayes - Post 5 - Startling No experiment - Feb 27th",
+    "slack_confidence": "high"
+  },
+  "2f8e4fd0-8136-800d-950f-e153b9488a8f": {
+    "forecast_ac": 184,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "10/10 from me"
+    ],
+    "slack_matched": "Alysha Devon - Post 2 - Startling Stats - Thursday 26th",
+    "slack_confidence": "medium"
+  },
+  "2fee4fd0-8136-80e3-a2e2-ca1618528cf4": {
+    "forecast_ac": 137,
+    "forecast_cac": 5,
+    "slack_notes": [
+      "Feel like she's done girl maths here",
+      "Yeah definitely has",
+      "Can just swap the experiment tags and run it I think",
+      "\"I had been ostriching for a while\" what?",
+      "oh: <https://en.wikipedia.org/wiki/Ostrich_effect>",
+      "also those are Os not zeroes in \"£3OO\", right?",
+      "not a tweak that matters tbf",
+      "Sophistication"
+    ],
+    "slack_matched": "Isabelle Handley Allen - Post 1 - Fashion Secret First - Feb 26th *today* ",
+    "slack_confidence": "high"
+  },
+  "2e8e4fd0-8136-8075-a492-db6d56210d86": {
+    "forecast_ac": 287,
+    "forecast_cac": 2,
+    "slack_notes": [
+      "OK so she was the gal that got £15 cac first time and then £130 on her next post!",
+      "the trustpulot screenshot is hilarious",
+      "just an AI summary of our stuff",
+      "yeah and i also worry if the 'reviews 153' make us look too small?",
+      "I kinda just want her to say this again and see how it does :joy:",
+      "Could do this trustpilot screenshot instead?",
+      "ok cool will ask her to swap trustpilot screenshots",
+      "do you think we should tweak the copy too?",
+      "First paragraph maybe:\n\n\"I can't believe how many people have recommended Nous to me this year :joy:\"",
+      "ooh i like that"
+    ],
+    "slack_matched": "Rebecca Meldrum - 12th Feb\nquite like it but i wonder if we need to make it a bit clearer that the chunk of text at the bottom is from trustpilot?",
+    "slack_confidence": "medium"
+  },
+  "2ede4fd0-8136-80f1-b920-c635cf44ad3e": {
+    "forecast_ac": 100,
+    "forecast_cac": 4,
+    "slack_notes": [
+      "Needs a full rewrite and a background on the text do it's readable. Copy maybe along the lines of the brief:\n\nLove hearing from so many people about how they've saved money with Nous! It's been amazing for me. They found savings on my bills I didn't even know were possible and now they handle everything\n\nIt's so good that I don't need to think about bills anymore, I'm just saving money in the background"
+    ],
+    "slack_matched": "Chloe Patton - Post 3 - No Experiment - *Today* :rotating_light:",
+    "slack_confidence": "medium"
+  },
+  "2fee4fd0-8136-80b8-9b99-f4eeb3fdc8d6": {
+    "forecast_ac": 40,
+    "forecast_cac": 6,
+    "slack_notes": [
+      "Think the copy here is very good, just needs to pop the button at the bottom"
+    ],
+    "slack_matched": "Georgie Elizabeth - Hate wasting money - Post 2 - *Feb 26th today*",
+    "slack_confidence": "high"
+  },
+  "2ffe4fd0-8136-80b8-88b3-e40bec4d11a2": {
+    "forecast_ac": 400,
+    "forecast_cac": 1,
+    "slack_notes": [
+      "Love this post",
+      "lololol this haul is sickening",
+      "but yeah like it! assume button below the text"
+    ],
+    "slack_matched": "Jade Darlington - Post 2 - Secret First - Feb 26th",
+    "slack_confidence": "high"
+  },
+  "2efe4fd0-8136-805e-a6d6-c8150bc50380": {
+    "forecast_ac": 265,
+    "forecast_cac": 3,
+    "slack_notes": [
+      "think we just need to ask to move the \"ad\" tag to below the button"
+    ],
+    "slack_matched": "Sophie Hawkins - No Experiment - Post 3 - *Today*",
+    "slack_confidence": "high"
+  },
+  "2f1e4fd0-8136-8018-af20-ed9f8e206ea4": {
+    "forecast_ac": 18,
+    "forecast_cac": 9,
+    "slack_notes": [
+      "• Cut \"so you all know\" in sentence 1\n•  Cut \"did you know\" in sentence 2",
+      "Amend!\n\nFrom Meg - 'Conscious Lucy has another sponsored story AD [today] and keen to keep them 24 hours apart'. Do we want to post today or delay till tomorrow?\n\nI think we should push for today.",
+      "I'd prefer to run tomorrow, as long as we have it approved there isn't any extra effort for us",
+      "Like the amend!",
+      "Do you think the other AD being first will hamper our chances?",
+      "If she posts the other AD at 6pm say.",
+      "I don't think it will make a huge difference but there isn't any reason to run it today instead of tomorrow",
+      "Cool, I'll push to tomorrow then."
+    ],
+    "slack_matched": "Lucy Hall - Post 3 - No experiment - Posting 24th feb",
+    "slack_confidence": "high"
+  },
+  "2f1e4fd0-8136-80f7-94b4-ea0cf1ee8fd9": {
+    "forecast_ac": 87,
+    "forecast_cac": 2,
+    "slack_notes": [
+      "the only tweak on this one was to move the #ad - I think it looks good to go"
+    ],
+    "slack_matched": "Some Sophie Price content through - this is Frame 1 for today",
+    "slack_confidence": "medium"
+  },
+  "2f8e4fd0-8136-8078-a16b-d024a55bd19f": {
+    "forecast_ac": 352,
+    "forecast_cac": 3,
+    "slack_notes": [
+      "I'd just add a quite line in the last par that we're saving her money -\n\n\"They showed me how much I was overpaying and sorted better deals straight away, I'm already saving so much!\"\nJust sign up and answer a few quick questions it's super easy - thank me later :clap::skin-tone-2::clap::skin-tone-2::clap::skin-tone-2:\"",
+      "Like the overall confessional tone :two_hearts:",
+      "I think the second paragraph is a bit clunky (in an effort to reference having already posted about this) - could amend to:\n\n\"Stupidly I've never thought to check if there were better deals until I looked the other day and realized I could save nearly £1000!!!\"\n\nWhat do you think <@U04SZAJ5J0J>?",
+      "yep like that",
+      "better flow",
+      "she was the mystery post, so vvvvvvv intrigued how this one will do"
+    ],
+    "slack_matched": "Emily Lucy Rajch - Frame 1 - 6th Feb",
+    "slack_confidence": "high"
+  },
+  "2cae4fd0-8136-8093-8bea-f1cb1f93bb66": {
+    "forecast_ac": 72,
+    "forecast_cac": 7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e1e4fd0-8136-8055-9d45-e08067bf3406": {
+    "forecast_ac": 221,
+    "forecast_cac": null,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-8075-953d-e8fcdcde8bf6": {
+    "forecast_ac": 36,
+    "forecast_cac": 123.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80ff-a3a2-ea180c350618": {
+    "forecast_ac": 75,
+    "forecast_cac": 122,
+    "slack_notes": [
+      "i find this one very sweet",
+      "My thoughts:\n\n• 'I've been getting even more messages from people who've already saved with get_nous and people who wanted to try it!'\n• They found out we were overpaying by £935 a year on our bills, which has been a massive help in saving for our wedding this year!!\n• the rest of it I think is good",
+      "any other bits you'd suggest <@U02BW0MQ62Y>?",
+      "they found out we were overpaying by £935 a year on our bills, and started searching for better deals straight away! the money we've saved will be a massive help in saving for our wedding this year!",
+      "the rest looks good to meee"
+    ],
+    "slack_matched": "Jenny Mogey for 29 Jan",
+    "slack_confidence": "medium"
+  },
+  "2e8e4fd0-8136-80e8-9653-e6af109ad902": {
+    "forecast_ac": 523,
+    "forecast_cac": 15.4,
+    "slack_notes": [
+      "OK so she was the gal that got £15 cac first time and then £130 on her next post!",
+      "the trustpulot screenshot is hilarious",
+      "just an AI summary of our stuff",
+      "yeah and i also worry if the 'reviews 153' make us look too small?",
+      "I kinda just want her to say this again and see how it does :joy:",
+      "Could do this trustpilot screenshot instead?",
+      "ok cool will ask her to swap trustpilot screenshots",
+      "do you think we should tweak the copy too?",
+      "First paragraph maybe:\n\n\"I can't believe how many people have recommended Nous to me this year :joy:\"",
+      "ooh i like that"
+    ],
+    "slack_matched": "Rebecca Meldrum - 12th Feb\nquite like it but i wonder if we need to make it a bit clearer that the chunk of text at the bottom is from trustpilot?",
+    "slack_confidence": "medium"
+  },
+  "2f1e4fd0-8136-8070-b572-f34e81a206d3": {
+    "forecast_ac": 44,
+    "forecast_cac": 54.5,
+    "slack_notes": [
+      "the only tweak on this one was to move the #ad - I think it looks good to go"
+    ],
+    "slack_matched": "Some Sophie Price content through - this is Frame 1 for today",
+    "slack_confidence": "medium"
+  },
+  "2cce4fd0-8136-8053-9572-fdcd27db288f": {
+    "forecast_ac": 17,
+    "forecast_cac": 200,
+    "slack_notes": [
+      "I think also good to go!",
+      "Looks good!"
+    ],
+    "slack_matched": "and Karly Louise, also for today:",
+    "slack_confidence": "medium"
+  },
+  "2efe4fd0-8136-80cb-a9fe-fb2a46e425c2": {
+    "forecast_ac": 191,
+    "forecast_cac": 57.3,
+    "slack_notes": [
+      "think we just need to ask to move the \"ad\" tag to below the button"
+    ],
+    "slack_matched": "Sophie Hawkins - No Experiment - Post 3 - *Today*",
+    "slack_confidence": "high"
+  },
+  "2cce4fd0-8136-80c1-bb2f-d80651b5c3f5": {
+    "forecast_ac": 136,
+    "forecast_cac": 43.6,
+    "slack_notes": [
+      "ha, I think we are supposed to remind people but i'm not sure if we actually do?",
+      "so this is also her 9th post... so she's mentioned us loads before",
+      "'susprise' ha",
+      "yeah i think conceptually we'd like to",
+      "but we don't actually",
+      "how about 'I know I've said it before but I'm still in shock they helped me save over £1,1000!!' - then the rest is fine",
+      "also think it's fine to say about the contract reminder, it's still on our homepage ha"
+    ],
+    "slack_matched": "Bethany Swancott - 11th Feb - there's a couple of spelling mistakes on there, and i also don't know where we stand on 'reminding me when contracts end', because from my understanding we don't do that",
+    "slack_confidence": "medium"
+  },
+  "2b6e4fd0-8136-80bd-a590-d22687c123fc": {
+    "forecast_ac": 151,
+    "forecast_cac": 118.8,
+    "slack_notes": [
+      "i kind of get what she's going for - but i think the delivery needs to be tweaked",
+      "like i think it's nice that she's made a link between her own life and nous",
+      "to try and minimise the randomness",
+      "but then she starts talking about how she doesnt want a corporate job",
+      "and it all becomes even more random",
+      "maybe we do something like\n\n'fun fact about me, i used to work in PR for travel &amp; energy companies.\n\none of the biggest lessons i learnt is that if you don't spend time searching for better deals on your bills, you're likely to be overpaying, so when i found out about get_nous, i was really excited to share it with you guys.\n\nnous looks for better deals on your energy, mobile and broadband bills, and does all the work of switching you - saving you hundreds of pounds.\n\nthe trustpilot reviews speak for themselves, and i was really impressed by how easy it was, and i've saved over £400!'",
+      "I drafted something similar\n\nFun fact about me I used to work in PR for travel &amp; energy companies.\n\nThat means I know some of the tricks! It taught me that if you don’t spend literally hours hunting for better deals on your bills and switching around, you end up overpaying by hundreds of pounds.\n\nThankfully I now use @get_nous and I've over £400!. They look for better deals on your energy, mobile and broadband bills and then do all the work of switching you over\n\nThe trustpilot reviews speak for themselves and I found it so easy!",
+      "don't mind the segue but the original version really doesn't sell Nous or build problem awareness",
+      "like your versions!"
+    ],
+    "slack_matched": "Olivia Hammond",
+    "slack_confidence": "medium"
+  },
+  "2cae4fd0-8136-80db-8836-ebc6858c788e": {
+    "forecast_ac": 122,
+    "forecast_cac": 58.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-802b-b5ae-c72d25f450e2": {
+    "forecast_ac": 406,
+    "forecast_cac": 126.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80ee-9c9a-f1b49a0aa405": {
+    "forecast_ac": 150,
+    "forecast_cac": 75.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cde4fd0-8136-803c-b2f2-fce6db150a0a": {
+    "forecast_ac": 202,
+    "forecast_cac": 113.8,
+    "slack_notes": [
+      "\"ans\" in line 1 of para 2 - could keep?",
+      "Argh this also does the \"I keep talking about this\" thing",
+      "but we've already gone back with edits - I think we leave it",
+      "Cool :slightly_smiling_face:"
+    ],
+    "slack_matched": "Ashley James - w/ amends - live at 5pm <!channel>",
+    "slack_confidence": "medium"
+  },
+  "2b5e4fd0-8136-805d-b4f9-cbfd4c6f42c7": {
+    "forecast_ac": 69,
+    "forecast_cac": 42.4,
+    "slack_notes": [
+      "absolutely bizarre photo, I love it",
+      "She's completely ignored the brief",
+      "Needs a rewrite:\n\nI found out something quite shocking about bills – if you haven’t changed your energy recently, you’re probably overpaying by more than £250 a year! :exploding_head: :sob:\n\nAnd one thing about me is I'll moan about my electric bill, but have every possible form of light on for comfort :melting-face:\n\nSo @get_nous has been a saving grace!!\"\n\nand then the rest",
+      "Needs to actually make the \":melting-face\" into the emoji!",
+      "real amend!",
+      "\"shocking\" runs right into the light in an unpleasant way but probably not a real problem",
+      "I could say a touch down but good to go",
+      "Yeah, think that's good"
+    ],
+    "slack_matched": "Mia Rose - Post 5 - Startling Stats - posting tomorrow 24th",
+    "slack_confidence": "medium"
+  },
+  "2cce4fd0-8136-807e-9cab-d509d241dc8e": {
+    "forecast_ac": 181,
+    "forecast_cac": 32.9,
+    "slack_notes": [
+      "ha, I think we are supposed to remind people but i'm not sure if we actually do?",
+      "so this is also her 9th post... so she's mentioned us loads before",
+      "'susprise' ha",
+      "yeah i think conceptually we'd like to",
+      "but we don't actually",
+      "how about 'I know I've said it before but I'm still in shock they helped me save over £1,1000!!' - then the rest is fine",
+      "also think it's fine to say about the contract reminder, it's still on our homepage ha"
+    ],
+    "slack_matched": "Bethany Swancott - 11th Feb - there's a couple of spelling mistakes on there, and i also don't know where we stand on 'reminding me when contracts end', because from my understanding we don't do that",
+    "slack_confidence": "medium"
+  },
+  "2a8e4fd0-8136-808b-bb55-d211f76ea550": {
+    "forecast_ac": 325,
+    "forecast_cac": 43.3,
+    "slack_notes": [
+      "10/10 from me"
+    ],
+    "slack_matched": "Alysha Devon - Post 2 - Startling Stats - Thursday 26th",
+    "slack_confidence": "medium"
+  },
+  "2bde4fd0-8136-809d-9824-d64cb6189fcd": {
+    "forecast_ac": 40,
+    "forecast_cac": 178.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2dfe4fd0-8136-8094-ba5d-c62086bca46b": {
+    "forecast_ac": 672,
+    "forecast_cac": 67.9,
+    "slack_notes": [
+      "Argh I hate the expected savings screenshot",
+      "Do we have other ones in the brief?",
+      "Otherwise I think the copy is good",
+      "i'm not aware of any other screenshots",
+      "<@U04SZAJ5J0J> are you?",
+      "I mean we can grab whatever we want",
+      "I'll get something from Figma",
+      "<@U09C429156X>"
+    ],
+    "slack_matched": "Charlotte Greedy - Post 6 - Family 2nd Campaign - 9th Feb",
+    "slack_confidence": "medium"
+  },
+  "2d1e4fd0-8136-8020-87e2-d60adf79c335": {
+    "forecast_ac": 508,
+    "forecast_cac": 30.9,
+    "slack_notes": [
+      "I'd be tempted to add a line in here about how much she's saved...",
+      "If we look at her old posts, she's previously said she's saved over £500 so could ask her to add into here",
+      "how about the last line – I've saved over £500 already, so definitely give it a go if you want to save money but find bill admin as boring as I do :rolling_on_the_floor_laughing:",
+      "Argh sorry I didn't actually see this one! And yep agree with the £500 line. Just to note this post and Brogan's have the exact same last line presumably where they've copied and pasted",
+      "Do we thank that's so terrible...?",
+      "No worries I've sent across both feedback already. They still need to send Katie's across, so I can mention the last line when they do that.",
+      "I kind of think it's alright?! they've done exactly what we asked! I doubt anyone would notice except us"
+    ],
+    "slack_matched": "Emma Stephenson - 3rd Frame - 4th Feb",
+    "slack_confidence": "medium"
+  },
+  "2cae4fd0-8136-806d-a99c-ea3221db2af9": {
+    "forecast_ac": 111,
+    "forecast_cac": 64.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-80f9-9d59-f3b7b1d1ae24": {
+    "forecast_ac": 471,
+    "forecast_cac": 105.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-80cc-8819-d5d13453e995": {
+    "forecast_ac": 48,
+    "forecast_cac": 163.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bfe4fd0-8136-80d5-9fb9-c36d541d0413": {
+    "forecast_ac": 27,
+    "forecast_cac": 142.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-803e-ba35-dd3d3bf96eb2": {
+    "forecast_ac": 136,
+    "forecast_cac": 48.8,
+    "slack_notes": [
+      "i find this one very sweet",
+      "My thoughts:\n\n• 'I've been getting even more messages from people who've already saved with get_nous and people who wanted to try it!'\n• They found out we were overpaying by £935 a year on our bills, which has been a massive help in saving for our wedding this year!!\n• the rest of it I think is good",
+      "any other bits you'd suggest <@U02BW0MQ62Y>?",
+      "they found out we were overpaying by £935 a year on our bills, and started searching for better deals straight away! the money we've saved will be a massive help in saving for our wedding this year!",
+      "the rest looks good to meee"
+    ],
+    "slack_matched": "Jenny Mogey for 29 Jan",
+    "slack_confidence": "medium"
+  },
+  "2cce4fd0-8136-8086-85e0-faac4ca77df5": {
+    "forecast_ac": 264,
+    "forecast_cac": 44.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bce4fd0-8136-80c9-951c-dd6fbaa63a49": {
+    "forecast_ac": 57,
+    "forecast_cac": 173.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-806c-b3ae-e702027014a6": {
+    "forecast_ac": 59,
+    "forecast_cac": 63.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bce4fd0-8136-800a-abf1-ea98f4e534b0": {
+    "forecast_ac": 77,
+    "forecast_cac": 6.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b9e4fd0-8136-80b1-9964-dcdafd2d245d": {
+    "forecast_ac": 111,
+    "forecast_cac": 5.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b6e4fd0-8136-8084-811b-fd48bc159608": {
+    "forecast_ac": 30,
+    "forecast_cac": 8.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "295e4fd0-8136-8089-8bc7-cea268e86c06": {
+    "forecast_ac": 246,
+    "forecast_cac": 2.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-8011-b7e4-ef8d51f9f04c": {
+    "forecast_ac": 486,
+    "forecast_cac": 1.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-8077-a634-f173d5d83ff1": {
+    "forecast_ac": 44,
+    "forecast_cac": 5.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bce4fd0-8136-8058-91c1-e0ab19e27a91": {
+    "forecast_ac": 35,
+    "forecast_cac": 14.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b5e4fd0-8136-805a-a68b-fab81683e6e6": {
+    "forecast_ac": 11,
+    "forecast_cac": 16.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c3e4fd0-8136-80e1-9f30-ea378043b33f": {
+    "forecast_ac": 12,
+    "forecast_cac": 16.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-8069-b80c-f43e27654970": {
+    "forecast_ac": 277,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-80ed-bba7-de429a360700": {
+    "forecast_ac": 114,
+    "forecast_cac": 4.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-8056-b045-e7a14698f34f": {
+    "forecast_ac": 508,
+    "forecast_cac": 6.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-8054-b588-f3523f4931c4": {
+    "forecast_ac": 70,
+    "forecast_cac": 14.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-8007-8ad2-cd156bf9abc0": {
+    "forecast_ac": 13,
+    "forecast_cac": 20.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bfe4fd0-8136-80ea-801a-cfedba25ab73": {
+    "forecast_ac": 27,
+    "forecast_cac": 9.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bce4fd0-8136-80c4-9248-e35650e16269": {
+    "forecast_ac": 34,
+    "forecast_cac": 14.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-80cb-a9c6-cdd837875c55": {
+    "forecast_ac": 59,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2afe4fd0-8136-8076-88e4-c9eaca039bc6": {
+    "forecast_ac": 209,
+    "forecast_cac": 9.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-8010-b13d-ccaefb04760c": {
+    "forecast_ac": 28,
+    "forecast_cac": 35.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b5e4fd0-8136-8038-a2bb-e508d175b61d": {
+    "forecast_ac": 10,
+    "forecast_cac": 20,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "295e4fd0-8136-80bf-b9ae-f9cd9026c1c1": {
+    "forecast_ac": 311,
+    "forecast_cac": 2.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-8021-b99c-c1b50cb40e2a": {
+    "forecast_ac": 78,
+    "forecast_cac": 6.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b5e4fd0-8136-8081-a8ee-fe13201fc458": {
+    "forecast_ac": 18,
+    "forecast_cac": 10.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-8043-a2a1-eb051ef544a9": {
+    "forecast_ac": 388,
+    "forecast_cac": 2.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bce4fd0-8136-808d-a397-f573c0a1c9e3": {
+    "forecast_ac": 140,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-80e8-86bd-ce69a3b74323": {
+    "forecast_ac": 80,
+    "forecast_cac": 14.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c3e4fd0-8136-8050-85e1-c1da423faad0": {
+    "forecast_ac": 48,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-80c9-91cd-f7b86b3620dd": {
+    "forecast_ac": 38,
+    "forecast_cac": 8.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-803f-b0fb-c7c4c5a3125d": {
+    "forecast_ac": 1088,
+    "forecast_cac": 3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-802d-9ba3-cc3b58dcf07f": {
+    "forecast_ac": 47,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bce4fd0-8136-8002-9ca7-ee0336783cea": {
+    "forecast_ac": 96,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-80c5-ae42-d46e5ffd68cd": {
+    "forecast_ac": 59,
+    "forecast_cac": 16.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-80ab-b810-ff5565aa6918": {
+    "forecast_ac": 33,
+    "forecast_cac": 7.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b5e4fd0-8136-8028-a8ae-eed830c60833": {
+    "forecast_ac": 54,
+    "forecast_cac": 3.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b5e4fd0-8136-800f-9413-c50a5c790bb3": {
+    "forecast_ac": 35,
+    "forecast_cac": 5.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2abe4fd0-8136-80cd-a3d1-ec8f80723b8f": {
+    "forecast_ac": 18,
+    "forecast_cac": 11.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-8041-a28b-def450698d06": {
+    "forecast_ac": 56,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "295e4fd0-8136-8098-8050-df7fe30b92c3": {
+    "forecast_ac": 246,
+    "forecast_cac": 2.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-8042-b193-ef454c75f784": {
+    "forecast_ac": 25,
+    "forecast_cac": 13.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-80a5-a43b-c7b7a2d3e540": {
+    "forecast_ac": 119,
+    "forecast_cac": 8.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2abe4fd0-8136-8019-a0d4-c6c9ec93a1a9": {
+    "forecast_ac": 50,
+    "forecast_cac": 4.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28de4fd0-8136-803f-bb78-cc9b3b8cbf6f": {
+    "forecast_ac": 27,
+    "forecast_cac": 7.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a9e4fd0-8136-8076-bb3d-cc239d6f74ac": {
+    "forecast_ac": 513,
+    "forecast_cac": 1.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-8091-b3bb-dde22c72b051": {
+    "forecast_ac": 108,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "295e4fd0-8136-80d2-8d26-e62d16e2451d": {
+    "forecast_ac": 97,
+    "forecast_cac": 6.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27de4fd0-8136-8020-8344-ed63802136f7": {
+    "forecast_ac": 283,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27ae4fd0-8136-8042-ac72-f1dfa1508dc8": {
+    "forecast_ac": 23,
+    "forecast_cac": 13,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27ae4fd0-8136-8027-b709-fa8d09d690a1": {
+    "forecast_ac": 13,
+    "forecast_cac": 23.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ce4fd0-8136-8024-b1c3-eb83be7e6e29": {
+    "forecast_ac": 122,
+    "forecast_cac": 0,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-80b1-9513-de75652a3776": {
+    "forecast_ac": 127,
+    "forecast_cac": 8.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-8074-b0c2-c66b843bdbcb": {
+    "forecast_ac": 75,
+    "forecast_cac": 8.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27de4fd0-8136-806a-bfb6-feba9d7ecd84": {
+    "forecast_ac": 231,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27ae4fd0-8136-80d9-87c7-dc7c2e6f317d": {
+    "forecast_ac": 23,
+    "forecast_cac": 13,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27ae4fd0-8136-8081-8857-ca355ebdffd7": {
+    "forecast_ac": 67,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-80de-bbec-d0ed840e1d72": {
+    "forecast_ac": 208,
+    "forecast_cac": 5.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "254e4fd0-8136-8019-9d6d-d17126bd9536": {
+    "forecast_ac": 252,
+    "forecast_cac": 2.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-8092-8d43-ce481e64dd1f": {
+    "forecast_ac": 81,
+    "forecast_cac": 8.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "268e4fd0-8136-8096-bd9f-ec011b077018": {
+    "forecast_ac": 104,
+    "forecast_cac": 7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27de4fd0-8136-80f7-a02f-c41a99054a5b": {
+    "forecast_ac": 362,
+    "forecast_cac": 3.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "279e4fd0-8136-809e-92f7-d1d34fc69f26": {
+    "forecast_ac": 61,
+    "forecast_cac": 6.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "265e4fd0-8136-8088-8dbe-eb3e0d2458be": {
+    "forecast_ac": 94,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27ae4fd0-8136-8036-ad27-d60032e4fb01": {
+    "forecast_ac": 122,
+    "forecast_cac": 2.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27ae4fd0-8136-80ce-b60d-e7aad58f9854": {
+    "forecast_ac": 68,
+    "forecast_cac": 4.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27de4fd0-8136-8051-a4e5-d9d2a1278194": {
+    "forecast_ac": 388,
+    "forecast_cac": 3.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "25de4fd0-8136-80df-b101-d981ee2b0924": {
+    "forecast_ac": 38,
+    "forecast_cac": 8.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "268e4fd0-8136-80bd-8ea8-cc5a9bd1955c": {
+    "forecast_ac": 107,
+    "forecast_cac": 6.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "278e4fd0-8136-8093-82bc-ef28feea1d68": {
+    "forecast_ac": 16,
+    "forecast_cac": 12.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-80ae-9003-de31d5a9f51d": {
+    "forecast_ac": 159,
+    "forecast_cac": 6.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-80f3-a75b-c9072de7d100": {
+    "forecast_ac": 74,
+    "forecast_cac": 9.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30de4fd0-8136-8076-af84-c78ba990f539": {
+    "forecast_ac": 75,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80e8-bfde-c36d7ce58ce5": {
+    "forecast_ac": 51,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80ca-9ffc-db9e7408dd87": {
+    "forecast_ac": 47,
+    "forecast_cac": 7.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80e1-a62e-f07180616062": {
+    "forecast_ac": 21,
+    "forecast_cac": 22.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80b8-aefa-c6ccc6d8f0bc": {
+    "forecast_ac": 32,
+    "forecast_cac": 11.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-8052-9f52-c2a799b04792": {
+    "forecast_ac": 39,
+    "forecast_cac": 9.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-8078-85d7-f6ff782afabe": {
+    "forecast_ac": 5,
+    "forecast_cac": 53.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80e7-832d-d4057352e7cd": {
+    "forecast_ac": 23,
+    "forecast_cac": 14.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-8081-84ce-d0089c3023b6": {
+    "forecast_ac": 80,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-8052-942c-e92e31ec9a97": {
+    "forecast_ac": 17,
+    "forecast_cac": 15.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "317e4fd0-8136-8052-b862-c925f9c7d053": {
+    "forecast_ac": 115,
+    "forecast_cac": 2.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "317e4fd0-8136-8040-9915-f74f4de34b39": {
+    "forecast_ac": 158,
+    "forecast_cac": 5.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30be4fd0-8136-804d-abae-f4dbca78db52": {
+    "forecast_ac": 70,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-801b-b0f4-c7add4163697": {
+    "forecast_ac": 8,
+    "forecast_cac": 25,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "313e4fd0-8136-8035-97b1-f084f2345453": {
+    "forecast_ac": 109,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fde4fd0-8136-804c-baf2-ed9d715614f0": {
+    "forecast_ac": 24,
+    "forecast_cac": 16.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f7e4fd0-8136-8068-a580-d917bb3f8315": {
+    "forecast_ac": 87,
+    "forecast_cac": 9.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-80e5-b3de-cef6eeea359e": {
+    "forecast_ac": 53,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-8077-a125-dfca39cedf17": {
+    "forecast_ac": 5,
+    "forecast_cac": 86.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-803b-9c06-fa24b53916f2": {
+    "forecast_ac": 18,
+    "forecast_cac": 50.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-8013-9092-dc6979bb59e4": {
+    "forecast_ac": 36,
+    "forecast_cac": 8.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-8093-9faf-dfbba2fe51e4": {
+    "forecast_ac": 20,
+    "forecast_cac": 11.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "305e4fd0-8136-8075-a1f5-cd7d3d0522e2": {
+    "forecast_ac": 123,
+    "forecast_cac": 8.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-8015-81df-e874850b9d9e": {
+    "forecast_ac": 41,
+    "forecast_cac": 16.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "31ae4fd0-8136-8073-b553-f44e19c2a669": {
+    "forecast_ac": 99,
+    "forecast_cac": 4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "313e4fd0-8136-80f2-8163-de77b2595d50": {
+    "forecast_ac": 79,
+    "forecast_cac": 5.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30de4fd0-8136-8035-ab05-fab2de30916b": {
+    "forecast_ac": 69,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "302e4fd0-8136-80f0-b8ea-c4f28748b1ce": {
+    "forecast_ac": 150,
+    "forecast_cac": 5.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-80d3-9130-e4bcd50cce72": {
+    "forecast_ac": 5,
+    "forecast_cac": 53.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "310e4fd0-8136-80bc-bc15-fb43dc5c48c1": {
+    "forecast_ac": 61,
+    "forecast_cac": 5.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ae4fd0-8136-805c-941f-d6fb9aef858f": {
+    "forecast_ac": 126,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-8004-8b8b-dc4edfe5dcdc": {
+    "forecast_ac": 17,
+    "forecast_cac": 15.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30be4fd0-8136-8024-ba7c-ce53890f8d6c": {
+    "forecast_ac": 64,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ede4fd0-8136-8016-956d-cfdee28a1b92": {
+    "forecast_ac": 40,
+    "forecast_cac": 10,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-80d0-8340-d6e6ffa55bb6": {
+    "forecast_ac": 56,
+    "forecast_cac": 6.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-80be-8e7a-cb589a0472f7": {
+    "forecast_ac": 31,
+    "forecast_cac": 12.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fce4fd0-8136-8077-b7c7-c7375a0fe22e": {
+    "forecast_ac": 27,
+    "forecast_cac": 12.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ce4fd0-8136-8059-8f28-cbb2fb4b5003": {
+    "forecast_ac": 59,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ce4fd0-8136-80b3-ab52-dce1064f535f": {
+    "forecast_ac": 30,
+    "forecast_cac": 7.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-80c8-9388-d8c540e06cd7": {
+    "forecast_ac": 200,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-806a-8c06-c14bd58bccf3": {
+    "forecast_ac": 63,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-8059-bae4-e69e3493abdb": {
+    "forecast_ac": 22,
+    "forecast_cac": 13.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-8073-bbdc-eaeb6e600035": {
+    "forecast_ac": 36,
+    "forecast_cac": 6.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f7e4fd0-8136-8019-8fa6-e23f5984b5bb": {
+    "forecast_ac": 39,
+    "forecast_cac": 15.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ce4fd0-8136-80d0-a24f-c4789e3599c4": {
+    "forecast_ac": 66,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ce4fd0-8136-8074-97c6-c5370db18039": {
+    "forecast_ac": 184,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80be-bbd7-fbc4e72fda1b": {
+    "forecast_ac": 68,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-808b-8421-fda5899f34f2": {
+    "forecast_ac": 62,
+    "forecast_cac": 5.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30ae4fd0-8136-8022-acdc-c184821592a6": {
+    "forecast_ac": 32,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2eee4fd0-8136-8020-bd7d-fe6895895d43": {
+    "forecast_ac": 68,
+    "forecast_cac": 5.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2eee4fd0-8136-806c-8e60-d0ed2f416867": {
+    "forecast_ac": 33,
+    "forecast_cac": 33.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-8055-b714-c2ca68025de0": {
+    "forecast_ac": 135,
+    "forecast_cac": 7.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "30be4fd0-8136-80ec-9a8b-db701ef9e26d": {
+    "forecast_ac": 94,
+    "forecast_cac": 4.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-805b-81c2-d1628daa89a5": {
+    "forecast_ac": 70,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80f5-8f8b-eb3f7311d41a": {
+    "forecast_ac": 57,
+    "forecast_cac": 4.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80af-b9e0-c2664c05c2be": {
+    "forecast_ac": 70,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-807d-8e56-d3fd7936f420": {
+    "forecast_ac": 51,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-80fc-8eb8-ed2f3e62e3ae": {
+    "forecast_ac": 217,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "306e4fd0-8136-80f0-9a62-ec2e8a4b6fe7": {
+    "forecast_ac": 54,
+    "forecast_cac": 4.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-8021-a000-dced931a3dd2": {
+    "forecast_ac": 110,
+    "forecast_cac": 6.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "309e4fd0-8136-80de-8c78-c23ffeae0817": {
+    "forecast_ac": 44,
+    "forecast_cac": 5.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-80ed-be97-cf5c7e7996ed": {
+    "forecast_ac": 43,
+    "forecast_cac": 4.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fde4fd0-8136-806f-a231-f4a83cde215e": {
+    "forecast_ac": 46,
+    "forecast_cac": 8.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-80b4-b85d-cabb69806376": {
+    "forecast_ac": 170,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-8060-8912-ea576207298a": {
+    "forecast_ac": 45,
+    "forecast_cac": 7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-8099-ae6e-f0321985e495": {
+    "forecast_ac": 125,
+    "forecast_cac": 3.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-80f1-9f57-d490a15dcd4f": {
+    "forecast_ac": 19,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "302e4fd0-8136-8003-8c69-d391bd3f58e5": {
+    "forecast_ac": 205,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f4e4fd0-8136-80be-995b-f50cd78c75e6": {
+    "forecast_ac": 191,
+    "forecast_cac": 2.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e3e4fd0-8136-8074-94f9-c8e4728ed638": {
+    "forecast_ac": 50,
+    "forecast_cac": 8.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-805a-a2e5-ccf0d51809fc": {
+    "forecast_ac": 90,
+    "forecast_cac": 2.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "303e4fd0-8136-80ef-bf5d-f04037f46493": {
+    "forecast_ac": 12,
+    "forecast_cac": 28.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cde4fd0-8136-8029-8bd1-cbe632ca30ce": {
+    "forecast_ac": 100,
+    "forecast_cac": 11.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-8082-8497-f90de6e0a06e": {
+    "forecast_ac": 74,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-80a8-80b9-cfad979677d5": {
+    "forecast_ac": 38,
+    "forecast_cac": 10.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f7e4fd0-8136-80e1-a60e-c298f509df0c": {
+    "forecast_ac": 108,
+    "forecast_cac": 5.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e3e4fd0-8136-808c-98ef-f230a1d47764": {
+    "forecast_ac": 119,
+    "forecast_cac": 5.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-80dc-adec-c661db7d0a62": {
+    "forecast_ac": 110,
+    "forecast_cac": 7.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-80df-8d7b-de5e0cff09fd": {
+    "forecast_ac": 64,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fee4fd0-8136-800a-b2a0-e3103ce7f385": {
+    "forecast_ac": 52,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fce4fd0-8136-803a-83c3-f1b83f822f4f": {
+    "forecast_ac": 111,
+    "forecast_cac": 3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80c7-bbe3-f415c9aff727": {
+    "forecast_ac": 136,
+    "forecast_cac": 2.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2eee4fd0-8136-803f-aabc-db6ea5afc9cd": {
+    "forecast_ac": 81,
+    "forecast_cac": 13.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ffe4fd0-8136-80c5-826e-d1e772c3cff1": {
+    "forecast_ac": 35,
+    "forecast_cac": 5.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2dfe4fd0-8136-8042-b1a1-e217f01effe1": {
+    "forecast_ac": 361,
+    "forecast_cac": 7.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fce4fd0-8136-80bd-833a-fb2c326fd9f9": {
+    "forecast_ac": 116,
+    "forecast_cac": 5.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-8019-afff-cc71470b7688": {
+    "forecast_ac": 149,
+    "forecast_cac": 6.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f7e4fd0-8136-8089-a15d-fbe0e548a5ba": {
+    "forecast_ac": 175,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ede4fd0-8136-800f-943b-eb25f6d8b9fa": {
+    "forecast_ac": 73,
+    "forecast_cac": 6.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-8086-ba41-e90a3244641d": {
+    "forecast_ac": 66,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-8064-a1bf-d1bcad1757cd": {
+    "forecast_ac": 51,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fde4fd0-8136-8030-8e83-e2a2872b8652": {
+    "forecast_ac": 81,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f8e4fd0-8136-80bb-92ed-e596b2fffd34": {
+    "forecast_ac": 147,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e8e4fd0-8136-80a5-ac98-e57ef939d1fc": {
+    "forecast_ac": 11,
+    "forecast_cac": 30.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b6e4fd0-8136-80b5-a7cb-cda401c9708e": {
+    "forecast_ac": 85,
+    "forecast_cac": 11.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-801a-a93c-e7fbdfca7afe": {
+    "forecast_ac": 112,
+    "forecast_cac": 7.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-8013-aadd-f175cc8a12e5": {
+    "forecast_ac": 136,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-805c-aace-d366c77e1255": {
+    "forecast_ac": 284,
+    "forecast_cac": 3.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e7e4fd0-8136-802f-bb9e-dcade9b24a59": {
+    "forecast_ac": 91,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a0e4fd0-8136-8072-a583-c6fc45d7567b": {
+    "forecast_ac": 150,
+    "forecast_cac": 4.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2fbe4fd0-8136-8041-880a-c632593a7ccb": {
+    "forecast_ac": 66,
+    "forecast_cac": null,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e6e4fd0-8136-8029-92d7-e1dbb0db3382": {
+    "forecast_ac": 112,
+    "forecast_cac": 5.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f4e4fd0-8136-80b1-8c9c-dc72330e8ec0": {
+    "forecast_ac": 96,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2eee4fd0-8136-8045-89ec-e6e1584de3d9": {
+    "forecast_ac": 165,
+    "forecast_cac": 6.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e0e4fd0-8136-8018-a13f-fb617f6144e0": {
+    "forecast_ac": 31,
+    "forecast_cac": 7.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-8018-834a-fb44fa31aa61": {
+    "forecast_ac": 11,
+    "forecast_cac": 30.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e3e4fd0-8136-8092-9674-ef29877facaf": {
+    "forecast_ac": 83,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e3e4fd0-8136-80d3-92f4-ea206e4517c7": {
+    "forecast_ac": 205,
+    "forecast_cac": 3.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80a7-9601-c2b615647f01": {
+    "forecast_ac": 41,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-8085-b97e-db7471fcb93b": {
+    "forecast_ac": 72,
+    "forecast_cac": 5.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cde4fd0-8136-8069-be2f-ea258904a994": {
+    "forecast_ac": 196,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-8045-ac7a-e41270f2269c": {
+    "forecast_ac": 110,
+    "forecast_cac": 7.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2f1e4fd0-8136-8010-a5e4-da064d0ba02d": {
+    "forecast_ac": 34,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ede4fd0-8136-80d6-b28f-c0b5906808c1": {
+    "forecast_ac": 81,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e7e4fd0-8136-808c-bf14-c791588a8c0f": {
+    "forecast_ac": 92,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e1e4fd0-8136-803e-a54e-c899e28aad7c": {
+    "forecast_ac": 4,
+    "forecast_cac": 83.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e0e4fd0-8136-80da-a304-c27c2b7e1323": {
+    "forecast_ac": 115,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80a6-956e-c6cfe512ffbc": {
+    "forecast_ac": 111,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c3e4fd0-8136-8009-ae75-dc052f529c89": {
+    "forecast_ac": 194,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-80e0-b356-fa321f2b56ca": {
+    "forecast_ac": 43,
+    "forecast_cac": 11.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e6e4fd0-8136-803f-bfe1-f4c78bccbadd": {
+    "forecast_ac": 139,
+    "forecast_cac": 4.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e6e4fd0-8136-80e5-9ca3-c8e551b4d470": {
+    "forecast_ac": 22,
+    "forecast_cac": 20.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2dfe4fd0-8136-8033-8faa-e32f50850f7b": {
+    "forecast_ac": 361,
+    "forecast_cac": 7.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2eee4fd0-8136-80b5-9a7e-cc3d880209f3": {
+    "forecast_ac": 384,
+    "forecast_cac": 2.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2ede4fd0-8136-8067-9795-f56a4ef96dfe": {
+    "forecast_ac": 89,
+    "forecast_cac": 5.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e0e4fd0-8136-80a4-bbd5-c97bd08455fd": {
+    "forecast_ac": 38,
+    "forecast_cac": 6.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e8e4fd0-8136-8092-b89b-d4884dc22ea8": {
+    "forecast_ac": 377,
+    "forecast_cac": 1.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-80e2-a32b-fbe0758cee12": {
+    "forecast_ac": 56,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-804e-be48-deb7b909e8f7": {
+    "forecast_ac": 87,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-80f3-ad55-d80b91cb3548": {
+    "forecast_ac": 149,
+    "forecast_cac": 10.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-80a9-8c3f-c50397eef8eb": {
+    "forecast_ac": 12,
+    "forecast_cac": 28.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-8011-b2d6-da3a42289fc9": {
+    "forecast_ac": 82,
+    "forecast_cac": 10.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-802a-a7f5-c07447b89d04": {
+    "forecast_ac": 180,
+    "forecast_cac": 2.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-80fc-b802-e4dcc5fb140e": {
+    "forecast_ac": 242,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-8099-94ae-f10669630867": {
+    "forecast_ac": 127,
+    "forecast_cac": 11.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-8034-9b76-de1c0ab91050": {
+    "forecast_ac": 61,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a0e4fd0-8136-806c-b7e9-e3e750de2893": {
+    "forecast_ac": 129,
+    "forecast_cac": 5.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e7e4fd0-8136-80cc-9c71-e7382cd2564a": {
+    "forecast_ac": 137,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e0e4fd0-8136-8080-8cdc-ca83e5b9cb6e": {
+    "forecast_ac": 122,
+    "forecast_cac": 3.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80e7-9c55-e9bd9ce36edb": {
+    "forecast_ac": 53,
+    "forecast_cac": 8.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e6e4fd0-8136-80dd-963e-f588d71ed992": {
+    "forecast_ac": 143,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e3e4fd0-8136-80ce-8e3b-d434f94651c8": {
+    "forecast_ac": 73,
+    "forecast_cac": 5.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e3e4fd0-8136-8047-9060-d593c2d2908c": {
+    "forecast_ac": 120,
+    "forecast_cac": 5.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80ef-b940-f3bc0fd657a3": {
+    "forecast_ac": 46,
+    "forecast_cac": 4.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-8006-a1d8-ebb852c8bedc": {
+    "forecast_ac": 19,
+    "forecast_cac": 10.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e6e4fd0-8136-80a6-b050-d5ae6f00556a": {
+    "forecast_ac": 101,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c3e4fd0-8136-804b-ab21-dda43f079cb6": {
+    "forecast_ac": 102,
+    "forecast_cac": 7.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-80c9-a301-c0be4d6bfcdc": {
+    "forecast_ac": 182,
+    "forecast_cac": 4.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c3e4fd0-8136-80ef-b648-f61ce20affb3": {
+    "forecast_ac": 11,
+    "forecast_cac": 18.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-8095-97ba-c3e866bdbdca": {
+    "forecast_ac": 69,
+    "forecast_cac": 7.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e1e4fd0-8136-803c-85e8-e0608bd33371": {
+    "forecast_ac": 90,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e0e4fd0-8136-80ee-9ac2-e80855a51431": {
+    "forecast_ac": 45,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b6e4fd0-8136-80ae-8d26-df4791b297bf": {
+    "forecast_ac": 252,
+    "forecast_cac": 4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-80b8-b62b-ce11461e33a2": {
+    "forecast_ac": 79,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2e0e4fd0-8136-805c-895b-dbb1ce9ebe7d": {
+    "forecast_ac": 68,
+    "forecast_cac": 6.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80b0-a6bb-d5e600470143": {
+    "forecast_ac": 102,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-808a-9339-ded03e364126": {
+    "forecast_ac": 121,
+    "forecast_cac": 6.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2d1e4fd0-8136-8020-9ee3-db44e8db42b6": {
+    "forecast_ac": 327,
+    "forecast_cac": 1.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-80d2-8035-ea792f9f7882": {
+    "forecast_ac": 51,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80f3-b23d-e84db9baec20": {
+    "forecast_ac": 76,
+    "forecast_cac": 4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-802a-9b7d-f49fe502c567": {
+    "forecast_ac": 281,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cee4fd0-8136-80f0-abc8-dca4f452c960": {
+    "forecast_ac": 249,
+    "forecast_cac": 1.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80fb-9c8a-e92dfcb639d5": {
+    "forecast_ac": 54,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cce4fd0-8136-80fd-9522-d27b2706cc9d": {
+    "forecast_ac": 44,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-8043-80f9-df378ed1f630": {
+    "forecast_ac": 280,
+    "forecast_cac": 5.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a0e4fd0-8136-8012-ad0f-d6caa905157d": {
+    "forecast_ac": 182,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-80b5-86a9-c82a4bf5301b": {
+    "forecast_ac": 138,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-8050-bdf7-e5a19da986e7": {
+    "forecast_ac": 221,
+    "forecast_cac": null,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a9e4fd0-8136-8012-9e78-fef36771d863": {
+    "forecast_ac": 121,
+    "forecast_cac": 8.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-80fc-8332-c7b585f58b83": {
+    "forecast_ac": 66,
+    "forecast_cac": 6.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c5e4fd0-8136-8074-8905-dfb1088d4468": {
+    "forecast_ac": 1128,
+    "forecast_cac": 2.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2cae4fd0-8136-80be-86f8-fd2320e78d4d": {
+    "forecast_ac": 84,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c5e4fd0-8136-802e-9daa-d6517e18b62e": {
+    "forecast_ac": 1805,
+    "forecast_cac": 1.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c3e4fd0-8136-80a0-8575-f792b71022fd": {
+    "forecast_ac": 187,
+    "forecast_cac": 4.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a9e4fd0-8136-80ca-9f42-fbc5864ca08b": {
+    "forecast_ac": 131,
+    "forecast_cac": 7.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b9e4fd0-8136-806f-8c68-e9bccfa02951": {
+    "forecast_ac": 111,
+    "forecast_cac": 5.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-8036-889b-dff341b245b0": {
+    "forecast_ac": 68,
+    "forecast_cac": 11,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "292e4fd0-8136-8080-af10-e46fea3dc4ee": {
+    "forecast_ac": 272,
+    "forecast_cac": 4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b6e4fd0-8136-80cc-9585-ef6712b63537": {
+    "forecast_ac": 52,
+    "forecast_cac": 5.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2abe4fd0-8136-8066-9d1e-e858324c6c8b": {
+    "forecast_ac": 17,
+    "forecast_cac": 11.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2abe4fd0-8136-80ac-abcc-e51a1de4fc21": {
+    "forecast_ac": 10,
+    "forecast_cac": 23.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-8054-ad4c-ec204db2a9d0": {
+    "forecast_ac": 30,
+    "forecast_cac": 10.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "29de4fd0-8136-80f5-82d2-fb41d19fc74a": {
+    "forecast_ac": 265,
+    "forecast_cac": 3.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "294e4fd0-8136-802c-b3ec-ea33490b9b52": {
+    "forecast_ac": 224,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2c5e4fd0-8136-80b1-b5ec-ee3b84f6d7d1": {
+    "forecast_ac": 1313,
+    "forecast_cac": 2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-803d-b994-c53cac54b77b": {
+    "forecast_ac": 46,
+    "forecast_cac": 8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-80a8-a276-eb325fbaa770": {
+    "forecast_ac": 24,
+    "forecast_cac": 13.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-80cf-8478-c9aac64a5d56": {
+    "forecast_ac": 47,
+    "forecast_cac": 10.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-801a-83ec-e8afc6b6f74d": {
+    "forecast_ac": 658,
+    "forecast_cac": 1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-806f-ba33-f2c9ecb63d77": {
+    "forecast_ac": 54,
+    "forecast_cac": 10.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-80d0-9b0d-c2d881bbdb04": {
+    "forecast_ac": 22,
+    "forecast_cac": 9.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a7e4fd0-8136-8023-a26d-dfa587aa8cb6": {
+    "forecast_ac": 148,
+    "forecast_cac": 2.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28fe4fd0-8136-808f-be11-f5b55ce9953a": {
+    "forecast_ac": 68,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bfe4fd0-8136-80a9-91e4-e04db0461f03": {
+    "forecast_ac": 50,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-808d-a709-ce006c132ee2": {
+    "forecast_ac": 298,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-80fa-80c2-ccb3d04fb5fc": {
+    "forecast_ac": 432,
+    "forecast_cac": 3.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a9e4fd0-8136-80df-8882-fb2e4c865599": {
+    "forecast_ac": 141,
+    "forecast_cac": 7.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2afe4fd0-8136-80b1-8b94-d0cfc00a1628": {
+    "forecast_ac": 36,
+    "forecast_cac": 4.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a1e4fd0-8136-8063-8c3e-df1051baaafc": {
+    "forecast_ac": 26,
+    "forecast_cac": 12.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-8099-812f-fc96d7805aa2": {
+    "forecast_ac": 15,
+    "forecast_cac": 17.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-8068-b5c0-ed0f587b0982": {
+    "forecast_ac": 107,
+    "forecast_cac": 7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "299e4fd0-8136-8005-be87-de6bc990d542": {
+    "forecast_ac": 53,
+    "forecast_cac": 13.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "295e4fd0-8136-8005-ab56-d112a7dd0416": {
+    "forecast_ac": 97,
+    "forecast_cac": 6.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2bde4fd0-8136-80e3-8ec0-cf6688577eb4": {
+    "forecast_ac": 101,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b9e4fd0-8136-80ec-b6c7-cce319ee7e42": {
+    "forecast_ac": 82,
+    "forecast_cac": 3.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-80d4-8da9-fea7b9673283": {
+    "forecast_ac": 294,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b9e4fd0-8136-8081-abb1-ef3f7dcfb5f6": {
+    "forecast_ac": 108,
+    "forecast_cac": 5.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "292e4fd0-8136-8051-832e-fbe93c5d757a": {
+    "forecast_ac": 286,
+    "forecast_cac": 3.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-8036-8dae-f4b1ae6b38c1": {
+    "forecast_ac": 6,
+    "forecast_cac": 50,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2afe4fd0-8136-801d-b307-e429252eb951": {
+    "forecast_ac": 308,
+    "forecast_cac": 6.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-80a2-89d3-d6727a5c36b2": {
+    "forecast_ac": 44,
+    "forecast_cac": 6.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b7e4fd0-8136-802e-a0a7-e69a03eb3a87": {
+    "forecast_ac": 277,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2b6e4fd0-8136-802f-a15c-c6acaa4e5191": {
+    "forecast_ac": 73,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-80db-9a4c-e34451234e9b": {
+    "forecast_ac": 272,
+    "forecast_cac": 2.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "294e4fd0-8136-80a8-a3ee-dfe269e66787": {
+    "forecast_ac": 338,
+    "forecast_cac": 2.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-8046-b6b0-c1052499db00": {
+    "forecast_ac": 204,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a0e4fd0-8136-8092-9172-f839a37eb3ce": {
+    "forecast_ac": 138,
+    "forecast_cac": null,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-802c-9d96-e6e1de990391": {
+    "forecast_ac": 46,
+    "forecast_cac": 21.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-80b4-b43a-e33297da62b2": {
+    "forecast_ac": 23,
+    "forecast_cac": 8.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "295e4fd0-8136-8001-9756-c3481708a45f": {
+    "forecast_ac": 162,
+    "forecast_cac": 4.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2afe4fd0-8136-80a1-8bce-dbe0777be800": {
+    "forecast_ac": 55,
+    "forecast_cac": 2.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-80c8-9cc3-e235f8bb17c4": {
+    "forecast_ac": 33,
+    "forecast_cac": 9.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "29de4fd0-8136-8059-a0a4-f65abd4d8a58": {
+    "forecast_ac": 327,
+    "forecast_cac": 3.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "27de4fd0-8136-8026-b1f8-db1910e62a4b": {
+    "forecast_ac": 283,
+    "forecast_cac": 4.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a7e4fd0-8136-8089-b520-eade5bd7985b": {
+    "forecast_ac": 193,
+    "forecast_cac": 2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-8028-8aa3-cfe107c50fe6": {
+    "forecast_ac": 75,
+    "forecast_cac": 6.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-8023-8929-f838d7fa9604": {
+    "forecast_ac": 41,
+    "forecast_cac": 6.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-8047-a2b4-d8fe77def5c6": {
+    "forecast_ac": 72,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2abe4fd0-8136-8074-b157-f2cb27629c62": {
+    "forecast_ac": 19,
+    "forecast_cac": 12.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28fe4fd0-8136-8066-bcad-dad53ff2dfd1": {
+    "forecast_ac": 74,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-8050-9410-dd16365c0f71": {
+    "forecast_ac": 42,
+    "forecast_cac": 8.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "279e4fd0-8136-80f2-8159-dc7548d239a1": {
+    "forecast_ac": 68,
+    "forecast_cac": 5.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-80ac-a5c0-ca20f95fc3c1": {
+    "forecast_ac": 51,
+    "forecast_cac": 11.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a1e4fd0-8136-8010-a736-d2becef883a9": {
+    "forecast_ac": 40,
+    "forecast_cac": 8.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "299e4fd0-8136-80d3-a843-dba08da621dc": {
+    "forecast_ac": 33,
+    "forecast_cac": 21.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2afe4fd0-8136-8060-9f4f-c7b6b7f748e1": {
+    "forecast_ac": 47,
+    "forecast_cac": 3.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a7e4fd0-8136-803d-b37b-fcbb48e33bbf": {
+    "forecast_ac": 113,
+    "forecast_cac": 3.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-809a-800b-edb2b3316cdf": {
+    "forecast_ac": 92,
+    "forecast_cac": 4.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2afe4fd0-8136-807e-b7e1-e65c175db5de": {
+    "forecast_ac": 443,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aee4fd0-8136-80d5-9ed3-fe09fed4f02a": {
+    "forecast_ac": 189,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "292e4fd0-8136-80e3-b69b-e31171cf2806": {
+    "forecast_ac": 300,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-80fa-9552-f7d575a0629c": {
+    "forecast_ac": 64,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-8027-b7db-effc569ca0eb": {
+    "forecast_ac": 22,
+    "forecast_cac": 15.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-80a0-9710-dd12d0b95e53": {
+    "forecast_ac": 78,
+    "forecast_cac": 6.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-804b-953c-e3f98adfa114": {
+    "forecast_ac": 47,
+    "forecast_cac": 5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-806a-9949-d04fa0f40414": {
+    "forecast_ac": 3,
+    "forecast_cac": 100,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2abe4fd0-8136-80ff-b145-f1463b6200d2": {
+    "forecast_ac": 46,
+    "forecast_cac": 4.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-8072-b8d5-ec8c7879bba9": {
+    "forecast_ac": 248,
+    "forecast_cac": 1.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2aae4fd0-8136-80f7-a9ce-d3b0e10dff2d": {
+    "forecast_ac": 93,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-80ac-a71e-fa48462b1945": {
+    "forecast_ac": 364,
+    "forecast_cac": 3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-80c6-abe2-d43dffe1d168": {
+    "forecast_ac": 60,
+    "forecast_cac": 5.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a8e4fd0-8136-8084-ad82-e4d8dd243df5": {
+    "forecast_ac": 68,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-8031-9bbf-f380e0dfb689": {
+    "forecast_ac": 81,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-8052-a7c1-e6f5162dee54": {
+    "forecast_ac": 97,
+    "forecast_cac": 5.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a4e4fd0-8136-800d-b9eb-f2d94e04c3df": {
+    "forecast_ac": 54,
+    "forecast_cac": 3.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "29de4fd0-8136-8041-aa75-d63dcd31bbb3": {
+    "forecast_ac": 405,
+    "forecast_cac": 2.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "2a1e4fd0-8136-8056-a93d-cd899e1aa4dc": {
+    "forecast_ac": 54,
+    "forecast_cac": 6.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "294e4fd0-8136-8009-b653-deb68cf4e6db": {
+    "forecast_ac": 452,
+    "forecast_cac": 2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-804a-8b7b-c7fa3273c6b7": {
+    "forecast_ac": 88,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-8011-aa50-fbaf9728bc20": {
+    "forecast_ac": 154,
+    "forecast_cac": 2.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28fe4fd0-8136-8042-9e06-ea54ced1d504": {
+    "forecast_ac": 70,
+    "forecast_cac": 3.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-8086-a0aa-c2da19ef51ce": {
+    "forecast_ac": 104,
+    "forecast_cac": 2.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "279e4fd0-8136-800a-b147-fe7d5f08fc68": {
+    "forecast_ac": 74,
+    "forecast_cac": 5.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-80ee-bf0a-d3fea0d6b347": {
+    "forecast_ac": 367,
+    "forecast_cac": 2.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-805f-8323-e0063d78a3d9": {
+    "forecast_ac": 19,
+    "forecast_cac": 17.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-80b7-80ca-de1dda22b288": {
+    "forecast_ac": 68,
+    "forecast_cac": 7.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "299e4fd0-8136-8042-86fd-d31046630ba6": {
+    "forecast_ac": 398,
+    "forecast_cac": 1.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28de4fd0-8136-809e-b31e-c864549a90df": {
+    "forecast_ac": 26,
+    "forecast_cac": 7.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-806f-9840-ea07f06ea064": {
+    "forecast_ac": 125,
+    "forecast_cac": 3.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-800b-a7c8-d02aa7fc7db8": {
+    "forecast_ac": 298,
+    "forecast_cac": 4.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-80c7-b978-eec8c479579d": {
+    "forecast_ac": 81,
+    "forecast_cac": 2.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-8082-8ad6-d83f5445f50d": {
+    "forecast_ac": 123,
+    "forecast_cac": 3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-80b5-9520-eae18f8a8b3a": {
+    "forecast_ac": 109,
+    "forecast_cac": 3.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "286e4fd0-8136-80ea-bfdb-ec64d4207ca2": {
+    "forecast_ac": 234,
+    "forecast_cac": 2.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "261e4fd0-8136-8087-b495-fc208275ed2c": {
+    "forecast_ac": 131,
+    "forecast_cac": 8.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "26be4fd0-8136-8076-9fc5-db17ad7f5f0e": {
+    "forecast_ac": 182,
+    "forecast_cac": 5.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28ee4fd0-8136-803e-94ab-d4a7db76415f": {
+    "forecast_ac": 93,
+    "forecast_cac": 4.7,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-80c1-a32a-febe6a020908": {
+    "forecast_ac": 240,
+    "forecast_cac": 1.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-8005-bd56-e684e6c45391": {
+    "forecast_ac": 74,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "277e4fd0-8136-80af-b626-e4cf2ff9d712": {
+    "forecast_ac": 458,
+    "forecast_cac": 2.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-80e5-9601-d38e38000203": {
+    "forecast_ac": 504,
+    "forecast_cac": 2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "279e4fd0-8136-80d6-891a-f5f9a0aed79c": {
+    "forecast_ac": 68,
+    "forecast_cac": 5.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "28de4fd0-8136-8032-8a9f-d2ed83d62e93": {
+    "forecast_ac": 51,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "270e4fd0-8136-80ba-ab6e-c200f7084549": {
+    "forecast_ac": 180,
+    "forecast_cac": 2.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "26be4fd0-8136-80a6-b127-f2eb03e893d0": {
+    "forecast_ac": 144,
+    "forecast_cac": 7.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-80aa-a188-dad91e6eb4ce": {
+    "forecast_ac": 540,
+    "forecast_cac": 2.5,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "26be4fd0-8136-80bc-8712-ed73d41c2f74": {
+    "forecast_ac": 216,
+    "forecast_cac": 4.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "26be4fd0-8136-8090-9c13-d0f815f02d83": {
+    "forecast_ac": 207,
+    "forecast_cac": 4.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "270e4fd0-8136-80b6-b753-c7f618031ec6": {
+    "forecast_ac": 69,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "261e4fd0-8136-8090-9ea9-f4ed69606dac": {
+    "forecast_ac": 121,
+    "forecast_cac": 9.1,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-8097-b60b-c9dd34ae7781": {
+    "forecast_ac": 73,
+    "forecast_cac": 3.6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-8069-a746-ebb7bb2c4329": {
+    "forecast_ac": 430,
+    "forecast_cac": 2.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "277e4fd0-8136-80d4-b2bc-d7a94fffe5be": {
+    "forecast_ac": 484,
+    "forecast_cac": 2.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-8048-a7fc-e01421197169": {
+    "forecast_ac": 241,
+    "forecast_cac": 1.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "261e4fd0-8136-8062-bd19-c67cd152ebf0": {
+    "forecast_ac": 473,
+    "forecast_cac": 1.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "261e4fd0-8136-8042-8cfb-eabd1a30b108": {
+    "forecast_ac": 189,
+    "forecast_cac": 5.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "25ee4fd0-8136-803f-b3f8-f28360f98d74": {
+    "forecast_ac": 357,
+    "forecast_cac": 2.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "25ee4fd0-8136-801c-9fb7-fea301fafa2d": {
+    "forecast_ac": 56,
+    "forecast_cac": 6,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "270e4fd0-8136-8068-b801-ce5116dc7d64": {
+    "forecast_ac": 80,
+    "forecast_cac": 5.2,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "26be4fd0-8136-8024-8fe1-e64816fc0c29": {
+    "forecast_ac": 166,
+    "forecast_cac": 6.4,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "254e4fd0-8136-80a5-80be-d29930683500": {
+    "forecast_ac": 314,
+    "forecast_cac": 1.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "272e4fd0-8136-800a-b9b6-f40c5f05f3dc": {
+    "forecast_ac": 172,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "25de4fd0-8136-8059-9923-c3cd859abb81": {
+    "forecast_ac": 40,
+    "forecast_cac": 10,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "254e4fd0-8136-80ed-82f1-f699ad7e8f18": {
+    "forecast_ac": 68,
+    "forecast_cac": 9.8,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "261e4fd0-8136-800d-a4d7-d8554958ad2c": {
+    "forecast_ac": 251,
+    "forecast_cac": 3.3,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "276e4fd0-8136-8080-8137-d6699af35fe1": {
+    "forecast_ac": 270,
+    "forecast_cac": 4.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  },
+  "26be4fd0-8136-80eb-8c36-d93ce5cd28b4": {
+    "forecast_ac": 257,
+    "forecast_cac": 3.9,
+    "slack_notes": [],
+    "slack_matched": "",
+    "slack_confidence": ""
+  }
+}
