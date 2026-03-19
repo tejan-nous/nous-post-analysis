@@ -317,17 +317,18 @@ def inject_into_html(posts, extras):
     with open(INDEX_HTML, "r") as f:
         html = f.read()
 
-    posts_js = json.dumps(posts, indent=2, ensure_ascii=False)
-    extras_js = json.dumps(extras, indent=2, ensure_ascii=False)
+    posts_js = json.dumps(posts, indent=2, ensure_ascii=True)
+    extras_js = json.dumps(extras, indent=2, ensure_ascii=True)
 
+    # Use lambda to prevent re.sub from interpreting \u escapes in JSON
     html = re.sub(
         r'const posts = \[[\s\S]*?\n\];',
-        f'const posts = {posts_js};',
+        lambda m: f'const posts = {posts_js};',
         html, count=1,
     )
     html = re.sub(
         r'const postExtras = \{[\s\S]*?\n\};',
-        f'const postExtras = {extras_js};',
+        lambda m: f'const postExtras = {extras_js};',
         html, count=1,
     )
 
