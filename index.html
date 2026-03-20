@@ -347,7 +347,7 @@
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
         <!-- Influencer name -->
         <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name <span style="font-weight:400;opacity:.6">(optional)</span></label>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name</label>
           <input id="ul-name" type="text" placeholder="e.g. Lucy Hall" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
         </div>
         <!-- Agent name -->
@@ -357,7 +357,7 @@
         </div>
         <!-- Post date -->
         <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Post date <span style="font-weight:400;opacity:.6">(optional)</span></label>
+          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Post date</label>
           <input id="ul-post-date" type="date" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
         </div>
       </div>
@@ -65574,7 +65574,10 @@ function ulRemoveFromQueue(idx) {
 async function ulAnalyse() {
   const name  = document.getElementById('ul-name').value.trim();
   const agent = document.getElementById('ul-agent').value.trim() || '';
+  const postDate = document.getElementById('ul-post-date').value;
 
+  if (!name) { alert('Please enter the influencer name'); document.getElementById('ul-name').focus(); return; }
+  if (!postDate) { alert('Please enter the post date'); document.getElementById('ul-post-date').focus(); return; }
   if (!ulImageQueue.length) { alert('Please upload at least one image first'); return; }
 
   // Validate each image has a brief selected
