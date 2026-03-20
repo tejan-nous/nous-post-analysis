@@ -51,6 +51,8 @@ The JSON structure must be exactly:
     }
   ],
   "summary": "<2-3 sentence summary of overall quality, referencing specific details visible in the image>",
+  "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
+  "copy_rewrite": "<if needs_work AND there are text/copy issues, provide a full rewritten version of the story copy that fixes the issues. If good_to_go or no copy issues, return empty string>",
   "email_influencer": "<full email text to send to the influencer>",
   "email_agent": "<full email text to send to the talent agent>"
 }
@@ -60,6 +62,10 @@ The JSON structure must be exactly:
 "brief_fit" covers content/messaging issues: hook quality, discovery moment, what Nous does, savings claims, sign-up ease, @get_nous tag usage, tone.
 
 IMPORTANT: Always include ALL items in both arrays — both passing AND failing criteria. Do not omit items just because they pass. The frontend needs the full list to show what was checked.
+
+"improvements" is a short array of exactly 3 concise bullet points summarising what needs to change (e.g. "Move CTA button to the bottom of the story", "Add a specific savings figure like £781/year"). If good_to_go, still include 3 minor suggestions. Each should be actionable and specific.
+
+"copy_rewrite" should contain a complete rewritten version of the influencer's story text/copy that fixes any messaging issues found in brief_fit. Preserve the influencer's voice and tone while fixing compliance issues. If there are no text/copy issues (e.g. only visual problems), return an empty string.
 
 Use "good_to_go" when score >= 80% of total criteria pass. Otherwise use "needs_work".
 """

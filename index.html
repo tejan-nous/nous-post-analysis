@@ -311,7 +311,7 @@
   </div>
 
   <!-- INPUT CARD -->
-  <div class="card" style="margin-bottom:24px">
+  <div id="ul-input-card" class="card" style="margin-bottom:24px">
     <div class="card-body">
       <!-- Defaults header -->
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
@@ -65591,6 +65591,33 @@ async function ulAnalyse() {
   const btn = document.getElementById('ul-btn');
   btn.disabled = true;
 
+  // Collapse the input form
+  const inputCard = document.getElementById('ul-input-card');
+  inputCard.style.display = 'none';
+
+  // Add or update the collapsed summary bar
+  let summaryBar = document.getElementById('ul-collapsed-summary');
+  if (!summaryBar) {
+    summaryBar = document.createElement('div');
+    summaryBar.id = 'ul-collapsed-summary';
+    inputCard.parentNode.insertBefore(summaryBar, inputCard);
+  }
+  const briefLabel = document.getElementById('ul-brief').selectedOptions[0]?.text || '';
+  summaryBar.innerHTML = `<div class="card" style="margin-bottom:24px;cursor:pointer" onclick="document.getElementById('ul-input-card').style.display='';this.style.display='none'">
+    <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px">
+      <div style="display:flex;align-items:center;gap:16px;font-size:13px">
+        <span style="font-weight:700">${name}</span>
+        <span style="color:var(--muted)">·</span>
+        <span style="color:var(--muted)">${briefLabel}</span>
+        <span style="color:var(--muted)">·</span>
+        <span style="color:var(--muted)">${postDate}</span>
+        <span style="color:var(--muted)">·</span>
+        <span style="color:var(--muted)">${ulImageQueue.length} image${ulImageQueue.length > 1 ? 's' : ''}</span>
+      </div>
+      <span style="font-size:11px;font-weight:600;color:var(--nous);text-transform:uppercase;letter-spacing:.05em">Edit ▸</span>
+    </div>
+  </div>`;
+
   const resultsEl = document.getElementById('ul-results');
   resultsEl.innerHTML = '';
   resultsEl.style.display = 'block';
@@ -65637,46 +65664,62 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   idx = idx || 0;
   const good = d.overall === 'good_to_go';
 
-  function itemsHtml(items) {
-    if (!items || items.length === 0) return `<div style="color:var(--green);font-size:13px">\u2713 All clear</div>`;
-    return items.map(f => `
-      <div class="ul-sub">
-        <span class="${f.pass ? 'ul-sub-pass' : 'ul-sub-fail'}" style="flex-shrink:0;font-weight:700">${f.pass ? '\u2713' : '\u2717'}</span>
+  const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
+  const briefFails = (d.brief_fit || []).filter(x => !x.pass);
+  const improvements = d.improvements || [];
+  const copyRewrite = d.copy_rewrite || '';
+
+  // Obvious tweaks: only show top 4 failures
+  function obvHtml() {
+    if (!obvFails.length) return `<div style="color:var(--green);font-size:13px;padding:8px 0">\u2713 All clear — no visual issues</div>`;
+    return obvFails.slice(0, 4).map(f => `
+      <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0">
+        <span style="color:var(--red);font-weight:700;flex-shrink:0">\u2717</span>
         <div>
-          <div style="font-weight:500;font-size:13px">${f.label}</div>
+          <div style="font-weight:600;font-size:13px">${f.label}</div>
           ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
         </div>
       </div>`).join('');
   }
 
-  const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
-  const briefFails = (d.brief_fit || []).filter(x => !x.pass);
-  const allFails  = [...obvFails, ...briefFails];
+  // Brief fit: full list with pass/fail, collapsible
+  function briefHtml() {
+    const items = d.brief_fit || [];
+    if (!items.length) return `<div style="color:var(--green);font-size:13px;padding:8px 0">\u2713 All clear</div>`;
+    return items.map(f => `
+      <div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span style="color:${f.pass ? 'var(--green)' : 'var(--red)'};font-weight:700;flex-shrink:0;font-size:13px">${f.pass ? '\u2713' : '\u2717'}</span>
+        <div style="flex:1">
+          <div style="font-weight:500;font-size:12px">${f.label}</div>
+          ${f.note ? `<div style="font-size:11px;color:var(--muted);margin-top:1px">${f.note}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
 
-  // Build Slack text
+  // Build Slack text — 3 bullet improvements + copy rewrite
   const slackLines = [
-    `*${brief} · Frame ${frame}${name ? ' · ' + name : ''}*`,
+    `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
     good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
   ];
-  if (!good) {
-    if (obvFails.length) {
-      slackLines.push('', '*Obvious tweaks:*');
-      obvFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
-    }
-    if (briefFails.length) {
-      slackLines.push('', '*Fitting the brief:*');
-      briefFails.forEach(f => slackLines.push('• ' + f.label + (f.note ? ' — ' + f.note : '')));
-    }
+  if (improvements.length) {
+    slackLines.push('');
+    improvements.forEach(imp => slackLines.push('\u2022 ' + imp));
+  }
+  if (copyRewrite) {
+    slackLines.push('', '*Suggested copy:*', '> ' + copyRewrite.split('\n').join('\n> '));
   }
   slackLines.push('');
   const slackText = slackLines.join('\n');
+
   const emailText = d.email_agent || '';
   const slackId = `ul-slack-area-${idx}`;
   const emailId = `ul-email-area-${idx}`;
+  const briefDetailId = `ul-brief-detail-${idx}`;
+  const copyRewriteId = `ul-rewrite-area-${idx}`;
 
   return `
-    <!-- VERDICT + IMAGE -->
-    <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:16px">
+    <!-- VERDICT BANNER + IMAGE -->
+    <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:20px">
       <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}" style="margin-bottom:0">
         <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
         <div>
@@ -65687,37 +65730,52 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       ${dataUrl ? `<img src="${dataUrl}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
     </div>
 
-    <!-- TWO CATEGORY CARDS -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-      <div class="card">
-        <div class="card-head" style="font-size:12px">🔧 Obvious tweaks${obvFails.length ? ' ('+obvFails.length+' issue'+(obvFails.length>1?'s':'')+')' : ' ✓'}</div>
-        <div class="card-body">${itemsHtml(d.obvious_tweaks || [])}</div>
+    <!-- OBVIOUS TWEAKS (max 4, compact) -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-head" style="font-size:12px">\ud83d\udd27 Obvious tweaks${obvFails.length ? ' (' + obvFails.length + ')' : ' \u2713'}</div>
+      <div class="card-body" style="padding:8px 16px">${obvHtml()}</div>
+    </div>
+
+    <!-- FITTING THE BRIEF (collapsible) -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-head" style="font-size:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="var el=document.getElementById('${briefDetailId}');el.style.display=el.style.display==='none'?'':'none';this.querySelector('.ul-chevron').textContent=el.style.display==='none'?'\u25b6':'\u25bc'">
+        <span>\ud83d\udccb Fitting the brief${briefFails.length ? ' (' + briefFails.length + ' issue' + (briefFails.length > 1 ? 's' : '') + ')' : ' \u2713'}</span>
+        <span class="ul-chevron" style="font-size:10px;color:var(--muted)">\u25b6</span>
       </div>
-      <div class="card">
-        <div class="card-head" style="font-size:12px">📋 Fitting the brief${briefFails.length ? ' ('+briefFails.length+' issue'+(briefFails.length>1?'s':'')+')' : ' ✓'}</div>
-        <div class="card-body">${itemsHtml(d.brief_fit || [])}</div>
-      </div>
+      <div id="${briefDetailId}" class="card-body" style="display:none;padding:8px 16px">${briefHtml()}</div>
     </div>
 
     <!-- SLACK OUTPUT -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>💬 Slack — #approving-content</span>
-        <button class="ul-copy-btn" onclick="ulCopyFromArea('${slackId}', this)">Copy</button>
+    <div style="background:var(--surface);border:2px solid var(--nous);border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
+      <div style="background:var(--nous);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px">\ud83d\udcac Slack \u2014 #approving-content</span>
+        <button onclick="ulCopyFromArea('${slackId}', this)" style="background:#fff;color:var(--nous);border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
       </div>
-      <div class="card-body">
-        <textarea id="${slackId}" style="width:100%;min-height:100px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
+      <div style="padding:12px 16px">
+        <textarea id="${slackId}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
-    <!-- EMAIL OUTPUT -->
-    <div class="card" style="margin-bottom:24px">
-      <div class="card-head" style="display:flex;justify-content:space-between;align-items:center">
-        <span>📧 Email${agent ? ' to ' + agent : ''}</span>
-        <button class="ul-copy-btn" onclick="ulCopyFromArea('${emailId}', this)">Copy</button>
+    ${copyRewrite ? `
+    <!-- COPY REWRITE -->
+    <div style="background:var(--surface);border:2px solid var(--green);border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
+      <div style="background:var(--green);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px">\u270f\ufe0f Suggested copy rewrite</span>
+        <button onclick="ulCopyFromArea('${copyRewriteId}', this)" style="background:#fff;color:var(--green);border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
       </div>
-      <div class="card-body">
-        <textarea id="${emailId}" style="width:100%;min-height:120px;background:var(--bg);border:none;border-radius:6px;padding:10px;font-size:12px;line-height:1.6;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
+      <div style="padding:12px 16px">
+        <textarea id="${copyRewriteId}" style="width:100%;min-height:100px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${copyRewrite.replace(/</g,'&lt;')}</textarea>
+      </div>
+    </div>` : ''}
+
+    <!-- EMAIL OUTPUT -->
+    <div style="background:var(--surface);border:2px solid #6366f1;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
+      <div style="background:#6366f1;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email${agent ? ' to ' + agent : ''}</span>
+        <button onclick="ulCopyFromArea('${emailId}', this)" style="background:#fff;color:#6366f1;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+      </div>
+      <div style="padding:12px 16px">
+        <textarea id="${emailId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>`;
 }
