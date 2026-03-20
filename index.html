@@ -65489,8 +65489,13 @@ function ulLoadFile(file) {
   reader.readAsDataURL(file);
 }
 function ulBriefOptions(selected) {
-  return `<option value="">Select brief...</option>` +
-    UL_BRIEFS.map(b => `<option value="${b}"${b === selected ? ' selected' : ''}>${b}</option>`).join('');
+  return '<option value="">Select brief...</option>' +
+    UL_BRIEFS.map((b, i) => {
+      const opt = document.createElement('option');
+      opt.value = b; opt.textContent = b;
+      if (b === selected) opt.selected = true;
+      return opt.outerHTML;
+    }).join('');
 }
 function ulFrameOptions(selected) {
   return [1,2,3].map(f => `<option value="${f}"${String(f) === String(selected) ? ' selected' : ''}>Frame ${f}</option>`).join('');
