@@ -65674,10 +65674,10 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   const improvements = d.improvements || [];
   const copyRewrite = d.copy_rewrite || '';
 
-  // Obvious tweaks: only show top 4 failures
+  // Obvious tweaks: only show top 3 failures
   function obvHtml() {
     if (!obvFails.length) return `<div style="color:var(--green);font-size:13px;padding:8px 0">\u2713 All clear — no visual issues</div>`;
-    return obvFails.slice(0, 4).map(f => `
+    return obvFails.slice(0, 3).map(f => `
       <div style="display:flex;gap:8px;align-items:flex-start;padding:6px 0">
         <span style="color:var(--red);font-weight:700;flex-shrink:0">\u2717</span>
         <div>
@@ -65701,7 +65701,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       </div>`).join('');
   }
 
-  // Build Slack text — 3 bullet improvements + copy rewrite
+  // Build Slack text — verdict + bullet improvements + copy rewrite
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
     good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
@@ -65711,16 +65711,17 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
     improvements.forEach(imp => slackLines.push('\u2022 ' + imp));
   }
   if (copyRewrite) {
-    slackLines.push('', '*Suggested copy:*', '> ' + copyRewrite.split('\n').join('\n> '));
+    slackLines.push('', '*Change copy to:*', '> ' + copyRewrite.split('\n').join('\n> '));
   }
   slackLines.push('');
   const slackText = slackLines.join('\n');
 
-  const emailText = d.email_agent || '';
+  const emailInfluencer = d.email_influencer || '';
+  const emailAgent = d.email_agent || '';
   const slackId = `ul-slack-area-${idx}`;
-  const emailId = `ul-email-area-${idx}`;
+  const emailInfluencerId = `ul-email-influencer-area-${idx}`;
+  const emailAgentId = `ul-email-agent-area-${idx}`;
   const briefDetailId = `ul-brief-detail-${idx}`;
-  const copyRewriteId = `ul-rewrite-area-${idx}`;
 
   return `
     <!-- VERDICT BANNER + IMAGE -->
@@ -65732,7 +65733,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
           <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
         </div>
       </div>
-      ${dataUrl ? `<img src="${dataUrl}" style="width:80px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
+      ${dataUrl ? `<img src="${dataUrl}" style="width:140px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
     </div>
 
     <!-- OBVIOUS TWEAKS (max 4, compact) -->
@@ -65761,28 +65762,38 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       </div>
     </div>
 
-    ${copyRewrite ? `
-    <!-- COPY REWRITE -->
-    <div style="background:var(--surface);border:2px solid var(--green);border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
-      <div style="background:var(--green);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:700;font-size:13px">\u270f\ufe0f Suggested copy rewrite</span>
-        <button onclick="ulCopyFromArea('${copyRewriteId}', this)" style="background:#fff;color:var(--green);border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
-      </div>
-      <div style="padding:12px 16px">
-        <textarea id="${copyRewriteId}" style="width:100%;min-height:100px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${copyRewrite.replace(/</g,'&lt;')}</textarea>
-      </div>
-    </div>` : ''}
-
-    <!-- EMAIL OUTPUT -->
-    <div style="background:var(--surface);border:2px solid #6366f1;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
+    <!-- EMAIL TO INFLUENCER -->
+    <div style="background:var(--surface);border:2px solid #6366f1;border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
       <div style="background:#6366f1;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email${agent ? ' to ' + agent : ''}</span>
-        <button onclick="ulCopyFromArea('${emailId}', this)" style="background:#fff;color:#6366f1;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to ${name || 'influencer'}</span>
+        <button onclick="ulCopyFromArea('${emailInfluencerId}', this)" style="background:#fff;color:#6366f1;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
       </div>
       <div style="padding:12px 16px">
-        <textarea id="${emailId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${emailInfluencerId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailInfluencer.replace(/</g,'&lt;')}</textarea>
       </div>
-    </div>`;
+    </div>
+
+    ${agent ? `
+    <!-- EMAIL TO AGENT -->
+    <div style="background:var(--surface);border:2px solid #8b5cf6;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
+      <div style="background:#8b5cf6;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to ${agent}</span>
+        <button onclick="ulCopyFromArea('${emailAgentId}', this)" style="background:#fff;color:#8b5cf6;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+      </div>
+      <div style="padding:12px 16px">
+        <textarea id="${emailAgentId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailAgent.replace(/</g,'&lt;')}</textarea>
+      </div>
+    </div>` : `
+    <!-- EMAIL TO AGENT (no agent specified) -->
+    <div style="background:var(--surface);border:2px solid #8b5cf6;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
+      <div style="background:#8b5cf6;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to agent</span>
+        <button onclick="ulCopyFromArea('${emailAgentId}', this)" style="background:#fff;color:#8b5cf6;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+      </div>
+      <div style="padding:12px 16px">
+        <textarea id="${emailAgentId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailAgent.replace(/</g,'&lt;')}</textarea>
+      </div>
+    </div>`}`;
 }
 
 function ulCopy(id) {

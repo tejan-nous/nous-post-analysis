@@ -141,14 +141,15 @@ Context:
 Email guidance:
 
 If overall = "needs_work":
-  - Influencer email: Warm and friendly. Start with what's good. List 2-3 specific changes needed based on failed criteria. Sign off as {agent_name}. Tone: collaborative, not critical.
-  - Agent email: Professional and concise. Bullet-pointed changes needed. State which criteria failed and why. Ask agent to pass feedback to influencer. Signed {agent_name}.
+  - Influencer email: Warm and friendly. Start with what's good. Then list the 2-3 improvements as bullet points. If there is a copy rewrite, include it at the end: "Here's a suggested tweak to the copy:" followed by the rewritten text. Sign off as {agent_name}. Tone: collaborative, not critical.
+  - Agent email: Professional and concise. Bullet-pointed improvements needed. If there is a copy rewrite, include it: "Suggested copy:" followed by the rewritten text. Ask agent to pass feedback to influencer. Signed {agent_name}.
 
 If overall = "good_to_go":
   - Influencer email: Short and enthusiastic. "Just reviewed your post and it looks great! Happy for this to go live." Signed {agent_name}.
   - Agent email: "Reviewed {influencer_name}'s post — all looks good. Happy to approve." Signed {agent_name}.
 
 In both emails, reference the specific brief ({brief}, Frame {frame}) and the influencer's name ({influencer_name}).
+The improvements and copy rewrite MUST be included within the email body — they should not be separate from the email.
 
 Now evaluate the image and return ONLY the JSON object described above.
 """
