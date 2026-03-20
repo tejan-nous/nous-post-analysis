@@ -10,14 +10,10 @@ import traceback
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import anthropic
-import requests as http_requests
-
 app = Flask(__name__)
 CORS(app)
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
-NOTION_API_KEY = os.environ.get("NOTION_API_KEY")
-NOTION_POSTS_DB = "1f8e4fd0-8136-8094-b03d-fffe5b42de1a"
 
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
@@ -170,104 +166,6 @@ def health():
 def briefs():
     return jsonify({"briefs": BRIEFS})
 
-
-@app.route("/search-posts", methods=["GET"])
-def search_posts():
-    """Search I.Posts in Notion — fetches recent posts and filters by query."""
-    if not NOTION_API_KEY:
-        return jsonify({"error": "NOTION_API_KEY environment variable not set"}), 500
-
-    q = request.args.get("q", "").strip()
-    if not q or len(q) < 2:
-        return jsonify({"results": []})
-
-    headers = {
-        "Authorization": f"Bearer {NOTION_API_KEY}",
-        "Notion-Version": "2022-06-28",
-        "Content-Type": "application/json",
-    }
-
-    body = {
-        "filter": {
-            "property": "id",
-            "title": {"contains": q},
-        },
-        "page_size": 10,
-    }
-
-    # filter_properties as URL params to only return the 5 fields we need
-    # (DB has 232 properties — without this, responses are huge and timeout)
-    prop_params = "&".join([
-        "filter_properties=title",       # post title
-        "filter_properties=DMQ%2560",    # Brief & Frame
-        "filter_properties=%253EG%255D%255D",  # Post date
-        "filter_properties=W%255C%255C~",      # Influencer (string)
-        "filter_properties=dvkA",        # Post Sequence
-    ])
-    query_url = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query?{prop_params}"
-
-    try:
-        resp = http_requests.post(
-            query_url,
-            headers=headers,
-            json=body,
-            timeout=15,
-        )
-        if not resp.ok:
-            err = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {"message": resp.text}
-            return jsonify({"error": f"Notion API {resp.status_code}: {err.get('message', resp.text)}"}), 502
-        data = resp.json()
-
-        results = []
-        for page in data.get("results", []):
-            props = page.get("properties", {})
-
-            # Extract title (property named "id" in this DB)
-            title_prop = props.get("id", {})
-            title_arr = title_prop.get("title", [])
-            title = "".join(t.get("plain_text", "") for t in title_arr) if title_arr else ""
-
-            # Extract Brief & Frame (rich_text)
-            bf_prop = props.get("Brief & Frame", {})
-            bf_arr = bf_prop.get("rich_text", [])
-            brief_frame = "".join(t.get("plain_text", "") for t in bf_arr) if bf_arr else ""
-
-            # Extract Influencer (string) — formula that returns a string
-            inf_prop = props.get("Influencer (string)", {})
-            influencer = ""
-            if inf_prop.get("type") == "formula":
-                formula = inf_prop.get("formula", {})
-                influencer = formula.get("string", "") or ""
-            elif inf_prop.get("type") == "rich_text":
-                inf_arr = inf_prop.get("rich_text", [])
-                influencer = "".join(t.get("plain_text", "") for t in inf_arr) if inf_arr else ""
-
-            # Extract Post Sequence (number)
-            seq_prop = props.get("Post Sequence", {})
-            post_sequence = seq_prop.get("number")
-
-            # Extract Post date
-            pd_prop = props.get("Post date", {})
-            post_date = ""
-            if pd_prop.get("type") == "date" and pd_prop.get("date"):
-                post_date = pd_prop["date"].get("start", "")
-
-            results.append({
-                "id": page["id"],
-                "title": title,
-                "brief_frame": brief_frame,
-                "influencer": influencer,
-                "post_sequence": post_sequence,
-                "post_date": post_date,
-            })
-
-        return jsonify({"results": results})
-
-    except http_requests.RequestException as e:
-        return jsonify({"error": f"Notion API error: {str(e)}"}), 502
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({"error": f"Search error: {str(e)}"}), 500
 
 
 @app.route("/analyse", methods=["POST"])
