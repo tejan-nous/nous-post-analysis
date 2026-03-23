@@ -65984,17 +65984,25 @@ async function ulSendToSlack(id, btn) {
   btn.textContent = 'Sending...';
   try {
     const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
-    const resp = await fetch(serverUrl + '/slack', {method:'POST', headers:{'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''}, body: JSON.stringify({text})});
+    // Extract image index from textarea id (ul-slack-area-0, ul-slack-area-1, etc.)
+    const idx = parseInt(id.replace('ul-slack-area-', ''));
+    const queueItem = ulImageQueue[idx];
+    const payload = {text};
+    if (queueItem && queueItem.base64) {
+      payload.image_base64 = queueItem.base64;
+      payload.filename = queueItem.filename || 'story.jpg';
+    }
+    const resp = await fetch(serverUrl + '/slack', {method:'POST', headers:{'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''}, body: JSON.stringify(payload)});
     const data = await resp.json();
     if (data.ok) {
       btn.textContent = 'Sent!';
       btn.style.background = 'var(--green)';
       btn.style.color = '#fff';
     } else {
-      btn.textContent = 'Failed';
+      btn.textContent = 'Failed: ' + (data.error || '');
       btn.style.background = 'var(--red)';
       btn.style.color = '#fff';
-      setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 2000);
+      setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 3000);
     }
   } catch(e) {
     btn.textContent = 'Error';

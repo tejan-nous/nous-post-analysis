@@ -600,6 +600,37 @@ def get_feedback():
     return jsonify({"feedback": entries, "total": len(entries)})
 
 
+def resolve_slack_channel_id(channel_name, headers):
+    """Resolve a channel name (e.g. #approving-content) to a Slack channel ID."""
+    clean = channel_name.lstrip("#")
+    # Try conversations.list to find the channel
+    cursor = None
+    for _ in range(5):  # max 5 pages
+        params = {"types": "public_channel,private_channel", "limit": 200}
+        if cursor:
+            params["cursor"] = cursor
+        resp = http_requests.get(
+            "https://slack.com/api/conversations.list",
+            headers=headers,
+            params=params,
+            timeout=10,
+        )
+        data = resp.json()
+        if not data.get("ok"):
+            return None
+        for ch in data.get("channels", []):
+            if ch.get("name") == clean:
+                return ch["id"]
+        cursor = data.get("response_metadata", {}).get("next_cursor")
+        if not cursor:
+            break
+    return None
+
+
+# Cache resolved channel ID
+_slack_channel_id_cache = {}
+
+
 @app.route("/slack", methods=["POST"])
 def send_to_slack():
     if not SLACK_BOT_TOKEN:
@@ -609,9 +640,69 @@ def send_to_slack():
     if not data or not data.get("text"):
         return jsonify({"error": "text is required"}), 400
 
+    slack_headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
+    image_b64 = data.get("image_base64")
+
+    # If image included, use Slack 3-step file upload
+    if image_b64:
+        try:
+            image_bytes = base64.b64decode(image_b64)
+            filename = data.get("filename", "story.jpg")
+
+            # Resolve channel ID (file uploads need ID, not name)
+            channel = SLACK_APPROVING_CONTENT_CHANNEL
+            if not channel.startswith("C"):
+                if channel not in _slack_channel_id_cache:
+                    resolved = resolve_slack_channel_id(channel, slack_headers)
+                    if resolved:
+                        _slack_channel_id_cache[channel] = resolved
+                channel = _slack_channel_id_cache.get(channel, channel)
+
+            # Step 1: Get upload URL
+            upload_resp = http_requests.get(
+                "https://slack.com/api/files.getUploadURLExternal",
+                headers=slack_headers,
+                params={"filename": filename, "length": len(image_bytes)},
+                timeout=10,
+            )
+            upload_data = upload_resp.json()
+            if not upload_data.get("ok"):
+                return jsonify({"error": f"Slack upload URL failed: {upload_data.get('error')}"}), 502
+
+            # Step 2: Upload file to the URL
+            put_resp = http_requests.post(
+                upload_data["upload_url"],
+                files={"file": (filename, image_bytes, "image/jpeg")},
+                timeout=30,
+            )
+            if put_resp.status_code != 200:
+                return jsonify({"error": "Slack file upload failed"}), 502
+
+            # Step 3: Complete upload with channel and message
+            complete_resp = http_requests.post(
+                "https://slack.com/api/files.completeUploadExternal",
+                headers={**slack_headers, "Content-Type": "application/json"},
+                json={
+                    "files": [{"id": upload_data["file_id"], "title": filename}],
+                    "channel_id": channel,
+                    "initial_comment": data["text"],
+                },
+                timeout=10,
+            )
+            complete_data = complete_resp.json()
+            if complete_data.get("ok"):
+                return jsonify({"ok": True})
+            else:
+                return jsonify({"error": f"Slack complete failed: {complete_data.get('error')}"}), 502
+
+        except Exception as e:
+            traceback.print_exc()
+            return jsonify({"error": f"Image upload failed: {str(e)}"}), 500
+
+    # No image — simple text message
     resp = http_requests.post(
         "https://slack.com/api/chat.postMessage",
-        headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}"},
+        headers=slack_headers,
         json={
             "channel": SLACK_APPROVING_CONTENT_CHANNEL,
             "text": data["text"],
