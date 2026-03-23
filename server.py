@@ -643,13 +643,13 @@ def send_to_slack():
     slack_headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
     image_b64 = data.get("image_base64")
 
-    # If image included, use Slack 3-step file upload
+    # If image included, post text then upload image in thread
     if image_b64:
         try:
             image_bytes = base64.b64decode(image_b64)
             filename = data.get("filename", "story.jpg")
 
-            # Resolve channel ID (file uploads need ID, not name)
+            # Resolve channel ID (needed for file uploads)
             channel = SLACK_APPROVING_CONTENT_CHANNEL
             if not channel.startswith("C"):
                 if channel not in _slack_channel_id_cache:
@@ -658,42 +658,42 @@ def send_to_slack():
                         _slack_channel_id_cache[channel] = resolved
                 channel = _slack_channel_id_cache.get(channel, channel)
 
-            # Step 1: Get upload URL
-            upload_resp = http_requests.get(
-                "https://slack.com/api/files.getUploadURLExternal",
+            # Step 1: Post the text message first
+            msg_resp = http_requests.post(
+                "https://slack.com/api/chat.postMessage",
                 headers=slack_headers,
-                params={"filename": filename, "length": len(image_bytes)},
-                timeout=10,
-            )
-            upload_data = upload_resp.json()
-            if not upload_data.get("ok"):
-                return jsonify({"error": f"Slack upload URL failed: {upload_data.get('error')}"}), 502
-
-            # Step 2: Upload file to the URL
-            put_resp = http_requests.post(
-                upload_data["upload_url"],
-                files={"file": (filename, image_bytes, "image/jpeg")},
-                timeout=30,
-            )
-            if put_resp.status_code != 200:
-                return jsonify({"error": "Slack file upload failed"}), 502
-
-            # Step 3: Complete upload with channel and message
-            complete_resp = http_requests.post(
-                "https://slack.com/api/files.completeUploadExternal",
-                headers={**slack_headers, "Content-Type": "application/json"},
                 json={
-                    "files": [{"id": upload_data["file_id"], "title": filename}],
-                    "channel_id": channel,
-                    "initial_comment": data["text"],
+                    "channel": channel,
+                    "text": data["text"],
                 },
                 timeout=10,
             )
-            complete_data = complete_resp.json()
-            if complete_data.get("ok"):
-                return jsonify({"ok": True})
-            else:
-                return jsonify({"error": f"Slack complete failed: {complete_data.get('error')}"}), 502
+            msg_data = msg_resp.json()
+            if not msg_data.get("ok"):
+                return jsonify({"error": f"Slack message failed: {msg_data.get('error')}"}), 502
+
+            thread_ts = msg_data.get("ts", "")
+            channel_id = msg_data.get("channel", channel)
+
+            # Step 2: Upload image using files.upload v1 (simpler, supports channel + thread)
+            upload_resp = http_requests.post(
+                "https://slack.com/api/files.upload",
+                headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}"},
+                data={
+                    "channels": channel_id,
+                    "thread_ts": thread_ts,
+                    "filename": filename,
+                    "title": filename,
+                },
+                files={"file": (filename, image_bytes, "image/jpeg")},
+                timeout=30,
+            )
+            upload_data = upload_resp.json()
+            if not upload_data.get("ok"):
+                # Image failed but text was sent — still partial success
+                return jsonify({"ok": True, "warning": f"Text sent but image upload failed: {upload_data.get('error')}"})
+
+            return jsonify({"ok": True})
 
         except Exception as e:
             traceback.print_exc()
