@@ -65535,9 +65535,10 @@ function ulLoadFile(file) {
       base64: dataUrl.split(',')[1],
       filename: file.name,
       dataUrl,
-      brief: document.getElementById('ul-brief').value,
-      frame: document.getElementById('ul-frame').value,
-      reviewType: document.getElementById('ul-default-review').value
+      brief: '',
+      frame: '',
+      reviewType: '',
+      overridden: false
     });
     ulRenderQueue();
   };
@@ -65556,7 +65557,7 @@ function ulFrameOptions(selected) {
   return [1,2,3].map(f => `<option value="${f}"${String(f) === String(selected) ? ' selected' : ''}>Frame ${f}</option>`).join('');
 }
 function ulUpdateQueueItem(idx, field, value) {
-  if (ulImageQueue[idx]) ulImageQueue[idx][field] = value;
+  if (ulImageQueue[idx]) { ulImageQueue[idx][field] = value; ulImageQueue[idx].overridden = true; }
 }
 function ulRenderQueue() {
   const qEl = document.getElementById('ul-queue');
@@ -65661,15 +65662,22 @@ async function ulAnalyse() {
   if (!postDate) { alert('Please enter the post date'); document.getElementById('ul-post-date').focus(); return; }
   if (!ulImageQueue.length) { alert('Please upload at least one image first'); return; }
 
-  // Apply defaults to any image missing brief/frame/reviewType
+  // Apply current defaults to all images that haven't been explicitly overridden
   const defaultBrief = document.getElementById('ul-brief').value;
   const defaultFrame = document.getElementById('ul-frame').value;
   const defaultReview = document.getElementById('ul-default-review').value;
   if (!defaultBrief) { alert('Please select a brief in the defaults'); document.getElementById('ul-brief').focus(); return; }
   for (let i = 0; i < ulImageQueue.length; i++) {
-    if (!ulImageQueue[i].brief) ulImageQueue[i].brief = defaultBrief;
-    if (!ulImageQueue[i].frame) ulImageQueue[i].frame = defaultFrame;
-    if (!ulImageQueue[i].reviewType) ulImageQueue[i].reviewType = defaultReview;
+    if (!ulImageQueue[i].overridden) {
+      ulImageQueue[i].brief = defaultBrief;
+      ulImageQueue[i].frame = defaultFrame;
+      ulImageQueue[i].reviewType = defaultReview;
+    } else {
+      // Still fill any blanks from defaults
+      if (!ulImageQueue[i].brief) ulImageQueue[i].brief = defaultBrief;
+      if (!ulImageQueue[i].frame) ulImageQueue[i].frame = defaultFrame;
+      if (!ulImageQueue[i].reviewType) ulImageQueue[i].reviewType = defaultReview;
+    }
   }
 
   const btn = document.getElementById('ul-btn');
