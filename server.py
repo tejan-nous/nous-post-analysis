@@ -675,23 +675,38 @@ def send_to_slack():
             thread_ts = msg_data.get("ts", "")
             channel_id = msg_data.get("channel", channel)
 
-            # Step 2: Upload image using files.upload v1 (simpler, supports channel + thread)
-            upload_resp = http_requests.post(
-                "https://slack.com/api/files.upload",
-                headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}"},
-                data={
-                    "channels": channel_id,
-                    "thread_ts": thread_ts,
-                    "filename": filename,
-                    "title": filename,
-                },
+            # Step 2: Get upload URL (v2 API)
+            url_resp = http_requests.get(
+                "https://slack.com/api/files.getUploadURLExternal",
+                headers=slack_headers,
+                params={"filename": filename, "length": len(image_bytes)},
+                timeout=10,
+            )
+            url_data = url_resp.json()
+            if not url_data.get("ok"):
+                return jsonify({"ok": True, "warning": f"Text sent but upload URL failed: {url_data.get('error')}"})
+
+            # Step 3: PUT the file bytes to the upload URL
+            put_resp = http_requests.post(
+                url_data["upload_url"],
                 files={"file": (filename, image_bytes, "image/jpeg")},
                 timeout=30,
             )
-            upload_data = upload_resp.json()
-            if not upload_data.get("ok"):
-                # Image failed but text was sent — still partial success
-                return jsonify({"ok": True, "warning": f"Text sent but image upload failed: {upload_data.get('error')}"})
+
+            # Step 4: Complete the upload — share to channel in thread
+            complete_resp = http_requests.post(
+                "https://slack.com/api/files.completeUploadExternal",
+                headers={**slack_headers, "Content-Type": "application/json"},
+                json={
+                    "files": [{"id": url_data["file_id"], "title": filename}],
+                    "channel_id": channel_id,
+                    "thread_ts": thread_ts,
+                },
+                timeout=10,
+            )
+            complete_data = complete_resp.json()
+            if not complete_data.get("ok"):
+                return jsonify({"ok": True, "warning": f"Text sent but image share failed: {complete_data.get('error')}"})
 
             return jsonify({"ok": True})
 
