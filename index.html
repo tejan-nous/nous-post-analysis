@@ -65859,6 +65859,18 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       <div style="padding:12px 16px">
         <textarea id="${emailId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
       </div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div id="ul-feedback-${idx}" style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:24px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px">Rate this review</div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button onclick="ulSetRating(${idx},'good',this)" class="ul-rating-btn" data-rating="good" style="flex:1;padding:8px;border:2px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;transition:all .15s">\ud83d\udc4d Accurate</button>
+        <button onclick="ulSetRating(${idx},'mixed',this)" class="ul-rating-btn" data-rating="mixed" style="flex:1;padding:8px;border:2px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;transition:all .15s">\ud83e\udd37 Partially</button>
+        <button onclick="ulSetRating(${idx},'bad',this)" class="ul-rating-btn" data-rating="bad" style="flex:1;padding:8px;border:2px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;transition:all .15s">\ud83d\udc4e Off</button>
+      </div>
+      <textarea id="ul-feedback-comment-${idx}" placeholder="What did the tool get wrong? What would you change?" style="width:100%;min-height:60px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;line-height:1.5;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box;margin-bottom:8px"></textarea>
+      <button onclick="ulSubmitFeedback(${idx},'${name.replace(/'/g,"\\'")}','${brief.replace(/'/g,"\\'")}',${frame},'${good?'good_to_go':'needs_work'}',this)" style="background:var(--nous);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%">Submit Feedback</button>
     </div>`;
 }
 
@@ -65876,6 +65888,55 @@ function ulCopyText(id) {
     const btns = document.querySelectorAll('.ul-copy-btn');
     btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) { b.textContent = 'Copied!'; setTimeout(()=>b.textContent='Copy',1500); }});
   });
+}
+
+const ulFeedbackRatings = {};
+function ulSetRating(idx, rating, btn) {
+  ulFeedbackRatings[idx] = rating;
+  const container = document.getElementById(`ul-feedback-${idx}`);
+  container.querySelectorAll('.ul-rating-btn').forEach(b => {
+    b.style.borderColor = 'var(--border)';
+    b.style.background = 'var(--surface)';
+    b.style.fontWeight = '400';
+  });
+  btn.style.borderColor = rating === 'good' ? 'var(--green)' : rating === 'bad' ? 'var(--red)' : 'var(--nous)';
+  btn.style.background = rating === 'good' ? 'var(--green-bg)' : rating === 'bad' ? 'var(--red-bg)' : 'var(--nous-light)';
+  btn.style.fontWeight = '700';
+}
+async function ulSubmitFeedback(idx, influencer, brief, frame, aiVerdict, btn) {
+  const rating = ulFeedbackRatings[idx];
+  if (!rating) { alert('Please select a rating first'); return; }
+  const comment = document.getElementById(`ul-feedback-comment-${idx}`).value.trim();
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+  try {
+    const res = await fetch(serverUrl + '/feedback', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        reviewer: document.getElementById('ul-agent')?.value || '',
+        influencer,
+        brief,
+        frame,
+        rating,
+        comment,
+        ai_verdict: aiVerdict,
+      })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      const container = document.getElementById(`ul-feedback-${idx}`);
+      container.innerHTML = `<div style="text-align:center;padding:12px;color:var(--green);font-weight:600">Thanks for the feedback! (${data.total} total)</div>`;
+    } else {
+      btn.textContent = 'Failed — try again';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    btn.textContent = 'Error — try again';
+    btn.disabled = false;
+  }
 }
 
 function ulCopyFromArea(id, btn) {

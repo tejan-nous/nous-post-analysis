@@ -313,6 +313,52 @@ def analyse():
         }), 500
 
 
+FEEDBACK_FILE = os.path.join(os.path.dirname(__file__), "data", "feedback.json")
+
+
+def load_feedback():
+    if os.path.exists(FEEDBACK_FILE):
+        with open(FEEDBACK_FILE) as f:
+            return json.load(f)
+    return []
+
+
+def save_feedback(entries):
+    os.makedirs(os.path.dirname(FEEDBACK_FILE), exist_ok=True)
+    with open(FEEDBACK_FILE, "w") as f:
+        json.dump(entries, f, indent=2, ensure_ascii=False)
+
+
+@app.route("/feedback", methods=["POST"])
+def post_feedback():
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+
+    entry = {
+        "timestamp": data.get("timestamp", ""),
+        "reviewer": data.get("reviewer", ""),
+        "influencer": data.get("influencer", ""),
+        "brief": data.get("brief", ""),
+        "frame": data.get("frame", ""),
+        "rating": data.get("rating", ""),           # "good", "bad", "mixed"
+        "comment": data.get("comment", ""),
+        "ai_verdict": data.get("ai_verdict", ""),    # "good_to_go" or "needs_work"
+        "ai_improvements": data.get("ai_improvements", []),
+    }
+
+    entries = load_feedback()
+    entries.append(entry)
+    save_feedback(entries)
+
+    return jsonify({"ok": True, "total": len(entries)})
+
+
+@app.route("/feedback", methods=["GET"])
+def get_feedback():
+    return jsonify({"feedback": load_feedback()})
+
+
 @app.route("/slack", methods=["POST"])
 def send_to_slack():
     if not SLACK_BOT_TOKEN:
