@@ -21,6 +21,7 @@ SLACK_APPROVING_CONTENT_CHANNEL = os.environ.get("SLACK_APPROVING_CONTENT_CHANNE
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
     {"brief": "Family/Lifestyle Brief 2", "frames": [1, 2, 3]},
+    {"brief": "Family Repeat", "frames": [1, 2, 3]},
     {"brief": "Home Brief 1", "frames": [1, 2, 3]},
     {"brief": "Home Brief 2", "frames": [1, 2, 3]},
     {"brief": "Celebrity Brief 1", "frames": [1, 2, 3]},
@@ -28,7 +29,185 @@ BRIEFS = [
     {"brief": "Fashion Brief 1", "frames": [1, 2, 3]},
     {"brief": "Fashion Brief 2", "frames": [1, 2, 3]},
     {"brief": "Lifestyle Brief 1", "frames": [1, 2, 3]},
+    {"brief": "Nous March 2026", "frames": [1, 2, 3]},
 ]
+
+# Per-brief, per-frame guidance extracted from Notion briefs.
+# Keys: brief name prefix (matched case-insensitively) → frame number → guidance dict
+BRIEF_FRAME_GUIDANCE = {
+    "family": {
+        1: {
+            "title": "Nous is saving you hundreds of pounds this year",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "Full story: hook about energy prices/overpaying, discovery of Nous, specific savings, sign-up ease. Should include @get_nous in body text. Confessional/personal tone.",
+            "skip_criteria": [],
+            "special_rules": [],
+        },
+        2: {
+            "title": "Nous saves you time & stress by looking after your bills",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "Discovery + explanation: how they found Nous, what it does (checks bills, finds better deals, switches you), ongoing management (tracks contracts, switches automatically). Should mention energy, broadband, phone/mobile.",
+            "skip_criteria": ["problem_hook"],
+            "special_rules": [],
+        },
+        3: {
+            "title": "People love using Nous to help them manage their bills",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "Social proof callback: hearing from followers about their savings, reinforcing the benefits. Can reference Trustpilot. Should still include @get_nous and savings figure.",
+            "skip_criteria": ["problem_hook", "discovery_moment"],
+            "special_rules": ["This is a social proof / community callback frame, NOT a short CTA-only frame. It should have substantial copy."],
+        },
+    },
+    "celebrity": {
+        1: {
+            "title": "Nous means you're not wasting money on bills",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Hook about hating wasting money, discovery that bills were too high, Nous found better deals and switched. Personal, slightly dramatic tone.",
+            "skip_criteria": [],
+            "special_rules": [],
+        },
+        2: {
+            "title": "Nous saves you time & stress by looking after your bills",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Busy life angle: between family/work/everything, never had time to sort bills. Nous did everything. Saved £500+ on energy, phone, internet. Emphasis on convenience and time saved.",
+            "skip_criteria": ["problem_hook"],
+            "special_rules": [],
+        },
+        3: {
+            "title": "Nous has saved you hundreds on your bills",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Full discovery story: lightbulb moment about overpaying, signed up to @get_nous, they showed savings and sorted better deals. NOT a short callback — this is a full-length story frame.",
+            "skip_criteria": ["discovery_moment"],
+            "special_rules": ["This is a FULL STORY frame, not a short callback. It should have substantial copy with a personal discovery angle."],
+        },
+    },
+    "fashion": {
+        1: {
+            "title": "I've found an amazing new way to save money (TEASER)",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Start saving here!",
+            "messaging_focus": "SHORT TEASER only. Intriguing, mysterious. Must NOT mention Nous. Must NOT include @get_nous. Keep text minimal — just a hook about saving money on bills from their phone.",
+            "skip_criteria": ["discovery_moment", "what_nous_does", "get_nous_tag"],
+            "special_rules": [
+                "MUST NOT mention Nous or @get_nous anywhere — this is a teaser frame.",
+                "CTA button text MUST be 'Start saving here!' NOT 'Save with Nous'.",
+                "Copy should be SHORT (3-4 lines max) to create intrigue.",
+            ],
+        },
+        2: {
+            "title": "Check out the results of my latest hack (REVEAL)",
+            "visual": "A shot of a recent haul or purchase",
+            "cta": "Save with Nous",
+            "messaging_focus": "Reveal frame: latest haul was 'basically free' thanks to savings. Now introduces @get_nous by name. Explains how Nous saved them £600+ by finding better deals on bills. Shopping/treat angle.",
+            "skip_criteria": ["problem_hook"],
+            "special_rules": ["Visual should be a haul/purchase, not a calm home shot."],
+        },
+        3: {
+            "title": "You realised you were overpaying but now Nous has sorted it",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Full overpaying story: 'loves a bargain' angle, fuming about overpaying, signed up to @get_nous, they sorted better deals. NOT a short callback — full-length story.",
+            "skip_criteria": ["discovery_moment"],
+            "special_rules": ["This is a FULL STORY frame, not a short callback. Should have substantial copy."],
+        },
+    },
+    "home": {
+        1: {
+            "title": "Nous is saving you hundreds and making life easier",
+            "visual": "A calming shot within the home",
+            "cta": "Save with Nous",
+            "messaging_focus": "Home-focused: thought they were switched-on about deals but were overpaying. Signed up to @get_nous. They checked all bills, found better deals, switched. Relief at having one less home admin task. Emphasis on saving money AND making home life easier.",
+            "skip_criteria": [],
+            "special_rules": ["Home niche: visual must be within the home, messaging should reference home/house admin."],
+        },
+        2: {
+            "title": "The one thing in my home I was getting totally wrong",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "Discovery frame: 'mistakes with the house' angle, bills were quietly costing hundreds. Signed up to @get_nous to remove boring admin. Mentions 'a few quick questions' ease. Home admin relief emphasis.",
+            "skip_criteria": ["problem_hook"],
+            "special_rules": ["Should tie into home improvement / home management content style."],
+        },
+        3: {
+            "title": "Check out what I've bought thanks to Nous",
+            "visual": "A shot of a recent purchase for the home",
+            "cta": "Save with Nous",
+            "messaging_focus": "Purchase showcase: showing something bought with the savings from @get_nous. Saved hundreds on bills. Easy sign-up. Now dealing with less admin and spending on things they love. Win-win angle.",
+            "skip_criteria": ["problem_hook", "discovery_moment"],
+            "special_rules": ["Visual should show a recent home purchase, NOT just a calm interior shot.", "This is a purchase showcase frame — the visual of the purchase is key."],
+        },
+    },
+    "lifestyle": {
+        1: {
+            "title": "My latest life lesson",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Life lesson angle: recently found out they were massively overpaying. Suppliers quietly creep up bills. Discovered @get_nous, saved hundreds on energy, broadband, phone. They check, find better deals, switch you. No time/patience to do it yourself.",
+            "skip_criteria": [],
+            "special_rules": [],
+        },
+        2: {
+            "title": "Realisation about my bills",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Phone bill shock stat: money experts say you shouldn't pay more than £7/month for mobile. Discovery of @get_nous, saved on phone + energy + internet. They did all research and switching. 'Prices just creep up' angle.",
+            "skip_criteria": ["problem_hook"],
+            "special_rules": ["May reference the £7/month phone bill stat."],
+        },
+        3: {
+            "title": "You realised you were overpaying but now Nous has sorted it",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Emotional callback: still fuming about overpaying. Never had time to check. Signed up to @get_nous and they sorted better deals straight away. Saved hundreds. Full story, not short callback.",
+            "skip_criteria": ["discovery_moment"],
+            "special_rules": ["This is a FULL STORY frame, not a short callback. Should have substantial copy."],
+        },
+    },
+    "nous march": {
+        1: {
+            "title": "How Nous is saving you money on your bills",
+            "visual": "A lifestyle shot or selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "Direct discovery + savings: signed up to @get_nous, they spotted overpaying on everything (energy, broadband, mobile), switched to better deals, saving £600. Took 5 minutes.",
+            "skip_criteria": [],
+            "special_rules": [],
+        },
+        2: {
+            "title": "Feedback from your followers",
+            "visual": "Calm image that includes a DM/message screenshot from a follower about using Nous",
+            "cta": "Save with Nous",
+            "messaging_focus": "Social proof: showing follower messages about saving with Nous. 'Not the only one wasting money on bills.' Still includes own savings story. @get_nous tag required.",
+            "skip_criteria": ["problem_hook", "discovery_moment"],
+            "special_rules": ["Visual MUST include a screenshot of a follower DM/message about Nous savings.", "This is a social proof frame — the DM screenshot is the key visual element."],
+        },
+        3: {
+            "title": "Text-only post about how Nous has saved you money",
+            "visual": "Coloured background with TEXT ONLY — no lifestyle image, no selfie",
+            "cta": "Save with Nous",
+            "messaging_focus": "PSA-style text-only recap: still in shock at how easy it was. @get_nous spotted overpaying, switched everything, saving £600, took 5 minutes. Worth checking.",
+            "skip_criteria": ["problem_hook", "discovery_moment"],
+            "special_rules": [
+                "Visual MUST be text-only on a coloured background — NO lifestyle image or selfie.",
+                "This is a text-only frame. The visual style check should look for clean text on a solid/gradient background.",
+            ],
+        },
+    },
+}
+
+
+def get_brief_guidance(brief_name, frame):
+    """Look up per-brief, per-frame guidance. Returns guidance dict or None."""
+    brief_lower = brief_name.lower()
+    for prefix, frames in BRIEF_FRAME_GUIDANCE.items():
+        if prefix in brief_lower:
+            return frames.get(frame)
+    return None
 
 SYSTEM_PROMPT = """You are a content quality reviewer for Nous, a UK utility-switching service that saves users £500+ by switching energy, broadband, and mortgage providers.
 
@@ -148,7 +327,7 @@ Context:
 - Frame number: {frame}
 - Influencer: {influencer_name}
 - Reviewer signing off as: {agent_name}
-
+{brief_guidance}
 Email guidance:
 
 Write ONE short, casual email. If an agent name is provided, address the agent (e.g. "Hey Katie,"); otherwise address the influencer directly (e.g. "Hey {influencer_name},").
@@ -208,11 +387,30 @@ Now evaluate the image and return ONLY the JSON object described above.
 
 
 def build_prompt(brief, frame, influencer_name, agent_name):
+    guidance = get_brief_guidance(brief, int(frame) if frame else 1)
+    brief_section = ""
+    if guidance:
+        brief_section = f"""
+
+BRIEF-SPECIFIC GUIDANCE for "{brief}" Frame {frame}:
+- Frame title: {guidance['title']}
+- Expected visual: {guidance['visual']}
+- Expected CTA button text: {guidance['cta']}
+- Messaging focus: {guidance['messaging_focus']}
+"""
+        if guidance.get("skip_criteria"):
+            brief_section += f"- Skip these criteria (mark as pass, they don't apply to this frame): {', '.join(guidance['skip_criteria'])}\n"
+        if guidance.get("special_rules"):
+            brief_section += "- SPECIAL RULES:\n"
+            for rule in guidance["special_rules"]:
+                brief_section += f"  * {rule}\n"
+
     return CRITERIA_PROMPT.format(
         brief=brief,
         frame=frame,
         influencer_name=influencer_name or "the influencer",
         agent_name=agent_name or "Nous Team",
+        brief_guidance=brief_section,
     )
 
 
