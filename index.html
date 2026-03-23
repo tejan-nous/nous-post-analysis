@@ -283,6 +283,14 @@
 </header>
 
 <div class="month-nav" id="month-nav"></div>
+<div id="date-range-panel" style="display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 28px;align-items:center;gap:10px;justify-content:center">
+  <label style="font-size:11px;font-weight:600;color:var(--muted)">From</label>
+  <input type="date" id="date-range-start" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--text);background:var(--bg)">
+  <label style="font-size:11px;font-weight:600;color:var(--muted)">To</label>
+  <input type="date" id="date-range-end" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--text);background:var(--bg)">
+  <button onclick="applyDateRange()" style="background:var(--nous);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Apply</button>
+  <button onclick="clearDateRange()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:11px;color:var(--muted);cursor:pointer">Clear</button>
+</div>
 <div id="week-drop-portal"></div>
 
 
@@ -64365,8 +64373,17 @@ let selectedMonthLabel = allMonthLabels[0] || '';
 let selectedWeekLabel  = null; // null = all weeks in month
 let selectedMonthKey   = allMonthKeys[0] || '';
 let currentIdx = 0;
+let dateRangeStart = null; // ISO string e.g. "2026-01-15"
+let dateRangeEnd   = null;
 
 function getPeriodPosts() {
+  // Custom date range overrides month/week selection
+  if (dateRangeStart && dateRangeEnd) {
+    return displayPosts.filter(p => {
+      const iso = parseIsoDate(p.date);
+      return iso >= dateRangeStart && iso <= dateRangeEnd;
+    });
+  }
   return displayPosts.filter(p => {
     const wl = getWeekLabel(p.date);
     if (!wl) return false;
@@ -64377,6 +64394,42 @@ function getPeriodPosts() {
   });
 }
 function getMonthPosts() { return getPeriodPosts(); }
+
+function applyDateRange() {
+  const startEl = document.getElementById('date-range-start');
+  const endEl = document.getElementById('date-range-end');
+  if (!startEl.value || !endEl.value) return;
+  dateRangeStart = startEl.value;
+  dateRangeEnd = endEl.value;
+  selectedMonthLabel = '';
+  selectedWeekLabel = null;
+  // Deactivate month pills
+  document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.week-chevron').forEach(c => c.classList.remove('active'));
+  // Highlight the range button
+  document.getElementById('date-range-btn').style.borderColor = 'var(--nous)';
+  document.getElementById('date-range-btn').style.color = 'var(--nous)';
+  const pp = getPeriodPosts();
+  if (pp.length) { currentIdx = 0; renderPost(0); }
+  else { alert('No posts found in that date range'); }
+}
+function clearDateRange() {
+  dateRangeStart = null;
+  dateRangeEnd = null;
+  document.getElementById('date-range-start').value = '';
+  document.getElementById('date-range-end').value = '';
+  document.getElementById('date-range-panel').style.display = 'none';
+  document.getElementById('date-range-btn').style.borderColor = 'var(--border)';
+  document.getElementById('date-range-btn').style.color = 'var(--muted)';
+  selectedMonthLabel = allMonthLabels[0] || '';
+  selectedWeekLabel = null;
+  renderMonthNav();
+  renderPost(0);
+}
+function toggleDateRangePanel() {
+  const panel = document.getElementById('date-range-panel');
+  panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+}
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function eCAcRating(ecac) {
@@ -64401,7 +64454,7 @@ function updateArrowNav(idx) {
   const mp = getPeriodPosts();
   const p = mp[idx];
   document.getElementById('arrow-name').textContent = p.name + ' — Post ' + p.post_sequence;
-  const periodLabel = selectedWeekLabel ? selectedMonthLabel + ' · ' + selectedWeekLabel : selectedMonthLabel;
+  const periodLabel = dateRangeStart ? dateRangeStart + ' → ' + dateRangeEnd : (selectedWeekLabel ? selectedMonthLabel + ' · ' + selectedWeekLabel : selectedMonthLabel);
   document.getElementById('arrow-counter').textContent = 'Post ' + (idx + 1) + ' of ' + mp.length + ' · ' + periodLabel;
   document.getElementById('btn-prev').disabled = idx === 0;
   document.getElementById('btn-next').disabled = idx === mp.length - 1;
@@ -64428,7 +64481,7 @@ function renderMonthNav() {
       <button class="month-pill${isActive?' active':''}" onclick="selectMonthLabel('${ml}')">${btnLabel} <span class="month-pill-count">${monthCount}</span></button>
       ${hasWeeks ? `<button class="week-chevron${isActive?' active':''}" id="chv-${safeId}" onclick="toggleWeekDrop(event,'${ml}')" title="Filter by week">&#9662;</button>` : ''}
     </div>`;
-  }).join('');
+  }).join('') + `<button class="month-pill" id="date-range-btn" onclick="toggleDateRangePanel()" style="margin-left:8px;${dateRangeStart?'border-color:var(--nous);color:var(--nous)':''}">📅 Date range</button>`;
 }
 function toggleWeekDrop(e, ml) {
   e.stopPropagation();
@@ -64468,6 +64521,8 @@ document.addEventListener('click', e => {
   if (!e.target.closest('.month-group') && !e.target.closest('#week-drop-portal')) closeDropdowns();
 });
 function selectMonthLabel(ml) {
+  dateRangeStart = null; dateRangeEnd = null;
+  const dp = document.getElementById('date-range-panel'); if (dp) dp.style.display = 'none';
   selectedMonthLabel = ml; selectedWeekLabel = null;
   renderMonthNav(); renderPost(0);
   history.pushState({page:'posts',month:ml,week:null,idx:0}, '', '#posts');
@@ -65140,7 +65195,7 @@ function renderPost(idx) {
     <!-- IMAGE PANEL -->
     <div class="image-panel">
       <div class="story-frame">
-        <img src="${p.image}" alt="${p.name}" crossorigin="anonymous" onerror="this.style.background='#111'" onload="ulCheckBlackImage(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">
+        ${p.image ? `<img src="${p.image}" alt="${p.name}" crossorigin="anonymous" onerror="this.style.background='var(--bg)';this.style.objectFit='none';this.alt='Image not available'" onload="ulCheckBlackImage(this)" onclick="if(this.src&&!this.src.endsWith('/'))openLightbox(this.src)" style="cursor:zoom-in">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:var(--bg)"><span style="font-size:32px">📷</span><span style="font-size:12px;color:var(--muted)">No image uploaded</span></div>`}
         <div class="story-frame-guide">
           <h4>📋 Quick quality guide</h4>
           <ul style="margin:0;padding-left:16px">
