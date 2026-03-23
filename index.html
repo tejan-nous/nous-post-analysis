@@ -65983,7 +65983,8 @@ async function ulSendToSlack(id, btn) {
   btn.disabled = true;
   btn.textContent = 'Sending...';
   try {
-    const resp = await fetch('/slack', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text})});
+    const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+    const resp = await fetch(serverUrl + '/slack', {method:'POST', headers:{'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''}, body: JSON.stringify({text})});
     const data = await resp.json();
     if (data.ok) {
       btn.textContent = 'Sent!';
