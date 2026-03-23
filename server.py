@@ -144,7 +144,15 @@ Email guidance:
 
 Write ONE short, casual email. If an agent name is provided, address the agent (e.g. "Hey Katie,"); otherwise address the influencer directly (e.g. "Hey {influencer_name},").
 
-Keep it brief — like a real person dashing off a quick email. Examples of the right tone:
+Structure for "needs_work":
+1. One-line positive opener
+2. Max 3 bullet points — short, specific changes needed (not explanations of why)
+3. If there are copy issues, add the full rewritten copy below the bullets as "Suggested copy:" on its own line
+4. Sign off
+
+Structure for "good_to_go":
+1. One line: looks great, happy for it to go live
+2. Sign off
 
 Example 1 (needs work, to agent):
 "Hi Katie,
@@ -152,19 +160,21 @@ Example 1 (needs work, to agent):
 Looks great, thanks. Just a couple tweaks from me:
 
 - Could she please cut the second sentence from paragraph 1
-
 - Could she please capitalise "Nous" in the third paragraph
 
 Thanks!
 {agent_name}"
 
-Example 2 (needs work, to agent with copy rewrite):
+Example 2 (needs work, with copy rewrite):
 "Hey Rosie,
 
-Thanks for sending over!
+Thanks for sending over! Could we have a small tweak to the copy for clarity:
 
-Could we have a small tweak to the second paragraph for clarity. Suggested version
+- Replace "saving loads" with a specific figure like "£781 a year"
+- Add that Nous is free
+- Move the CTA button to the bottom of the frame
 
+Suggested copy:
 It turns out I've been foolishly overpaying. Luckily I found out about a new tool called Nous and decided to give it a go. It checked everything for me, it's automatically switching me to better deals and I'll be saving hundreds of pounds a year!
 
 Many thanks,
@@ -179,10 +189,9 @@ Thanks,
 {agent_name}"
 
 Key rules:
-- Maximum 2-4 sentences plus bullet points if needed
+- Maximum 3 bullet points. Each bullet is ONE short instruction, not an explanation
+- Do NOT say "I've included a suggested copy rewrite above" — just put it inline after "Suggested copy:"
 - No formal greetings like "I hope this finds you well"
-- Reference specific issues from the review, not vague feedback
-- If there's a copy rewrite, include the suggested text inline
 - Sign off as {agent_name}
 
 Now evaluate the image and return ONLY the JSON object described above.
