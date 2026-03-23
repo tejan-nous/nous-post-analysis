@@ -65606,12 +65606,15 @@ async function ulAnalyse() {
   if (!postDate) { alert('Please enter the post date'); document.getElementById('ul-post-date').focus(); return; }
   if (!ulImageQueue.length) { alert('Please upload at least one image first'); return; }
 
-  // Validate each image has a brief selected
+  // Apply defaults to any image missing brief/frame/reviewType
+  const defaultBrief = document.getElementById('ul-brief').value;
+  const defaultFrame = document.getElementById('ul-frame').value;
+  const defaultReview = document.getElementById('ul-default-review').value;
+  if (!defaultBrief) { alert('Please select a brief in the defaults'); document.getElementById('ul-brief').focus(); return; }
   for (let i = 0; i < ulImageQueue.length; i++) {
-    if (!ulImageQueue[i].brief) {
-      alert(`Please select a brief for image ${i + 1} (${ulImageQueue[i].filename})`);
-      return;
-    }
+    if (!ulImageQueue[i].brief) ulImageQueue[i].brief = defaultBrief;
+    if (!ulImageQueue[i].frame) ulImageQueue[i].frame = defaultFrame;
+    if (!ulImageQueue[i].reviewType) ulImageQueue[i].reviewType = defaultReview;
   }
 
   const btn = document.getElementById('ul-btn');
