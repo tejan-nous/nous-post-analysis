@@ -75,42 +75,51 @@ Use "good_to_go" when score >= 80% of total criteria pass. Otherwise use "needs_
 CRITERIA_PROMPT = """
 Evaluate this Instagram Story image against the following criteria. For each sub-criterion, determine pass (true) or fail (false) based only on what is visible in the image.
 
+IMPORTANT — Frame-specific guidance:
+Each brief has 3 frames. NOT all criteria apply equally to every frame:
+
+Frame 1 (Hook): This is the opening story. It MUST have a problem-aware hook, personal confession, or shock stat. It should NOT mention Nous or @get_nous yet. Criteria 1 (Problem-aware hook) is critical here. Criteria 3-5 (What Nous does, Savings claim, Sign-up ease) are NOT expected on Frame 1 — do NOT fail them if absent.
+
+Frame 2 (Discovery + Explanation): This is where the influencer introduces Nous. Criteria 2 (Discovery moment), 3 (What Nous does), 4 (Savings claim), and 5 (Sign-up ease) are critical here. Criterion 1 (Problem-aware hook) is NOT expected — do NOT fail it if absent.
+
+Frame 3 (Callback / CTA): This is a short callback frame — a final nudge to sign up. It is typically very short (1-2 sentences). Criteria 1 (Problem-aware hook), 2 (Discovery moment), 3 (What Nous does), and 5 (Sign-up ease) are NOT expected on Frame 3 — do NOT fail them if absent. The most important things on Frame 3 are: CTA button (criteria 7-8), @get_nous tag, and a clear savings figure or callback to the saving mentioned earlier.
+
 CRITERIA TO CHECK:
 
-1. Problem-aware hook
+1. Problem-aware hook [FRAME 1 ONLY — skip for Frames 2-3]
    a. Doesn't open with brand name or product (@get_nous / "I've been using Nous")
    b. Opens with a personal problem, confession, or shock stat
    c. No "loads of people posting about Nous" or herd-following language
    d. Tone is confessional or self-deprecating, not corporate
    e. No unproven enthusiasm ("excited to see what we can save")
 
-2. Discovery moment
+2. Discovery moment [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Discovery feels natural, not scripted ("I stumbled across", not "Nous asked me")
    b. Nous called a "tool", not a "company"
    c. No "I promise it's totally legit" disclaimer
    d. Creator has clearly signed up and used Nous themselves
 
-3. What Nous does
+3. What Nous does [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Mentions switching across energy, broadband and phone/mobile
    b. No claim that Nous finds the cheapest deal on the whole market
    c. No claim that Nous reminds you when contracts end
    d. Makes clear Nous handles the switching (zero effort for user)
 
-4. Savings claim
+4. Savings claim [FRAMES 2-3 — skip for Frame 1]
    a. Specific £ figure mentioned (personal saving OR approved stat: £781/yr, £250 energy, £7/mo phone, £500+)
    b. No vague language like "save loads" or "could save you money"
    c. No "cheapest deal" claim
 
-5. Sign-up ease
+5. Sign-up ease [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Mentions how quick it is ("2 minutes", "from my phone in like five minutes")
    b. Mentions Nous is free
    c. References "just a few quick questions" or minimal effort
 
-6. @get_nous tag
+6. @get_nous tag [ALL FRAMES]
    a. @get_nous appears in body text (unless this is a Fashion Secret/Teaser frame)
    b. @get_nous does not appear in the opening line
 
-7. Save with Nous CTA
+7. Save with Nous CTA [ALL FRAMES — critical for Frame 3]
    a. CTA button is present
    b. Button text is "Save with Nous" (or "Start saving here!" for Fashion Frame 2 only)
    c. No "AD" text inside the button itself
@@ -118,17 +127,17 @@ CRITERIA TO CHECK:
    e. Button text is readable — good contrast, not too small
    f. No vote/poll sticker on the story that competes with the CTA
 
-8. Button placement
+8. Button placement [ALL FRAMES — critical for Frame 3]
    a. CTA button is at the BOTTOM of the story
    b. Button is not obscured by AD label, stickers or text blocks
    c. Only one CTA button — no competing links
 
-9. Calming/lifestyle visual
+9. Calming/lifestyle visual [ALL FRAMES]
    a. Visual is calming — not busy, cluttered or high-contrast
    b. Visual matches niche expectation for this frame (home interior, lifestyle shot, etc.)
    c. AD label is placed below the product shot, not covering the image
 
-10. Text readability
+10. Text readability [ALL FRAMES]
     a. Font is large enough to read comfortably on a phone screen
     b. Text colour has strong contrast against the background
     c. Long copy is broken into multiple text blocks, not a single wall of text
@@ -356,7 +365,26 @@ def post_feedback():
 
 @app.route("/feedback", methods=["GET"])
 def get_feedback():
-    return jsonify({"feedback": load_feedback()})
+    entries = load_feedback()
+    # Optional query filters
+    influencer = request.args.get("influencer", "").lower()
+    brief = request.args.get("brief", "").lower()
+    rating = request.args.get("rating", "").lower()
+    reviewer = request.args.get("reviewer", "").lower()
+    verdict = request.args.get("verdict", "").lower()
+
+    if influencer:
+        entries = [e for e in entries if influencer in e.get("influencer", "").lower()]
+    if brief:
+        entries = [e for e in entries if brief in e.get("brief", "").lower()]
+    if rating:
+        entries = [e for e in entries if e.get("rating", "").lower() == rating]
+    if reviewer:
+        entries = [e for e in entries if reviewer in e.get("reviewer", "").lower()]
+    if verdict:
+        entries = [e for e in entries if e.get("ai_verdict", "").lower() == verdict]
+
+    return jsonify({"feedback": entries, "total": len(entries)})
 
 
 @app.route("/slack", methods=["POST"])
