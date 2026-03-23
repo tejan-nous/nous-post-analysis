@@ -7,6 +7,7 @@ import os
 import json
 import base64
 import traceback
+import requests as http_requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import anthropic
@@ -14,6 +15,8 @@ app = Flask(__name__)
 CORS(app)
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
+SLACK_APPROVING_CONTENT_CHANNEL = os.environ.get("SLACK_APPROVING_CONTENT_CHANNEL", "#approving-content")
 
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
@@ -53,8 +56,7 @@ The JSON structure must be exactly:
   "summary": "<2-3 sentence summary of overall quality, referencing specific details visible in the image>",
   "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
   "copy_rewrite": "<if needs_work AND there are text/copy issues, provide a full rewritten version of the story copy that fixes the issues. If good_to_go or no copy issues, return empty string>",
-  "email_influencer": "<full email text to send to the influencer>",
-  "email_agent": "<full email text to send to the talent agent>"
+  "email": "<single short email — addressed to agent if agent name provided, otherwise to influencer directly>"
 }
 
 "obvious_tweaks" covers visual/technical issues: text readability, button placement, button text, CTA visibility, image quality, AD label placement, font size, contrast, text layout.
@@ -140,16 +142,48 @@ Context:
 
 Email guidance:
 
-If overall = "needs_work":
-  - Influencer email: Warm and friendly. Start with what's good. Then list the 2-3 improvements as bullet points. If there is a copy rewrite, include it at the end: "Here's a suggested tweak to the copy:" followed by the rewritten text. Sign off as {agent_name}. Tone: collaborative, not critical.
-  - Agent email: Professional and concise. Bullet-pointed improvements needed. If there is a copy rewrite, include it: "Suggested copy:" followed by the rewritten text. Ask agent to pass feedback to influencer. Signed {agent_name}.
+Write ONE short, casual email. If an agent name is provided, address the agent (e.g. "Hey Katie,"); otherwise address the influencer directly (e.g. "Hey {influencer_name},").
 
-If overall = "good_to_go":
-  - Influencer email: Short and enthusiastic. "Just reviewed your post and it looks great! Happy for this to go live." Signed {agent_name}.
-  - Agent email: "Reviewed {influencer_name}'s post — all looks good. Happy to approve." Signed {agent_name}.
+Keep it brief — like a real person dashing off a quick email. Examples of the right tone:
 
-In both emails, reference the specific brief ({brief}, Frame {frame}) and the influencer's name ({influencer_name}).
-The improvements and copy rewrite MUST be included within the email body — they should not be separate from the email.
+Example 1 (needs work, to agent):
+"Hi Katie,
+
+Looks great, thanks. Just a couple tweaks from me:
+
+- Could she please cut the second sentence from paragraph 1
+
+- Could she please capitalise "Nous" in the third paragraph
+
+Thanks!
+{agent_name}"
+
+Example 2 (needs work, to agent with copy rewrite):
+"Hey Rosie,
+
+Thanks for sending over!
+
+Could we have a small tweak to the second paragraph for clarity. Suggested version
+
+It turns out I've been foolishly overpaying. Luckily I found out about a new tool called Nous and decided to give it a go. It checked everything for me, it's automatically switching me to better deals and I'll be saving hundreds of pounds a year!
+
+Many thanks,
+{agent_name}"
+
+Example 3 (good to go):
+"Hey [name],
+
+Looks great — happy for this to go live!
+
+Thanks,
+{agent_name}"
+
+Key rules:
+- Maximum 2-4 sentences plus bullet points if needed
+- No formal greetings like "I hope this finds you well"
+- Reference specific issues from the review, not vague feedback
+- If there's a copy rewrite, include the suggested text inline
+- Sign off as {agent_name}
 
 Now evaluate the image and return ONLY the JSON object described above.
 """
@@ -268,6 +302,32 @@ def analyse():
             "error": "Internal server error",
             "detail": str(e),
         }), 500
+
+
+@app.route("/slack", methods=["POST"])
+def send_to_slack():
+    if not SLACK_BOT_TOKEN:
+        return jsonify({"error": "SLACK_BOT_TOKEN not configured"}), 500
+
+    data = request.get_json(force=True, silent=True)
+    if not data or not data.get("text"):
+        return jsonify({"error": "text is required"}), 400
+
+    resp = http_requests.post(
+        "https://slack.com/api/chat.postMessage",
+        headers={"Authorization": f"Bearer {SLACK_BOT_TOKEN}"},
+        json={
+            "channel": SLACK_APPROVING_CONTENT_CHANNEL,
+            "text": data["text"],
+        },
+        timeout=10,
+    )
+
+    result = resp.json()
+    if result.get("ok"):
+        return jsonify({"ok": True})
+    else:
+        return jsonify({"error": result.get("error", "Unknown Slack error")}), 502
 
 
 if __name__ == "__main__":

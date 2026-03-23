@@ -65526,8 +65526,33 @@ function ulRenderQueue() {
     thumb.onclick = () => openLightbox(item.dataUrl);
     row.appendChild(thumb);
 
+    const infoCol = document.createElement('div');
+    infoCol.style.cssText = 'flex:1;min-width:0;display:flex;flex-direction:column;gap:4px';
+
+    const topRow = document.createElement('div');
+    topRow.style.cssText = 'display:flex;align-items:center;gap:8px';
+    const fname = document.createElement('div');
+    fname.style.cssText = 'font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1';
+    fname.textContent = item.filename;
+    topRow.appendChild(fname);
+
+    const overrideBtn = document.createElement('button');
+    overrideBtn.textContent = 'Override';
+    overrideBtn.style.cssText = 'background:none;border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:10px;color:var(--muted);cursor:pointer;flex-shrink:0';
+    overrideBtn.onclick = () => {
+      const panel = row.querySelector('.ul-override-panel');
+      const visible = panel.style.display !== 'none';
+      panel.style.display = visible ? 'none' : 'grid';
+      overrideBtn.textContent = visible ? 'Override' : 'Hide';
+      overrideBtn.style.color = visible ? 'var(--muted)' : 'var(--nous)';
+      overrideBtn.style.borderColor = visible ? 'var(--border)' : 'var(--nous)';
+    };
+    topRow.appendChild(overrideBtn);
+    infoCol.appendChild(topRow);
+
     const controls = document.createElement('div');
-    controls.style.cssText = 'flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;min-width:0';
+    controls.className = 'ul-override-panel';
+    controls.style.cssText = 'display:none;grid-template-columns:1fr 1fr 1fr;gap:8px;min-width:0';
     controls.innerHTML = `
       <div>
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Review</div>
@@ -65547,18 +65572,14 @@ function ulRenderQueue() {
     controls.querySelectorAll('select[data-idx]').forEach(sel => {
       sel.addEventListener('change', () => ulUpdateQueueItem(+sel.dataset.idx, sel.dataset.field, sel.value));
     });
-    row.appendChild(controls);
+    infoCol.appendChild(controls);
+    row.appendChild(infoCol);
 
     const removeBtn = document.createElement('button');
     removeBtn.textContent = '\u00d7';
     removeBtn.style.cssText = 'position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1;padding:0';
     removeBtn.onclick = () => ulRemoveFromQueue(i);
     row.appendChild(removeBtn);
-
-    const fname = document.createElement('div');
-    fname.style.cssText = 'position:absolute;bottom:4px;left:68px;font-size:8px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
-    fname.textContent = item.filename;
-    row.appendChild(fname);
 
     container.appendChild(row);
   });
@@ -65716,25 +65737,31 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
   slackLines.push('');
   const slackText = slackLines.join('\n');
 
-  const emailInfluencer = d.email_influencer || '';
-  const emailAgent = d.email_agent || '';
+  const emailText = d.email || d.email_influencer || d.email_agent || '';
+  const emailRecipient = agent || name || 'influencer';
   const slackId = `ul-slack-area-${idx}`;
-  const emailInfluencerId = `ul-email-influencer-area-${idx}`;
-  const emailAgentId = `ul-email-agent-area-${idx}`;
+  const emailId = `ul-email-area-${idx}`;
   const briefDetailId = `ul-brief-detail-${idx}`;
 
   return `
-    <!-- VERDICT BANNER + IMAGE -->
-    <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;margin-bottom:20px">
-      <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}" style="margin-bottom:0">
-        <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
-        <div>
-          <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
-          <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
-        </div>
+    <!-- IMAGE HERO -->
+    ${dataUrl ? `
+    <div style="position:relative;margin-bottom:20px;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">
+      <img src="${dataUrl}" style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,.12)">
+      <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:${good ? 'rgba(22,163,74,.92)' : 'rgba(220,38,38,.92)'};color:#fff;padding:8px 20px;border-radius:99px;font-weight:800;font-size:14px;white-space:nowrap;backdrop-filter:blur(4px)">
+        ${good ? '\u2705 Good to go!' : '\u26a0\ufe0f Needs work'}
       </div>
-      ${dataUrl ? `<img src="${dataUrl}" style="width:140px;border-radius:8px;object-fit:cover;aspect-ratio:9/16;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">` : ''}
     </div>
+    <div style="text-align:center;font-size:13px;color:var(--muted);margin:-12px 0 20px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
+    ` : `
+    <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}" style="margin-bottom:20px">
+      <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
+      <div>
+        <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
+        <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
+      </div>
+    </div>
+    `}
 
     <!-- OBVIOUS TWEAKS (max 4, compact) -->
     <div class="card" style="margin-bottom:12px">
@@ -65755,45 +65782,26 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
     <div style="background:var(--surface);border:2px solid var(--nous);border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
       <div style="background:var(--nous);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-weight:700;font-size:13px">\ud83d\udcac Slack \u2014 #approving-content</span>
-        <button onclick="ulCopyFromArea('${slackId}', this)" style="background:#fff;color:var(--nous);border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+        <div style="display:flex;gap:6px">
+          <button onclick="ulCopyFromArea('${slackId}', this)" style="background:#fff;color:var(--nous);border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+          <button onclick="ulSendToSlack('${slackId}', this)" style="background:#fff;color:var(--nous);border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Send</button>
+        </div>
       </div>
       <div style="padding:12px 16px">
         <textarea id="${slackId}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
-    <!-- EMAIL TO INFLUENCER -->
-    <div style="background:var(--surface);border:2px solid #6366f1;border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
+    <!-- EMAIL -->
+    <div style="background:var(--surface);border:2px solid #6366f1;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
       <div style="background:#6366f1;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to ${name || 'influencer'}</span>
-        <button onclick="ulCopyFromArea('${emailInfluencerId}', this)" style="background:#fff;color:#6366f1;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
+        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to ${emailRecipient}</span>
+        <button onclick="ulCopyFromArea('${emailId}', this)" style="background:#fff;color:#6366f1;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
       </div>
       <div style="padding:12px 16px">
-        <textarea id="${emailInfluencerId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailInfluencer.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${emailId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailText.replace(/</g,'&lt;')}</textarea>
       </div>
-    </div>
-
-    ${agent ? `
-    <!-- EMAIL TO AGENT -->
-    <div style="background:var(--surface);border:2px solid #8b5cf6;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
-      <div style="background:#8b5cf6;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to ${agent}</span>
-        <button onclick="ulCopyFromArea('${emailAgentId}', this)" style="background:#fff;color:#8b5cf6;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
-      </div>
-      <div style="padding:12px 16px">
-        <textarea id="${emailAgentId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailAgent.replace(/</g,'&lt;')}</textarea>
-      </div>
-    </div>` : `
-    <!-- EMAIL TO AGENT (no agent specified) -->
-    <div style="background:var(--surface);border:2px solid #8b5cf6;border-radius:12px;padding:0;margin-bottom:24px;overflow:hidden">
-      <div style="background:#8b5cf6;color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-weight:700;font-size:13px">\ud83d\udce7 Email to agent</span>
-        <button onclick="ulCopyFromArea('${emailAgentId}', this)" style="background:#fff;color:#8b5cf6;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Copy</button>
-      </div>
-      <div style="padding:12px 16px">
-        <textarea id="${emailAgentId}" style="width:100%;min-height:140px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${emailAgent.replace(/</g,'&lt;')}</textarea>
-      </div>
-    </div>`}`;
+    </div>`;
 }
 
 function ulCopy(id) {
@@ -65819,6 +65827,30 @@ function ulCopyFromArea(id, btn) {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = orig, 1500);
   });
+}
+async function ulSendToSlack(id, btn) {
+  const el = document.getElementById(id);
+  const text = el.value.trim();
+  if (!text) return;
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  try {
+    const resp = await fetch('/slack', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text})});
+    const data = await resp.json();
+    if (data.ok) {
+      btn.textContent = 'Sent!';
+      btn.style.background = 'var(--green)';
+      btn.style.color = '#fff';
+    } else {
+      btn.textContent = 'Failed';
+      btn.style.background = 'var(--red)';
+      btn.style.color = '#fff';
+      setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 2000);
+    }
+  } catch(e) {
+    btn.textContent = 'Error';
+    setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 2000);
+  }
 }
 
 // Detect mostly-black images (likely video screenshots)
