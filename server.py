@@ -491,14 +491,29 @@ def analyse():
         raw_text = message.content[0].text.strip()
 
         # Strip markdown code fences if present
-        if raw_text.startswith("```"):
-            lines = raw_text.split("\n")
-            # Remove first and last fence lines
-            lines = [l for l in lines if not l.strip().startswith("```")]
-            raw_text = "\n".join(lines).strip()
+        if "```" in raw_text:
+            import re as _re
+            fence_match = _re.search(r'```(?:json)?\s*\n?(.*?)\n?\s*```', raw_text, _re.DOTALL)
+            if fence_match:
+                raw_text = fence_match.group(1).strip()
 
-        result = json.loads(raw_text)
-        return jsonify(result)
+        # Try direct parse first
+        try:
+            result = json.loads(raw_text)
+            return jsonify(result)
+        except json.JSONDecodeError:
+            pass
+
+        # Fallback: extract the first JSON object from the response
+        first_brace = raw_text.find("{")
+        last_brace = raw_text.rfind("}")
+        if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
+            json_substr = raw_text[first_brace:last_brace + 1]
+            result = json.loads(json_substr)
+            return jsonify(result)
+
+        # If we get here, truly no JSON found
+        raise json.JSONDecodeError("No JSON object found in response", raw_text, 0)
 
     except json.JSONDecodeError as e:
         return jsonify({
