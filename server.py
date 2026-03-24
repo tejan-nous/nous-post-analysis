@@ -428,7 +428,7 @@ def briefs():
 
 
 # --- Notion upcoming posts lookup (cached) ---
-_upcoming_posts_cache = {"data": None, "fetched_at": 0}
+_upcoming_posts_cache = {"data": None, "fetched_at": 0, "error": None, "loading": False}
 UPCOMING_POSTS_CACHE_TTL = 300  # 5 minutes
 _notion_headers = None
 _posts_prop_ids = None  # cached property IDs for filter_properties
@@ -556,25 +556,33 @@ def _resolve_campaign_prop_ids(campaign_id):
     return _resolve_campaign_prop_ids._ids
 
 
-def _prewarm_notion_cache():
-    """Pre-resolve property IDs and fetch upcoming posts on startup."""
+def _refresh_upcoming_posts():
+    """Fetch upcoming posts in background. Updates cache when done."""
     import time as _t
+    if _upcoming_posts_cache.get("loading"):
+        return  # already running
+    _upcoming_posts_cache["loading"] = True
+    _upcoming_posts_cache["error"] = None
     try:
         if NOTION_TOKEN and NOTION_POSTS_DB:
             _get_posts_prop_ids()
         if NOTION_TOKEN and NOTION_CAMPAIGNS_DB:
             _resolve_campaign_prop_ids(None)
-        # Pre-fetch upcoming posts so first user request is instant
         if NOTION_TOKEN and NOTION_POSTS_DB:
             data = _fetch_upcoming_posts()
             _upcoming_posts_cache["data"] = data
             _upcoming_posts_cache["fetched_at"] = _t.time()
-            print(f"[notion] prewarm complete: {len(data)} upcoming posts cached", flush=True)
+            print(f"[notion] refresh complete: {len(data)} upcoming posts cached", flush=True)
     except Exception as e:
-        print(f"[notion] prewarm error: {e}", flush=True)
+        import traceback as _tb
+        _tb.print_exc()
+        _upcoming_posts_cache["error"] = str(e)
+        print(f"[notion] refresh error: {e}", flush=True)
+    finally:
+        _upcoming_posts_cache["loading"] = False
 
 import threading
-threading.Thread(target=_prewarm_notion_cache, daemon=True).start()
+threading.Thread(target=_refresh_upcoming_posts, daemon=True).start()
 
 
 def _fetch_upcoming_posts():
@@ -699,109 +707,23 @@ def _fetch_upcoming_posts():
 
 @app.route("/notion/debug", methods=["GET"])
 def notion_debug():
-    """Debug endpoint to test Notion connectivity."""
+    """Debug endpoint — returns cache status (no live Notion calls)."""
     import time
-    results = {"token_set": bool(NOTION_TOKEN), "posts_db": NOTION_POSTS_DB, "campaigns_db": NOTION_CAMPAIGNS_DB}
-    if not NOTION_TOKEN:
-        return jsonify(results), 500
-    # Test: retrieve DB metadata (tiny response)
-    try:
-        t0 = time.time()
-        resp = http_requests.get(
-            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}",
-            headers=_get_notion_headers(),
-            timeout=15,
-        )
-        results["db_fetch_ms"] = int((time.time() - t0) * 1000)
-        results["db_status"] = resp.status_code
-        if resp.status_code == 200:
-            db = resp.json()
-            results["db_title"] = db.get("title", [{}])[0].get("plain_text", "?")
-            results["property_count"] = len(db.get("properties", {}))
-            # Show IDs for the 2 props we need
-            props = db.get("properties", {})
-            for name in ["Post date", "I.Campaigns"]:
-                if name in props:
-                    results[f"prop_{name}_id"] = props[name].get("id", "?")
-        else:
-            results["db_error"] = resp.text[:200]
-    except Exception as e:
-        results["db_error"] = str(e)
-    # Test: query with page_size=1 and filter_properties
-    try:
-        from datetime import datetime, timedelta
-        today = datetime.utcnow().strftime("%Y-%m-%d")
-        one_week = (datetime.utcnow() + timedelta(days=7)).strftime("%Y-%m-%d")
-        prop_ids = _get_posts_prop_ids()
-        results["resolved_prop_ids"] = prop_ids
-        t0 = time.time()
-        url = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query"
-        qp = [("filter_properties", pid) for pid in (prop_ids or [])]
-        resp = http_requests.post(url, headers=_get_notion_headers(), params=qp, json={
-            "filter": {"and": [
-                {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_week}},
-            ]},
-            "page_size": 1,
-        }, timeout=30)
-        results["query_ms"] = int((time.time() - t0) * 1000)
-        results["query_status"] = resp.status_code
-        if resp.status_code == 200:
-            data = resp.json()
-            results["total_results_hint"] = "has_more" if data.get("has_more") else "all_returned"
-            results["result_count"] = len(data.get("results", []))
-            if data.get("results"):
-                results["sample_props"] = list(data["results"][0].get("properties", {}).keys())
-        else:
-            results["query_error"] = resp.text[:300]
-    except Exception as e:
-        results["query_error"] = str(e)
-    # Test: campaign DB schema fetch + property IDs
-    try:
-        t0 = time.time()
-        camp_pids = _resolve_campaign_prop_ids(None)
-        results["camp_resolve_ms"] = int((time.time() - t0) * 1000)
-        results["camp_prop_ids"] = camp_pids
-    except Exception as e:
-        results["camp_resolve_error"] = str(e)
-    # Test: fetch a single campaign page with filter_properties
-    try:
-        if results.get("query_status") == 200 and results.get("result_count", 0) > 0:
-            # Get a campaign ID from the first post
-            first_post = resp.json().get("results", [{}])[0]
-            camp_rel = first_post.get("properties", {}).get("I.Campaigns", {}).get("relation", [])
-            if camp_rel:
-                cid = camp_rel[0]["id"]
-                t0 = time.time()
-                page = _notion_get_page(cid, prop_ids=camp_pids if camp_pids else None)
-                results["camp_page_ms"] = int((time.time() - t0) * 1000)
-                if page:
-                    props = page.get("properties", {})
-                    results["camp_page_props"] = list(props.keys())
-                    results["camp_page_title"] = _extract_title(props, "id")
-                    results["camp_page_influencer"] = str(_extract_formula(props, "Influencer (string)") or "")
-                    results["camp_page_brief"] = str(_extract_formula(props, "Brief Link") or "")
-    except Exception as e:
-        results["camp_page_error"] = str(e)
-    # Test: count total upcoming posts
-    try:
-        t0 = time.time()
-        url2 = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query"
-        qp2 = [("filter_properties", pid) for pid in (prop_ids or [])]
-        resp2 = http_requests.post(url2, headers=_get_notion_headers(), params=qp2, json={
-            "filter": {"and": [
-                {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_week}},
-            ]},
-            "page_size": 10,
-        }, timeout=30)
-        results["full_query_ms"] = int((time.time() - t0) * 1000)
-        if resp2.status_code == 200:
-            d2 = resp2.json()
-            results["full_count"] = len(d2.get("results", []))
-            results["full_has_more"] = d2.get("has_more", False)
-    except Exception as e:
-        results["full_query_error"] = str(e)
+    results = {
+        "token_set": bool(NOTION_TOKEN),
+        "posts_db": NOTION_POSTS_DB[:8] + "..." if NOTION_POSTS_DB else "",
+        "campaigns_db": NOTION_CAMPAIGNS_DB[:8] + "..." if NOTION_CAMPAIGNS_DB else "",
+        "cache_has_data": _upcoming_posts_cache["data"] is not None,
+        "cache_post_count": len(_upcoming_posts_cache["data"]) if _upcoming_posts_cache["data"] else 0,
+        "cache_age_seconds": int(time.time() - _upcoming_posts_cache["fetched_at"]) if _upcoming_posts_cache["fetched_at"] else None,
+        "cache_loading": _upcoming_posts_cache.get("loading", False),
+        "cache_error": _upcoming_posts_cache.get("error"),
+        "posts_prop_ids": _posts_prop_ids,
+        "camp_prop_ids": getattr(_resolve_campaign_prop_ids, "_ids", None),
+    }
+    # Show sample data if cached
+    if _upcoming_posts_cache["data"]:
+        results["sample"] = _upcoming_posts_cache["data"][:3]
     return jsonify(results)
 
 
@@ -813,17 +735,29 @@ def upcoming_posts():
         return jsonify({"error": "NOTION_TOKEN and NOTION_POSTS_DB must be configured"}), 500
 
     now = time.time()
-    if _upcoming_posts_cache["data"] is not None and (now - _upcoming_posts_cache["fetched_at"]) < UPCOMING_POSTS_CACHE_TTL:
+    cache_age = now - _upcoming_posts_cache["fetched_at"]
+
+    # If cache is fresh, return it
+    if _upcoming_posts_cache["data"] is not None and cache_age < UPCOMING_POSTS_CACHE_TTL:
         return jsonify({"posts": _upcoming_posts_cache["data"]})
 
-    try:
-        data = _fetch_upcoming_posts()
-        _upcoming_posts_cache["data"] = data
-        _upcoming_posts_cache["fetched_at"] = now
-        return jsonify({"posts": data})
-    except Exception as e:
-        traceback.print_exc()
-        return jsonify({"error": str(e)}), 500
+    # If cache is stale (or empty), trigger background refresh
+    if not _upcoming_posts_cache.get("loading"):
+        threading.Thread(target=_refresh_upcoming_posts, daemon=True).start()
+
+    # Return stale data if we have it (better than nothing)
+    if _upcoming_posts_cache["data"] is not None:
+        return jsonify({"posts": _upcoming_posts_cache["data"], "stale": True})
+
+    # No data yet — still loading from prewarm
+    if _upcoming_posts_cache.get("loading"):
+        return jsonify({"posts": [], "loading": True, "message": "Loading posts from Notion..."}), 202
+
+    # Prewarm failed — return the error
+    if _upcoming_posts_cache.get("error"):
+        return jsonify({"error": _upcoming_posts_cache["error"]}), 500
+
+    return jsonify({"posts": [], "message": "No data available yet"}), 202
 
 
 @app.route("/analyse", methods=["POST"])
