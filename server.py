@@ -477,7 +477,7 @@ def _notion_query(database_id, body, prop_ids=None):
     start_cursor = None
     for _ in range(10):  # max 10 pages
         req_body = dict(body)
-        req_body.setdefault("page_size", 25)
+        req_body.setdefault("page_size", 10)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
         url = f"https://api.notion.com/v1/databases/{database_id}/query"
@@ -792,7 +792,7 @@ def notion_debug():
                 {"property": "Post date", "date": {"on_or_after": today}},
                 {"property": "Post date", "date": {"on_or_before": one_month}},
             ]},
-            "page_size": 100,
+            "page_size": 10,
         }, timeout=30)
         results["full_query_ms"] = int((time.time() - t0) * 1000)
         if resp2.status_code == 200:
