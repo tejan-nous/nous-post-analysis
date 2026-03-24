@@ -240,7 +240,7 @@ The JSON structure must be exactly:
   "email": "<single short email — addressed to agent if agent name provided, otherwise to influencer directly>"
 }
 
-"obvious_tweaks" covers visual/technical issues: text readability, button placement, button text, CTA visibility, image quality, AD label placement, font size, contrast, text layout.
+"obvious_tweaks" covers visual/technical issues: text readability, text size (too small or too big), button placement, button text, CTA visibility, image quality, font size, contrast, text layout.
 
 "brief_fit" covers content/messaging issues: hook quality, discovery moment, what Nous does, savings claims, sign-up ease, @get_nous tag usage, tone.
 
@@ -302,7 +302,7 @@ CRITERIA TO CHECK:
 
 7. Save with Nous CTA [ALL FRAMES — critical for Frame 3]
    a. CTA button is present
-   b. Button text is "Save with Nous" (or "Start saving here!" for Fashion Frame 2 only)
+   b. Button text is acceptable — creative variations are FINE (e.g. "SAVE £€ WITH NOUS", "Start saving here!", "Save hundreds with Nous"). Only fail this if the button text is clearly bad or unengaging (e.g. just "nous.co", a bare URL, or completely unrelated text). Do NOT fail for capitalisation, emoji, or personality in the button text.
    c. No "AD" text inside the button itself
    d. Link/chain emoji (🔗) present alongside CTA
    e. Button text is readable — good contrast, not too small
@@ -316,10 +316,9 @@ CRITERIA TO CHECK:
 9. Calming/lifestyle visual [ALL FRAMES]
    a. Visual is calming — not busy, cluttered or high-contrast
    b. Visual matches niche expectation for this frame (home interior, lifestyle shot, etc.)
-   c. AD label is placed below the product shot, not covering the image
 
 10. Text readability [ALL FRAMES]
-    a. Font is large enough to read comfortably on a phone screen
+    a. Font size is appropriate for phone viewing — fail if text is too small to read comfortably at a glance (common problem: influencers cramming too much copy into small font) OR if text is disproportionately large. Text should be easily readable on a phone screen without zooming.
     b. Text colour has strong contrast against the background
     c. Long copy is broken into multiple text blocks, not a single wall of text
     d. Text is not placed over faces or focal points of the image
@@ -712,11 +711,12 @@ def send_to_slack():
     slack_headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
     image_b64 = data.get("image_base64")
 
-    # If image included, post text then upload image in thread
+    # If image included, post image first then text as threaded reply
     if image_b64:
         try:
             image_bytes = base64.b64decode(image_b64)
             filename = data.get("filename", "story.jpg")
+            caption = data.get("caption", "")
 
             # Resolve channel ID (needed for file uploads)
             channel = SLACK_APPROVING_CONTENT_CHANNEL
@@ -727,24 +727,7 @@ def send_to_slack():
                         _slack_channel_id_cache[channel] = resolved
                 channel = _slack_channel_id_cache.get(channel, channel)
 
-            # Step 1: Post the text message first
-            msg_resp = http_requests.post(
-                "https://slack.com/api/chat.postMessage",
-                headers=slack_headers,
-                json={
-                    "channel": channel,
-                    "text": data["text"],
-                },
-                timeout=10,
-            )
-            msg_data = msg_resp.json()
-            if not msg_data.get("ok"):
-                return jsonify({"error": f"Slack message failed: {msg_data.get('error')}"}), 502
-
-            thread_ts = msg_data.get("ts", "")
-            channel_id = msg_data.get("channel", channel)
-
-            # Step 2: Get upload URL (v2 API)
+            # Step 1: Upload the image as the main channel post
             url_resp = http_requests.get(
                 "https://slack.com/api/files.getUploadURLExternal",
                 headers=slack_headers,
@@ -753,29 +736,72 @@ def send_to_slack():
             )
             url_data = url_resp.json()
             if not url_data.get("ok"):
-                return jsonify({"ok": True, "warning": f"Text sent but upload URL failed: {url_data.get('error')}"})
+                return jsonify({"error": f"Upload URL failed: {url_data.get('error')}"}), 502
 
-            # Step 3: PUT the file bytes to the upload URL
+            # Step 2: PUT the file bytes
             put_resp = http_requests.post(
                 url_data["upload_url"],
                 files={"file": (filename, image_bytes, "image/jpeg")},
                 timeout=30,
             )
 
-            # Step 4: Complete the upload — share to channel in thread
+            # Step 3: Complete the upload — share to channel with caption
+            complete_payload = {
+                "files": [{"id": url_data["file_id"], "title": filename}],
+                "channel_id": channel,
+            }
+            if caption:
+                complete_payload["initial_comment"] = caption
+
             complete_resp = http_requests.post(
                 "https://slack.com/api/files.completeUploadExternal",
                 headers={**slack_headers, "Content-Type": "application/json"},
-                json={
-                    "files": [{"id": url_data["file_id"], "title": filename}],
-                    "channel_id": channel_id,
-                    "thread_ts": thread_ts,
-                },
+                json=complete_payload,
                 timeout=10,
             )
             complete_data = complete_resp.json()
             if not complete_data.get("ok"):
-                return jsonify({"ok": True, "warning": f"Text sent but image share failed: {complete_data.get('error')}"})
+                return jsonify({"error": f"Image share failed: {complete_data.get('error')}"}), 502
+
+            # Step 4: Get the file's thread_ts to reply in thread
+            # The file share creates a message — find its ts
+            file_ts = ""
+            files_list = complete_data.get("files", [])
+            if files_list:
+                file_info = files_list[0]
+                shares = file_info.get("shares", {})
+                # shares is {channel_type: {channel_id: [{ts: ...}]}}
+                for share_type in shares.values():
+                    for ch_shares in share_type.values():
+                        if ch_shares:
+                            file_ts = ch_shares[0].get("ts", "")
+                            break
+                    if file_ts:
+                        break
+
+            if file_ts:
+                # Step 5: Post the analysis text as a threaded reply
+                http_requests.post(
+                    "https://slack.com/api/chat.postMessage",
+                    headers=slack_headers,
+                    json={
+                        "channel": channel,
+                        "text": data["text"],
+                        "thread_ts": file_ts,
+                    },
+                    timeout=10,
+                )
+            else:
+                # Fallback: post text as a separate message
+                http_requests.post(
+                    "https://slack.com/api/chat.postMessage",
+                    headers=slack_headers,
+                    json={
+                        "channel": channel,
+                        "text": data["text"],
+                    },
+                    timeout=10,
+                )
 
             return jsonify({"ok": True})
 
