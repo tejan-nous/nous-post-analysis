@@ -727,7 +727,24 @@ def send_to_slack():
                         _slack_channel_id_cache[channel] = resolved
                 channel = _slack_channel_id_cache.get(channel, channel)
 
-            # Step 1: Upload the image as the main channel post
+            # Step 1: Post the caption as the main channel message
+            msg_resp = http_requests.post(
+                "https://slack.com/api/chat.postMessage",
+                headers=slack_headers,
+                json={
+                    "channel": channel,
+                    "text": caption or data["text"],
+                },
+                timeout=10,
+            )
+            msg_data = msg_resp.json()
+            if not msg_data.get("ok"):
+                return jsonify({"error": f"Slack message failed: {msg_data.get('error')}"}), 502
+
+            thread_ts = msg_data.get("ts", "")
+            channel_id = msg_data.get("channel", channel)
+
+            # Step 2: Get upload URL for image
             url_resp = http_requests.get(
                 "https://slack.com/api/files.getUploadURLExternal",
                 headers=slack_headers,
@@ -736,69 +753,39 @@ def send_to_slack():
             )
             url_data = url_resp.json()
             if not url_data.get("ok"):
-                return jsonify({"error": f"Upload URL failed: {url_data.get('error')}"}), 502
+                return jsonify({"ok": True, "warning": f"Caption sent but upload URL failed: {url_data.get('error')}"})
 
-            # Step 2: PUT the file bytes
-            put_resp = http_requests.post(
+            # Step 3: PUT the file bytes
+            http_requests.post(
                 url_data["upload_url"],
                 files={"file": (filename, image_bytes, "image/jpeg")},
                 timeout=30,
             )
 
-            # Step 3: Complete the upload — share to channel with caption
-            complete_payload = {
-                "files": [{"id": url_data["file_id"], "title": filename}],
-                "channel_id": channel,
-            }
-            if caption:
-                complete_payload["initial_comment"] = caption
-
+            # Step 4: Complete upload — share image in thread under caption
             complete_resp = http_requests.post(
                 "https://slack.com/api/files.completeUploadExternal",
                 headers={**slack_headers, "Content-Type": "application/json"},
-                json=complete_payload,
+                json={
+                    "files": [{"id": url_data["file_id"], "title": filename}],
+                    "channel_id": channel_id,
+                    "thread_ts": thread_ts,
+                },
                 timeout=10,
             )
             complete_data = complete_resp.json()
             if not complete_data.get("ok"):
-                return jsonify({"error": f"Image share failed: {complete_data.get('error')}"}), 502
+                return jsonify({"ok": True, "warning": f"Caption sent but image share failed: {complete_data.get('error')}"})
 
-            # Step 4: Get the file's thread_ts to reply in thread
-            # The file share creates a message — find its ts
-            file_ts = ""
-            files_list = complete_data.get("files", [])
-            if files_list:
-                file_info = files_list[0]
-                shares = file_info.get("shares", {})
-                # shares is {channel_type: {channel_id: [{ts: ...}]}}
-                for share_type in shares.values():
-                    for ch_shares in share_type.values():
-                        if ch_shares:
-                            file_ts = ch_shares[0].get("ts", "")
-                            break
-                    if file_ts:
-                        break
-
-            if file_ts:
-                # Step 5: Post the analysis text as a threaded reply
+            # Step 5: Post the full analysis as a second thread reply
+            if caption and data["text"] != caption:
                 http_requests.post(
                     "https://slack.com/api/chat.postMessage",
                     headers=slack_headers,
                     json={
-                        "channel": channel,
+                        "channel": channel_id,
                         "text": data["text"],
-                        "thread_ts": file_ts,
-                    },
-                    timeout=10,
-                )
-            else:
-                # Fallback: post text as a separate message
-                http_requests.post(
-                    "https://slack.com/api/chat.postMessage",
-                    headers=slack_headers,
-                    json={
-                        "channel": channel,
-                        "text": data["text"],
+                        "thread_ts": thread_ts,
                     },
                     timeout=10,
                 )
