@@ -488,7 +488,7 @@ def _notion_query(database_id, body, prop_ids=None):
             headers=_get_notion_headers(),
             json=req_body,
             params=query_params,
-            timeout=30,
+            timeout=60,
         )
         if resp.status_code != 200:
             raise Exception(f"Notion query failed: {resp.status_code} {resp.text[:300]}")
@@ -586,122 +586,49 @@ threading.Thread(target=_refresh_upcoming_posts, daemon=True).start()
 
 
 def _fetch_upcoming_posts():
-    """Fetch posts in the next month from Notion, resolve names + briefs."""
+    """Fetch active campaigns from Notion Campaigns DB for autocomplete.
+    Queries Campaigns DB directly (fast) instead of Posts DB (301 properties, times out).
+    """
     import time as _time
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-    from datetime import datetime, timedelta
 
     t_start = _time.time()
-    now = datetime.utcnow()
-    today = now.strftime("%Y-%m-%d")
-    one_week = (now + timedelta(days=7)).strftime("%Y-%m-%d")
-
-    # Resolve Posts DB property IDs for filter_properties (only Post date + I.Campaigns)
-    post_pids = _get_posts_prop_ids()
-    print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms, ids={post_pids}", flush=True)
-
-    # Query posts with Post date in [today, today+30d] — only 2 properties returned
-    # Limit to 2 pages (20 posts) to stay within timeout budget
-    t1 = _time.time()
-    posts = _notion_query(NOTION_POSTS_DB, {
-        "filter": {
-            "and": [
-                {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_week}},
-            ]
-        },
-        "sorts": [{"property": "Post date", "direction": "ascending"}],
-        "_max_pages": 2,
-    }, prop_ids=post_pids)
-    print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
-
-    # Collect unique campaign IDs
-    post_campaign_map = {}  # post_id -> campaign_id
-    campaign_ids = set()
-
-    for page in posts:
-        pid = page["id"]
-        props = page.get("properties", {})
-        camp_ids = _extract_relation_ids(props, "I.Campaigns")
-        if camp_ids:
-            post_campaign_map[pid] = camp_ids[0]
-            campaign_ids.add(camp_ids[0])
-
-    print(f"[notion] {len(campaign_ids)} unique campaigns to resolve", flush=True)
 
     # Resolve campaign property IDs for filter_properties
-    camp_pids = _resolve_campaign_prop_ids(None) if campaign_ids else []
-    print(f"[notion] campaign prop IDs: {camp_pids}", flush=True)
+    camp_pids = _resolve_campaign_prop_ids(None)
+    print(f"[notion] campaign prop IDs resolved in {int((_time.time()-t_start)*1000)}ms: {camp_pids}", flush=True)
 
-    # Query Campaigns DB for all matching campaigns in one call (filter by page IDs)
-    # Notion doesn't support filtering by page ID, so fetch all campaigns with
-    # filter_properties to keep payload small, then match by ID
-    campaign_cache = {}
-    if campaign_ids and NOTION_CAMPAIGNS_DB:
-        t2 = _time.time()
-        # Fetch campaigns in batches using page retrieval with filter_properties
-        from concurrent.futures import ThreadPoolExecutor, as_completed
+    # Query Campaigns DB for "In progress" campaigns with filter_properties
+    t1 = _time.time()
+    campaigns = _notion_query(NOTION_CAMPAIGNS_DB, {
+        "filter": {
+            "property": "Status",
+            "status": {"equals": "In progress"},
+        },
+        "_max_pages": 5,
+        "page_size": 50,
+    }, prop_ids=camp_pids)
+    print(f"[notion] campaigns query: {len(campaigns)} in {int((_time.time()-t1)*1000)}ms", flush=True)
 
-        def fetch_campaign(cid):
-            # Use pages endpoint with filter_properties — much smaller than full page
-            url = f"https://api.notion.com/v1/pages/{cid}"
-            qp = [("filter_properties", pid) for pid in (camp_pids or [])]
-            try:
-                resp = http_requests.get(url, headers=_get_notion_headers(), params=qp, timeout=15)
-                if resp.status_code != 200:
-                    print(f"[notion] campaign {cid[:8]} fetch failed: {resp.status_code}", flush=True)
-                    return cid, None
-                props = resp.json().get("properties", {})
-                return cid, {
-                    "name": _extract_title(props, "id"),
-                    "brief_link": str(_extract_formula(props, "Brief Link") or ""),
-                    "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
-                }
-            except Exception as e:
-                print(f"[notion] campaign {cid[:8]} error: {e}", flush=True)
-                return cid, None
-
-        with ThreadPoolExecutor(max_workers=10) as pool:
-            futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
-            for future in as_completed(futures):
-                cid, data = future.result()
-                if data:
-                    campaign_cache[cid] = data
-        print(f"[notion] {len(campaign_cache)} campaigns fetched in {int((_time.time()-t2)*1000)}ms", flush=True)
-
-    # Group posts by campaign to compute frame order
-    campaign_posts = {}  # campaign_id -> [(post_date, post_id)]
-    for page in posts:
-        pid = page["id"]
-        cid = post_campaign_map.get(pid)
-        if cid:
-            post_date = _extract_date(page.get("properties", {}), "Post date")
-            campaign_posts.setdefault(cid, []).append((post_date or "", pid))
-
-    # Sort within each campaign to assign frame numbers
-    frame_numbers = {}  # post_id -> frame_number
-    for cid, post_list in campaign_posts.items():
-        post_list.sort(key=lambda x: x[0])
-        for i, (_, pid) in enumerate(post_list):
-            frame_numbers[pid] = i + 1
-
-    # Build final list
+    # Build result list
     result = []
-    for page in posts:
-        pid = page["id"]
+    for page in campaigns:
         props = page.get("properties", {})
-        post_date = _extract_date(props, "Post date")
-        cid = post_campaign_map.get(pid)
-        campaign = campaign_cache.get(cid, {}) if cid else {}
+        influencer_name = str(_extract_formula(props, "Influencer (string)") or "")
+        brief = _extract_title(props, "id")
+        brief_link = str(_extract_formula(props, "Brief Link") or "")
+
+        if not influencer_name:
+            continue
 
         result.append({
-            "influencer_name": campaign.get("influencer_name", ""),
-            "post_date": post_date,
-            "frame": frame_numbers.get(pid, 1),
-            "brief": campaign.get("name", ""),
-            "brief_link": campaign.get("brief_link", ""),
+            "influencer_name": influencer_name,
+            "post_date": None,
+            "frame": 1,
+            "brief": brief,
+            "brief_link": brief_link,
         })
 
+    print(f"[notion] built {len(result)} entries in {int((_time.time()-t_start)*1000)}ms total", flush=True)
     return result
 
 
