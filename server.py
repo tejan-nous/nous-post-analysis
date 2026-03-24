@@ -19,6 +19,8 @@ SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 SLACK_APPROVING_CONTENT_CHANNEL = os.environ.get("SLACK_APPROVING_CONTENT_CHANNEL", "#approving-content")
 NOTION_TOKEN = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN")
 NOTION_FEEDBACK_DB = os.environ.get("NOTION_FEEDBACK_DB", "0e7d5f8cb1be416d9dc23b68103ce739")
+NOTION_POSTS_DB = os.environ.get("NOTION_POSTS_DB")
+NOTION_CAMPAIGNS_DB = os.environ.get("NOTION_CAMPAIGNS_DB")
 
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
@@ -424,6 +426,218 @@ def health():
 def briefs():
     return jsonify({"briefs": BRIEFS})
 
+
+# --- Notion upcoming posts lookup (cached) ---
+_upcoming_posts_cache = {"data": None, "fetched_at": 0}
+UPCOMING_POSTS_CACHE_TTL = 300  # 5 minutes
+
+
+def _notion_query(database_id, body):
+    """Query a Notion database. Returns list of pages (handles pagination)."""
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
+    pages = []
+    start_cursor = None
+    for _ in range(10):  # max 10 pages
+        req_body = dict(body)
+        if start_cursor:
+            req_body["start_cursor"] = start_cursor
+        resp = http_requests.post(
+            f"https://api.notion.com/v1/databases/{database_id}/query",
+            headers=headers,
+            json=req_body,
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            raise Exception(f"Notion query failed: {resp.status_code} {resp.text[:300]}")
+        data = resp.json()
+        pages.extend(data.get("results", []))
+        if not data.get("has_more"):
+            break
+        start_cursor = data.get("next_cursor")
+    return pages
+
+
+def _notion_get_page(page_id):
+    """Fetch a single Notion page by ID."""
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
+    resp = http_requests.get(
+        f"https://api.notion.com/v1/pages/{page_id}",
+        headers=headers,
+        timeout=10,
+    )
+    if resp.status_code != 200:
+        return None
+    return resp.json()
+
+
+def _extract_title(props, field_name="id"):
+    """Extract plain text from a Notion title property."""
+    title = props.get(field_name, {}).get("title", [])
+    return title[0]["plain_text"] if title else ""
+
+
+def _extract_date(props, field_name):
+    """Extract date string from a Notion date property."""
+    d = props.get(field_name, {}).get("date")
+    return d["start"] if d else None
+
+
+def _extract_relation_ids(props, field_name):
+    """Extract relation page IDs from a Notion relation property."""
+    return [r["id"] for r in props.get(field_name, {}).get("relation", [])]
+
+
+def _extract_url(props, field_name):
+    """Extract URL from a Notion URL property."""
+    return props.get(field_name, {}).get("url") or ""
+
+
+def _extract_rollup_relation_ids(props, field_name):
+    """Extract relation IDs from a rollup-of-relation property."""
+    rollup = props.get(field_name, {}).get("rollup", {})
+    ids = []
+    for item in rollup.get("array", []):
+        for r in item.get("relation", []):
+            ids.append(r["id"])
+    return ids
+
+
+def _fetch_upcoming_posts():
+    """Fetch posts in the next month from Notion, resolve names + briefs."""
+    import time
+    from datetime import datetime, timedelta
+
+    now = datetime.utcnow()
+    today = now.strftime("%Y-%m-%d")
+    one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
+
+    # Query posts with Post date in [today, today+30d]
+    posts = _notion_query(NOTION_POSTS_DB, {
+        "filter": {
+            "and": [
+                {"property": "Post date", "date": {"on_or_after": today}},
+                {"property": "Post date", "date": {"on_or_before": one_month}},
+            ]
+        },
+        "sorts": [{"property": "Post date", "direction": "ascending"}],
+    })
+
+    # Collect unique campaign IDs and influencer IDs
+    campaign_ids = set()
+    influencer_ids_from_rollup = {}  # post_id -> influencer_page_id
+    post_campaign_map = {}  # post_id -> campaign_id
+
+    for page in posts:
+        pid = page["id"]
+        props = page.get("properties", {})
+
+        # Campaign relation
+        camp_ids = _extract_relation_ids(props, "I.Campaigns")
+        if camp_ids:
+            post_campaign_map[pid] = camp_ids[0]
+            campaign_ids.add(camp_ids[0])
+
+        # Influencer via rollup
+        inf_ids = _extract_rollup_relation_ids(props, "ref_Influencer")
+        if inf_ids:
+            influencer_ids_from_rollup[pid] = inf_ids[0]
+
+    # Batch fetch campaigns (deduplicated)
+    campaign_cache = {}
+    for cid in campaign_ids:
+        page = _notion_get_page(cid)
+        if page:
+            props = page.get("properties", {})
+            campaign_cache[cid] = {
+                "name": _extract_title(props, "id"),
+                "brief_link": _extract_url(props, "Brief Link"),
+            }
+            # Also get influencer from campaign if not from rollup
+            inf_ids = _extract_relation_ids(props, "INFL_Influencers")
+            if inf_ids:
+                campaign_cache[cid]["influencer_id"] = inf_ids[0]
+
+    # Collect all influencer IDs
+    all_influencer_ids = set(influencer_ids_from_rollup.values())
+    for c in campaign_cache.values():
+        if c.get("influencer_id"):
+            all_influencer_ids.add(c["influencer_id"])
+
+    # Batch fetch influencer names (deduplicated)
+    influencer_names = {}
+    for iid in all_influencer_ids:
+        page = _notion_get_page(iid)
+        if page:
+            props = page.get("properties", {})
+            influencer_names[iid] = _extract_title(props, "Name")
+
+    # Build result: group posts by campaign to compute frame order
+    campaign_posts = {}  # campaign_id -> [(post_date, post_id)]
+    for page in posts:
+        pid = page["id"]
+        cid = post_campaign_map.get(pid)
+        if cid:
+            post_date = _extract_date(page.get("properties", {}), "Post date")
+            campaign_posts.setdefault(cid, []).append((post_date or "", pid))
+
+    # Sort within each campaign to assign frame numbers
+    frame_numbers = {}  # post_id -> frame_number
+    for cid, post_list in campaign_posts.items():
+        post_list.sort(key=lambda x: x[0])
+        for i, (_, pid) in enumerate(post_list):
+            frame_numbers[pid] = i + 1
+
+    # Build final list
+    result = []
+    for page in posts:
+        pid = page["id"]
+        props = page.get("properties", {})
+        post_date = _extract_date(props, "Post date")
+        cid = post_campaign_map.get(pid)
+        campaign = campaign_cache.get(cid, {}) if cid else {}
+
+        # Resolve influencer name
+        inf_id = influencer_ids_from_rollup.get(pid) or campaign.get("influencer_id")
+        inf_name = influencer_names.get(inf_id, "") if inf_id else ""
+
+        result.append({
+            "influencer_name": inf_name,
+            "post_date": post_date,
+            "frame": frame_numbers.get(pid, 1),
+            "brief": campaign.get("name", ""),
+            "brief_link": campaign.get("brief_link", ""),
+        })
+
+    return result
+
+
+@app.route("/notion/upcoming-posts", methods=["GET"])
+def upcoming_posts():
+    import time
+
+    if not NOTION_TOKEN or not NOTION_POSTS_DB:
+        return jsonify({"error": "NOTION_TOKEN and NOTION_POSTS_DB must be configured"}), 500
+
+    now = time.time()
+    if _upcoming_posts_cache["data"] is not None and (now - _upcoming_posts_cache["fetched_at"]) < UPCOMING_POSTS_CACHE_TTL:
+        return jsonify({"posts": _upcoming_posts_cache["data"]})
+
+    try:
+        data = _fetch_upcoming_posts()
+        _upcoming_posts_cache["data"] = data
+        _upcoming_posts_cache["fetched_at"] = now
+        return jsonify({"posts": data})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/analyse", methods=["POST"])

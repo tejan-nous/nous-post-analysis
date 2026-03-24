@@ -353,10 +353,12 @@
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
-        <!-- Influencer name -->
-        <div>
+        <!-- Influencer name (with Notion autocomplete) -->
+        <div style="position:relative">
           <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name</label>
-          <input id="ul-name" type="text" placeholder="e.g. Lucy Hall" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+          <input id="ul-name" type="text" placeholder="e.g. Lucy Hall" autocomplete="off" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+          <div id="ul-name-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:2px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12)"></div>
+          <div id="ul-notion-status" style="font-size:10px;color:var(--muted);margin-top:3px;opacity:.7"></div>
         </div>
         <!-- Agent name -->
         <div>
@@ -65484,6 +65486,143 @@ const UL_BRIEFS = [
   const savedPwd = localStorage.getItem('ul_password');
   if (savedUrl) { const el = document.getElementById('ul-server-url'); if(el) el.value = savedUrl; }
   if (savedPwd) { const el = document.getElementById('ul-password'); if(el) el.value = savedPwd; }
+})();
+
+// --- Notion upcoming posts autocomplete ---
+let _notionPosts = [];
+let _notionPostsLoaded = false;
+
+(function() {
+  const statusEl = document.getElementById('ul-notion-status');
+  const serverUrl = () => (document.getElementById('ul-server-url')?.value || '').replace(/\/+$/, '');
+
+  function fetchUpcomingPosts() {
+    const base = serverUrl();
+    if (!base) return;
+    if (statusEl) statusEl.textContent = 'Loading Notion posts…';
+    fetch(base + '/notion/upcoming-posts')
+      .then(r => r.json())
+      .then(data => {
+        if (data.posts) {
+          _notionPosts = data.posts;
+          _notionPostsLoaded = true;
+          if (statusEl) statusEl.textContent = `${data.posts.length} upcoming posts loaded from Notion`;
+          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+        } else {
+          if (statusEl) statusEl.textContent = '';
+        }
+      })
+      .catch(() => {
+        if (statusEl) statusEl.textContent = '';
+      });
+  }
+
+  // Fetch on page load (after short delay to let server URL populate)
+  setTimeout(fetchUpcomingPosts, 500);
+
+  // Autocomplete dropdown logic
+  const nameInput = document.getElementById('ul-name');
+  const dropdown = document.getElementById('ul-name-dropdown');
+  if (!nameInput || !dropdown) return;
+
+  // Get unique influencer names from posts
+  function getMatches(query) {
+    if (!query || !_notionPostsLoaded) return [];
+    const q = query.toLowerCase();
+    const seen = new Set();
+    const matches = [];
+    for (const p of _notionPosts) {
+      if (!p.influencer_name) continue;
+      const name = p.influencer_name;
+      if (seen.has(name)) continue;
+      if (name.toLowerCase().includes(q)) {
+        seen.add(name);
+        // Find earliest post date for this influencer
+        const posts = _notionPosts.filter(x => x.influencer_name === name);
+        const nextDate = posts.length ? posts[0].post_date : '';
+        matches.push({ name, nextDate, postCount: posts.length });
+      }
+    }
+    return matches.slice(0, 8);
+  }
+
+  function showDropdown(matches) {
+    if (!matches.length) { dropdown.style.display = 'none'; return; }
+    dropdown.innerHTML = matches.map(m =>
+      `<div class="ul-name-option" data-name="${m.name}" style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s">
+        <span style="font-weight:600">${m.name}</span>
+        ${m.nextDate ? `<span style="float:right;font-size:11px;color:var(--muted)">${m.nextDate} · ${m.postCount} post${m.postCount > 1 ? 's' : ''}</span>` : ''}
+      </div>`
+    ).join('');
+    dropdown.style.display = 'block';
+    dropdown.querySelectorAll('.ul-name-option').forEach(opt => {
+      opt.addEventListener('mouseenter', () => opt.style.background = 'var(--border)');
+      opt.addEventListener('mouseleave', () => opt.style.background = '');
+      opt.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        selectInfluencer(opt.dataset.name);
+      });
+    });
+  }
+
+  function selectInfluencer(name) {
+    nameInput.value = name;
+    dropdown.style.display = 'none';
+
+    // Find all posts for this influencer and auto-fill fields
+    const posts = _notionPosts.filter(p => p.influencer_name === name);
+    if (!posts.length) return;
+
+    // Set post date to earliest upcoming post
+    const dateInput = document.getElementById('ul-post-date');
+    if (dateInput && posts[0].post_date) {
+      dateInput.value = posts[0].post_date;
+    }
+
+    // Set frame (from first post)
+    const frameSelect = document.getElementById('ul-frame');
+    if (frameSelect && posts[0].frame) {
+      frameSelect.value = String(posts[0].frame);
+    }
+
+    // Try to match brief to dropdown options
+    const briefSelect = document.getElementById('ul-brief');
+    if (briefSelect && posts[0].brief) {
+      const campaignName = posts[0].brief.toLowerCase();
+      // Try to find a matching brief option
+      let matched = false;
+      for (const opt of briefSelect.options) {
+        if (!opt.value) continue;
+        const optLower = opt.value.toLowerCase();
+        // Match if campaign name contains brief keywords (family, home, celebrity, fashion, lifestyle, repeat)
+        const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
+        for (const kw of keywords) {
+          if (campaignName.includes(kw) && optLower.includes(kw)) {
+            briefSelect.value = opt.value;
+            matched = true;
+            break;
+          }
+        }
+        if (matched) break;
+      }
+    }
+  }
+
+  nameInput.addEventListener('input', () => {
+    const matches = getMatches(nameInput.value);
+    showDropdown(matches);
+  });
+
+  nameInput.addEventListener('focus', () => {
+    if (nameInput.value) {
+      const matches = getMatches(nameInput.value);
+      showDropdown(matches);
+    }
+  });
+
+  nameInput.addEventListener('blur', () => {
+    setTimeout(() => dropdown.style.display = 'none', 150);
+  });
 })();
 
 
