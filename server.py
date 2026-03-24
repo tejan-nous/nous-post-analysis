@@ -17,7 +17,7 @@ CORS(app)
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 SLACK_APPROVING_CONTENT_CHANNEL = os.environ.get("SLACK_APPROVING_CONTENT_CHANNEL", "#approving-content")
-NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+NOTION_TOKEN = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN")
 NOTION_FEEDBACK_DB = os.environ.get("NOTION_FEEDBACK_DB", "0e7d5f8cb1be416d9dc23b68103ce739")
 
 BRIEFS = [
@@ -542,7 +542,7 @@ RATING_MAP = {"good": "Accurate", "bad": "Off", "mixed": "Partially"}
 
 def notion_headers():
     return {
-        "Authorization": f"Bearer {os.environ.get('NOTION_TOKEN', NOTION_TOKEN or '')}",
+        "Authorization": f"Bearer {os.environ.get('NOTION_API_KEY') or os.environ.get('NOTION_TOKEN') or NOTION_TOKEN or ''}",
         "Content-Type": "application/json",
         "Notion-Version": "2022-06-28",
     }
@@ -560,7 +560,7 @@ def post_feedback():
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
 
-    token = os.environ.get("NOTION_TOKEN", NOTION_TOKEN or "")
+    token = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN") or NOTION_TOKEN or ""
     if not token:
         return jsonify({"error": "NOTION_TOKEN not configured"}), 500
 
@@ -611,7 +611,7 @@ def post_feedback():
 
 @app.route("/feedback", methods=["GET"])
 def get_feedback():
-    token = os.environ.get("NOTION_TOKEN", NOTION_TOKEN or "")
+    token = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN") or NOTION_TOKEN or ""
     if not token:
         return jsonify({"error": "NOTION_TOKEN not configured"}), 500
 
