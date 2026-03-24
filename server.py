@@ -493,7 +493,7 @@ def _get_posts_prop_ids():
         if resp.status_code == 200:
             db_props = resp.json().get("properties", {})
             _posts_prop_ids = []
-            for name in ["Post date", "I.Campaigns"]:
+            for name in ["Post date", "I.Campaigns", "Brief Link"]:
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
     except Exception:
@@ -723,12 +723,23 @@ def _fetch_upcoming_posts():
         cid = post_campaign_map.get(pid)
         campaign = campaign_cache.get(cid, {}) if cid else {}
 
+        # Brief Link from post — try formula, then URL, then rich_text
+        bl = props.get("Brief Link", {})
+        brief_link = ""
+        if bl.get("formula"):
+            brief_link = bl["formula"].get("string") or ""
+        elif bl.get("url"):
+            brief_link = bl["url"] or ""
+        elif bl.get("rich_text"):
+            rt = bl["rich_text"]
+            brief_link = rt[0]["plain_text"] if rt else ""
+
         result.append({
             "influencer_name": campaign.get("influencer_name", ""),
             "post_date": post_date,
             "frame": frame_numbers.get(pid, 1),
             "brief": campaign.get("name", ""),
-            "brief_link": campaign.get("brief_link", ""),
+            "brief_link": brief_link,
         })
 
     print(f"[notion] total: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms", flush=True)
