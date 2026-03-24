@@ -558,19 +558,37 @@ def _resolve_campaign_prop_ids(campaign_id):
     return _resolve_campaign_prop_ids._ids
 
 
+def _prewarm_notion_cache():
+    """Pre-resolve property IDs on startup so first request is fast."""
+    try:
+        if NOTION_TOKEN and NOTION_POSTS_DB:
+            _get_posts_prop_ids()
+        if NOTION_TOKEN and NOTION_CAMPAIGNS_DB:
+            _resolve_campaign_prop_ids(None)
+    except Exception:
+        pass
+
+import threading
+threading.Thread(target=_prewarm_notion_cache, daemon=True).start()
+
+
 def _fetch_upcoming_posts():
     """Fetch posts in the next month from Notion, resolve names + briefs."""
+    import time as _time
     from concurrent.futures import ThreadPoolExecutor, as_completed
     from datetime import datetime, timedelta
 
+    t_start = _time.time()
     now = datetime.utcnow()
     today = now.strftime("%Y-%m-%d")
     one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
     # Resolve Posts DB property IDs for filter_properties (only Post date + I.Campaigns)
     post_pids = _get_posts_prop_ids()
+    print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms, ids={post_pids}", flush=True)
 
     # Query posts with Post date in [today, today+30d] — only 2 properties returned
+    t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
             "and": [
@@ -580,6 +598,7 @@ def _fetch_upcoming_posts():
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
     }, prop_ids=post_pids)
+    print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
     # Collect unique campaign IDs
     post_campaign_map = {}  # post_id -> campaign_id
@@ -593,8 +612,11 @@ def _fetch_upcoming_posts():
             post_campaign_map[pid] = camp_ids[0]
             campaign_ids.add(camp_ids[0])
 
+    print(f"[notion] {len(campaign_ids)} unique campaigns to fetch", flush=True)
+
     # Resolve campaign property IDs (title, Brief Link, Influencer string)
     camp_pids = _resolve_campaign_prop_ids(next(iter(campaign_ids))) if campaign_ids else []
+    print(f"[notion] campaign prop IDs: {camp_pids}", flush=True)
 
     # Parallel fetch campaigns — only 3 properties returned per page
     campaign_cache = {}
@@ -610,12 +632,14 @@ def _fetch_upcoming_posts():
             "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
         }
 
+    t2 = _time.time()
     with ThreadPoolExecutor(max_workers=10) as pool:
         futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
         for future in as_completed(futures):
             cid, data = future.result()
             if data:
                 campaign_cache[cid] = data
+    print(f"[notion] campaigns fetched in {int((_time.time()-t2)*1000)}ms", flush=True)
 
     # Group posts by campaign to compute frame order
     campaign_posts = {}  # campaign_id -> [(post_date, post_id)]
