@@ -614,15 +614,12 @@ def _refresh_upcoming_posts():
         _upcoming_posts_cache["loading"] = False
 
 import threading
-threading.Thread(target=_refresh_upcoming_posts, daemon=True).start()
 
 
 def _fetch_upcoming_posts():
-    """Fetch upcoming posts from Notion Posts DB using small page sizes.
-    The Posts DB has 301 properties but filter_properties limits the response.
-    Uses page_size=1 per request but fetches up to 20 posts via pagination.
-    Each page takes ~7s so we fetch 3 pages (21 posts) in ~21s.
-    Then parallel-fetches campaign details.
+    """Fetch upcoming posts (next 30 days) from Notion Posts DB + campaign details.
+    Runs in background — disk cache serves requests while this completes.
+    Refreshes every 4 hours.
     """
     import time as _time
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -631,7 +628,7 @@ def _fetch_upcoming_posts():
     t_start = _time.time()
     now = datetime.utcnow()
     today = now.strftime("%Y-%m-%d")
-    one_week = (now + timedelta(days=7)).strftime("%Y-%m-%d")
+    one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
     # Resolve property IDs
     post_pids = _get_posts_prop_ids()
@@ -645,7 +642,7 @@ def _fetch_upcoming_posts():
         "filter": {
             "and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_week}},
+                {"property": "Post date", "date": {"on_or_before": one_month}},
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
@@ -731,6 +728,10 @@ def _fetch_upcoming_posts():
 
     print(f"[notion] total: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms", flush=True)
     return result
+
+
+# Start background prewarm AFTER all functions are defined
+threading.Thread(target=_refresh_upcoming_posts, daemon=True).start()
 
 
 @app.route("/notion/debug", methods=["GET"])
