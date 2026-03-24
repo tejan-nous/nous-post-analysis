@@ -477,17 +477,16 @@ def _notion_query(database_id, body, prop_ids=None):
     start_cursor = None
     for _ in range(10):  # max 10 pages
         req_body = dict(body)
-        req_body.setdefault("page_size", 10)
+        req_body.setdefault("page_size", 5)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
         url = f"https://api.notion.com/v1/databases/{database_id}/query"
-        if prop_ids:
-            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
-            url = f"{url}?{params}"
+        query_params = [("filter_properties", pid) for pid in (prop_ids or [])]
         resp = http_requests.post(
             url,
             headers=_get_notion_headers(),
             json=req_body,
+            params=query_params,
             timeout=30,
         )
         if resp.status_code != 200:
@@ -503,10 +502,8 @@ def _notion_query(database_id, body, prop_ids=None):
 def _notion_get_page(page_id, prop_ids=None):
     """Fetch a single Notion page by ID, optionally filtering properties."""
     url = f"https://api.notion.com/v1/pages/{page_id}"
-    if prop_ids:
-        params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
-        url = f"{url}?{params}"
-    resp = http_requests.get(url, headers=_get_notion_headers(), timeout=15)
+    query_params = [("filter_properties", pid) for pid in (prop_ids or [])]
+    resp = http_requests.get(url, headers=_get_notion_headers(), params=query_params, timeout=15)
     if resp.status_code != 200:
         return None
     return resp.json()
@@ -630,11 +627,9 @@ def _fetch_upcoming_posts():
         def fetch_campaign(cid):
             # Use pages endpoint with filter_properties — much smaller than full page
             url = f"https://api.notion.com/v1/pages/{cid}"
-            if camp_pids:
-                params = "&".join(f"filter_properties={pid}" for pid in camp_pids)
-                url = f"{url}?{params}"
+            qp = [("filter_properties", pid) for pid in (camp_pids or [])]
             try:
-                resp = http_requests.get(url, headers=_get_notion_headers(), timeout=15)
+                resp = http_requests.get(url, headers=_get_notion_headers(), params=qp, timeout=15)
                 if resp.status_code != 200:
                     print(f"[notion] campaign {cid[:8]} fetch failed: {resp.status_code}", flush=True)
                     return cid, None
@@ -731,10 +726,8 @@ def notion_debug():
         results["resolved_prop_ids"] = prop_ids
         t0 = time.time()
         url = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query"
-        if prop_ids:
-            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
-            url = f"{url}?{params}"
-        resp = http_requests.post(url, headers=_get_notion_headers(), json={
+        qp = [("filter_properties", pid) for pid in (prop_ids or [])]
+        resp = http_requests.post(url, headers=_get_notion_headers(), params=qp, json={
             "filter": {"and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
                 {"property": "Post date", "date": {"on_or_before": one_month}},
@@ -784,10 +777,8 @@ def notion_debug():
     try:
         t0 = time.time()
         url2 = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query"
-        if prop_ids:
-            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
-            url2 = f"{url2}?{params}"
-        resp2 = http_requests.post(url2, headers=_get_notion_headers(), json={
+        qp2 = [("filter_properties", pid) for pid in (prop_ids or [])]
+        resp2 = http_requests.post(url2, headers=_get_notion_headers(), params=qp2, json={
             "filter": {"and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
                 {"property": "Post date", "date": {"on_or_before": one_month}},
