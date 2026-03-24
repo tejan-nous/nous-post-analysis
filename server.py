@@ -19,8 +19,8 @@ SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 SLACK_APPROVING_CONTENT_CHANNEL = os.environ.get("SLACK_APPROVING_CONTENT_CHANNEL", "#approving-content")
 NOTION_TOKEN = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN")
 NOTION_FEEDBACK_DB = os.environ.get("NOTION_FEEDBACK_DB", "0e7d5f8cb1be416d9dc23b68103ce739")
-NOTION_POSTS_DB = os.environ.get("NOTION_POSTS_DB")
-NOTION_CAMPAIGNS_DB = os.environ.get("NOTION_CAMPAIGNS_DB")
+NOTION_POSTS_DB = (os.environ.get("NOTION_POSTS_DB") or "").strip()
+NOTION_CAMPAIGNS_DB = (os.environ.get("NOTION_CAMPAIGNS_DB") or "").strip()
 
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
