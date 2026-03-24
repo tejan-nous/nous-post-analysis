@@ -65876,7 +65876,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
         </div>
       </div>
       <div style="padding:12px 16px">
-        <textarea id="${slackId}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${slackId}" data-original-bullets="${encodeURIComponent(JSON.stringify(improvements))}" data-brief="${brief}" data-frame="${frame}" data-name="${name ? name.replace(/"/g,'&quot;') : ''}" data-verdict="${good ? 'good_to_go' : 'needs_work'}" data-post-date="${postDate}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
@@ -65979,6 +65979,46 @@ function ulCopyFromArea(id, btn) {
     setTimeout(() => btn.textContent = orig, 1500);
   });
 }
+// Compute auto-rating by comparing original bullets vs what was actually sent
+function ulComputeAutoRating(originalBullets, sentText, verdict) {
+  // Good to go sent without changes → Accurate
+  if (verdict === 'good_to_go') return {rating: 'good', reason: 'Good to go — sent as-is'};
+  if (!originalBullets.length) return {rating: 'good', reason: 'No bullets to compare'};
+
+  // Extract bullet lines from sent text (lines starting with •)
+  const sentBullets = sentText.split('\n').filter(l => l.trim().startsWith('•')).map(l => l.replace(/^[\s•]+/, '').trim().toLowerCase());
+  const origLower = originalBullets.map(b => b.trim().toLowerCase());
+
+  // Check how many original bullets survived (exact or fuzzy match)
+  let matched = 0;
+  for (const orig of origLower) {
+    const found = sentBullets.some(sent => {
+      // Exact match or >70% overlap (simple word-based)
+      if (sent === orig) return true;
+      const origWords = new Set(orig.split(/\s+/));
+      const sentWords = new Set(sent.split(/\s+/));
+      const overlap = [...origWords].filter(w => sentWords.has(w)).length;
+      return overlap / Math.max(origWords.size, 1) > 0.7;
+    });
+    if (found) matched++;
+  }
+
+  const addedBullets = sentBullets.filter(sent => !origLower.some(orig => {
+    if (sent === orig) return true;
+    const origWords = new Set(orig.split(/\s+/));
+    const sentWords = new Set(sent.split(/\s+/));
+    const overlap = [...origWords].filter(w => sentWords.has(w)).length;
+    return overlap / Math.max(origWords.size, 1) > 0.7;
+  }));
+
+  const matchRatio = matched / origLower.length;
+  const removedCount = origLower.length - matched;
+
+  if (matchRatio >= 0.9 && addedBullets.length === 0) return {rating: 'good', reason: 'Bullets sent as-is'};
+  if (matchRatio >= 0.5) return {rating: 'mixed', reason: `${matched}/${origLower.length} bullets kept, ${removedCount} removed, ${addedBullets.length} added`};
+  return {rating: 'bad', reason: `${removedCount}/${origLower.length} bullets removed, ${addedBullets.length} added — major rewrite`};
+}
+
 async function ulSendToSlack(id, btn) {
   const el = document.getElementById(id);
   const text = el.value.trim();
@@ -66007,6 +66047,32 @@ async function ulSendToSlack(id, btn) {
       btn.textContent = 'Sent!';
       btn.style.background = 'var(--green)';
       btn.style.color = '#fff';
+
+      // Auto-rate the review based on what was edited
+      try {
+        const originalBullets = JSON.parse(decodeURIComponent(el.dataset.originalBullets || '[]'));
+        const verdict = el.dataset.verdict || '';
+        const autoRating = ulComputeAutoRating(originalBullets, text, verdict);
+
+        // Save feedback to Notion
+        await fetch(serverUrl + '/feedback', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            timestamp: new Date().toISOString(),
+            reviewer: document.getElementById('ul-agent')?.value || '',
+            influencer: el.dataset.name || '',
+            brief: el.dataset.brief || '',
+            frame: el.dataset.frame || '',
+            rating: autoRating.rating,
+            comment: `[Auto-rated on Send] ${autoRating.reason}`,
+            ai_verdict: verdict,
+            ai_improvements: originalBullets,
+          })
+        });
+      } catch(feedbackErr) {
+        console.warn('Auto-feedback save failed:', feedbackErr);
+      }
     } else {
       btn.textContent = 'Failed: ' + (data.error || '');
       btn.style.background = 'var(--red)';
