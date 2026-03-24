@@ -65758,7 +65758,7 @@ async function ulAnalyse() {
         wrapper.innerHTML = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:${i>0?'24px':0} 0 8px">Image ${i+1} of ${ulImageQueue.length} — ${item.filename}</div>`;
       }
       const inner = document.createElement('div');
-      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, item.dataUrl, i);
+      inner.innerHTML = ulRenderResults(data, brief, frame, name, agent, item.dataUrl, i, postDate);
       wrapper.appendChild(inner);
       resultsEl.appendChild(wrapper);
       if (i === 0) resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
@@ -65773,8 +65773,9 @@ async function ulAnalyse() {
   btn.textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
 }
 
-function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
+function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   idx = idx || 0;
+  postDate = postDate || '';
   const good = d.overall === 'good_to_go';
 
   const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
@@ -65809,17 +65810,17 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx) {
       </div>`).join('');
   }
 
-  // Build Slack text — verdict + bullet improvements + copy rewrite
+  // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
     good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
   ];
+  if (postDate) {
+    slackLines.push(`:calendar: Post date: ${postDate}`);
+  }
   if (improvements.length) {
     slackLines.push('');
     improvements.forEach(imp => slackLines.push('\u2022 ' + imp));
-  }
-  if (copyRewrite) {
-    slackLines.push('', '*Change copy to:*', '> ' + copyRewrite.split('\n').join('\n> '));
   }
   slackLines.push('');
   const slackText = slackLines.join('\n');
