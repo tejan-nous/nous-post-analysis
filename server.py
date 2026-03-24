@@ -430,15 +430,49 @@ def briefs():
 # --- Notion upcoming posts lookup (cached) ---
 _upcoming_posts_cache = {"data": None, "fetched_at": 0}
 UPCOMING_POSTS_CACHE_TTL = 300  # 5 minutes
+_notion_headers = None
+_posts_prop_ids = None  # cached property IDs for filter_properties
 
 
-def _notion_query(database_id, body):
-    """Query a Notion database. Returns list of pages (handles pagination)."""
-    headers = {
-        "Authorization": f"Bearer {NOTION_TOKEN}",
-        "Content-Type": "application/json",
-        "Notion-Version": "2022-06-28",
-    }
+def _get_notion_headers():
+    global _notion_headers
+    if not _notion_headers:
+        _notion_headers = {
+            "Authorization": f"Bearer {NOTION_TOKEN}",
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28",
+        }
+    return _notion_headers
+
+
+def _get_posts_prop_ids():
+    """Resolve and cache the Notion property IDs for Post date and I.Campaigns."""
+    global _posts_prop_ids
+    if _posts_prop_ids is not None:
+        return _posts_prop_ids
+    try:
+        resp = http_requests.get(
+            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}",
+            headers=_get_notion_headers(),
+            timeout=15,
+        )
+        if resp.status_code == 200:
+            db_props = resp.json().get("properties", {})
+            _posts_prop_ids = []
+            for name in ["Post date", "I.Campaigns"]:
+                if name in db_props and "id" in db_props[name]:
+                    _posts_prop_ids.append(db_props[name]["id"])
+    except Exception:
+        pass
+    if not _posts_prop_ids:
+        _posts_prop_ids = []
+    return _posts_prop_ids
+
+
+def _notion_query(database_id, body, prop_ids=None):
+    """Query a Notion database. Returns list of pages (handles pagination).
+    prop_ids: list of property IDs to pass as filter_properties (reduces payload).
+    """
     pages = []
     start_cursor = None
     for _ in range(10):  # max 10 pages
@@ -446,11 +480,15 @@ def _notion_query(database_id, body):
         req_body.setdefault("page_size", 100)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
+        url = f"https://api.notion.com/v1/databases/{database_id}/query"
+        if prop_ids:
+            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
+            url = f"{url}?{params}"
         resp = http_requests.post(
-            f"https://api.notion.com/v1/databases/{database_id}/query",
-            headers=headers,
+            url,
+            headers=_get_notion_headers(),
             json=req_body,
-            timeout=60,
+            timeout=30,
         )
         if resp.status_code != 200:
             raise Exception(f"Notion query failed: {resp.status_code} {resp.text[:300]}")
@@ -462,18 +500,13 @@ def _notion_query(database_id, body):
     return pages
 
 
-def _notion_get_page(page_id):
-    """Fetch a single Notion page by ID."""
-    headers = {
-        "Authorization": f"Bearer {NOTION_TOKEN}",
-        "Content-Type": "application/json",
-        "Notion-Version": "2022-06-28",
-    }
-    resp = http_requests.get(
-        f"https://api.notion.com/v1/pages/{page_id}",
-        headers=headers,
-        timeout=30,
-    )
+def _notion_get_page(page_id, prop_ids=None):
+    """Fetch a single Notion page by ID, optionally filtering properties."""
+    url = f"https://api.notion.com/v1/pages/{page_id}"
+    if prop_ids:
+        params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
+        url = f"{url}?{params}"
+    resp = http_requests.get(url, headers=_get_notion_headers(), timeout=15)
     if resp.status_code != 200:
         return None
     return resp.json()
@@ -496,15 +529,33 @@ def _extract_relation_ids(props, field_name):
     return [r["id"] for r in props.get(field_name, {}).get("relation", [])]
 
 
-def _extract_url(props, field_name):
-    """Extract URL from a Notion URL property."""
-    return props.get(field_name, {}).get("url") or ""
-
-
 def _extract_formula(props, field_name):
     """Extract string result from a Notion formula property."""
     f = props.get(field_name, {}).get("formula", {})
     return f.get("string") or f.get("number") or ""
+
+
+def _resolve_campaign_prop_ids(campaign_id):
+    """Resolve property IDs for campaign fields we need (cached after first call)."""
+    if not hasattr(_resolve_campaign_prop_ids, "_ids"):
+        try:
+            resp = http_requests.get(
+                f"https://api.notion.com/v1/databases/{NOTION_CAMPAIGNS_DB}",
+                headers=_get_notion_headers(),
+                timeout=15,
+            )
+            if resp.status_code == 200:
+                db_props = resp.json().get("properties", {})
+                ids = []
+                for name in ["id", "Brief Link", "Influencer (string)"]:
+                    if name in db_props and "id" in db_props[name]:
+                        ids.append(db_props[name]["id"])
+                _resolve_campaign_prop_ids._ids = ids
+            else:
+                _resolve_campaign_prop_ids._ids = []
+        except Exception:
+            _resolve_campaign_prop_ids._ids = []
+    return _resolve_campaign_prop_ids._ids
 
 
 def _fetch_upcoming_posts():
@@ -516,7 +567,10 @@ def _fetch_upcoming_posts():
     today = now.strftime("%Y-%m-%d")
     one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
-    # Query posts with Post date in [today, today+30d] — only fetch needed fields
+    # Resolve Posts DB property IDs for filter_properties (only Post date + I.Campaigns)
+    post_pids = _get_posts_prop_ids()
+
+    # Query posts with Post date in [today, today+30d] — only 2 properties returned
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
             "and": [
@@ -525,7 +579,7 @@ def _fetch_upcoming_posts():
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
-    })
+    }, prop_ids=post_pids)
 
     # Collect unique campaign IDs
     post_campaign_map = {}  # post_id -> campaign_id
@@ -539,11 +593,14 @@ def _fetch_upcoming_posts():
             post_campaign_map[pid] = camp_ids[0]
             campaign_ids.add(camp_ids[0])
 
-    # Parallel fetch campaigns — get name, brief link, and influencer name
+    # Resolve campaign property IDs (title, Brief Link, Influencer string)
+    camp_pids = _resolve_campaign_prop_ids(next(iter(campaign_ids))) if campaign_ids else []
+
+    # Parallel fetch campaigns — only 3 properties returned per page
     campaign_cache = {}
 
     def fetch_campaign(cid):
-        page = _notion_get_page(cid)
+        page = _notion_get_page(cid, prop_ids=camp_pids)
         if not page:
             return cid, None
         props = page.get("properties", {})
