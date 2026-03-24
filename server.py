@@ -731,7 +731,7 @@ def notion_debug():
     try:
         from datetime import datetime, timedelta
         today = datetime.utcnow().strftime("%Y-%m-%d")
-        one_month = (datetime.utcnow() + timedelta(days=30)).strftime("%Y-%m-%d")
+        one_week = (datetime.utcnow() + timedelta(days=7)).strftime("%Y-%m-%d")
         prop_ids = _get_posts_prop_ids()
         results["resolved_prop_ids"] = prop_ids
         t0 = time.time()
