@@ -500,19 +500,15 @@ def _extract_url(props, field_name):
     return props.get(field_name, {}).get("url") or ""
 
 
-def _extract_rollup_relation_ids(props, field_name):
-    """Extract relation IDs from a rollup-of-relation property."""
-    rollup = props.get(field_name, {}).get("rollup", {})
-    ids = []
-    for item in rollup.get("array", []):
-        for r in item.get("relation", []):
-            ids.append(r["id"])
-    return ids
+def _extract_formula(props, field_name):
+    """Extract string result from a Notion formula property."""
+    f = props.get(field_name, {}).get("formula", {})
+    return f.get("string") or f.get("number") or ""
 
 
 def _fetch_upcoming_posts():
     """Fetch posts in the next month from Notion, resolve names + briefs."""
-    import time
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     from datetime import datetime, timedelta
 
     now = datetime.utcnow()
@@ -530,56 +526,40 @@ def _fetch_upcoming_posts():
         "sorts": [{"property": "Post date", "direction": "ascending"}],
     })
 
-    # Collect unique campaign IDs and influencer IDs
-    campaign_ids = set()
-    influencer_ids_from_rollup = {}  # post_id -> influencer_page_id
+    # Collect unique campaign IDs
     post_campaign_map = {}  # post_id -> campaign_id
+    campaign_ids = set()
 
     for page in posts:
         pid = page["id"]
         props = page.get("properties", {})
-
-        # Campaign relation
         camp_ids = _extract_relation_ids(props, "I.Campaigns")
         if camp_ids:
             post_campaign_map[pid] = camp_ids[0]
             campaign_ids.add(camp_ids[0])
 
-        # Influencer via rollup
-        inf_ids = _extract_rollup_relation_ids(props, "ref_Influencer")
-        if inf_ids:
-            influencer_ids_from_rollup[pid] = inf_ids[0]
-
-    # Batch fetch campaigns (deduplicated)
+    # Parallel fetch campaigns — get name, brief link, and influencer name
     campaign_cache = {}
-    for cid in campaign_ids:
+
+    def fetch_campaign(cid):
         page = _notion_get_page(cid)
-        if page:
-            props = page.get("properties", {})
-            campaign_cache[cid] = {
-                "name": _extract_title(props, "id"),
-                "brief_link": _extract_url(props, "Brief Link"),
-            }
-            # Also get influencer from campaign if not from rollup
-            inf_ids = _extract_relation_ids(props, "INFL_Influencers")
-            if inf_ids:
-                campaign_cache[cid]["influencer_id"] = inf_ids[0]
+        if not page:
+            return cid, None
+        props = page.get("properties", {})
+        return cid, {
+            "name": _extract_title(props, "id"),
+            "brief_link": str(_extract_formula(props, "Brief Link") or ""),
+            "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
+        }
 
-    # Collect all influencer IDs
-    all_influencer_ids = set(influencer_ids_from_rollup.values())
-    for c in campaign_cache.values():
-        if c.get("influencer_id"):
-            all_influencer_ids.add(c["influencer_id"])
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
+        for future in as_completed(futures):
+            cid, data = future.result()
+            if data:
+                campaign_cache[cid] = data
 
-    # Batch fetch influencer names (deduplicated)
-    influencer_names = {}
-    for iid in all_influencer_ids:
-        page = _notion_get_page(iid)
-        if page:
-            props = page.get("properties", {})
-            influencer_names[iid] = _extract_title(props, "Name")
-
-    # Build result: group posts by campaign to compute frame order
+    # Group posts by campaign to compute frame order
     campaign_posts = {}  # campaign_id -> [(post_date, post_id)]
     for page in posts:
         pid = page["id"]
@@ -604,12 +584,8 @@ def _fetch_upcoming_posts():
         cid = post_campaign_map.get(pid)
         campaign = campaign_cache.get(cid, {}) if cid else {}
 
-        # Resolve influencer name
-        inf_id = influencer_ids_from_rollup.get(pid) or campaign.get("influencer_id")
-        inf_name = influencer_names.get(inf_id, "") if inf_id else ""
-
         result.append({
-            "influencer_name": inf_name,
+            "influencer_name": campaign.get("influencer_name", ""),
             "post_date": post_date,
             "frame": frame_numbers.get(pid, 1),
             "brief": campaign.get("name", ""),
