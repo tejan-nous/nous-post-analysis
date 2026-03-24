@@ -475,9 +475,10 @@ def _notion_query(database_id, body, prop_ids=None):
     """
     pages = []
     start_cursor = None
-    for _ in range(10):  # max 10 pages
+    max_pages = body.pop("_max_pages", 5)
+    for _ in range(max_pages):
         req_body = dict(body)
-        req_body.setdefault("page_size", 5)
+        req_body.setdefault("page_size", 10)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
         url = f"https://api.notion.com/v1/databases/{database_id}/query"
@@ -585,6 +586,7 @@ def _fetch_upcoming_posts():
     print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms, ids={post_pids}", flush=True)
 
     # Query posts with Post date in [today, today+30d] — only 2 properties returned
+    # Limit to 2 pages (20 posts) to stay within timeout budget
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
@@ -594,6 +596,7 @@ def _fetch_upcoming_posts():
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
+        "_max_pages": 2,
     }, prop_ids=post_pids)
     print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
