@@ -17,6 +17,8 @@ CORS(app)
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 SLACK_APPROVING_CONTENT_CHANNEL = os.environ.get("SLACK_APPROVING_CONTENT_CHANNEL", "#approving-content")
+NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
+NOTION_FEEDBACK_DB = os.environ.get("NOTION_FEEDBACK_DB", "0e7d5f8cb1be416d9dc23b68103ce739")
 
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
@@ -535,20 +537,21 @@ def analyse():
         }), 500
 
 
-FEEDBACK_FILE = os.path.join(os.path.dirname(__file__), "data", "feedback.json")
+RATING_MAP = {"good": "Accurate", "bad": "Off", "mixed": "Partially"}
 
 
-def load_feedback():
-    if os.path.exists(FEEDBACK_FILE):
-        with open(FEEDBACK_FILE) as f:
-            return json.load(f)
-    return []
+def notion_headers():
+    return {
+        "Authorization": f"Bearer {os.environ.get('NOTION_TOKEN', NOTION_TOKEN or '')}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
+    }
 
 
-def save_feedback(entries):
-    os.makedirs(os.path.dirname(FEEDBACK_FILE), exist_ok=True)
-    with open(FEEDBACK_FILE, "w") as f:
-        json.dump(entries, f, indent=2, ensure_ascii=False)
+def _notion_rich_text(text):
+    if not text:
+        return []
+    return [{"text": {"content": str(text)[:2000]}}]
 
 
 @app.route("/feedback", methods=["POST"])
@@ -557,45 +560,108 @@ def post_feedback():
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
 
-    entry = {
-        "timestamp": data.get("timestamp", ""),
-        "reviewer": data.get("reviewer", ""),
-        "influencer": data.get("influencer", ""),
-        "brief": data.get("brief", ""),
-        "frame": data.get("frame", ""),
-        "rating": data.get("rating", ""),           # "good", "bad", "mixed"
-        "comment": data.get("comment", ""),
-        "ai_verdict": data.get("ai_verdict", ""),    # "good_to_go" or "needs_work"
-        "ai_improvements": data.get("ai_improvements", []),
+    if not NOTION_TOKEN:
+        return jsonify({"error": "NOTION_TOKEN not configured"}), 500
+
+    rating_raw = data.get("rating", "")
+    rating_select = RATING_MAP.get(rating_raw, rating_raw)
+
+    ai_improvements = data.get("ai_improvements", [])
+    if isinstance(ai_improvements, list):
+        ai_improvements = "\n".join(ai_improvements)
+
+    timestamp = data.get("timestamp", "")
+
+    properties = {
+        "Name": {"title": _notion_rich_text(f"{data.get('influencer', 'Unknown')} - Frame {data.get('frame', '?')}")},
+        "Reviewer": {"rich_text": _notion_rich_text(data.get("reviewer", ""))},
+        "Influencer": {"rich_text": _notion_rich_text(data.get("influencer", ""))},
+        "Brief": {"rich_text": _notion_rich_text(data.get("brief", ""))},
+        "Frame": {"rich_text": _notion_rich_text(str(data.get("frame", "")))},
+        "Comment": {"rich_text": _notion_rich_text(data.get("comment", ""))},
+        "AI Improvements": {"rich_text": _notion_rich_text(ai_improvements)},
     }
 
-    entries = load_feedback()
-    entries.append(entry)
-    save_feedback(entries)
+    if rating_select in ("Accurate", "Partially", "Off"):
+        properties["Rating"] = {"select": {"name": rating_select}}
 
-    return jsonify({"ok": True, "total": len(entries)})
+    ai_verdict = data.get("ai_verdict", "")
+    if ai_verdict in ("good_to_go", "needs_work"):
+        properties["AI Verdict"] = {"select": {"name": ai_verdict}}
+
+    if timestamp:
+        try:
+            properties["Date"] = {"date": {"start": timestamp[:10]}}
+        except Exception:
+            pass
+
+    resp = http_requests.post(
+        "https://api.notion.com/v1/pages",
+        headers=notion_headers(),
+        json={"parent": {"database_id": NOTION_FEEDBACK_DB}, "properties": properties},
+    )
+
+    if resp.status_code == 200:
+        return jsonify({"ok": True})
+    else:
+        return jsonify({"error": f"Notion API error: {resp.text}"}), 500
 
 
 @app.route("/feedback", methods=["GET"])
 def get_feedback():
-    entries = load_feedback()
-    # Optional query filters
-    influencer = request.args.get("influencer", "").lower()
-    brief = request.args.get("brief", "").lower()
-    rating = request.args.get("rating", "").lower()
-    reviewer = request.args.get("reviewer", "").lower()
-    verdict = request.args.get("verdict", "").lower()
+    if not NOTION_TOKEN:
+        return jsonify({"error": "NOTION_TOKEN not configured"}), 500
 
-    if influencer:
-        entries = [e for e in entries if influencer in e.get("influencer", "").lower()]
-    if brief:
-        entries = [e for e in entries if brief in e.get("brief", "").lower()]
-    if rating:
-        entries = [e for e in entries if e.get("rating", "").lower() == rating]
-    if reviewer:
-        entries = [e for e in entries if reviewer in e.get("reviewer", "").lower()]
-    if verdict:
-        entries = [e for e in entries if e.get("ai_verdict", "").lower() == verdict]
+    # Build Notion filter from query params
+    filters = []
+    for param, prop in [("influencer", "Influencer"), ("brief", "Brief"), ("reviewer", "Reviewer")]:
+        val = request.args.get(param, "")
+        if val:
+            filters.append({"property": prop, "rich_text": {"contains": val}})
+    for param, prop in [("rating", "Rating"), ("verdict", "AI Verdict")]:
+        val = request.args.get(param, "")
+        if val:
+            filters.append({"property": prop, "select": {"equals": val}})
+
+    body = {}
+    if filters:
+        body["filter"] = {"and": filters} if len(filters) > 1 else filters[0]
+    body["sorts"] = [{"property": "Date", "direction": "descending"}]
+
+    resp = http_requests.post(
+        f"https://api.notion.com/v1/databases/{NOTION_FEEDBACK_DB}/query",
+        headers=notion_headers(),
+        json=body,
+    )
+
+    if resp.status_code != 200:
+        return jsonify({"error": f"Notion query failed: {resp.text}"}), 500
+
+    entries = []
+    for page in resp.json().get("results", []):
+        props = page.get("properties", {})
+        def get_text(name):
+            p = props.get(name, {})
+            rt = p.get("rich_text") or p.get("title") or []
+            return rt[0]["plain_text"] if rt else ""
+        def get_select(name):
+            s = props.get(name, {}).get("select")
+            return s["name"] if s else ""
+        def get_date(name):
+            d = props.get(name, {}).get("date")
+            return d["start"] if d else ""
+
+        entries.append({
+            "timestamp": get_date("Date"),
+            "reviewer": get_text("Reviewer"),
+            "influencer": get_text("Influencer"),
+            "brief": get_text("Brief"),
+            "frame": get_text("Frame"),
+            "rating": get_select("Rating"),
+            "comment": get_text("Comment"),
+            "ai_verdict": get_select("AI Verdict"),
+            "ai_improvements": get_text("AI Improvements"),
+        })
 
     return jsonify({"feedback": entries, "total": len(entries)})
 
