@@ -753,6 +753,54 @@ def notion_debug():
             results["query_error"] = resp.text[:300]
     except Exception as e:
         results["query_error"] = str(e)
+    # Test: campaign DB schema fetch + property IDs
+    try:
+        t0 = time.time()
+        camp_pids = _resolve_campaign_prop_ids(None)
+        results["camp_resolve_ms"] = int((time.time() - t0) * 1000)
+        results["camp_prop_ids"] = camp_pids
+    except Exception as e:
+        results["camp_resolve_error"] = str(e)
+    # Test: fetch a single campaign page with filter_properties
+    try:
+        if results.get("query_status") == 200 and results.get("result_count", 0) > 0:
+            # Get a campaign ID from the first post
+            first_post = resp.json().get("results", [{}])[0]
+            camp_rel = first_post.get("properties", {}).get("I.Campaigns", {}).get("relation", [])
+            if camp_rel:
+                cid = camp_rel[0]["id"]
+                t0 = time.time()
+                page = _notion_get_page(cid, prop_ids=camp_pids if camp_pids else None)
+                results["camp_page_ms"] = int((time.time() - t0) * 1000)
+                if page:
+                    props = page.get("properties", {})
+                    results["camp_page_props"] = list(props.keys())
+                    results["camp_page_title"] = _extract_title(props, "id")
+                    results["camp_page_influencer"] = str(_extract_formula(props, "Influencer (string)") or "")
+                    results["camp_page_brief"] = str(_extract_formula(props, "Brief Link") or "")
+    except Exception as e:
+        results["camp_page_error"] = str(e)
+    # Test: count total upcoming posts
+    try:
+        t0 = time.time()
+        url2 = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query"
+        if prop_ids:
+            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
+            url2 = f"{url2}?{params}"
+        resp2 = http_requests.post(url2, headers=_get_notion_headers(), json={
+            "filter": {"and": [
+                {"property": "Post date", "date": {"on_or_after": today}},
+                {"property": "Post date", "date": {"on_or_before": one_month}},
+            ]},
+            "page_size": 100,
+        }, timeout=30)
+        results["full_query_ms"] = int((time.time() - t0) * 1000)
+        if resp2.status_code == 200:
+            d2 = resp2.json()
+            results["full_count"] = len(d2.get("results", []))
+            results["full_has_more"] = d2.get("has_more", False)
+    except Exception as e:
+        results["full_query_error"] = str(e)
     return jsonify(results)
 
 
