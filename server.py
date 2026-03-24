@@ -628,26 +628,26 @@ def _fetch_upcoming_posts():
     t_start = _time.time()
     now = datetime.utcnow()
     today = now.strftime("%Y-%m-%d")
-    one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
+    one_week = (now + timedelta(days=7)).strftime("%Y-%m-%d")
 
     # Resolve property IDs
     post_pids = _get_posts_prop_ids()
     camp_pids = _resolve_campaign_prop_ids(None)
     print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms", flush=True)
 
-    # Query posts — page_size=7 to balance speed and results
-    # Each page takes ~7-15s on this 301-property DB
+    # Query posts with small page_size — Notion 504s on page_size=100 with 301 properties
+    # page_size=10 takes ~22s, page_size=1 takes ~7s (from debug data)
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
             "and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_month}},
+                {"property": "Post date", "date": {"on_or_before": one_week}},
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
-        "_max_pages": 1,
-        "page_size": 100,
+        "_max_pages": 3,
+        "page_size": 10,
     }, prop_ids=post_pids)
     print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
@@ -673,7 +673,7 @@ def _fetch_upcoming_posts():
             try:
                 resp = http_requests.get(
                     f"https://api.notion.com/v1/pages/{cid}",
-                    headers=_get_notion_headers(), params=qp, timeout=15,
+                    headers=_get_notion_headers(), params=qp, timeout=30,
                 )
                 if resp.status_code != 200:
                     return cid, None
@@ -787,6 +787,15 @@ def upcoming_posts():
         return jsonify({"error": _upcoming_posts_cache["error"]}), 500
 
     return jsonify({"posts": [], "message": "No data available yet"}), 202
+
+
+@app.route("/notion/refresh", methods=["POST"])
+def refresh_posts():
+    """Force a background refresh of the posts cache."""
+    if _upcoming_posts_cache.get("loading"):
+        return jsonify({"ok": True, "message": "Already refreshing"})
+    threading.Thread(target=_refresh_upcoming_posts, daemon=True).start()
+    return jsonify({"ok": True, "message": "Refresh started"})
 
 
 @app.route("/analyse", methods=["POST"])
