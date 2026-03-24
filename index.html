@@ -65959,11 +65959,13 @@ async function ulSubmitFeedback(idx, influencer, brief, frame, aiVerdict, btn) {
       const container = document.getElementById(`ul-feedback-${idx}`);
       container.innerHTML = `<div style="text-align:center;padding:12px;color:var(--green);font-weight:600">Thanks for the feedback! (${data.total} total)</div>`;
     } else {
-      btn.textContent = 'Failed — try again';
+      btn.textContent = `Failed: ${data.error || 'unknown error'}`;
+      btn.style.background = '#d97706';
       btn.disabled = false;
     }
   } catch(e) {
-    btn.textContent = 'Error — try again';
+    btn.textContent = `Error: ${e.message}`;
+    btn.style.background = '#d97706';
     btn.disabled = false;
   }
 }

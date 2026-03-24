@@ -560,7 +560,8 @@ def post_feedback():
     if not data:
         return jsonify({"error": "Invalid JSON"}), 400
 
-    if not NOTION_TOKEN:
+    token = os.environ.get("NOTION_TOKEN", NOTION_TOKEN or "")
+    if not token:
         return jsonify({"error": "NOTION_TOKEN not configured"}), 500
 
     rating_raw = data.get("rating", "")
@@ -604,12 +605,14 @@ def post_feedback():
     if resp.status_code == 200:
         return jsonify({"ok": True})
     else:
-        return jsonify({"error": f"Notion API error: {resp.text}"}), 500
+        print(f"[FEEDBACK] Notion API error {resp.status_code}: {resp.text}")
+        return jsonify({"ok": False, "error": f"Notion API error {resp.status_code}: {resp.text}"}), 500
 
 
 @app.route("/feedback", methods=["GET"])
 def get_feedback():
-    if not NOTION_TOKEN:
+    token = os.environ.get("NOTION_TOKEN", NOTION_TOKEN or "")
+    if not token:
         return jsonify({"error": "NOTION_TOKEN not configured"}), 500
 
     # Build Notion filter from query params
