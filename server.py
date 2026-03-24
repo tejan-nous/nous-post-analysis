@@ -653,6 +653,70 @@ def _fetch_upcoming_posts():
     return result
 
 
+@app.route("/notion/debug", methods=["GET"])
+def notion_debug():
+    """Debug endpoint to test Notion connectivity."""
+    import time
+    results = {"token_set": bool(NOTION_TOKEN), "posts_db": NOTION_POSTS_DB, "campaigns_db": NOTION_CAMPAIGNS_DB}
+    if not NOTION_TOKEN:
+        return jsonify(results), 500
+    # Test: retrieve DB metadata (tiny response)
+    try:
+        t0 = time.time()
+        resp = http_requests.get(
+            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}",
+            headers=_get_notion_headers(),
+            timeout=15,
+        )
+        results["db_fetch_ms"] = int((time.time() - t0) * 1000)
+        results["db_status"] = resp.status_code
+        if resp.status_code == 200:
+            db = resp.json()
+            results["db_title"] = db.get("title", [{}])[0].get("plain_text", "?")
+            results["property_count"] = len(db.get("properties", {}))
+            # Show IDs for the 2 props we need
+            props = db.get("properties", {})
+            for name in ["Post date", "I.Campaigns"]:
+                if name in props:
+                    results[f"prop_{name}_id"] = props[name].get("id", "?")
+        else:
+            results["db_error"] = resp.text[:200]
+    except Exception as e:
+        results["db_error"] = str(e)
+    # Test: query with page_size=1 and filter_properties
+    try:
+        from datetime import datetime, timedelta
+        today = datetime.utcnow().strftime("%Y-%m-%d")
+        one_month = (datetime.utcnow() + timedelta(days=30)).strftime("%Y-%m-%d")
+        prop_ids = _get_posts_prop_ids()
+        results["resolved_prop_ids"] = prop_ids
+        t0 = time.time()
+        url = f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query"
+        if prop_ids:
+            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
+            url = f"{url}?{params}"
+        resp = http_requests.post(url, headers=_get_notion_headers(), json={
+            "filter": {"and": [
+                {"property": "Post date", "date": {"on_or_after": today}},
+                {"property": "Post date", "date": {"on_or_before": one_month}},
+            ]},
+            "page_size": 1,
+        }, timeout=30)
+        results["query_ms"] = int((time.time() - t0) * 1000)
+        results["query_status"] = resp.status_code
+        if resp.status_code == 200:
+            data = resp.json()
+            results["total_results_hint"] = "has_more" if data.get("has_more") else "all_returned"
+            results["result_count"] = len(data.get("results", []))
+            if data.get("results"):
+                results["sample_props"] = list(data["results"][0].get("properties", {}).keys())
+        else:
+            results["query_error"] = resp.text[:300]
+    except Exception as e:
+        results["query_error"] = str(e)
+    return jsonify(results)
+
+
 @app.route("/notion/upcoming-posts", methods=["GET"])
 def upcoming_posts():
     import time
