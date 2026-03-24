@@ -477,7 +477,7 @@ def _notion_query(database_id, body, prop_ids=None):
     start_cursor = None
     for _ in range(10):  # max 10 pages
         req_body = dict(body)
-        req_body.setdefault("page_size", 100)
+        req_body.setdefault("page_size", 25)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
         url = f"https://api.notion.com/v1/databases/{database_id}/query"
