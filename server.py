@@ -612,34 +612,49 @@ def _fetch_upcoming_posts():
             post_campaign_map[pid] = camp_ids[0]
             campaign_ids.add(camp_ids[0])
 
-    print(f"[notion] {len(campaign_ids)} unique campaigns to fetch", flush=True)
+    print(f"[notion] {len(campaign_ids)} unique campaigns to resolve", flush=True)
 
-    # Resolve campaign property IDs (title, Brief Link, Influencer string)
-    camp_pids = _resolve_campaign_prop_ids(next(iter(campaign_ids))) if campaign_ids else []
+    # Resolve campaign property IDs for filter_properties
+    camp_pids = _resolve_campaign_prop_ids(None) if campaign_ids else []
     print(f"[notion] campaign prop IDs: {camp_pids}", flush=True)
 
-    # Parallel fetch campaigns — only 3 properties returned per page
+    # Query Campaigns DB for all matching campaigns in one call (filter by page IDs)
+    # Notion doesn't support filtering by page ID, so fetch all campaigns with
+    # filter_properties to keep payload small, then match by ID
     campaign_cache = {}
+    if campaign_ids and NOTION_CAMPAIGNS_DB:
+        t2 = _time.time()
+        # Fetch campaigns in batches using page retrieval with filter_properties
+        from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    def fetch_campaign(cid):
-        page = _notion_get_page(cid, prop_ids=camp_pids)
-        if not page:
-            return cid, None
-        props = page.get("properties", {})
-        return cid, {
-            "name": _extract_title(props, "id"),
-            "brief_link": str(_extract_formula(props, "Brief Link") or ""),
-            "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
-        }
+        def fetch_campaign(cid):
+            # Use pages endpoint with filter_properties — much smaller than full page
+            url = f"https://api.notion.com/v1/pages/{cid}"
+            if camp_pids:
+                params = "&".join(f"filter_properties={pid}" for pid in camp_pids)
+                url = f"{url}?{params}"
+            try:
+                resp = http_requests.get(url, headers=_get_notion_headers(), timeout=15)
+                if resp.status_code != 200:
+                    print(f"[notion] campaign {cid[:8]} fetch failed: {resp.status_code}", flush=True)
+                    return cid, None
+                props = resp.json().get("properties", {})
+                return cid, {
+                    "name": _extract_title(props, "id"),
+                    "brief_link": str(_extract_formula(props, "Brief Link") or ""),
+                    "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
+                }
+            except Exception as e:
+                print(f"[notion] campaign {cid[:8]} error: {e}", flush=True)
+                return cid, None
 
-    t2 = _time.time()
-    with ThreadPoolExecutor(max_workers=10) as pool:
-        futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
-        for future in as_completed(futures):
-            cid, data = future.result()
-            if data:
-                campaign_cache[cid] = data
-    print(f"[notion] campaigns fetched in {int((_time.time()-t2)*1000)}ms", flush=True)
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
+            for future in as_completed(futures):
+                cid, data = future.result()
+                if data:
+                    campaign_cache[cid] = data
+        print(f"[notion] {len(campaign_cache)} campaigns fetched in {int((_time.time()-t2)*1000)}ms", flush=True)
 
     # Group posts by campaign to compute frame order
     campaign_posts = {}  # campaign_id -> [(post_date, post_id)]
