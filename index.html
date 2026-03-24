@@ -65500,20 +65500,26 @@ let _notionPostsLoaded = false;
     const base = serverUrl();
     if (!base) return;
     if (statusEl) statusEl.textContent = 'Loading Notion posts…';
-    fetch(base + '/notion/upcoming-posts')
-      .then(r => r.json())
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 60000);
+    fetch(base + '/notion/upcoming-posts', { signal: controller.signal })
+      .then(r => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
       .then(data => {
-        if (data.posts) {
+        if (data.posts && data.posts.length) {
           _notionPosts = data.posts;
           _notionPostsLoaded = true;
-          if (statusEl) statusEl.textContent = `${data.posts.length} upcoming posts loaded from Notion`;
+          if (statusEl) statusEl.textContent = data.posts.length + ' upcoming posts loaded';
           setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
         } else {
-          if (statusEl) statusEl.textContent = '';
+          if (statusEl) statusEl.textContent = data.error || 'No upcoming posts';
         }
       })
-      .catch(() => {
-        if (statusEl) statusEl.textContent = '';
+      .catch(err => {
+        console.error('Notion fetch error:', err);
+        if (statusEl) statusEl.textContent = 'Notion: ' + (err.message || 'failed');
       });
   }
 
