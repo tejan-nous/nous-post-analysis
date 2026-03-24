@@ -678,8 +678,19 @@ def _fetch_upcoming_posts():
                 if resp.status_code != 200:
                     return cid, None
                 props = resp.json().get("properties", {})
-                # Brief Link (formula) or Brief URL (url) — use whichever has a value
-                brief_link = str(_extract_formula(props, "Brief Link") or "")
+                # Brief Link — try formula, then rich_text, then url type
+                bl = props.get("Brief Link", {})
+                brief_link = ""
+                bl_type = bl.get("type", "")
+                print(f"[notion] campaign {cid[:8]} Brief Link type={bl_type} value={bl}", flush=True)
+                if bl_type == "formula":
+                    brief_link = (bl.get("formula") or {}).get("string") or ""
+                elif bl_type == "rich_text":
+                    rt = bl.get("rich_text") or []
+                    brief_link = rt[0]["plain_text"] if rt else ""
+                elif bl_type == "url":
+                    brief_link = bl.get("url") or ""
+                # Fallback: Brief URL property
                 if not brief_link:
                     brief_url_prop = props.get("Brief URL", {}).get("url")
                     brief_link = brief_url_prop or ""
