@@ -65990,9 +65990,12 @@ async function ulSendToSlack(id, btn) {
     // Extract image index from textarea id (ul-slack-area-0, ul-slack-area-1, etc.)
     const idx = parseInt(id.replace('ul-slack-area-', ''));
     const queueItem = ulImageQueue[idx];
-    // Extract first two lines as image caption (title + verdict)
+    // Extract first lines as image caption (title + verdict + date)
     const lines = text.split('\n');
-    const caption = lines.slice(0, 2).join('\n');
+    // Take lines until first empty line (header block)
+    let captionEnd = lines.findIndex((l, i) => i > 0 && l.trim() === '');
+    if (captionEnd < 0) captionEnd = lines.length;
+    const caption = lines.slice(0, captionEnd).join('\n');
     const payload = {text, caption};
     if (queueItem && queueItem.base64) {
       payload.image_base64 = queueItem.base64;
