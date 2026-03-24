@@ -557,14 +557,21 @@ def _resolve_campaign_prop_ids(campaign_id):
 
 
 def _prewarm_notion_cache():
-    """Pre-resolve property IDs on startup so first request is fast."""
+    """Pre-resolve property IDs and fetch upcoming posts on startup."""
+    import time as _t
     try:
         if NOTION_TOKEN and NOTION_POSTS_DB:
             _get_posts_prop_ids()
         if NOTION_TOKEN and NOTION_CAMPAIGNS_DB:
             _resolve_campaign_prop_ids(None)
-    except Exception:
-        pass
+        # Pre-fetch upcoming posts so first user request is instant
+        if NOTION_TOKEN and NOTION_POSTS_DB:
+            data = _fetch_upcoming_posts()
+            _upcoming_posts_cache["data"] = data
+            _upcoming_posts_cache["fetched_at"] = _t.time()
+            print(f"[notion] prewarm complete: {len(data)} upcoming posts cached", flush=True)
+    except Exception as e:
+        print(f"[notion] prewarm error: {e}", flush=True)
 
 import threading
 threading.Thread(target=_prewarm_notion_cache, daemon=True).start()
@@ -579,7 +586,7 @@ def _fetch_upcoming_posts():
     t_start = _time.time()
     now = datetime.utcnow()
     today = now.strftime("%Y-%m-%d")
-    one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
+    one_week = (now + timedelta(days=7)).strftime("%Y-%m-%d")
 
     # Resolve Posts DB property IDs for filter_properties (only Post date + I.Campaigns)
     post_pids = _get_posts_prop_ids()
@@ -592,7 +599,7 @@ def _fetch_upcoming_posts():
         "filter": {
             "and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_month}},
+                {"property": "Post date", "date": {"on_or_before": one_week}},
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
@@ -733,7 +740,7 @@ def notion_debug():
         resp = http_requests.post(url, headers=_get_notion_headers(), params=qp, json={
             "filter": {"and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_month}},
+                {"property": "Post date", "date": {"on_or_before": one_week}},
             ]},
             "page_size": 1,
         }, timeout=30)
@@ -784,7 +791,7 @@ def notion_debug():
         resp2 = http_requests.post(url2, headers=_get_notion_headers(), params=qp2, json={
             "filter": {"and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_month}},
+                {"property": "Post date", "date": {"on_or_before": one_week}},
             ]},
             "page_size": 10,
         }, timeout=30)
