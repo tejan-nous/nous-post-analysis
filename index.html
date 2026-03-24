@@ -65494,7 +65494,7 @@ let _notionPostsLoaded = false;
 
 (function() {
   const statusEl = document.getElementById('ul-notion-status');
-  const serverUrl = () => (document.getElementById('ul-server-url')?.value || '').replace(/\/+$/, '');
+  const serverUrl = () => (document.getElementById('ul-server-url')?.value || localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/+$/, '');
 
   function fetchUpcomingPosts() {
     const base = serverUrl();
