@@ -432,46 +432,25 @@ _upcoming_posts_cache = {"data": None, "fetched_at": 0}
 UPCOMING_POSTS_CACHE_TTL = 300  # 5 minutes
 
 
-def _notion_query(database_id, body, filter_properties=None):
-    """Query a Notion database. Returns list of pages (handles pagination).
-    filter_properties: list of property names to return (reduces payload size).
-    """
+def _notion_query(database_id, body):
+    """Query a Notion database. Returns list of pages (handles pagination)."""
     headers = {
         "Authorization": f"Bearer {NOTION_TOKEN}",
         "Content-Type": "application/json",
         "Notion-Version": "2022-06-28",
     }
-    # Resolve property IDs from names if filter_properties given
-    prop_ids = None
-    if filter_properties:
-        resp = http_requests.get(
-            f"https://api.notion.com/v1/databases/{database_id}",
-            headers=headers,
-            timeout=15,
-        )
-        if resp.status_code == 200:
-            db_props = resp.json().get("properties", {})
-            prop_ids = []
-            for name in filter_properties:
-                if name in db_props and "id" in db_props[name]:
-                    prop_ids.append(db_props[name]["id"])
-
     pages = []
     start_cursor = None
     for _ in range(10):  # max 10 pages
         req_body = dict(body)
+        req_body.setdefault("page_size", 100)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
-        # Build URL with filter_properties as query params
-        url = f"https://api.notion.com/v1/databases/{database_id}/query"
-        if prop_ids:
-            params = "&".join(f"filter_properties={pid}" for pid in prop_ids)
-            url = f"{url}?{params}"
         resp = http_requests.post(
-            url,
+            f"https://api.notion.com/v1/databases/{database_id}/query",
             headers=headers,
             json=req_body,
-            timeout=30,
+            timeout=60,
         )
         if resp.status_code != 200:
             raise Exception(f"Notion query failed: {resp.status_code} {resp.text[:300]}")
@@ -493,7 +472,7 @@ def _notion_get_page(page_id):
     resp = http_requests.get(
         f"https://api.notion.com/v1/pages/{page_id}",
         headers=headers,
-        timeout=10,
+        timeout=30,
     )
     if resp.status_code != 200:
         return None
@@ -546,7 +525,7 @@ def _fetch_upcoming_posts():
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
-    }, filter_properties=["Post date", "I.Campaigns"])
+    })
 
     # Collect unique campaign IDs
     post_campaign_map = {}  # post_id -> campaign_id
