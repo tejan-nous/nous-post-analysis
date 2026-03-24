@@ -429,9 +429,43 @@ def briefs():
 
 # --- Notion upcoming posts lookup (cached) ---
 _upcoming_posts_cache = {"data": None, "fetched_at": 0, "error": None, "loading": False}
-UPCOMING_POSTS_CACHE_TTL = 300  # 5 minutes
+UPCOMING_POSTS_CACHE_TTL = 14400  # 4 hours — disk cache keeps data fresh across restarts
+DISK_CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "upcoming_posts_cache.json")
 _notion_headers = None
 _posts_prop_ids = None  # cached property IDs for filter_properties
+
+
+def _load_disk_cache():
+    """Load cached posts from disk so startup is instant (no Notion calls needed)."""
+    import time as _t
+    try:
+        if os.path.exists(DISK_CACHE_FILE):
+            with open(DISK_CACHE_FILE, "r") as f:
+                disk = json.load(f)
+            if disk.get("data") and disk.get("fetched_at"):
+                age_hours = (_t.time() - disk["fetched_at"]) / 3600
+                _upcoming_posts_cache["data"] = disk["data"]
+                _upcoming_posts_cache["fetched_at"] = disk["fetched_at"]
+                print(f"[notion] disk cache loaded: {len(disk['data'])} posts, {age_hours:.1f}h old", flush=True)
+                return True
+    except Exception as e:
+        print(f"[notion] disk cache load error: {e}", flush=True)
+    return False
+
+
+def _save_disk_cache(data, fetched_at):
+    """Persist cache to disk so it survives restarts."""
+    try:
+        os.makedirs(os.path.dirname(DISK_CACHE_FILE), exist_ok=True)
+        with open(DISK_CACHE_FILE, "w") as f:
+            json.dump({"data": data, "fetched_at": fetched_at}, f)
+        print(f"[notion] disk cache saved: {len(data)} posts", flush=True)
+    except Exception as e:
+        print(f"[notion] disk cache save error: {e}", flush=True)
+
+
+# Load disk cache immediately on import (before any threads start)
+_load_disk_cache()
 
 
 def _get_notion_headers():
@@ -564,14 +598,13 @@ def _refresh_upcoming_posts():
     _upcoming_posts_cache["loading"] = True
     _upcoming_posts_cache["error"] = None
     try:
-        if NOTION_TOKEN and NOTION_POSTS_DB:
-            _get_posts_prop_ids()
         if NOTION_TOKEN and NOTION_CAMPAIGNS_DB:
             _resolve_campaign_prop_ids(None)
-        if NOTION_TOKEN and NOTION_POSTS_DB:
             data = _fetch_upcoming_posts()
+            now = _t.time()
             _upcoming_posts_cache["data"] = data
-            _upcoming_posts_cache["fetched_at"] = _t.time()
+            _upcoming_posts_cache["fetched_at"] = now
+            _save_disk_cache(data, now)
             print(f"[notion] refresh complete: {len(data)} upcoming posts cached", flush=True)
     except Exception as e:
         import traceback as _tb
@@ -597,12 +630,15 @@ def _fetch_upcoming_posts():
     camp_pids = _resolve_campaign_prop_ids(None)
     print(f"[notion] campaign prop IDs resolved in {int((_time.time()-t_start)*1000)}ms: {camp_pids}", flush=True)
 
-    # Query Campaigns DB for "In progress" campaigns with filter_properties
+    # Query Campaigns DB — exclude terminal statuses, keep all active ones
     t1 = _time.time()
     campaigns = _notion_query(NOTION_CAMPAIGNS_DB, {
         "filter": {
-            "property": "Status",
-            "status": {"equals": "In progress"},
+            "and": [
+                {"property": "Status", "status": {"does_not_equal": "Complete"}},
+                {"property": "Status", "status": {"does_not_equal": "Cancelled"}},
+                {"property": "Status", "status": {"does_not_equal": "Closed (no further campaign)"}},
+            ]
         },
         "_max_pages": 5,
         "page_size": 50,
@@ -658,8 +694,8 @@ def notion_debug():
 def upcoming_posts():
     import time
 
-    if not NOTION_TOKEN or not NOTION_POSTS_DB:
-        return jsonify({"error": "NOTION_TOKEN and NOTION_POSTS_DB must be configured"}), 500
+    if not NOTION_TOKEN or not NOTION_CAMPAIGNS_DB:
+        return jsonify({"error": "NOTION_TOKEN and NOTION_CAMPAIGNS_DB must be configured"}), 500
 
     now = time.time()
     cache_age = now - _upcoming_posts_cache["fetched_at"]
