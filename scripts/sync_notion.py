@@ -124,33 +124,15 @@ def fetch_posts_fast(token, prop_ids):
     query_string = "&".join(fp_params)
     base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query?{query_string}"
 
-    cutoff = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
-    all_posts = []
-    cursor = None
+    body = {
+        "sorts": [{"timestamp": "last_edited_time", "direction": "descending"}],
+        "page_size": 100,
+    }
 
-    while True:
-        body = {
-            "filter": {
-                "property": "Post date",
-                "date": {"on_or_after": cutoff},
-            },
-            "page_size": 100,
-        }
-        if cursor:
-            body["start_cursor"] = cursor
-
-        resp = notion_request(token, base_url, body=body)
-        results = resp.get("results", [])
-        all_posts.extend(results)
-        print(f"  Fetched {len(results)} posts (total: {len(all_posts)})")
-
-        if resp.get("has_more") and resp.get("next_cursor"):
-            cursor = resp["next_cursor"]
-            time.sleep(0.3)
-        else:
-            break
-
-    return all_posts
+    resp = notion_request(token, base_url, body=body)
+    results = resp.get("results", [])
+    print(f"  Fetched {len(results)} most recently edited posts")
+    return results
 
 
 def extract_text(rich_text_arr):
