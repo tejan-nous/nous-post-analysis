@@ -111,18 +111,8 @@ def discover_property_ids(token):
 
 
 def fetch_posts_fast(token, prop_ids):
-    """Fetch posts using filter_properties for speed."""
-    # Build filter_properties query params (double-URL-encoded for Notion)
-    fp_params = []
-    for key in ["title", "post_date", "post_sequence", "accounts_created",
-                 "delegations", "landing_page_views", "status", "influencer", "brief_frame"]:
-        pid = prop_ids.get(key)
-        if pid:
-            encoded = urllib.parse.quote(pid, safe="")
-            fp_params.append(f"filter_properties={encoded}")
-
-    query_string = "&".join(fp_params)
-    base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query?{query_string}"
+    """Fetch the 100 most recently edited posts from Notion."""
+    base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
 
     body = {
         "sorts": [{"timestamp": "last_edited_time", "direction": "descending"}],
