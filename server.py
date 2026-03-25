@@ -635,7 +635,7 @@ def _fetch_upcoming_posts():
     t_start = _time.time()
     now = datetime.utcnow()
     today = now.strftime("%Y-%m-%d")
-    one_week = (now + timedelta(days=7)).strftime("%Y-%m-%d")
+    one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
     # Resolve property IDs
     post_pids = _get_posts_prop_ids()
@@ -649,7 +649,7 @@ def _fetch_upcoming_posts():
         "filter": {
             "and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_week}},
+                {"property": "Post date", "date": {"on_or_before": one_month}},
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
@@ -694,9 +694,26 @@ def _fetch_upcoming_posts():
                 if resp.status_code != 200:
                     return cid, None
                 props = resp.json().get("properties", {})
+                # Extract Brief Link (formula or URL property)
+                brief_link = ""
+                for pname in ["Brief Link", "Brief URL"]:
+                    if pname in props:
+                        p = props[pname]
+                        ptype = p.get("type", "")
+                        if ptype == "formula":
+                            formula = p.get("formula", {})
+                            brief_link = formula.get("string") or formula.get("url") or ""
+                        elif ptype == "url":
+                            brief_link = p.get("url") or ""
+                        elif ptype == "rich_text":
+                            rts = p.get("rich_text", [])
+                            brief_link = rts[0].get("plain_text", "") if rts else ""
+                        if brief_link:
+                            break
                 return cid, {
                     "name": _extract_title(props, "id"),
                     "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
+                    "brief_link": brief_link,
                 }
             except Exception:
                 return cid, None
@@ -772,6 +789,8 @@ def _fetch_upcoming_posts():
             "post_date": post_date,
             "frame": frame_numbers.get(pid, 1),
             "brief": brief_name,
+            "campaign_name": campaign.get("name", ""),
+            "brief_link": campaign.get("brief_link", ""),
         })
 
     print(f"[notion] total: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms", flush=True)
@@ -817,6 +836,37 @@ def notion_debug():
     except Exception as e:
         results["db_check_error"] = str(e)
     return jsonify(results)
+
+
+@app.route("/notion/test-post-page", methods=["GET"])
+def test_post_page():
+    """Debug: fetch one post WITHOUT filter_properties to see if ETM is there."""
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    one_week = (datetime.utcnow() + timedelta(days=7)).strftime("%Y-%m-%d")
+    try:
+        resp = http_requests.post(
+            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query",
+            headers=_get_notion_headers(), timeout=60,
+            json={
+                "filter": {"and": [
+                    {"property": "Post date", "date": {"on_or_after": today}},
+                    {"property": "Post date", "date": {"on_or_before": one_week}},
+                ]},
+                "page_size": 1,
+            },
+        )
+        if resp.status_code != 200:
+            return jsonify({"error": resp.status_code, "body": resp.text[:500]}), 500
+        results = resp.json().get("results", [])
+        if not results:
+            return jsonify({"error": "No posts found"}), 404
+        props = results[0].get("properties", {})
+        etm_keys = {k: str(v)[:200] for k, v in props.items()
+                    if "experiment" in k.lower() or "treatment" in k.lower() or "brief" in k.lower()}
+        return jsonify({"page_id": results[0]["id"], "total_props": len(props), "etm_related": etm_keys})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/notion/upcoming-posts", methods=["GET"])
