@@ -71883,6 +71883,9 @@ function ulRefreshNotion() {
           if (check) { check.style.display = 'block'; setTimeout(() => check.style.display = 'none', 3000); }
           if (statusEl) { statusEl.textContent = data.posts.length + ' posts loaded'; setTimeout(() => statusEl.textContent = '', 3000); }
           _retryCount = 0;
+          // If the input is already focused, show the dropdown now that data has loaded
+          const ni = document.getElementById('ul-name');
+          if (ni && document.activeElement === ni) { ni.dispatchEvent(new Event('focus')); }
         } else if (status === 202 || data.loading) {
           if (_retryCount < MAX_RETRIES) {
             _retryCount++;
