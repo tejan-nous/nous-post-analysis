@@ -496,6 +496,9 @@ def _get_posts_prop_ids():
             for name in ["Post date", "I.Campaigns", "Experiment Treatment Manager"]:
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
+                    print(f"[notion] post prop '{name}' → id={db_props[name]['id']}", flush=True)
+                else:
+                    print(f"[notion] post prop '{name}' NOT FOUND in DB schema", flush=True)
     except Exception:
         pass
     if not _posts_prop_ids:
@@ -667,6 +670,9 @@ def _fetch_upcoming_posts():
             post_etm_map[pid] = etm_rel[0]
             etm_ids.add(etm_rel[0])
 
+    if posts:
+        sample_props = list(posts[0].get("properties", {}).keys())
+        print(f"[notion] sample post property keys: {sample_props}", flush=True)
     print(f"[notion] {len(campaign_ids)} campaigns, {len(etm_ids)} ETMs to fetch", flush=True)
 
     # Parallel-fetch campaign details (each takes ~1.3s)
