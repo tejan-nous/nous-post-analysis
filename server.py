@@ -595,7 +595,7 @@ def _resolve_campaign_prop_ids(campaign_id):
             if resp.status_code == 200:
                 db_props = resp.json().get("properties", {})
                 ids = []
-                for name in ["id", "Influencer (string)"]:
+                for name in ["id", "Influencer (string)", "Brief Name"]:
                     if name in db_props and "id" in db_props[name]:
                         ids.append(db_props[name]["id"])
                 _resolve_campaign_prop_ids._ids = ids
@@ -713,9 +713,12 @@ def _fetch_upcoming_posts():
                     print(f"[notion] campaign {cid[:8]} failed: {resp.status_code}", flush=True)
                     return cid, None
                 props = resp.json().get("properties", {})
+                brief_rt = props.get("Brief Name", {}).get("rich_text", [])
+                brief_name = brief_rt[0]["plain_text"] if brief_rt else ""
                 return cid, {
                     "name": _extract_title(props, "id"),
                     "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
+                    "brief_name": brief_name,
                 }
             except Exception as e:
                 print(f"[notion] campaign {cid[:8]} error: {e}", flush=True)
@@ -788,7 +791,7 @@ def _fetch_upcoming_posts():
 
         etm_id = post_etm_map.get(pid)
         etm = etm_cache.get(etm_id, {}) if etm_id else {}
-        brief_name = etm.get("brief_name", "")  # Only from ETM, don't fall back to campaign name
+        brief_name = campaign.get("brief_name", "") or etm.get("brief_name", "")
 
         result.append({
             "influencer_name": campaign.get("influencer_name", ""),
