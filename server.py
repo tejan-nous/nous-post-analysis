@@ -664,8 +664,9 @@ def _fetch_upcoming_posts():
     camp_pids = _resolve_campaign_prop_ids(None)
     print(f"[notion] step 1: prop IDs resolved in {int((_time.time()-t_start)*1000)}ms", flush=True)
 
-    # Step 2: Query posts — NO SORT (sort causes Notion to time out on 311-prop DB)
-    # page_size=100 works without sort; we sort in Python after
+    # Step 2: Query posts — page_size=10 + no sort + filter_properties
+    # This 311-prop DB 504s on page_size=100 and times out with sort.
+    # page_size=10 with filter_properties takes ~11s/page but works reliably.
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
@@ -674,10 +675,9 @@ def _fetch_upcoming_posts():
                 {"property": "Post date", "date": {"on_or_before": one_month}},
             ]
         },
-        "_max_pages": 5,
-        "page_size": 100,
+        "_max_pages": 10,
+        "page_size": 10,
     }, prop_ids=post_pids)
-    # Sort in Python instead
     posts.sort(key=lambda p: _extract_date(p.get("properties", {}), "Post date") or "")
     print(f"[notion] step 2: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
