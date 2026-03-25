@@ -512,27 +512,38 @@ def _notion_query(database_id, body, prop_ids=None):
     """Query a Notion database. Returns list of pages (handles pagination).
     prop_ids: list of property IDs to pass as filter_properties (reduces payload).
     """
+    import time as _qt
     pages = []
     start_cursor = None
     max_pages = body.pop("_max_pages", 5)
-    for _ in range(max_pages):
+    for page_num in range(max_pages):
         req_body = dict(body)
-        req_body.setdefault("page_size", 10)
+        req_body.setdefault("page_size", 100)
         if start_cursor:
             req_body["start_cursor"] = start_cursor
         url = f"https://api.notion.com/v1/databases/{database_id}/query"
         query_params = [("filter_properties", pid) for pid in (prop_ids or [])]
-        resp = http_requests.post(
-            url,
-            headers=_get_notion_headers(),
-            json=req_body,
-            params=query_params,
-            timeout=60,
-        )
+        t0 = _qt.time()
+        print(f"[notion] query page {page_num+1}/{max_pages}, page_size={req_body['page_size']}, filter_props={len(prop_ids or [])}", flush=True)
+        try:
+            resp = http_requests.post(
+                url,
+                headers=_get_notion_headers(),
+                json=req_body,
+                params=query_params,
+                timeout=30,
+            )
+        except Exception as e:
+            print(f"[notion] query page {page_num+1} FAILED after {int((_qt.time()-t0)*1000)}ms: {e}", flush=True)
+            raise
+        elapsed = int((_qt.time()-t0)*1000)
         if resp.status_code != 200:
+            print(f"[notion] query page {page_num+1} returned {resp.status_code} in {elapsed}ms: {resp.text[:200]}", flush=True)
             raise Exception(f"Notion query failed: {resp.status_code} {resp.text[:300]}")
         data = resp.json()
-        pages.extend(data.get("results", []))
+        batch = data.get("results", [])
+        pages.extend(batch)
+        print(f"[notion] query page {page_num+1}: {len(batch)} results in {elapsed}ms (total {len(pages)})", flush=True)
         if not data.get("has_more"):
             break
         start_cursor = data.get("next_cursor")
@@ -596,11 +607,18 @@ def _resolve_campaign_prop_ids(campaign_id):
 
 
 def _refresh_upcoming_posts():
-    """Fetch upcoming posts in background. Updates cache when done."""
+    """Fetch upcoming posts in background. Updates cache when done.
+    Has a 120s total timeout to prevent getting stuck forever.
+    """
     import time as _t
     if _upcoming_posts_cache.get("loading"):
-        return  # already running
+        # Check if loading for too long (stuck thread) — allow retry after 120s
+        load_start = _upcoming_posts_cache.get("_load_start", 0)
+        if _t.time() - load_start < 120:
+            return  # still within timeout
+        print("[notion] previous refresh appears stuck (>120s), allowing retry", flush=True)
     _upcoming_posts_cache["loading"] = True
+    _upcoming_posts_cache["_load_start"] = _t.time()
     _upcoming_posts_cache["error"] = None
     try:
         if NOTION_TOKEN and NOTION_POSTS_DB:
@@ -609,7 +627,7 @@ def _refresh_upcoming_posts():
             _upcoming_posts_cache["data"] = data
             _upcoming_posts_cache["fetched_at"] = now
             _save_disk_cache(data, now)
-            print(f"[notion] refresh complete: {len(data)} upcoming posts cached", flush=True)
+            print(f"[notion] refresh complete: {len(data)} upcoming posts cached in {int((now - _upcoming_posts_cache['_load_start'])*1000)}ms", flush=True)
     except Exception as e:
         import traceback as _tb
         _tb.print_exc()
@@ -635,13 +653,12 @@ def _fetch_upcoming_posts():
     today = now.strftime("%Y-%m-%d")
     one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
-    # Resolve property IDs
+    # Resolve property IDs (3 props: Post date, I.Campaigns, ETM)
     post_pids = _get_posts_prop_ids()
     camp_pids = _resolve_campaign_prop_ids(None)
-    print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms", flush=True)
+    print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms, post_pids={post_pids}", flush=True)
 
-    # Query posts with small page_size — Notion 504s on page_size=100 with 301 properties
-    # page_size=10 takes ~22s, page_size=1 takes ~7s (from debug data)
+    # Query posts — filter_properties limits response to 3 props so page_size=100 is safe
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
@@ -651,8 +668,8 @@ def _fetch_upcoming_posts():
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
-        "_max_pages": 10,
-        "page_size": 10,
+        "_max_pages": 5,
+        "page_size": 100,
     }, prop_ids=post_pids)
     print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 

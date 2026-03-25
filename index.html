@@ -326,50 +326,65 @@
         <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Defaults for new images</span>
         <span style="font-size:10px;color:var(--muted);opacity:.7">— each image can be overridden below</span>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
-        <!-- Default review type -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Review type</label>
-          <select id="ul-default-review" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
-            <option value="first">First review</option>
-            <option value="second">Final review</option>
-          </select>
+      <!-- Step 1: Influencer name (primary input) -->
+      <div style="position:relative;margin-bottom:20px">
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name</label>
+        <div style="position:relative">
+          <input id="ul-name" type="text" placeholder="Start typing an influencer name..." autocomplete="off" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;padding-right:40px;font-size:15px;color:var(--text);box-sizing:border-box">
+          <div id="ul-notion-spinner" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:none">
+            <svg width="18" height="18" viewBox="0 0 24 24" style="animation:ul-spin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="31 31" stroke-linecap="round"/></svg>
+          </div>
+          <div id="ul-notion-check" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:none;color:#22c55e;font-size:16px">✓</div>
         </div>
-        <!-- Default brief -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Brief</label>
-          <select id="ul-brief" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
-            <option value="">Select brief...</option>
-          </select>
+        <div id="ul-name-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:2px;max-height:240px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.15)"></div>
+        <div id="ul-notion-status" style="font-size:10px;color:var(--muted);margin-top:3px;opacity:.7"></div>
+      </div>
+      <style>@keyframes ul-spin{to{transform:rotate(360deg)}}</style>
+
+      <!-- Auto-filled details (shown after selecting influencer or manual mode) -->
+      <div id="ul-details-section" style="display:none;margin-bottom:20px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px">
+        <div id="ul-details-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <span id="ul-details-label" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">Post details</span>
+          <span id="ul-autofilled-badge" style="display:none;font-size:10px;background:#22c55e20;color:#22c55e;padding:2px 8px;border-radius:99px;font-weight:600">Auto-filled from Notion</span>
         </div>
-        <!-- Default frame -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame</label>
-          <select id="ul-frame" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
-            <option value="1">Frame 1</option>
-            <option value="2">Frame 2</option>
-            <option value="3">Frame 3</option>
-          </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:12px">
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Brief</label>
+            <select id="ul-brief" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+              <option value="">Select brief...</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame</label>
+            <select id="ul-frame" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+              <option value="1">Frame 1</option>
+              <option value="2">Frame 2</option>
+              <option value="3">Frame 3</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Post date</label>
+            <input id="ul-post-date" type="date" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Review type</label>
+            <select id="ul-default-review" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+              <option value="first">First review</option>
+              <option value="second">Final review</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
+            <input id="ul-agent" type="text" placeholder="e.g. Sarah at Gleam" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+          </div>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
-        <!-- Influencer name (with Notion autocomplete) -->
-        <div style="position:relative">
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Influencer name</label>
-          <input id="ul-name" type="text" placeholder="e.g. Lucy Hall" autocomplete="off" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
-          <div id="ul-name-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:2px;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12)"></div>
-          <div id="ul-notion-status" style="font-size:10px;color:var(--muted);margin-top:3px;opacity:.7"></div>
-        </div>
-        <!-- Agent name -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
-          <input id="ul-agent" type="text" placeholder="e.g. Sarah at Gleam" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
-        </div>
-        <!-- Post date -->
-        <div>
-          <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Post date</label>
-          <input id="ul-post-date" type="date" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
-        </div>
+
+      <!-- Can't find? Manual entry link -->
+      <div id="ul-manual-link" style="margin-bottom:20px;text-align:center">
+        <a href="#" id="ul-cant-find" onclick="event.preventDefault();ulShowManual()" style="font-size:12px;color:var(--muted);text-decoration:none;border-bottom:1px dashed var(--muted)">Can't find the influencer? Enter details manually</a>
       </div>
 
       <!-- Drop zone -->
@@ -65612,22 +65627,48 @@ let _notionPostsLoaded = false;
     // Try to match brief to dropdown options
     const briefSelect = document.getElementById('ul-brief');
     if (briefSelect && posts[0].brief) {
-      const campaignName = posts[0].brief.toLowerCase();
-      // Try to find a matching brief option
+      const briefName = posts[0].brief.trim();
       let matched = false;
+      // Strategy 1: Exact match (experiment name matches dropdown text minus emoji prefix)
       for (const opt of briefSelect.options) {
         if (!opt.value) continue;
-        const optLower = opt.value.toLowerCase();
-        // Match if campaign name contains brief keywords (family, home, celebrity, fashion, lifestyle, repeat)
-        const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
-        for (const kw of keywords) {
-          if (campaignName.includes(kw) && optLower.includes(kw)) {
+        // Strip leading emoji + space from option text (e.g. "👗 Fashion Exp..." → "Fashion Exp...")
+        const optText = opt.value.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, '');
+        if (optText.toLowerCase() === briefName.toLowerCase()) {
+          briefSelect.value = opt.value;
+          matched = true;
+          break;
+        }
+      }
+      // Strategy 2: Partial match — check if brief name is contained in option or vice versa
+      if (!matched) {
+        const briefLower = briefName.toLowerCase();
+        for (const opt of briefSelect.options) {
+          if (!opt.value) continue;
+          const optLower = opt.value.toLowerCase();
+          if (optLower.includes(briefLower) || briefLower.includes(optLower.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, ''))) {
             briefSelect.value = opt.value;
             matched = true;
             break;
           }
         }
-        if (matched) break;
+      }
+      // Strategy 3: Keyword fallback (campaign name or brief link)
+      if (!matched) {
+        const searchText = (briefName + ' ' + (posts[0].campaign_name || '') + ' ' + (posts[0].brief_link || '')).toLowerCase();
+        const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
+        for (const opt of briefSelect.options) {
+          if (!opt.value) continue;
+          const optLower = opt.value.toLowerCase();
+          for (const kw of keywords) {
+            if (searchText.includes(kw) && optLower.includes(kw)) {
+              briefSelect.value = opt.value;
+              matched = true;
+              break;
+            }
+          }
+          if (matched) break;
+        }
       }
     }
   }
