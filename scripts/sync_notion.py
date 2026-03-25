@@ -71,7 +71,7 @@ def notion_request(token, url, method="POST", body=None, retries=3):
     )
     for attempt in range(retries):
         try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            with urllib.request.urlopen(req, timeout=60) as resp:
                 return json.load(resp)
         except Exception as e:
             if attempt < retries - 1:
@@ -428,3 +428,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
