@@ -595,7 +595,7 @@ def _resolve_campaign_prop_ids(campaign_id):
             if resp.status_code == 200:
                 db_props = resp.json().get("properties", {})
                 ids = []
-                for name in ["id", "Brief Link", "Brief URL", "Influencer (string)"]:
+                for name in ["id", "Influencer (string)"]:
                     if name in db_props and "id" in db_props[name]:
                         ids.append(db_props[name]["id"])
                 _resolve_campaign_prop_ids._ids = ids
@@ -710,26 +710,9 @@ def _fetch_upcoming_posts():
                 if resp.status_code != 200:
                     return cid, None
                 props = resp.json().get("properties", {})
-                # Extract Brief Link (formula or URL property)
-                brief_link = ""
-                for pname in ["Brief Link", "Brief URL"]:
-                    if pname in props:
-                        p = props[pname]
-                        ptype = p.get("type", "")
-                        if ptype == "formula":
-                            formula = p.get("formula", {})
-                            brief_link = formula.get("string") or formula.get("url") or ""
-                        elif ptype == "url":
-                            brief_link = p.get("url") or ""
-                        elif ptype == "rich_text":
-                            rts = p.get("rich_text", [])
-                            brief_link = rts[0].get("plain_text", "") if rts else ""
-                        if brief_link:
-                            break
                 return cid, {
                     "name": _extract_title(props, "id"),
                     "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
-                    "brief_link": brief_link,
                 }
             except Exception:
                 return cid, None
