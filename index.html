@@ -337,7 +337,10 @@
           <div id="ul-notion-check" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:none;color:#22c55e;font-size:16px">✓</div>
         </div>
         <div id="ul-name-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-top:2px;max-height:240px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.15)"></div>
-        <div id="ul-notion-status" style="font-size:10px;color:var(--muted);margin-top:3px;opacity:.7"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+          <div id="ul-notion-status" style="font-size:10px;color:var(--muted);opacity:.7"></div>
+          <button id="ul-refresh-btn" onclick="ulRefreshNotion()" style="font-size:9px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:4px;padding:1px 6px;cursor:pointer;opacity:.6" title="Refresh posts from Notion">refresh</button>
+        </div>
       </div>
       <style>@keyframes ul-spin{to{transform:rotate(360deg)}}</style>
 
@@ -65507,17 +65510,66 @@ const UL_BRIEFS = [
 let _notionPosts = [];
 let _notionPostsLoaded = false;
 
+// Manual mode toggle
+function ulShowManual() {
+  const section = document.getElementById('ul-details-section');
+  const link = document.getElementById('ul-manual-link');
+  const badge = document.getElementById('ul-autofilled-badge');
+  if (section) { section.style.display = 'block'; }
+  if (link) { link.style.display = 'none'; }
+  if (badge) { badge.style.display = 'none'; }
+}
+
+// Refresh Notion posts
+function ulRefreshNotion() {
+  const base = (document.getElementById('ul-server-url')?.value || localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/+$/, '');
+  const btn = document.getElementById('ul-refresh-btn');
+  const statusEl = document.getElementById('ul-notion-status');
+  const spinner = document.getElementById('ul-notion-spinner');
+  if (btn) btn.disabled = true;
+  if (spinner) spinner.style.display = 'block';
+  if (statusEl) statusEl.textContent = 'Refreshing from Notion...';
+  fetch(base + '/notion/refresh', { method: 'POST' })
+    .then(() => {
+      // Poll until new data arrives
+      let polls = 0;
+      const poll = () => {
+        if (polls++ > 30) { if (statusEl) statusEl.textContent = 'Refresh taking a while, check back soon'; if (btn) btn.disabled = false; if (spinner) spinner.style.display = 'none'; return; }
+        fetch(base + '/notion/upcoming-posts').then(r => r.json()).then(data => {
+          if (data.posts && data.posts.length) {
+            _notionPosts = data.posts; _notionPostsLoaded = true;
+            if (statusEl) statusEl.textContent = data.posts.length + ' posts refreshed';
+            if (spinner) spinner.style.display = 'none';
+            const check = document.getElementById('ul-notion-check');
+            if (check) { check.style.display = 'block'; setTimeout(() => check.style.display = 'none', 3000); }
+            if (btn) btn.disabled = false;
+            setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+          } else { setTimeout(poll, 10000); }
+        }).catch(() => setTimeout(poll, 10000));
+      };
+      setTimeout(poll, 10000);
+    })
+    .catch(err => {
+      if (statusEl) statusEl.textContent = 'Refresh failed: ' + err.message;
+      if (btn) btn.disabled = false;
+      if (spinner) spinner.style.display = 'none';
+    });
+}
+
 (function() {
   const statusEl = document.getElementById('ul-notion-status');
+  const spinner = document.getElementById('ul-notion-spinner');
+  const check = document.getElementById('ul-notion-check');
   const serverUrl = () => (document.getElementById('ul-server-url')?.value || localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/+$/, '');
 
   let _retryCount = 0;
-  const MAX_RETRIES = 5;
+  const MAX_RETRIES = 12; // retry for ~2 min on first load
 
   function fetchUpcomingPosts() {
     const base = serverUrl();
     if (!base) return;
-    if (statusEl) statusEl.textContent = 'Loading Notion posts…';
+    if (spinner) spinner.style.display = 'block';
+    if (_retryCount === 0 && statusEl) statusEl.textContent = '';
     const controller = new AbortController();
     setTimeout(() => controller.abort(), 15000);
     fetch(base + '/notion/upcoming-posts', { signal: controller.signal })
@@ -65526,37 +65578,39 @@ let _notionPostsLoaded = false;
         if (data.posts && data.posts.length) {
           _notionPosts = data.posts;
           _notionPostsLoaded = true;
-          if (statusEl) statusEl.textContent = data.posts.length + ' upcoming posts loaded';
-          setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+          if (spinner) spinner.style.display = 'none';
+          if (check) { check.style.display = 'block'; setTimeout(() => check.style.display = 'none', 3000); }
+          if (statusEl) { statusEl.textContent = data.posts.length + ' posts loaded'; setTimeout(() => statusEl.textContent = '', 3000); }
           _retryCount = 0;
         } else if (status === 202 || data.loading) {
-          // Server is still loading from Notion — retry in a few seconds
           if (_retryCount < MAX_RETRIES) {
             _retryCount++;
-            if (statusEl) statusEl.textContent = 'Notion loading… (retry ' + _retryCount + ')';
-            setTimeout(fetchUpcomingPosts, 5000);
+            setTimeout(fetchUpcomingPosts, 10000);
           } else {
-            if (statusEl) statusEl.textContent = 'Notion still loading, will retry on next use';
+            if (spinner) spinner.style.display = 'none';
+            if (statusEl) statusEl.textContent = 'Posts still loading on server — use refresh button or enter manually';
           }
         } else if (data.error) {
-          if (statusEl) statusEl.textContent = 'Notion: ' + data.error;
+          if (spinner) spinner.style.display = 'none';
+          if (statusEl) statusEl.textContent = 'Error loading posts';
         } else {
-          if (statusEl) statusEl.textContent = 'No upcoming posts';
+          if (spinner) spinner.style.display = 'none';
+          if (statusEl) statusEl.textContent = 'No upcoming posts found';
         }
       })
       .catch(err => {
         console.error('Notion fetch error:', err);
         if (_retryCount < MAX_RETRIES) {
           _retryCount++;
-          if (statusEl) statusEl.textContent = 'Retrying… (' + _retryCount + ')';
-          setTimeout(fetchUpcomingPosts, 5000);
+          setTimeout(fetchUpcomingPosts, 10000);
         } else {
-          if (statusEl) statusEl.textContent = 'Notion: ' + (err.message || 'failed');
+          if (spinner) spinner.style.display = 'none';
+          if (statusEl) statusEl.textContent = 'Could not load posts — enter details manually';
         }
       });
   }
 
-  // Fetch on page load (after short delay to let server URL populate)
+  // Fetch on page load
   setTimeout(fetchUpcomingPosts, 500);
 
   // Autocomplete dropdown logic
@@ -65564,7 +65618,6 @@ let _notionPostsLoaded = false;
   const dropdown = document.getElementById('ul-name-dropdown');
   if (!nameInput || !dropdown) return;
 
-  // Get unique influencer names from posts
   function getMatches(query) {
     if (!query || !_notionPostsLoaded) return [];
     const q = query.toLowerCase();
@@ -65576,21 +65629,24 @@ let _notionPostsLoaded = false;
       if (seen.has(name)) continue;
       if (name.toLowerCase().includes(q)) {
         seen.add(name);
-        // Find earliest post date for this influencer
         const posts = _notionPosts.filter(x => x.influencer_name === name);
         const nextDate = posts.length ? posts[0].post_date : '';
-        matches.push({ name, nextDate, postCount: posts.length });
+        const brief = posts[0]?.brief || '';
+        matches.push({ name, nextDate, postCount: posts.length, brief });
       }
     }
-    return matches.slice(0, 8);
+    return matches.slice(0, 10);
   }
 
   function showDropdown(matches) {
     if (!matches.length) { dropdown.style.display = 'none'; return; }
     dropdown.innerHTML = matches.map(m =>
-      `<div class="ul-name-option" data-name="${m.name}" style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s">
-        <span style="font-weight:600">${m.name}</span>
-        ${m.nextDate ? `<span style="float:right;font-size:11px;color:var(--muted)">${m.nextDate} · ${m.postCount} post${m.postCount > 1 ? 's' : ''}</span>` : ''}
+      `<div class="ul-name-option" data-name="${m.name}" style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:600">${m.name}</span>
+          <span style="font-size:11px;color:var(--muted)">${m.nextDate || ''} · ${m.postCount} post${m.postCount > 1 ? 's' : ''}</span>
+        </div>
+        ${m.brief ? `<div style="font-size:10px;color:var(--muted);margin-top:2px">${m.brief}</div>` : ''}
       </div>`
     ).join('');
     dropdown.style.display = 'block';
@@ -65608,52 +65664,51 @@ let _notionPostsLoaded = false;
     nameInput.value = name;
     dropdown.style.display = 'none';
 
-    // Find all posts for this influencer and auto-fill fields
+    // Show details section with auto-filled badge
+    const section = document.getElementById('ul-details-section');
+    const manualLink = document.getElementById('ul-manual-link');
+    const badge = document.getElementById('ul-autofilled-badge');
+    if (section) section.style.display = 'block';
+    if (manualLink) manualLink.style.display = 'none';
+    if (badge) badge.style.display = 'inline-block';
+
+    // Find all posts for this influencer
     const posts = _notionPosts.filter(p => p.influencer_name === name);
     if (!posts.length) return;
 
-    // Set post date to earliest upcoming post
+    // Auto-fill date
     const dateInput = document.getElementById('ul-post-date');
-    if (dateInput && posts[0].post_date) {
-      dateInput.value = posts[0].post_date;
-    }
+    if (dateInput && posts[0].post_date) dateInput.value = posts[0].post_date;
 
-    // Set frame (from first post)
+    // Auto-fill frame
     const frameSelect = document.getElementById('ul-frame');
-    if (frameSelect && posts[0].frame) {
-      frameSelect.value = String(posts[0].frame);
-    }
+    if (frameSelect && posts[0].frame) frameSelect.value = String(posts[0].frame);
 
-    // Try to match brief to dropdown options
+    // Match brief to dropdown
     const briefSelect = document.getElementById('ul-brief');
     if (briefSelect && posts[0].brief) {
       const briefName = posts[0].brief.trim();
       let matched = false;
-      // Strategy 1: Exact match (experiment name matches dropdown text minus emoji prefix)
+      // Strategy 1: Exact match (strip emoji prefix)
       for (const opt of briefSelect.options) {
         if (!opt.value) continue;
-        // Strip leading emoji + space from option text (e.g. "👗 Fashion Exp..." → "Fashion Exp...")
         const optText = opt.value.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, '');
         if (optText.toLowerCase() === briefName.toLowerCase()) {
-          briefSelect.value = opt.value;
-          matched = true;
-          break;
+          briefSelect.value = opt.value; matched = true; break;
         }
       }
-      // Strategy 2: Partial match — check if brief name is contained in option or vice versa
+      // Strategy 2: Partial match
       if (!matched) {
         const briefLower = briefName.toLowerCase();
         for (const opt of briefSelect.options) {
           if (!opt.value) continue;
           const optLower = opt.value.toLowerCase();
           if (optLower.includes(briefLower) || briefLower.includes(optLower.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, ''))) {
-            briefSelect.value = opt.value;
-            matched = true;
-            break;
+            briefSelect.value = opt.value; matched = true; break;
           }
         }
       }
-      // Strategy 3: Keyword fallback (campaign name or brief link)
+      // Strategy 3: Keyword fallback
       if (!matched) {
         const searchText = (briefName + ' ' + (posts[0].campaign_name || '') + ' ' + (posts[0].brief_link || '')).toLowerCase();
         const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
@@ -65662,9 +65717,7 @@ let _notionPostsLoaded = false;
           const optLower = opt.value.toLowerCase();
           for (const kw of keywords) {
             if (searchText.includes(kw) && optLower.includes(kw)) {
-              briefSelect.value = opt.value;
-              matched = true;
-              break;
+              briefSelect.value = opt.value; matched = true; break;
             }
           }
           if (matched) break;
