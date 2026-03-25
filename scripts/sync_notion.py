@@ -282,8 +282,8 @@ def make_new_post(notion):
     }
 
 
-def inject_into_html(posts, extras):
-    """Replace const posts and const postExtras in index.html."""
+def inject_into_html(posts, extras, upcoming=None):
+    """Replace const posts, const postExtras, and const upcomingPosts in index.html."""
     with open(INDEX_HTML, "r") as f:
         html = f.read()
 
@@ -301,6 +301,13 @@ def inject_into_html(posts, extras):
         lambda m: f'const postExtras = {extras_js};',
         html, count=1,
     )
+    if upcoming is not None:
+        _upcoming_js = json.dumps(upcoming, ensure_ascii=True)
+        html = re.sub(
+            r'const upcomingPosts = \[.*?\];',
+            lambda m: f'const upcomingPosts = {_upcoming_js};',
+            html, count=1,
+        )
 
     with open(INDEX_HTML, "w") as f:
         f.write(html)
@@ -354,6 +361,7 @@ def generate_upcoming_posts_cache(posts_list):
     with open(UPCOMING_CACHE_JSON, "w") as f:
         json.dump(cache, f)
     print(f"Saved data/upcoming_posts_cache.json ({len(upcoming)} upcoming posts)")
+    return upcoming
 
 
 def main():
@@ -441,11 +449,11 @@ def main():
     print(f"Saved data/post_extras.json")
 
     # Generate upcoming_posts_cache.json for warm Railway startup
-    generate_upcoming_posts_cache(posts_list)
+    upcoming = generate_upcoming_posts_cache(posts_list)
 
-    # Update index.html
+    # Update index.html (embeds upcoming posts so dropdown is instant)
     print("Updating index.html...")
-    inject_into_html(posts_list, existing_extras)
+    inject_into_html(posts_list, existing_extras, upcoming)
     print("Done!")
 
 
