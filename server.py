@@ -497,7 +497,7 @@ def _get_posts_prop_ids():
             for pn in db_props:
                 if "experiment" in pn.lower() or "treatment" in pn.lower() or "etm" in pn.lower():
                     print(f"[notion] found related prop: '{pn}' type={db_props[pn].get('type')} id={db_props[pn].get('id')}", flush=True)
-            for name in ["Post date", "I.Campaigns", "Experiment Treatment Manager"]:
+            for name in ["Post date", "I.Campaigns", "Treatment Brief URL"]:
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
                     print(f"[notion] post prop '{name}' → id={db_props[name]['id']}", flush=True)
@@ -658,26 +658,20 @@ def _fetch_upcoming_posts():
     }, prop_ids=post_pids)
     print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
-    # Collect campaign IDs and ETM IDs from posts
+    # Collect campaign IDs from posts
     post_campaign_map = {}
-    post_etm_map = {}
     campaign_ids = set()
-    etm_ids = set()
     for page in posts:
         pid = page["id"]
         camp_ids = _extract_relation_ids(page.get("properties", {}), "I.Campaigns")
         if camp_ids:
             post_campaign_map[pid] = camp_ids[0]
             campaign_ids.add(camp_ids[0])
-        etm_rel = _extract_relation_ids(page.get("properties", {}), "Experiment Treatment Manager")
-        if etm_rel:
-            post_etm_map[pid] = etm_rel[0]
-            etm_ids.add(etm_rel[0])
 
     if posts:
         sample_props = list(posts[0].get("properties", {}).keys())
         print(f"[notion] sample post property keys: {sample_props}", flush=True)
-    print(f"[notion] {len(campaign_ids)} campaigns, {len(etm_ids)} ETMs to fetch", flush=True)
+    print(f"[notion] {len(campaign_ids)} campaigns to fetch", flush=True)
 
     # Parallel-fetch campaign details (each takes ~1.3s)
     campaign_cache = {}
@@ -709,45 +703,6 @@ def _fetch_upcoming_posts():
                     campaign_cache[cid] = data
         print(f"[notion] {len(campaign_cache)} campaigns in {int((_time.time()-t2)*1000)}ms", flush=True)
 
-    # Parallel-fetch ETM pages for brief names
-    etm_cache = {}
-    if etm_ids:
-        t3 = _time.time()
-
-        def fetch_etm(eid):
-            try:
-                resp = http_requests.get(
-                    f"https://api.notion.com/v1/pages/{eid}",
-                    headers=_get_notion_headers(), timeout=30,
-                )
-                if resp.status_code != 200:
-                    return eid, None
-                props = resp.json().get("properties", {})
-                # Brief name is a text property on ETM
-                bn = props.get("Brief name", {})
-                brief_name = ""
-                if bn.get("type") == "rich_text":
-                    rt = bn.get("rich_text") or []
-                    brief_name = rt[0]["plain_text"] if rt else ""
-                elif bn.get("type") == "title":
-                    t = bn.get("title") or []
-                    brief_name = t[0]["plain_text"] if t else ""
-                else:
-                    # Fallback: try title property
-                    brief_name = _extract_title(props)
-                print(f"[notion] ETM {eid[:8]} brief_name={brief_name}", flush=True)
-                return eid, {"brief_name": brief_name}
-            except Exception:
-                return eid, None
-
-        with ThreadPoolExecutor(max_workers=10) as pool:
-            futures = {pool.submit(fetch_etm, eid): eid for eid in etm_ids}
-            for f in as_completed(futures):
-                eid, data = f.result()
-                if data:
-                    etm_cache[eid] = data
-        print(f"[notion] {len(etm_cache)} ETMs in {int((_time.time()-t3)*1000)}ms", flush=True)
-
     # Compute frame numbers per campaign
     campaign_posts = {}
     for page in posts:
@@ -772,10 +727,11 @@ def _fetch_upcoming_posts():
         cid = post_campaign_map.get(pid)
         campaign = campaign_cache.get(cid, {}) if cid else {}
 
-        # Brief name from ETM
-        etm_id = post_etm_map.get(pid)
-        etm = etm_cache.get(etm_id, {}) if etm_id else {}
-        brief_name = etm.get("brief_name", "") or campaign.get("name", "")
+        # Treatment Brief URL from post (formula property)
+        brief_name = str(_extract_formula(props, "Treatment Brief URL") or "")
+        if not brief_name:
+            brief_name = campaign.get("name", "")
+        print(f"[notion] post {pid[:8]} Treatment Brief URL={brief_name}", flush=True)
 
         result.append({
             "influencer_name": campaign.get("influencer_name", ""),
