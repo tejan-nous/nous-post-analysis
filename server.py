@@ -493,12 +493,16 @@ def _get_posts_prop_ids():
         if resp.status_code == 200:
             db_props = resp.json().get("properties", {})
             _posts_prop_ids = []
+            # Log any ETM-related properties for debugging
+            for pn in db_props:
+                if "experiment" in pn.lower() or "treatment" in pn.lower() or "etm" in pn.lower():
+                    print(f"[notion] found related prop: '{pn}' type={db_props[pn].get('type')} id={db_props[pn].get('id')}", flush=True)
             for name in ["Post date", "I.Campaigns", "Experiment Treatment Manager"]:
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
                     print(f"[notion] post prop '{name}' → id={db_props[name]['id']}", flush=True)
                 else:
-                    print(f"[notion] post prop '{name}' NOT FOUND in DB schema", flush=True)
+                    print(f"[notion] post prop '{name}' NOT FOUND (total props: {len(db_props)})", flush=True)
     except Exception:
         pass
     if not _posts_prop_ids:
@@ -807,6 +811,21 @@ def notion_debug():
     # Show sample data if cached
     if _upcoming_posts_cache["data"]:
         results["sample"] = _upcoming_posts_cache["data"][:3]
+    # Live check: how many properties does the Posts DB schema return?
+    try:
+        resp = http_requests.get(
+            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}",
+            headers=_get_notion_headers(), timeout=15,
+        )
+        if resp.status_code == 200:
+            db_props = resp.json().get("properties", {})
+            results["db_prop_count"] = len(db_props)
+            etm_matches = {k: {"type": v.get("type"), "id": v.get("id")}
+                           for k, v in db_props.items()
+                           if "experiment" in k.lower() or "treatment" in k.lower()}
+            results["etm_props"] = etm_matches
+    except Exception as e:
+        results["db_check_error"] = str(e)
     return jsonify(results)
 
 
