@@ -71864,7 +71864,7 @@ function ulRefreshNotion() {
   const serverUrl = () => (document.getElementById('ul-server-url')?.value || localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/+$/, '');
 
   let _retryCount = 0;
-  const MAX_RETRIES = 12; // retry for ~2 min on first load
+  const MAX_RETRIES = 36; // retry for ~6 min on first load (cold Railway starts can take 3-5 min)
 
   function fetchUpcomingPosts() {
     const base = serverUrl();

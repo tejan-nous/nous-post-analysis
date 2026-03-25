@@ -23,6 +23,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 POSTS_JSON = os.path.join(ROOT_DIR, "data", "posts.json")
 EXTRAS_JSON = os.path.join(ROOT_DIR, "data", "post_extras.json")
+UPCOMING_CACHE_JSON = os.path.join(ROOT_DIR, "data", "upcoming_posts_cache.json")
 INDEX_HTML = os.path.join(ROOT_DIR, "index.html")
 
 # Property IDs for filter_properties (avoids fetching all 232 props)
@@ -305,6 +306,56 @@ def inject_into_html(posts, extras):
         f.write(html)
 
 
+def generate_upcoming_posts_cache(posts_list):
+    """Generate data/upcoming_posts_cache.json from posts.json so Railway starts warm.
+
+    The server loads this file on startup via _load_disk_cache() to avoid a
+    cold-start delay while Notion is queried fresh. We produce it here so it's
+    always bundled with each deployment.
+    """
+    from datetime import datetime, timedelta
+
+    today = datetime.utcnow().date()
+    window = today + timedelta(days=30)
+
+    upcoming = []
+    for p in posts_list:
+        raw_date = p.get("date", "")
+        if not raw_date:
+            continue
+        try:
+            post_date = datetime.strptime(raw_date, "%d %b %Y").date()
+        except ValueError:
+            continue
+        if post_date < today or post_date > window:
+            continue
+
+        influencer_name = p.get("name", "")
+        frame = p.get("post_sequence") or 1
+        # Clamp frame to 1-3 (post_sequence can be campaign-level; server does the
+        # same grouping, but 1-3 is the most useful value for the autocomplete UI)
+        if isinstance(frame, (int, float)):
+            frame = max(1, min(3, int(frame)))
+
+        upcoming.append({
+            "influencer_name": influencer_name,
+            "post_date": post_date.isoformat(),
+            "frame": frame,
+            "brief": "",   # brief names come from ETM which we don't fetch here
+            "campaign_name": influencer_name,
+            "has_etm": False,
+        })
+
+    # Sort by post_date ascending (matches server behaviour)
+    upcoming.sort(key=lambda x: x["post_date"])
+
+    cache = {"data": upcoming, "fetched_at": time.time()}
+    os.makedirs(os.path.join(ROOT_DIR, "data"), exist_ok=True)
+    with open(UPCOMING_CACHE_JSON, "w") as f:
+        json.dump(cache, f)
+    print(f"Saved data/upcoming_posts_cache.json ({len(upcoming)} upcoming posts)")
+
+
 def main():
     token = get_token()
 
@@ -388,6 +439,9 @@ def main():
     with open(EXTRAS_JSON, "w") as f:
         json.dump(existing_extras, f, indent=2, ensure_ascii=False)
     print(f"Saved data/post_extras.json")
+
+    # Generate upcoming_posts_cache.json for warm Railway startup
+    generate_upcoming_posts_cache(posts_list)
 
     # Update index.html
     print("Updating index.html...")
