@@ -843,6 +843,48 @@ def notion_debug():
     return jsonify(results)
 
 
+@app.route("/notion/test-query", methods=["GET"])
+def test_query():
+    """Debug: test a single query page with filter_properties to measure timing."""
+    import time as _t
+    from datetime import datetime, timedelta
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    one_month = (datetime.utcnow() + timedelta(days=30)).strftime("%Y-%m-%d")
+    page_size = int(request.args.get("page_size", "10"))
+    post_pids = _get_posts_prop_ids()
+    try:
+        t0 = _t.time()
+        qp = [("filter_properties", pid) for pid in (post_pids or [])]
+        resp = http_requests.post(
+            f"https://api.notion.com/v1/databases/{NOTION_POSTS_DB}/query",
+            headers=_get_notion_headers(), timeout=60,
+            json={
+                "filter": {"and": [
+                    {"property": "Post date", "date": {"on_or_after": today}},
+                    {"property": "Post date", "date": {"on_or_before": one_month}},
+                ]},
+                "page_size": page_size,
+            },
+            params=qp,
+        )
+        elapsed = int((_t.time()-t0)*1000)
+        if resp.status_code != 200:
+            return jsonify({"error": resp.status_code, "body": resp.text[:300], "elapsed_ms": elapsed, "post_pids": post_pids}), 500
+        data = resp.json()
+        results = data.get("results", [])
+        sample_props = list(results[0].get("properties", {}).keys()) if results else []
+        return jsonify({
+            "count": len(results),
+            "has_more": data.get("has_more"),
+            "elapsed_ms": elapsed,
+            "page_size": page_size,
+            "post_pids": post_pids,
+            "sample_props": sample_props,
+        })
+    except Exception as e:
+        return jsonify({"error": str(e), "post_pids": post_pids}), 500
+
+
 @app.route("/notion/test-post-page", methods=["GET"])
 def test_post_page():
     """Debug: fetch one post WITHOUT filter_properties to see if ETM is there."""
