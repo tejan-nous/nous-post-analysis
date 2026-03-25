@@ -114,7 +114,7 @@ def fetch_posts_fast(token, prop_ids):
     """Fetch the 100 most recently edited posts from Notion."""
     base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
 
-    body = {"page_size": 10}
+    body = {"page_size": 100}
 
     resp = notion_request(token, base_url, body=body)
     results = resp.get("results", [])
