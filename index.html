@@ -353,9 +353,10 @@
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:12px">
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Brief</label>
-            <select id="ul-brief" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
+            <select id="ul-brief" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" onchange="this.style.borderColor='var(--border)';var w=document.getElementById('ul-brief-warning');if(w)w.style.display='none'">
               <option value="">Select brief...</option>
             </select>
+            <div id="ul-brief-warning" style="display:none;font-size:10px;color:#f59e0b;margin-top:3px"></div>
           </div>
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Frame</label>
@@ -65632,7 +65633,8 @@ function ulRefreshNotion() {
         const posts = _notionPosts.filter(x => x.influencer_name === name);
         const nextDate = posts.length ? posts[0].post_date : '';
         const brief = posts[0]?.brief || '';
-        matches.push({ name, nextDate, postCount: posts.length, brief });
+        const hasEtm = posts.some(p => p.has_etm);
+        matches.push({ name, nextDate, postCount: posts.length, brief, hasEtm });
       }
     }
     return matches.slice(0, 10);
@@ -65646,7 +65648,7 @@ function ulRefreshNotion() {
           <span style="font-weight:600">${m.name}</span>
           <span style="font-size:11px;color:var(--muted)">${m.nextDate || ''} · ${m.postCount} post${m.postCount > 1 ? 's' : ''}</span>
         </div>
-        ${m.brief ? `<div style="font-size:10px;color:var(--muted);margin-top:2px">${m.brief}</div>` : ''}
+        ${m.brief ? `<div style="font-size:10px;color:var(--muted);margin-top:2px">${m.brief}</div>` : `<div style="font-size:10px;color:#f59e0b;margin-top:2px">No brief assigned</div>`}
       </div>`
     ).join('');
     dropdown.style.display = 'block';
@@ -65686,42 +65688,55 @@ function ulRefreshNotion() {
 
     // Match brief to dropdown
     const briefSelect = document.getElementById('ul-brief');
-    if (briefSelect && posts[0].brief) {
-      const briefName = posts[0].brief.trim();
-      let matched = false;
-      // Strategy 1: Exact match (strip emoji prefix)
-      for (const opt of briefSelect.options) {
-        if (!opt.value) continue;
-        const optText = opt.value.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, '');
-        if (optText.toLowerCase() === briefName.toLowerCase()) {
-          briefSelect.value = opt.value; matched = true; break;
-        }
-      }
-      // Strategy 2: Partial match
-      if (!matched) {
-        const briefLower = briefName.toLowerCase();
+    const briefWarning = document.getElementById('ul-brief-warning');
+    if (briefSelect) {
+      if (posts[0].brief) {
+        const briefName = posts[0].brief.trim();
+        let matched = false;
+        // Strategy 1: Exact match (strip emoji prefix)
         for (const opt of briefSelect.options) {
           if (!opt.value) continue;
-          const optLower = opt.value.toLowerCase();
-          if (optLower.includes(briefLower) || briefLower.includes(optLower.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, ''))) {
+          const optText = opt.value.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, '');
+          if (optText.toLowerCase() === briefName.toLowerCase()) {
             briefSelect.value = opt.value; matched = true; break;
           }
         }
-      }
-      // Strategy 3: Keyword fallback
-      if (!matched) {
-        const searchText = (briefName + ' ' + (posts[0].campaign_name || '') + ' ' + (posts[0].brief_link || '')).toLowerCase();
-        const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
-        for (const opt of briefSelect.options) {
-          if (!opt.value) continue;
-          const optLower = opt.value.toLowerCase();
-          for (const kw of keywords) {
-            if (searchText.includes(kw) && optLower.includes(kw)) {
+        // Strategy 2: Partial match
+        if (!matched) {
+          const briefLower = briefName.toLowerCase();
+          for (const opt of briefSelect.options) {
+            if (!opt.value) continue;
+            const optLower = opt.value.toLowerCase();
+            if (optLower.includes(briefLower) || briefLower.includes(optLower.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, ''))) {
               briefSelect.value = opt.value; matched = true; break;
             }
           }
-          if (matched) break;
         }
+        // Strategy 3: Keyword fallback
+        if (!matched) {
+          const searchText = (briefName + ' ' + (posts[0].campaign_name || '')).toLowerCase();
+          const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
+          for (const opt of briefSelect.options) {
+            if (!opt.value) continue;
+            const optLower = opt.value.toLowerCase();
+            for (const kw of keywords) {
+              if (searchText.includes(kw) && optLower.includes(kw)) {
+                briefSelect.value = opt.value; matched = true; break;
+              }
+            }
+            if (matched) break;
+          }
+        }
+        if (briefWarning) briefWarning.style.display = matched ? 'none' : 'block';
+        if (!matched && briefWarning) briefWarning.textContent = 'Brief "' + briefName + '" not matched — please select manually';
+      } else {
+        // No ETM assigned — flag for user
+        briefSelect.value = '';
+        if (briefWarning) {
+          briefWarning.style.display = 'block';
+          briefWarning.textContent = 'No brief assigned in Notion — please select manually';
+        }
+        briefSelect.style.borderColor = '#f59e0b';
       }
     }
   }

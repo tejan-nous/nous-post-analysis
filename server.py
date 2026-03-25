@@ -786,7 +786,7 @@ def _fetch_upcoming_posts():
 
         etm_id = post_etm_map.get(pid)
         etm = etm_cache.get(etm_id, {}) if etm_id else {}
-        brief_name = etm.get("brief_name", "") or campaign.get("name", "")
+        brief_name = etm.get("brief_name", "")  # Only from ETM, don't fall back to campaign name
 
         result.append({
             "influencer_name": campaign.get("influencer_name", ""),
@@ -794,6 +794,7 @@ def _fetch_upcoming_posts():
             "frame": frame_numbers.get(pid, 1),
             "brief": brief_name,
             "campaign_name": campaign.get("name", ""),
+            "has_etm": bool(etm_id),
         })
 
     print(f"[notion] DONE: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms total", flush=True)
