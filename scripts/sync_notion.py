@@ -58,21 +58,18 @@ def get_token():
     raise ValueError("No NOTION_API_KEY found")
 
 
-def notion_request(token, url, method="POST", body=None, retries=3):
+def notion_request(token, url, method="POST", body=None, retries=3, timeout=90):
     """Make a request to the Notion API. url should be a full URL."""
     data = json.dumps(body).encode() if body else None
-    req = urllib.request.Request(
-        url, data=data,
-        headers={
-            "Authorization": f"Bearer {token}",
-            "Notion-Version": "2022-06-28",
-            "Content-Type": "application/json",
-        },
-        method=method,
-    )
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+    }
     for attempt in range(retries):
         try:
-            with urllib.request.urlopen(req, timeout=60) as resp:
+            req = urllib.request.Request(url, data=data, headers=headers, method=method)
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return json.load(resp)
         except Exception as e:
             if attempt < retries - 1:
@@ -313,47 +310,124 @@ def inject_into_html(posts, extras, upcoming=None):
         f.write(html)
 
 
-def generate_upcoming_posts_cache(posts_list):
-    """Generate data/upcoming_posts_cache.json from posts.json so Railway starts warm.
+# Property IDs for the upcoming-posts targeted query
+# Post date, I.Campaigns, Influencer (string), Post Sequence, Brief Name (rollup)
+UPCOMING_POST_PROPS = ["%3EG%5D%5D", "%3CL%7Cp", "W%5C%5C~", "dvkA", "tdAu"]
 
-    The server loads this file on startup via _load_disk_cache() to avoid a
-    cold-start delay while Notion is queried fresh. We produce it here so it's
-    always bundled with each deployment.
+
+def generate_upcoming_posts_cache(posts_list, token=None):
+    """Generate data/upcoming_posts_cache.json from a targeted Notion query.
+
+    Queries upcoming posts (next 30 days) directly from Notion with their
+    campaign relations, then fetches Brief Name from each campaign. Falls back
+    to posts_list data (no brief) if no token is available.
     """
     from datetime import datetime, timedelta
 
     today = datetime.utcnow().date()
     window = today + timedelta(days=30)
 
+    # --- Targeted Notion query for upcoming posts ---
     upcoming = []
-    for p in posts_list:
-        raw_date = p.get("date", "")
-        if not raw_date:
-            continue
+    if token:
         try:
-            post_date = datetime.strptime(raw_date, "%d %b %Y").date()
-        except ValueError:
-            continue
-        if post_date < today or post_date > window:
-            continue
+            print("Fetching upcoming posts from Notion for cache...")
+            query_body = {
+                "filter": {
+                    "and": [
+                        {"property": "Post date", "date": {"on_or_after": today.isoformat()}},
+                        {"property": "Post date", "date": {"on_or_before": window.isoformat()}},
+                    ]
+                },
+                "page_size": 10,
+            }
+            pages = []
+            cursor = None
+            base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query?" + "&".join(
+                f"filter_properties={p}" for p in UPCOMING_POST_PROPS
+            )
+            for _ in range(20):  # max 200 posts
+                body = dict(query_body)
+                if cursor:
+                    body["start_cursor"] = cursor
+                resp = notion_request(token, base_url, body=body, timeout=90)
+                pages.extend(resp.get("results", []))
+                if not resp.get("has_more"):
+                    break
+                cursor = resp.get("next_cursor")
+            print(f"  Got {len(pages)} upcoming posts from Notion")
 
-        influencer_name = p.get("name", "")
-        frame = p.get("post_sequence") or 1
-        # Clamp frame to 1-3 (post_sequence can be campaign-level; server does the
-        # same grouping, but 1-3 is the most useful value for the autocomplete UI)
-        if isinstance(frame, (int, float)):
-            frame = max(1, min(3, int(frame)))
+            # Compute frame numbers per campaign (order within campaign by date)
+            post_campaign_map = {}
+            campaign_post_lists = {}
+            for page in pages:
+                pid = page["id"]
+                rel = page.get("properties", {}).get("I.Campaigns", {}).get("relation", [])
+                if rel:
+                    cid = rel[0]["id"]
+                    post_campaign_map[pid] = cid
+                    date_val = page.get("properties", {}).get("Post date", {}).get("date")
+                    post_date_str = date_val["start"][:10] if date_val else ""
+                    campaign_post_lists.setdefault(cid, []).append((post_date_str, pid))
 
-        upcoming.append({
-            "influencer_name": influencer_name,
-            "post_date": post_date.isoformat(),
-            "frame": frame,
-            "brief": "",   # brief names come from ETM which we don't fetch here
-            "campaign_name": influencer_name,
-            "has_etm": False,
-        })
+            frame_numbers = {}
+            for cid, entries in campaign_post_lists.items():
+                for i, (_, pid) in enumerate(sorted(entries)):
+                    frame_numbers[pid] = i + 1
 
-    # Sort by post_date ascending (matches server behaviour)
+            for page in pages:
+                pid = page["id"]
+                props = page.get("properties", {})
+                date_val = props.get("Post date", {}).get("date")
+                post_date_str = date_val["start"][:10] if date_val else ""
+
+                # Influencer name from formula on post
+                inf_name = props.get("Influencer (string)", {}).get("formula", {}).get("string", "") or ""
+
+                # Brief name from rollup on post (Brief Name → show_original array)
+                brief = ""
+                brief_arr = props.get("Brief Name", {}).get("rollup", {}).get("array", [])
+                if brief_arr:
+                    rt = brief_arr[0].get("rich_text", [])
+                    brief = rt[0].get("plain_text", "") if rt else ""
+
+                upcoming.append({
+                    "influencer_name": inf_name,
+                    "post_date": post_date_str,
+                    "frame": frame_numbers.get(pid, 1),
+                    "brief": brief,
+                    "campaign_name": inf_name,
+                    "has_etm": False,
+                })
+        except Exception as e:
+            print(f"  Upcoming posts Notion query failed: {e} — falling back to posts_list")
+            upcoming = []
+
+    # Fallback: derive from posts_list (no brief names)
+    if not upcoming:
+        for p in posts_list:
+            raw_date = p.get("date", "")
+            if not raw_date:
+                continue
+            try:
+                post_date = datetime.strptime(raw_date, "%d %b %Y").date()
+            except ValueError:
+                continue
+            if post_date < today or post_date > window:
+                continue
+            influencer_name = p.get("name", "")
+            frame = p.get("post_sequence") or 1
+            if isinstance(frame, (int, float)):
+                frame = max(1, min(3, int(frame)))
+            upcoming.append({
+                "influencer_name": influencer_name,
+                "post_date": post_date.isoformat(),
+                "frame": frame,
+                "brief": "",
+                "campaign_name": influencer_name,
+                "has_etm": False,
+            })
+
     upcoming.sort(key=lambda x: x["post_date"])
 
     cache = {"data": upcoming, "fetched_at": time.time()}
@@ -449,7 +523,7 @@ def main():
     print(f"Saved data/post_extras.json")
 
     # Generate upcoming_posts_cache.json for warm Railway startup
-    upcoming = generate_upcoming_posts_cache(posts_list)
+    upcoming = generate_upcoming_posts_cache(posts_list, token=token)
 
     # Update index.html (embeds upcoming posts so dropdown is instant)
     print("Updating index.html...")

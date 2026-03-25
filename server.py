@@ -480,7 +480,7 @@ def _get_notion_headers():
 
 
 def _get_posts_prop_ids():
-    """Resolve and cache the Notion property IDs for Post date and I.Campaigns."""
+    """Resolve and cache property IDs for Post date, I.Campaigns, Influencer, Brief Name."""
     global _posts_prop_ids
     if _posts_prop_ids is not None:
         return _posts_prop_ids
@@ -493,14 +493,10 @@ def _get_posts_prop_ids():
         if resp.status_code == 200:
             db_props = resp.json().get("properties", {})
             _posts_prop_ids = []
-            for name in ["Post date", "I.Campaigns"]:
+            for name in ["Post date", "I.Campaigns", "Influencer (string)", "Brief Name"]:
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
                     print(f"[notion] post prop '{name}' → id={db_props[name]['id']}", flush=True)
-            # ETM relation isn't in schema API (301 of 311 props returned)
-            # but exists with known ID from unfiltered page fetch
-            _posts_prop_ids.append("RWE%3A")  # Experiment Treatment Manager
-            print(f"[notion] added ETM prop id=RWE%3A (hardcoded)", flush=True)
     except Exception:
         pass
     if not _posts_prop_ids:
@@ -646,12 +642,11 @@ def _fetch_upcoming_posts():
 
     Steps (each logged):
       1. Query Posts DB with filter_properties (10 results/page, ~11s/page)
-      2. Fetch campaign pages sequentially (3 at a time to avoid Notion rate limits)
-      3. Fetch ETM pages sequentially for brief names
-      4. Compute frame numbers and build result
+         Brief Name rollup and Influencer formula are fetched directly from each post —
+         no secondary campaign or ETM lookups needed.
+      2. Compute frame numbers per campaign and build result
     """
     import time as _time
-    from concurrent.futures import ThreadPoolExecutor, as_completed
     from datetime import datetime, timedelta
 
     t_start = _time.time()
@@ -659,14 +654,11 @@ def _fetch_upcoming_posts():
     today = now.strftime("%Y-%m-%d")
     one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
-    # Step 1: Resolve property IDs
+    # Step 1: Resolve property IDs (includes Brief Name rollup + Influencer formula)
     post_pids = _get_posts_prop_ids()
-    camp_pids = _resolve_campaign_prop_ids(None)
     print(f"[notion] step 1: prop IDs resolved in {int((_time.time()-t_start)*1000)}ms", flush=True)
 
-    # Step 2: Query posts — page_size=10 + no sort + filter_properties
-    # This 311-prop DB 504s on page_size=100 and times out with sort.
-    # page_size=10 with filter_properties takes ~11s/page but works reliably.
+    # Step 2: Query posts — page_size=10 + filter_properties
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
@@ -681,96 +673,15 @@ def _fetch_upcoming_posts():
     posts.sort(key=lambda p: _extract_date(p.get("properties", {}), "Post date") or "")
     print(f"[notion] step 2: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
-    # Step 3: Collect campaign + ETM IDs
+    # Step 3: Collect campaign IDs for frame-number computation
     post_campaign_map = {}
-    post_etm_map = {}
-    campaign_ids = set()
-    etm_ids = set()
+    campaign_posts = {}
     for page in posts:
         pid = page["id"]
         camp_ids = _extract_relation_ids(page.get("properties", {}), "I.Campaigns")
         if camp_ids:
-            post_campaign_map[pid] = camp_ids[0]
-            campaign_ids.add(camp_ids[0])
-        etm_rel = _extract_relation_ids(page.get("properties", {}), "Experiment Treatment Manager")
-        if etm_rel:
-            post_etm_map[pid] = etm_rel[0]
-            etm_ids.add(etm_rel[0])
-    print(f"[notion] step 3: {len(campaign_ids)} campaigns, {len(etm_ids)} ETMs to fetch", flush=True)
-
-    # Step 4: Fetch campaigns (3 concurrent to avoid Notion rate limits)
-    campaign_cache = {}
-    if campaign_ids and NOTION_CAMPAIGNS_DB:
-        t2 = _time.time()
-        def fetch_campaign(cid):
-            qp = [("filter_properties", pid) for pid in (camp_pids or [])]
-            try:
-                resp = http_requests.get(
-                    f"https://api.notion.com/v1/pages/{cid}",
-                    headers=_get_notion_headers(), params=qp, timeout=15,
-                )
-                if resp.status_code != 200:
-                    print(f"[notion] campaign {cid[:8]} failed: {resp.status_code}", flush=True)
-                    return cid, None
-                props = resp.json().get("properties", {})
-                brief_rt = props.get("Brief Name", {}).get("rich_text", [])
-                brief_name = brief_rt[0]["plain_text"] if brief_rt else ""
-                return cid, {
-                    "name": _extract_title(props, "id"),
-                    "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
-                    "brief_name": brief_name,
-                }
-            except Exception as e:
-                print(f"[notion] campaign {cid[:8]} error: {e}", flush=True)
-                return cid, None
-
-        with ThreadPoolExecutor(max_workers=3) as pool:
-            futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
-            for f in as_completed(futures):
-                cid, data = f.result()
-                if data:
-                    campaign_cache[cid] = data
-        print(f"[notion] step 4: {len(campaign_cache)}/{len(campaign_ids)} campaigns in {int((_time.time()-t2)*1000)}ms", flush=True)
-
-    # Step 5: Fetch ETM pages for brief names (3 concurrent)
-    etm_cache = {}
-    if etm_ids:
-        t3 = _time.time()
-        def fetch_etm(eid):
-            try:
-                resp = http_requests.get(
-                    f"https://api.notion.com/v1/pages/{eid}",
-                    headers=_get_notion_headers(), timeout=15,
-                )
-                if resp.status_code != 200:
-                    return eid, None
-                props = resp.json().get("properties", {})
-                bn = props.get("Brief name", {})
-                brief_name = ""
-                if bn.get("type") == "rich_text":
-                    rt = bn.get("rich_text") or []
-                    brief_name = rt[0]["plain_text"] if rt else ""
-                if not brief_name:
-                    brief_name = _extract_title(props) or _extract_title(props, "Name")
-                return eid, {"brief_name": brief_name}
-            except Exception as e:
-                print(f"[notion] ETM {eid[:8]} error: {e}", flush=True)
-                return eid, None
-
-        with ThreadPoolExecutor(max_workers=3) as pool:
-            futures = {pool.submit(fetch_etm, eid): eid for eid in etm_ids}
-            for f in as_completed(futures):
-                eid, data = f.result()
-                if data:
-                    etm_cache[eid] = data
-        print(f"[notion] step 5: {len(etm_cache)}/{len(etm_ids)} ETMs in {int((_time.time()-t3)*1000)}ms", flush=True)
-
-    # Step 6: Compute frame numbers per campaign
-    campaign_posts = {}
-    for page in posts:
-        pid = page["id"]
-        cid = post_campaign_map.get(pid)
-        if cid:
+            cid = camp_ids[0]
+            post_campaign_map[pid] = cid
             post_date = _extract_date(page.get("properties", {}), "Post date")
             campaign_posts.setdefault(cid, []).append((post_date or "", pid))
 
@@ -780,26 +691,30 @@ def _fetch_upcoming_posts():
         for i, (_, pid) in enumerate(post_list):
             frame_numbers[pid] = i + 1
 
-    # Step 7: Build result
+    # Step 4: Build result — brief and influencer come directly from post properties
     result = []
     for page in posts:
         pid = page["id"]
         props = page.get("properties", {})
         post_date = _extract_date(props, "Post date")
-        cid = post_campaign_map.get(pid)
-        campaign = campaign_cache.get(cid, {}) if cid else {}
 
-        etm_id = post_etm_map.get(pid)
-        etm = etm_cache.get(etm_id, {}) if etm_id else {}
-        brief_name = campaign.get("brief_name", "") or etm.get("brief_name", "")
+        # Influencer name from formula on the post
+        influencer_name = _extract_formula(props, "Influencer (string)")
+
+        # Brief name from rollup on the post (show_original → array of rich_text)
+        brief_name = ""
+        brief_arr = props.get("Brief Name", {}).get("rollup", {}).get("array", [])
+        if brief_arr:
+            rt = brief_arr[0].get("rich_text", [])
+            brief_name = rt[0].get("plain_text", "") if rt else ""
 
         result.append({
-            "influencer_name": campaign.get("influencer_name", ""),
+            "influencer_name": influencer_name,
             "post_date": post_date,
             "frame": frame_numbers.get(pid, 1),
             "brief": brief_name,
-            "campaign_name": campaign.get("name", ""),
-            "has_etm": bool(etm_id),
+            "campaign_name": influencer_name,
+            "has_etm": False,
         })
 
     print(f"[notion] DONE: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms total", flush=True)
