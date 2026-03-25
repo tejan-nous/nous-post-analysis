@@ -497,6 +497,8 @@ def _get_posts_prop_ids():
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
                     print(f"[notion] post prop '{name}' → id={db_props[name]['id']}", flush=True)
+            # ETM relation isn't always in schema API — hardcode known ID
+            _posts_prop_ids.append("RWE%3A")  # Experiment Treatment Manager
     except Exception:
         pass
     if not _posts_prop_ids:
@@ -673,17 +675,24 @@ def _fetch_upcoming_posts():
     posts.sort(key=lambda p: _extract_date(p.get("properties", {}), "Post date") or "")
     print(f"[notion] step 2: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
-    # Step 3: Collect campaign IDs for frame-number computation
+    # Step 3: Collect campaign IDs for frame-number computation + ETM IDs for brief fallback
     post_campaign_map = {}
     campaign_posts = {}
+    post_etm_map = {}
+    etm_ids = set()
     for page in posts:
         pid = page["id"]
-        camp_ids = _extract_relation_ids(page.get("properties", {}), "I.Campaigns")
+        props = page.get("properties", {})
+        camp_ids = _extract_relation_ids(props, "I.Campaigns")
         if camp_ids:
             cid = camp_ids[0]
             post_campaign_map[pid] = cid
-            post_date = _extract_date(page.get("properties", {}), "Post date")
+            post_date = _extract_date(props, "Post date")
             campaign_posts.setdefault(cid, []).append((post_date or "", pid))
+        etm_rel = _extract_relation_ids(props, "Experiment Treatment Manager")
+        if etm_rel:
+            post_etm_map[pid] = etm_rel[0]
+            etm_ids.add(etm_rel[0])
 
     frame_numbers = {}
     for cid, post_list in campaign_posts.items():
@@ -691,7 +700,46 @@ def _fetch_upcoming_posts():
         for i, (_, pid) in enumerate(post_list):
             frame_numbers[pid] = i + 1
 
-    # Step 4: Build result — brief and influencer come directly from post properties
+    # Step 4: Fetch ETM brief names for posts where campaign Brief Name rollup is empty
+    # (only fetch ETMs we actually need — posts whose rollup returned nothing)
+    posts_needing_etm = set()
+    for page in posts:
+        pid = page["id"]
+        brief_arr = page.get("properties", {}).get("Brief Name", {}).get("rollup", {}).get("array", [])
+        brief = brief_arr[0].get("rich_text", [{}])[0].get("plain_text", "") if brief_arr and brief_arr[0].get("rich_text") else ""
+        if not brief and pid in post_etm_map:
+            posts_needing_etm.add(pid)
+
+    needed_etm_ids = {post_etm_map[pid] for pid in posts_needing_etm}
+    etm_cache = {}
+    if needed_etm_ids:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        t3 = _time.time()
+        def fetch_etm(eid):
+            try:
+                resp = http_requests.get(
+                    f"https://api.notion.com/v1/pages/{eid}",
+                    headers=_get_notion_headers(), timeout=15,
+                )
+                if resp.status_code != 200:
+                    return eid, ""
+                props = resp.json().get("properties", {})
+                bn = props.get("Brief name", {})
+                brief = ""
+                if bn.get("type") == "rich_text":
+                    rt = bn.get("rich_text") or []
+                    brief = rt[0]["plain_text"] if rt else ""
+                if not brief:
+                    brief = _extract_title(props) or _extract_title(props, "Name")
+                return eid, brief
+            except Exception:
+                return eid, ""
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            for eid, brief in pool.map(fetch_etm, needed_etm_ids):
+                etm_cache[eid] = brief
+        print(f"[notion] ETM fallback: {len(etm_cache)} briefs in {int((_time.time()-t3)*1000)}ms", flush=True)
+
+    # Step 5: Build result
     result = []
     for page in posts:
         pid = page["id"]
@@ -701,12 +749,15 @@ def _fetch_upcoming_posts():
         # Influencer name from formula on the post
         influencer_name = _extract_formula(props, "Influencer (string)")
 
-        # Brief name from rollup on the post (show_original → array of rich_text)
+        # Brief name: rollup from campaign first, fall back to ETM
         brief_name = ""
         brief_arr = props.get("Brief Name", {}).get("rollup", {}).get("array", [])
         if brief_arr:
             rt = brief_arr[0].get("rich_text", [])
             brief_name = rt[0].get("plain_text", "") if rt else ""
+        if not brief_name:
+            etm_id = post_etm_map.get(pid)
+            brief_name = etm_cache.get(etm_id, "") if etm_id else ""
 
         result.append({
             "influencer_name": influencer_name,
@@ -714,7 +765,7 @@ def _fetch_upcoming_posts():
             "frame": frame_numbers.get(pid, 1),
             "brief": brief_name,
             "campaign_name": influencer_name,
-            "has_etm": False,
+            "has_etm": bool(post_etm_map.get(pid)),
         })
 
     print(f"[notion] DONE: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms total", flush=True)
