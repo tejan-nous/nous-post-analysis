@@ -531,7 +531,7 @@ def _notion_query(database_id, body, prop_ids=None):
                 headers=_get_notion_headers(),
                 json=req_body,
                 params=query_params,
-                timeout=30,
+                timeout=60,
             )
         except Exception as e:
             print(f"[notion] query page {page_num+1} FAILED after {int((_qt.time()-t0)*1000)}ms: {e}", flush=True)
@@ -614,9 +614,9 @@ def _refresh_upcoming_posts():
     if _upcoming_posts_cache.get("loading"):
         # Check if loading for too long (stuck thread) — allow retry after 120s
         load_start = _upcoming_posts_cache.get("_load_start", 0)
-        if _t.time() - load_start < 120:
-            return  # still within timeout
-        print("[notion] previous refresh appears stuck (>120s), allowing retry", flush=True)
+        if _t.time() - load_start < 600:
+            return  # still within timeout (10 min for slow Notion queries)
+        print("[notion] previous refresh appears stuck (>600s), allowing retry", flush=True)
     _upcoming_posts_cache["loading"] = True
     _upcoming_posts_cache["_load_start"] = _t.time()
     _upcoming_posts_cache["error"] = None
@@ -658,7 +658,8 @@ def _fetch_upcoming_posts():
     camp_pids = _resolve_campaign_prop_ids(None)
     print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms, post_pids={post_pids}", flush=True)
 
-    # Query posts — filter_properties limits response to 3 props so page_size=100 is safe
+    # Query posts — even with filter_properties, Notion is slow on 311-prop DBs
+    # page_size=10 works reliably (~22s per page), page_size=100 causes 30s timeouts
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
@@ -668,8 +669,8 @@ def _fetch_upcoming_posts():
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
-        "_max_pages": 5,
-        "page_size": 100,
+        "_max_pages": 10,
+        "page_size": 10,
     }, prop_ids=post_pids)
     print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
