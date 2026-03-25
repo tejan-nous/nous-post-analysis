@@ -71920,15 +71920,15 @@ function ulRefreshNotion() {
   if (!nameInput || !dropdown) return;
 
   function getMatches(query) {
-    if (!query || !_notionPostsLoaded) return [];
-    const q = query.toLowerCase();
+    if (!_notionPostsLoaded) return [];
+    const q = (query || '').toLowerCase();
     const seen = new Set();
     const matches = [];
     for (const p of _notionPosts) {
       if (!p.influencer_name) continue;
       const name = p.influencer_name;
       if (seen.has(name)) continue;
-      if (name.toLowerCase().includes(q)) {
+      if (!q || name.toLowerCase().includes(q)) {
         seen.add(name);
         const posts = _notionPosts.filter(x => x.influencer_name === name);
         const nextDate = posts.length ? posts[0].post_date : '';
@@ -72047,10 +72047,8 @@ function ulRefreshNotion() {
   });
 
   nameInput.addEventListener('focus', () => {
-    if (nameInput.value) {
-      const matches = getMatches(nameInput.value);
-      showDropdown(matches);
-    }
+    const matches = getMatches(nameInput.value);
+    showDropdown(matches);
   });
 
   nameInput.addEventListener('blur', () => {
