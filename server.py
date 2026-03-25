@@ -493,16 +493,14 @@ def _get_posts_prop_ids():
         if resp.status_code == 200:
             db_props = resp.json().get("properties", {})
             _posts_prop_ids = []
-            # Log any ETM-related properties for debugging
-            for pn in db_props:
-                if "experiment" in pn.lower() or "treatment" in pn.lower() or "etm" in pn.lower():
-                    print(f"[notion] found related prop: '{pn}' type={db_props[pn].get('type')} id={db_props[pn].get('id')}", flush=True)
-            for name in ["Post date", "I.Campaigns", "Experiments"]:
+            for name in ["Post date", "I.Campaigns"]:
                 if name in db_props and "id" in db_props[name]:
                     _posts_prop_ids.append(db_props[name]["id"])
                     print(f"[notion] post prop '{name}' → id={db_props[name]['id']}", flush=True)
-                else:
-                    print(f"[notion] post prop '{name}' NOT FOUND (total props: {len(db_props)})", flush=True)
+            # ETM relation isn't in schema API (301 of 311 props returned)
+            # but exists with known ID from unfiltered page fetch
+            _posts_prop_ids.append("RWE%3A")  # Experiment Treatment Manager
+            print(f"[notion] added ETM prop id=RWE%3A (hardcoded)", flush=True)
     except Exception:
         pass
     if not _posts_prop_ids:
@@ -653,31 +651,31 @@ def _fetch_upcoming_posts():
             ]
         },
         "sorts": [{"property": "Post date", "direction": "ascending"}],
-        "_max_pages": 3,
+        "_max_pages": 10,
         "page_size": 10,
     }, prop_ids=post_pids)
     print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
-    # Collect campaign IDs and experiment IDs from posts
+    # Collect campaign IDs and ETM IDs from posts
     post_campaign_map = {}
-    post_experiment_map = {}
+    post_etm_map = {}
     campaign_ids = set()
-    experiment_ids = set()
+    etm_ids = set()
     for page in posts:
         pid = page["id"]
         camp_ids = _extract_relation_ids(page.get("properties", {}), "I.Campaigns")
         if camp_ids:
             post_campaign_map[pid] = camp_ids[0]
             campaign_ids.add(camp_ids[0])
-        exp_ids = _extract_relation_ids(page.get("properties", {}), "Experiments")
-        if exp_ids:
-            post_experiment_map[pid] = exp_ids[0]
-            experiment_ids.add(exp_ids[0])
+        etm_rel = _extract_relation_ids(page.get("properties", {}), "Experiment Treatment Manager")
+        if etm_rel:
+            post_etm_map[pid] = etm_rel[0]
+            etm_ids.add(etm_rel[0])
 
     if posts:
         sample_props = list(posts[0].get("properties", {}).keys())
         print(f"[notion] sample post property keys: {sample_props}", flush=True)
-    print(f"[notion] {len(campaign_ids)} campaigns, {len(experiment_ids)} experiments to fetch", flush=True)
+    print(f"[notion] {len(campaign_ids)} campaigns, {len(etm_ids)} ETMs to fetch", flush=True)
 
     # Parallel-fetch campaign details (each takes ~1.3s)
     campaign_cache = {}
@@ -726,12 +724,12 @@ def _fetch_upcoming_posts():
                     campaign_cache[cid] = data
         print(f"[notion] {len(campaign_cache)} campaigns in {int((_time.time()-t2)*1000)}ms", flush=True)
 
-    # Parallel-fetch experiment pages for brief names (title = brief name)
-    experiment_cache = {}
-    if experiment_ids:
+    # Parallel-fetch ETM pages for brief names (title = treatment brief name)
+    etm_cache = {}
+    if etm_ids:
         t3 = _time.time()
 
-        def fetch_experiment(eid):
+        def fetch_etm(eid):
             try:
                 resp = http_requests.get(
                     f"https://api.notion.com/v1/pages/{eid}",
@@ -740,20 +738,26 @@ def _fetch_upcoming_posts():
                 if resp.status_code != 200:
                     return eid, None
                 props = resp.json().get("properties", {})
-                # Try title property (experiments DB likely uses "Name" or default title)
-                brief_name = _extract_title(props) or _extract_title(props, "Name")
-                print(f"[notion] experiment {eid[:8]} title={brief_name}", flush=True)
+                # ETM title field is "Brief name" (rich_text) or page title
+                bn = props.get("Brief name", {})
+                brief_name = ""
+                if bn.get("type") == "rich_text":
+                    rt = bn.get("rich_text") or []
+                    brief_name = rt[0]["plain_text"] if rt else ""
+                if not brief_name:
+                    brief_name = _extract_title(props) or _extract_title(props, "Name")
+                print(f"[notion] ETM {eid[:8]} brief_name={brief_name}", flush=True)
                 return eid, {"brief_name": brief_name}
             except Exception:
                 return eid, None
 
         with ThreadPoolExecutor(max_workers=10) as pool:
-            futures = {pool.submit(fetch_experiment, eid): eid for eid in experiment_ids}
+            futures = {pool.submit(fetch_etm, eid): eid for eid in etm_ids}
             for f in as_completed(futures):
                 eid, data = f.result()
                 if data:
-                    experiment_cache[eid] = data
-        print(f"[notion] {len(experiment_cache)} experiments in {int((_time.time()-t3)*1000)}ms", flush=True)
+                    etm_cache[eid] = data
+        print(f"[notion] {len(etm_cache)} ETMs in {int((_time.time()-t3)*1000)}ms", flush=True)
 
     # Compute frame numbers per campaign
     campaign_posts = {}
@@ -779,10 +783,10 @@ def _fetch_upcoming_posts():
         cid = post_campaign_map.get(pid)
         campaign = campaign_cache.get(cid, {}) if cid else {}
 
-        # Brief name from Experiments relation, fallback to campaign name
-        exp_id = post_experiment_map.get(pid)
-        exp = experiment_cache.get(exp_id, {}) if exp_id else {}
-        brief_name = exp.get("brief_name", "") or campaign.get("name", "")
+        # Brief name from ETM, fallback to campaign name
+        etm_id = post_etm_map.get(pid)
+        etm = etm_cache.get(etm_id, {}) if etm_id else {}
+        brief_name = etm.get("brief_name", "") or campaign.get("name", "")
 
         result.append({
             "influencer_name": campaign.get("influencer_name", ""),
