@@ -643,6 +643,12 @@ def _fetch_upcoming_posts():
     """Fetch upcoming posts (next 30 days) from Notion Posts DB + campaign details.
     Runs in background — disk cache serves requests while this completes.
     Refreshes every 4 hours.
+
+    Steps (each logged):
+      1. Query Posts DB with filter_properties (10 results/page, ~11s/page)
+      2. Fetch campaign pages sequentially (3 at a time to avoid Notion rate limits)
+      3. Fetch ETM pages sequentially for brief names
+      4. Compute frame numbers and build result
     """
     import time as _time
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -653,13 +659,12 @@ def _fetch_upcoming_posts():
     today = now.strftime("%Y-%m-%d")
     one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
 
-    # Resolve property IDs (3 props: Post date, I.Campaigns, ETM)
+    # Step 1: Resolve property IDs
     post_pids = _get_posts_prop_ids()
     camp_pids = _resolve_campaign_prop_ids(None)
-    print(f"[notion] prop IDs resolved in {int((_time.time()-t_start)*1000)}ms, post_pids={post_pids}", flush=True)
+    print(f"[notion] step 1: prop IDs resolved in {int((_time.time()-t_start)*1000)}ms", flush=True)
 
-    # Query posts — even with filter_properties, Notion is slow on 311-prop DBs
-    # page_size=10 works reliably (~22s per page), page_size=100 causes 30s timeouts
+    # Step 2: Query posts (page_size=10, ~11s per page on 311-prop DB)
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
@@ -672,9 +677,9 @@ def _fetch_upcoming_posts():
         "_max_pages": 10,
         "page_size": 10,
     }, prop_ids=post_pids)
-    print(f"[notion] posts query: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
+    print(f"[notion] step 2: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
-    # Collect campaign IDs and ETM IDs from posts
+    # Step 3: Collect campaign + ETM IDs
     post_campaign_map = {}
     post_etm_map = {}
     campaign_ids = set()
@@ -689,57 +694,52 @@ def _fetch_upcoming_posts():
         if etm_rel:
             post_etm_map[pid] = etm_rel[0]
             etm_ids.add(etm_rel[0])
+    print(f"[notion] step 3: {len(campaign_ids)} campaigns, {len(etm_ids)} ETMs to fetch", flush=True)
 
-    if posts:
-        sample_props = list(posts[0].get("properties", {}).keys())
-        print(f"[notion] sample post property keys: {sample_props}", flush=True)
-    print(f"[notion] {len(campaign_ids)} campaigns, {len(etm_ids)} ETMs to fetch", flush=True)
-
-    # Parallel-fetch campaign details (each takes ~1.3s)
+    # Step 4: Fetch campaigns (3 concurrent to avoid Notion rate limits)
     campaign_cache = {}
     if campaign_ids and NOTION_CAMPAIGNS_DB:
         t2 = _time.time()
-
         def fetch_campaign(cid):
             qp = [("filter_properties", pid) for pid in (camp_pids or [])]
             try:
                 resp = http_requests.get(
                     f"https://api.notion.com/v1/pages/{cid}",
-                    headers=_get_notion_headers(), params=qp, timeout=30,
+                    headers=_get_notion_headers(), params=qp, timeout=15,
                 )
                 if resp.status_code != 200:
+                    print(f"[notion] campaign {cid[:8]} failed: {resp.status_code}", flush=True)
                     return cid, None
                 props = resp.json().get("properties", {})
                 return cid, {
                     "name": _extract_title(props, "id"),
                     "influencer_name": str(_extract_formula(props, "Influencer (string)") or ""),
                 }
-            except Exception:
+            except Exception as e:
+                print(f"[notion] campaign {cid[:8]} error: {e}", flush=True)
                 return cid, None
 
-        with ThreadPoolExecutor(max_workers=10) as pool:
+        with ThreadPoolExecutor(max_workers=3) as pool:
             futures = {pool.submit(fetch_campaign, cid): cid for cid in campaign_ids}
             for f in as_completed(futures):
                 cid, data = f.result()
                 if data:
                     campaign_cache[cid] = data
-        print(f"[notion] {len(campaign_cache)} campaigns in {int((_time.time()-t2)*1000)}ms", flush=True)
+        print(f"[notion] step 4: {len(campaign_cache)}/{len(campaign_ids)} campaigns in {int((_time.time()-t2)*1000)}ms", flush=True)
 
-    # Parallel-fetch ETM pages for brief names (title = treatment brief name)
+    # Step 5: Fetch ETM pages for brief names (3 concurrent)
     etm_cache = {}
     if etm_ids:
         t3 = _time.time()
-
         def fetch_etm(eid):
             try:
                 resp = http_requests.get(
                     f"https://api.notion.com/v1/pages/{eid}",
-                    headers=_get_notion_headers(), timeout=30,
+                    headers=_get_notion_headers(), timeout=15,
                 )
                 if resp.status_code != 200:
                     return eid, None
                 props = resp.json().get("properties", {})
-                # ETM title field is "Brief name" (rich_text) or page title
                 bn = props.get("Brief name", {})
                 brief_name = ""
                 if bn.get("type") == "rich_text":
@@ -747,20 +747,20 @@ def _fetch_upcoming_posts():
                     brief_name = rt[0]["plain_text"] if rt else ""
                 if not brief_name:
                     brief_name = _extract_title(props) or _extract_title(props, "Name")
-                print(f"[notion] ETM {eid[:8]} brief_name={brief_name}", flush=True)
                 return eid, {"brief_name": brief_name}
-            except Exception:
+            except Exception as e:
+                print(f"[notion] ETM {eid[:8]} error: {e}", flush=True)
                 return eid, None
 
-        with ThreadPoolExecutor(max_workers=10) as pool:
+        with ThreadPoolExecutor(max_workers=3) as pool:
             futures = {pool.submit(fetch_etm, eid): eid for eid in etm_ids}
             for f in as_completed(futures):
                 eid, data = f.result()
                 if data:
                     etm_cache[eid] = data
-        print(f"[notion] {len(etm_cache)} ETMs in {int((_time.time()-t3)*1000)}ms", flush=True)
+        print(f"[notion] step 5: {len(etm_cache)}/{len(etm_ids)} ETMs in {int((_time.time()-t3)*1000)}ms", flush=True)
 
-    # Compute frame numbers per campaign
+    # Step 6: Compute frame numbers per campaign
     campaign_posts = {}
     for page in posts:
         pid = page["id"]
@@ -775,7 +775,7 @@ def _fetch_upcoming_posts():
         for i, (_, pid) in enumerate(post_list):
             frame_numbers[pid] = i + 1
 
-    # Build final list
+    # Step 7: Build result
     result = []
     for page in posts:
         pid = page["id"]
@@ -784,7 +784,6 @@ def _fetch_upcoming_posts():
         cid = post_campaign_map.get(pid)
         campaign = campaign_cache.get(cid, {}) if cid else {}
 
-        # Brief name from ETM, fallback to campaign name
         etm_id = post_etm_map.get(pid)
         etm = etm_cache.get(etm_id, {}) if etm_id else {}
         brief_name = etm.get("brief_name", "") or campaign.get("name", "")
@@ -795,10 +794,9 @@ def _fetch_upcoming_posts():
             "frame": frame_numbers.get(pid, 1),
             "brief": brief_name,
             "campaign_name": campaign.get("name", ""),
-            "brief_link": campaign.get("brief_link", ""),
         })
 
-    print(f"[notion] total: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms", flush=True)
+    print(f"[notion] DONE: {len(result)} entries in {int((_time.time()-t_start)*1000)}ms total", flush=True)
     return result
 
 
