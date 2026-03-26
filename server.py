@@ -669,7 +669,7 @@ def _fetch_upcoming_posts():
                 {"property": "Post date", "date": {"on_or_before": one_month}},
             ]
         },
-        "_max_pages": 10,
+        "_max_pages": 50,
         "page_size": 10,
     }, prop_ids=post_pids)
     posts.sort(key=lambda p: _extract_date(p.get("properties", {}), "Post date") or "")
