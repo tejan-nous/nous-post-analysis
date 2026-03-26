@@ -1175,7 +1175,7 @@ def resolve_slack_channel_id(channel_name, headers):
     clean = channel_name.lstrip("#")
     # Try conversations.list to find the channel
     cursor = None
-    for _ in range(5):  # max 5 pages
+    for _ in range(10):  # max 10 pages (2000 channels)
         params = {"types": "public_channel,private_channel", "limit": 200}
         if cursor:
             params["cursor"] = cursor
@@ -1187,13 +1187,44 @@ def resolve_slack_channel_id(channel_name, headers):
         )
         data = resp.json()
         if not data.get("ok"):
-            return None
+            print(f"    conversations.list error: {data.get('error')}", flush=True)
+            break
         for ch in data.get("channels", []):
             if ch.get("name") == clean:
                 return ch["id"]
         cursor = data.get("response_metadata", {}).get("next_cursor")
         if not cursor:
             break
+
+    # Fallback: try posting directly with channel name — Slack resolves it for
+    # channels the bot is in, even private ones without groups:read scope
+    print(f"    conversations.list couldn't find #{clean}, trying direct post fallback", flush=True)
+    try:
+        fallback_resp = http_requests.post(
+            "https://slack.com/api/chat.postMessage",
+            headers=headers,
+            json={"channel": f"#{clean}", "text": "."},
+            timeout=10,
+        )
+        fallback_data = fallback_resp.json()
+        if fallback_data.get("ok"):
+            channel_id = fallback_data.get("channel")
+            temp_ts = fallback_data.get("ts", "")
+            # Clean up the temp message
+            if temp_ts and channel_id:
+                http_requests.post(
+                    "https://slack.com/api/chat.delete",
+                    headers=headers,
+                    json={"channel": channel_id, "ts": temp_ts},
+                    timeout=5,
+                )
+            print(f"    fallback resolved #{clean} → {channel_id}", flush=True)
+            return channel_id
+        else:
+            print(f"    fallback failed: {fallback_data.get('error')}", flush=True)
+    except Exception as e:
+        print(f"    fallback exception: {e}", flush=True)
+
     return None
 
 
@@ -1251,6 +1282,19 @@ def slack_test():
         scope_checks["channels:read"] = "ok" if d.get("ok") else d.get("error")
     except Exception as e:
         scope_checks["channels:read"] = str(e)
+
+    # Check groups:read scope (needed to list private channels)
+    try:
+        resp = http_requests.get(
+            "https://slack.com/api/conversations.list",
+            headers=slack_headers,
+            params={"types": "private_channel", "limit": 1},
+            timeout=10,
+        )
+        d = resp.json()
+        scope_checks["groups:read"] = "ok" if d.get("ok") else d.get("error")
+    except Exception as e:
+        scope_checks["groups:read"] = str(e)
 
     # Check files:write scope
     try:
