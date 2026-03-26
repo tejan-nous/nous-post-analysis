@@ -72681,14 +72681,19 @@ async function ulSendToSlack(id, btn) {
         console.warn('Auto-feedback save failed:', feedbackErr);
       }
     } else {
-      btn.textContent = 'Failed: ' + (data.error || '');
+      btn.textContent = 'Failed: ' + (data.error || 'unknown error');
       btn.style.background = 'var(--red)';
       btn.style.color = '#fff';
-      setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 3000);
+      console.error('Slack send failed:', data.error);
+      setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 5000);
     }
   } catch(e) {
-    btn.textContent = 'Error';
-    setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 2000);
+    console.error('Slack send error:', e);
+    const msg = e.message || 'Network error';
+    btn.textContent = 'Error: ' + msg;
+    btn.style.background = 'var(--red)';
+    btn.style.color = '#fff';
+    setTimeout(() => { btn.textContent = 'Send'; btn.style.background = '#fff'; btn.style.color = 'var(--nous)'; btn.disabled = false; }, 5000);
   }
 }
 

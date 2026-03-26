@@ -1201,6 +1201,93 @@ def resolve_slack_channel_id(channel_name, headers):
 _slack_channel_id_cache = {}
 
 
+def _resolve_slack_channel(slack_headers):
+    """Resolve SLACK_APPROVING_CONTENT_CHANNEL to a real channel ID, with caching."""
+    channel = SLACK_APPROVING_CONTENT_CHANNEL
+    if channel.startswith("C"):
+        return channel
+    if channel in _slack_channel_id_cache:
+        return _slack_channel_id_cache[channel]
+    resolved = resolve_slack_channel_id(channel, slack_headers)
+    if resolved:
+        _slack_channel_id_cache[channel] = resolved
+        return resolved
+    return None
+
+
+@app.route("/slack/test", methods=["GET"])
+def slack_test():
+    """Health-check: verify Slack token, scopes, and channel access."""
+    issues = []
+    if not SLACK_BOT_TOKEN:
+        return jsonify({"ok": False, "error": "SLACK_BOT_TOKEN not configured"}), 500
+
+    slack_headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
+
+    # Check token validity
+    try:
+        auth_resp = http_requests.post(
+            "https://slack.com/api/auth.test",
+            headers=slack_headers,
+            timeout=10,
+        )
+        auth_data = auth_resp.json()
+        if not auth_data.get("ok"):
+            return jsonify({"ok": False, "error": f"Token invalid: {auth_data.get('error')}"}), 502
+        bot_info = {"bot_user": auth_data.get("user"), "team": auth_data.get("team")}
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"auth.test failed: {e}"}), 502
+
+    # Check channels:read scope
+    scope_checks = {}
+    try:
+        resp = http_requests.get(
+            "https://slack.com/api/conversations.list",
+            headers=slack_headers,
+            params={"types": "public_channel", "limit": 1},
+            timeout=10,
+        )
+        d = resp.json()
+        scope_checks["channels:read"] = "ok" if d.get("ok") else d.get("error")
+    except Exception as e:
+        scope_checks["channels:read"] = str(e)
+
+    # Check files:write scope
+    try:
+        resp = http_requests.get(
+            "https://slack.com/api/files.getUploadURLExternal",
+            headers=slack_headers,
+            params={"filename": "test.txt", "length": 4},
+            timeout=10,
+        )
+        d = resp.json()
+        scope_checks["files:write"] = "ok" if d.get("ok") else d.get("error")
+    except Exception as e:
+        scope_checks["files:write"] = str(e)
+
+    # Resolve channel
+    channel_id = _resolve_slack_channel(slack_headers)
+    channel_status = {"configured": SLACK_APPROVING_CONTENT_CHANNEL}
+    if channel_id:
+        channel_status["resolved_id"] = channel_id
+        channel_status["status"] = "ok"
+    else:
+        channel_status["status"] = "NOT FOUND — bot may not be a member"
+        issues.append("Channel not found")
+
+    for scope, result in scope_checks.items():
+        if result != "ok":
+            issues.append(f"Missing scope {scope}: {result}")
+
+    return jsonify({
+        "ok": len(issues) == 0,
+        "bot": bot_info,
+        "channel": channel_status,
+        "scopes": scope_checks,
+        "issues": issues or None,
+    })
+
+
 @app.route("/slack", methods=["POST"])
 def send_to_slack():
     if not SLACK_BOT_TOKEN:
@@ -1222,14 +1309,9 @@ def send_to_slack():
             caption = data.get("caption", "")
 
             # Step 1: Resolve channel ID
-            channel = SLACK_APPROVING_CONTENT_CHANNEL
-            if not channel.startswith("C"):
-                if channel not in _slack_channel_id_cache:
-                    resolved = resolve_slack_channel_id(channel, slack_headers)
-                    if resolved:
-                        _slack_channel_id_cache[channel] = resolved
-                channel = _slack_channel_id_cache.get(channel, channel)
-            channel_id = channel
+            channel_id = _resolve_slack_channel(slack_headers)
+            if not channel_id:
+                return jsonify({"error": f"Could not resolve channel '{SLACK_APPROVING_CONTENT_CHANNEL}' — is the bot a member?"}), 502
 
             # Step 2: Get upload URL for image
             url_resp = http_requests.get(
@@ -1289,38 +1371,36 @@ def send_to_slack():
                     break
 
             # Step 6: Post the bullet analysis as a thread reply
+            reply_payload = {"channel": channel_id, "text": data["text"]}
             if file_ts:
-                http_requests.post(
-                    "https://slack.com/api/chat.postMessage",
-                    headers=slack_headers,
-                    json={
-                        "channel": channel_id,
-                        "text": data["text"],
-                        "thread_ts": file_ts,
-                    },
-                    timeout=10,
-                )
-            else:
-                # Fallback: couldn't get ts — post text as standalone message
-                http_requests.post(
-                    "https://slack.com/api/chat.postMessage",
-                    headers=slack_headers,
-                    json={"channel": channel_id, "text": data["text"]},
-                    timeout=10,
-                )
+                reply_payload["thread_ts"] = file_ts
 
-            return jsonify({"ok": True})
+            reply_resp = http_requests.post(
+                "https://slack.com/api/chat.postMessage",
+                headers=slack_headers,
+                json=reply_payload,
+                timeout=10,
+            )
+            reply_data = reply_resp.json()
+            if not reply_data.get("ok"):
+                return jsonify({"error": f"Analysis post failed: {reply_data.get('error')} (image was shared OK)"}), 502
+
+            return jsonify({"ok": True, "threaded": bool(file_ts)})
 
         except Exception as e:
             traceback.print_exc()
             return jsonify({"error": f"Image upload failed: {str(e)}"}), 500
 
     # No image — simple text message
+    channel_id = _resolve_slack_channel(slack_headers)
+    if not channel_id:
+        return jsonify({"error": f"Could not resolve channel '{SLACK_APPROVING_CONTENT_CHANNEL}' — is the bot a member?"}), 502
+
     resp = http_requests.post(
         "https://slack.com/api/chat.postMessage",
         headers=slack_headers,
         json={
-            "channel": SLACK_APPROVING_CONTENT_CHANNEL,
+            "channel": channel_id,
             "text": data["text"],
         },
         timeout=10,
