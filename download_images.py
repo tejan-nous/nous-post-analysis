@@ -7,7 +7,7 @@ import re
 import urllib.request
 import ssl
 
-BASE = "/Users/tejanpereira/Documents/nous-post-analysis"
+BASE = os.path.dirname(os.path.abspath(__file__))
 IMAGES_DIR = os.path.join(BASE, "images")
 os.makedirs(IMAGES_DIR, exist_ok=True)
 

@@ -1457,6 +1457,51 @@ def send_to_slack():
         return jsonify({"error": result.get("error", "Unknown Slack error")}), 502
 
 
+@app.route("/review", methods=["POST"])
+def post_review():
+    """Write a star review (1-5) + optional comment to the 'Comments in review' field on I.Posts."""
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+
+    page_id = (data.get("page_id") or "").strip()
+    stars = data.get("stars")
+    comment = (data.get("comment") or "").strip()
+
+    if not page_id:
+        return jsonify({"error": "page_id is required"}), 400
+    if not isinstance(stars, int) or stars < 1 or stars > 5:
+        return jsonify({"error": "stars must be an integer 1-5"}), 400
+
+    star_emoji = "\u2b50" * stars
+    review_text = f"{star_emoji} {stars}/5"
+    if comment:
+        review_text += f" \u2014 {comment}"
+
+    token = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN") or NOTION_TOKEN or ""
+    if not token:
+        return jsonify({"error": "NOTION_TOKEN not configured"}), 500
+
+    resp = http_requests.patch(
+        f"https://api.notion.com/v1/pages/{page_id}",
+        headers=notion_headers(),
+        json={
+            "properties": {
+                "Comments in review": {
+                    "rich_text": _notion_rich_text(review_text),
+                }
+            }
+        },
+        timeout=15,
+    )
+
+    if resp.status_code == 200:
+        return jsonify({"ok": True, "review_text": review_text})
+    else:
+        print(f"[REVIEW] Notion API error {resp.status_code}: {resp.text[:300]}")
+        return jsonify({"ok": False, "error": f"Notion API error {resp.status_code}"}), 500
+
+
 if __name__ == "__main__":
     print("Nous Story Analyser running on http://localhost:8765")
     app.run(host="0.0.0.0", port=8765, debug=False)

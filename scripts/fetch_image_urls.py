@@ -122,10 +122,18 @@ while has_more:
     if has_more:
         time.sleep(1)
 
-# 4. Save results
+# 4. Merge with existing and save
 output_path = os.path.join(os.path.dirname(__file__), "..", "data", "image_urls.json")
-with open(output_path, "w") as fh:
-    json.dump(image_map, fh, indent=2)
+existing = {}
+if os.path.exists(output_path):
+    with open(output_path) as fh:
+        existing = json.load(fh)
+    print(f"Loaded {len(existing)} existing image URLs")
 
-print(f"\nDone! Found {len(image_map)} image URLs out of {len(needed_ids)} needed.")
+existing.update(image_map)
+with open(output_path, "w") as fh:
+    json.dump(existing, fh, indent=2)
+
+print(f"\nDone! Found {len(image_map)} new image URLs out of {len(needed_ids)} needed.")
+print(f"Total image URLs: {len(existing)}")
 print(f"Saved to {os.path.abspath(output_path)}")
