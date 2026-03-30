@@ -173,6 +173,42 @@ BRIEF_FRAME_GUIDANCE = {
             "special_rules": ["This is a FULL STORY frame, not a short callback. Should have substantial copy."],
         },
     },
+    "identical": {
+        # All 3 frames use EXACTLY THE SAME copy — this is intentional by design.
+        # Brief: "We'd like you to use the same message on all three of your frames."
+        # Copy includes: problem hook, @get_nous, £600+ saving, energy+broadband+mobile, 2-min sign-up.
+        1: {
+            "title": "Identical message — Frame 1",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "IDENTICAL MESSAGING BRIEF — all 3 frames use the same copy. This is intentional. Evaluate this frame as a complete standalone story. Expected copy: personal hook about overpaying → signed up to @get_nous → they checked energy, broadband, mobile → switched to better deals → saved £600+ → took 2 minutes. ALL of this should be present and is correct. Do NOT suggest moving any content to another frame.",
+            "skip_criteria": ["discovery_moment"],
+            "special_rules": [
+                "IDENTICAL MESSAGING BRIEF: all 3 frames have the same copy by design. Do NOT suggest stripping back Frame 1 or moving savings/Nous details to Frame 2. The complete story (hook, @get_nous, £600 saving, sign-up ease) must appear on every frame.",
+                "Do NOT apply the default 'Frame 1 = hook only' rule. This brief explicitly uses the full story on all frames.",
+            ],
+        },
+        2: {
+            "title": "Identical message — Frame 2",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "IDENTICAL MESSAGING BRIEF — same copy as Frame 1. Full story: problem hook, @get_nous, £600+ saving, energy+broadband+mobile, 2-minute sign-up. All present and correct.",
+            "skip_criteria": ["problem_hook", "discovery_moment"],
+            "special_rules": [
+                "IDENTICAL MESSAGING BRIEF: identical copy across all frames is correct. Do not flag anything as missing that would only apply to a different frame type.",
+            ],
+        },
+        3: {
+            "title": "Identical message — Frame 3",
+            "visual": "A calming shot within the house",
+            "cta": "Save with Nous",
+            "messaging_focus": "IDENTICAL MESSAGING BRIEF — same copy as Frames 1 and 2. Full story: problem hook, @get_nous, £600+ saving, energy+broadband+mobile, 2-minute sign-up. All present and correct.",
+            "skip_criteria": ["problem_hook", "discovery_moment"],
+            "special_rules": [
+                "IDENTICAL MESSAGING BRIEF: identical copy across all frames is correct. Focus only on CTA button, @get_nous presence, savings figure, and text readability.",
+            ],
+        },
+    },
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
@@ -261,6 +297,8 @@ Evaluate this Instagram Story image against the following criteria. For each sub
 
 IMPORTANT — Frame-specific guidance:
 Each brief has 3 frames. NOT all criteria apply equally to every frame:
+
+IMPORTANT OVERRIDE: If the brief guidance below contains a SPECIAL RULE saying "IDENTICAL MESSAGING BRIEF" or similar, that overrides ALL of the default per-frame rules below. Apply only what the brief guidance says for that frame.
 
 Frame 1 (Hook): This is the opening story. It MUST have a problem-aware hook, personal confession, or shock stat. It should NOT mention Nous or @get_nous yet. Frame 1 should END ON THE PROBLEM, not the solution — do NOT let the influencer leak the Nous explanation, savings details, or how-it-works into Frame 1. If Frame 1 starts introducing the solution, flag it and suggest trimming back to leave the discovery for Frame 2. Criteria 1 (Problem-aware hook) is critical here. Criteria 3-5 (What Nous does, Savings claim, Sign-up ease) are NOT expected on Frame 1 — do NOT fail them if absent, but DO flag if the solution is being introduced too early.
 
