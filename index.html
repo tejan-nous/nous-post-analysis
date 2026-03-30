@@ -72436,7 +72436,7 @@ async function ulAnalyse() {
       });
       ulStopTypewriter(btn);
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Server error');
+      if (!res.ok) { const err = new Error(data.error || 'Server error'); err.raw = data.raw || data.detail || ''; throw err; }
       const wrapper = document.createElement('div');
       if (ulImageQueue.length > 1) {
         wrapper.innerHTML = `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:${i>0?'24px':0} 0 8px">Image ${i+1} of ${ulImageQueue.length} — ${item.filename}</div>`;
@@ -72448,8 +72448,9 @@ async function ulAnalyse() {
       if (i === 0) resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
     } catch(e) {
       ulStopTypewriter(btn);
+      const rawHtml = e.raw ? `<details style="margin-top:8px"><summary style="font-size:11px;cursor:pointer;color:var(--muted)">Show raw response</summary><pre style="font-size:10px;white-space:pre-wrap;word-break:break-all;margin-top:6px;color:var(--muted);max-height:200px;overflow:auto">${(e.raw||'').replace(/</g,'&lt;')}</pre></details>` : '';
       const errDiv = document.createElement('div');
-      errDiv.innerHTML = `<div class="card" style="margin-bottom:12px"><div class="card-body" style="color:#e53935">⚠ ${e.message} (${item.filename})<br><span style="font-size:12px;color:var(--muted)">URL: ${serverUrl}</span></div></div>`;
+      errDiv.innerHTML = `<div class="card" style="margin-bottom:12px"><div class="card-body" style="color:#e53935">⚠ ${e.message} (${item.filename})<br><span style="font-size:12px;color:var(--muted)">URL: ${serverUrl}</span>${rawHtml}</div></div>`;
       resultsEl.appendChild(errDiv);
     }
   }

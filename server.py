@@ -970,7 +970,7 @@ def analyse():
 
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=4096,
+            max_tokens=8192,
             system=SYSTEM_PROMPT,
             messages=[
                 {
@@ -1014,10 +1014,12 @@ def analyse():
         last_brace = raw_text.rfind("}")
         if first_brace != -1 and last_brace != -1 and last_brace > first_brace:
             json_substr = raw_text[first_brace:last_brace + 1]
-            result = json.loads(json_substr)
-            return jsonify(result)
+            try:
+                result = json.loads(json_substr)
+                return jsonify(result)
+            except json.JSONDecodeError:
+                pass  # fall through to error with raw included
 
-        # If we get here, truly no JSON found
         raise json.JSONDecodeError("No JSON object found in response", raw_text, 0)
 
     except json.JSONDecodeError as e:
