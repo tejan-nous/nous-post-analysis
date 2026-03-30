@@ -318,43 +318,49 @@ UPCOMING_POST_PROPS = ["%3EG%5D%5D", "%3CL%7Cp", "W%5C%5C~", "dvkA", "tdAu"]
 def generate_upcoming_posts_cache(posts_list, token=None):
     """Generate data/upcoming_posts_cache.json from a targeted Notion query.
 
-    Queries upcoming posts (next 30 days) directly from Notion with their
-    campaign relations, then fetches Brief Name from each campaign. Falls back
-    to posts_list data (no brief) if no token is available.
+    Fetches at least 100 upcoming posts by expanding the date window (90 → 180 → 365 days)
+    until 100 results are found. Falls back to posts_list data (no brief) if no token.
     """
     from datetime import datetime, timedelta
 
     today = datetime.utcnow().date()
-    window = today + timedelta(days=30)
 
     # --- Targeted Notion query for upcoming posts ---
+    # Fetch until we have at least 100, expanding the window as needed.
     upcoming = []
     if token:
         try:
             print("Fetching upcoming posts from Notion for cache...")
-            query_body = {
-                "filter": {
-                    "and": [
-                        {"property": "Post date", "date": {"on_or_after": today.isoformat()}},
-                        {"property": "Post date", "date": {"on_or_before": window.isoformat()}},
-                    ]
-                },
-                "page_size": 10,
-            }
-            pages = []
-            cursor = None
             base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query?" + "&".join(
                 f"filter_properties={p}" for p in UPCOMING_POST_PROPS
             )
-            for _ in range(20):  # max 200 posts
-                body = dict(query_body)
-                if cursor:
-                    body["start_cursor"] = cursor
-                resp = notion_request(token, base_url, body=body, timeout=90)
-                pages.extend(resp.get("results", []))
-                if not resp.get("has_more"):
+            pages = []
+            # Try progressively wider windows: 90 → 180 → 365 days
+            for window_days in (90, 180, 365):
+                window = today + timedelta(days=window_days)
+                query_body = {
+                    "filter": {
+                        "and": [
+                            {"property": "Post date", "date": {"on_or_after": today.isoformat()}},
+                            {"property": "Post date", "date": {"on_or_before": window.isoformat()}},
+                        ]
+                    },
+                    "page_size": 10,
+                }
+                pages = []
+                cursor = None
+                for _ in range(30):  # max 300 posts per window
+                    body = dict(query_body)
+                    if cursor:
+                        body["start_cursor"] = cursor
+                    resp = notion_request(token, base_url, body=body, timeout=90)
+                    pages.extend(resp.get("results", []))
+                    if not resp.get("has_more"):
+                        break
+                    cursor = resp.get("next_cursor")
+                print(f"  Window {window_days}d → {len(pages)} posts")
+                if len(pages) >= 100:
                     break
-                cursor = resp.get("next_cursor")
             print(f"  Got {len(pages)} upcoming posts from Notion")
 
             # Compute frame numbers per campaign (order within campaign by date)
@@ -405,6 +411,7 @@ def generate_upcoming_posts_cache(posts_list, token=None):
 
     # Fallback: derive from posts_list (no brief names)
     if not upcoming:
+        fallback_window = today + timedelta(days=365)
         for p in posts_list:
             raw_date = p.get("date", "")
             if not raw_date:
@@ -413,7 +420,7 @@ def generate_upcoming_posts_cache(posts_list, token=None):
                 post_date = datetime.strptime(raw_date, "%d %b %Y").date()
             except ValueError:
                 continue
-            if post_date < today or post_date > window:
+            if post_date < today or post_date > fallback_window:
                 continue
             influencer_name = p.get("name", "")
             frame = p.get("post_sequence") or 1

@@ -233,7 +233,8 @@
     .tab-btn.active { color:var(--nous);border-bottom-color:var(--nous);font-weight:600; }
     /* UPLOAD VIEW */
     .ul-verdict-good { background:#e8f5e9;border:1px solid #4caf50;border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px }
-    .ul-verdict-bad  { background:#fff3e0;border:1px solid var(--amber);border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px }
+    .ul-verdict-warn { background:#fffbeb;border:1px solid #f59e0b;border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px }
+    .ul-verdict-bad  { background:#fee2e2;border:1px solid var(--red);border-radius:12px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px }
     .ul-crit-group { margin-bottom:16px }
     .ul-crit-parent { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px }
     .ul-sub { display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--border);font-size:13px }
@@ -72459,10 +72460,11 @@ async function ulAnalyse() {
 function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   idx = idx || 0;
   postDate = postDate || '';
-  const good = d.overall === 'good_to_go';
-
   const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
   const briefFails = (d.brief_fit || []).filter(x => !x.pass);
+  const failCount = obvFails.length + briefFails.length;
+  const verdict = failCount === 0 ? 'good' : failCount <= 2 ? 'warn' : 'bad';
+  const good = verdict === 'good';
   const improvements = d.improvements || [];
   const copyRewrite = d.copy_rewrite || '';
 
@@ -72496,7 +72498,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
-    good ? ':white_check_mark: *Good to go*' : ':warning: *Needs work*',
+    verdict === 'good' ? ':white_check_mark: *Good to go*' : verdict === 'warn' ? ':large_yellow_circle: *Minor tweaks*' : ':warning: *Needs work*',
   ];
   if (postDate) {
     slackLines.push(`:calendar: Post date: ${postDate}`);
@@ -72519,16 +72521,16 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     ${dataUrl ? `
     <div style="position:relative;margin-bottom:20px;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">
       <img src="${dataUrl}" style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,.12)">
-      <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:${good ? 'rgba(22,163,74,.92)' : 'rgba(220,38,38,.92)'};color:#fff;padding:8px 20px;border-radius:99px;font-weight:800;font-size:14px;white-space:nowrap;backdrop-filter:blur(4px)">
-        ${good ? '\u2705 Good to go!' : '\u26a0\ufe0f Needs work'}
+      <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:${verdict === 'good' ? 'rgba(22,163,74,.92)' : verdict === 'warn' ? 'rgba(217,119,6,.92)' : 'rgba(220,38,38,.92)'};color:#fff;padding:8px 20px;border-radius:99px;font-weight:800;font-size:14px;white-space:nowrap;backdrop-filter:blur(4px)">
+        ${verdict === 'good' ? '\u2705 Good to go!' : verdict === 'warn' ? '\uD83D\uDFE1 Minor tweaks' : '\u26a0\ufe0f Needs work'}
       </div>
     </div>
     <div style="text-align:center;font-size:13px;color:var(--muted);margin:-12px 0 20px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
     ` : `
-    <div class="${good ? 'ul-verdict-good' : 'ul-verdict-bad'}" style="margin-bottom:20px">
-      <div style="font-size:36px">${good ? '\u2705' : '\u26a0\ufe0f'}</div>
+    <div class="${verdict === 'good' ? 'ul-verdict-good' : verdict === 'warn' ? 'ul-verdict-warn' : 'ul-verdict-bad'}" style="margin-bottom:20px">
+      <div style="font-size:36px">${verdict === 'good' ? '\u2705' : verdict === 'warn' ? '\uD83D\uDFE1' : '\u26a0\ufe0f'}</div>
       <div>
-        <div style="font-size:18px;font-weight:800">${good ? 'Good to go!' : 'Needs work'}</div>
+        <div style="font-size:18px;font-weight:800">${verdict === 'good' ? 'Good to go!' : verdict === 'warn' ? 'Minor tweaks' : 'Needs work'}</div>
         <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
       </div>
     </div>
@@ -72559,7 +72561,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
         </div>
       </div>
       <div style="padding:12px 16px">
-        <textarea id="${slackId}" data-original-bullets="${encodeURIComponent(JSON.stringify(improvements))}" data-brief="${brief}" data-frame="${frame}" data-name="${name ? name.replace(/"/g,'&quot;') : ''}" data-verdict="${good ? 'good_to_go' : 'needs_work'}" data-post-date="${postDate}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
+        <textarea id="${slackId}" data-original-bullets="${encodeURIComponent(JSON.stringify(improvements))}" data-brief="${brief}" data-frame="${frame}" data-name="${name ? name.replace(/"/g,'&quot;') : ''}" data-verdict="${verdict === 'good' ? 'good_to_go' : 'needs_work'}" data-post-date="${postDate}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
     </div>
 
@@ -72583,7 +72585,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
         <button onclick="ulSetRating(${idx},'bad',this)" class="ul-rating-btn" data-rating="bad" style="flex:1;padding:8px;border:2px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:13px;transition:all .15s">\ud83d\udc4e Off</button>
       </div>
       <textarea id="ul-feedback-comment-${idx}" placeholder="What did the tool get wrong? What would you change?" style="width:100%;min-height:60px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;line-height:1.5;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box;margin-bottom:8px"></textarea>
-      <button onclick="ulSubmitFeedback(${idx},'${name.replace(/'/g,"\\'")}','${brief.replace(/'/g,"\\'")}',${frame},'${good?'good_to_go':'needs_work'}',this)" style="background:var(--nous);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%">Submit Feedback</button>
+      <button onclick="ulSubmitFeedback(${idx},'${name.replace(/'/g,"\\'")}','${brief.replace(/'/g,"\\'")}',${frame},'${verdict === 'good' ? 'good_to_go' : 'needs_work'}',this)" style="background:var(--nous);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;width:100%">Submit Feedback</button>
     </div>`;
 }
 

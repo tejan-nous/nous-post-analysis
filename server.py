@@ -221,7 +221,6 @@ You MUST respond ONLY with valid JSON — no preamble, no markdown, no explanati
 
 The JSON structure must be exactly:
 {
-  "overall": "good_to_go" or "needs_work",
   "obvious_tweaks": [
     {
       "label": "<issue description>",
@@ -238,11 +237,11 @@ The JSON structure must be exactly:
   ],
   "summary": "<2-3 sentence summary of overall quality, referencing specific details visible in the image>",
   "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
-  "copy_rewrite": "<if needs_work AND there are text/copy issues, provide a full rewritten version of the story copy that fixes the issues. If good_to_go or no copy issues, return empty string>",
+  "copy_rewrite": "<if there are text/copy issues, provide a full rewritten version of the story copy that fixes the issues. If no copy issues, return empty string>",
   "email": "<single short email — addressed to agent if agent name provided, otherwise to influencer directly>"
 }
 
-"obvious_tweaks" covers visual/technical issues: text readability, text size (too small or too big), button placement, button text, CTA visibility, image quality, font size, contrast, text layout.
+"obvious_tweaks" covers technical issues: text readability, text size (too small or too big), button placement, button text, CTA visibility, font size, contrast, text layout. Do NOT include visual/image direction in this section — we do not steer on visuals.
 
 "brief_fit" covers content/messaging issues: hook quality, discovery moment, what Nous does, savings claims, sign-up ease, @get_nous tag usage, tone.
 
@@ -252,7 +251,9 @@ IMPORTANT: Always include ALL items in both arrays — both passing AND failing 
 
 "copy_rewrite" should contain a complete rewritten version of the influencer's story text/copy that fixes any messaging issues found in brief_fit. Preserve the influencer's voice and tone while fixing compliance issues. If there are no text/copy issues (e.g. only visual problems), return an empty string.
 
-Use "good_to_go" when score >= 80% of total criteria pass. Otherwise use "needs_work".
+Do NOT include an "overall" verdict field (like "good_to_go" or "needs_work") — every post will have suggestions, so a binary tag adds no value. Just provide the checklist, improvements, and email.
+
+Do NOT include any "warning" section, cautionary notes, or disclaimer language in your output. Go straight to actionable feedback — no preamble, no warnings, no caveats.
 """
 
 CRITERIA_PROMPT = """
@@ -261,7 +262,7 @@ Evaluate this Instagram Story image against the following criteria. For each sub
 IMPORTANT — Frame-specific guidance:
 Each brief has 3 frames. NOT all criteria apply equally to every frame:
 
-Frame 1 (Hook): This is the opening story. It MUST have a problem-aware hook, personal confession, or shock stat. It should NOT mention Nous or @get_nous yet. Criteria 1 (Problem-aware hook) is critical here. Criteria 3-5 (What Nous does, Savings claim, Sign-up ease) are NOT expected on Frame 1 — do NOT fail them if absent.
+Frame 1 (Hook): This is the opening story. It MUST have a problem-aware hook, personal confession, or shock stat. It should NOT mention Nous or @get_nous yet. Frame 1 should END ON THE PROBLEM, not the solution — do NOT let the influencer leak the Nous explanation, savings details, or how-it-works into Frame 1. If Frame 1 starts introducing the solution, flag it and suggest trimming back to leave the discovery for Frame 2. Criteria 1 (Problem-aware hook) is critical here. Criteria 3-5 (What Nous does, Savings claim, Sign-up ease) are NOT expected on Frame 1 — do NOT fail them if absent, but DO flag if the solution is being introduced too early.
 
 Frame 2 (Discovery + Explanation): This is where the influencer introduces Nous. Criteria 2 (Discovery moment), 3 (What Nous does), 4 (Savings claim), and 5 (Sign-up ease) are critical here. Criterion 1 (Problem-aware hook) is NOT expected — do NOT fail it if absent.
 
@@ -275,6 +276,7 @@ CRITERIA TO CHECK:
    c. No "loads of people posting about Nous" or herd-following language
    d. Tone is confessional or self-deprecating, not corporate
    e. No unproven enthusiasm ("excited to see what we can save")
+   f. Hook connects logically with the rest of the post — the opening line should lead naturally into the body copy, not feel disconnected or unrelated to the story that follows
 
 2. Discovery moment [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Discovery feels natural, not scripted ("I stumbled across", not "Nous asked me")
@@ -285,7 +287,7 @@ CRITERIA TO CHECK:
 3. What Nous does [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Mentions switching across energy, broadband and phone/mobile
    b. No claim that Nous finds the cheapest deal on the whole market
-   c. No claim that Nous reminds you when contracts end
+   c. No claim that Nous reminds you when contracts end — HOWEVER, this is acceptable if the influencer also claims to have already saved money with Nous (i.e. they're speaking from experience, not making an unsubstantiated feature claim). Only fail this if "reminds when contracts end" appears WITHOUT any evidence of actual savings.
    d. Makes clear Nous handles the switching (zero effort for user)
 
 4. Savings claim [FRAMES 2-3 — skip for Frame 1]
@@ -295,7 +297,7 @@ CRITERIA TO CHECK:
 
 5. Sign-up ease [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Mentions how quick it is ("2 minutes", "from my phone in like five minutes")
-   b. Mentions Nous is free
+   b. Mentions Nous is free — this is a NICE-TO-HAVE, not a hard requirement. Only flag if the post actively implies Nous costs money. Do NOT fail this just because "free" isn't mentioned.
    c. References "just a few quick questions" or minimal effort
 
 6. @get_nous tag [ALL FRAMES]
@@ -303,7 +305,7 @@ CRITERIA TO CHECK:
    b. @get_nous does not appear in the opening line
 
 7. Save with Nous CTA [ALL FRAMES — critical for Frame 3]
-   a. CTA button is present
+   a. CTA button is present — if the button is missing, do NOT hard-fail. Instead note that we'd just like to confirm a CTA button will be placed at the bottom of the frame before posting. Influencers often add the button last.
    b. Button text is acceptable — creative variations are FINE (e.g. "SAVE £€ WITH NOUS", "Start saving here!", "Save hundreds with Nous"). Only fail this if the button text is clearly bad or unengaging (e.g. just "nous.co", a bare URL, or completely unrelated text). Do NOT fail for capitalisation, emoji, or personality in the button text.
    c. No "AD" text inside the button itself
    d. Link/chain emoji (🔗) present alongside CTA
@@ -315,12 +317,13 @@ CRITERIA TO CHECK:
    b. Button is not obscured by AD label, stickers or text blocks
    c. Only one CTA button — no competing links
 
-9. Calming/lifestyle visual [ALL FRAMES]
-   a. Visual is calming — not busy, cluttered or high-contrast
-   b. Visual matches niche expectation for this frame (home interior, lifestyle shot, etc.)
+9. Calming/lifestyle visual [ALL FRAMES — SOFT CHECK ONLY, do NOT steer on visuals]
+   NOTE: We do NOT give visual direction to influencers. Only flag a visual issue if it actively harms readability (e.g. text is invisible against the background). Do NOT suggest changing the setting, background, or style of the image. Always pass this criterion unless there is a genuine readability problem.
+   a. Visual does not actively harm text readability (e.g. busy background making text unreadable)
+   b. No competing visual elements that obscure the CTA or key text
 
 10. Text readability [ALL FRAMES]
-    a. Font size is appropriate for phone viewing — fail if text is too small to read comfortably at a glance (common problem: influencers cramming too much copy into small font) OR if text is disproportionately large. Text should be easily readable on a phone screen without zooming.
+    a. Font size — ONLY fail if text is genuinely unreadable, i.e. so small that a viewer could not make it out at normal phone viewing distance without zooming in. A moderately small font is a PASS. Do NOT fail just because there is a lot of copy or because text could be slightly bigger. Only flag truly illegible text.
     b. Text colour has strong contrast against the background
     c. Long copy is broken into multiple text blocks, not a single wall of text
     d. Text is not placed over faces or focal points of the image
@@ -335,15 +338,13 @@ Email guidance:
 
 Write ONE short, casual email. If an agent name is provided, address the agent (e.g. "Hey Katie,"); otherwise address the influencer directly (e.g. "Hey {influencer_name},").
 
-Structure for "needs_work":
+Structure (every post will have suggestions):
 1. One-line positive opener
-2. Max 3 bullet points — short, specific changes needed (not explanations of why)
+2. Max 3 bullet points — short, specific changes needed (not explanations of why). Do NOT include visual/image direction — we don't steer on visuals.
 3. If there are copy issues, add the full rewritten copy below the bullets as "Suggested copy:" on its own line
 4. Sign off
 
-Structure for "good_to_go":
-1. One line: looks great, happy for it to go live
-2. Sign off
+If the post genuinely has no issues at all (rare), just say it looks great and is happy to go live.
 
 Example 1 (needs work, to agent):
 "Hi Katie,
@@ -397,7 +398,6 @@ def build_prompt(brief, frame, influencer_name, agent_name):
 
 BRIEF-SPECIFIC GUIDANCE for "{brief}" Frame {frame}:
 - Frame title: {guidance['title']}
-- Expected visual: {guidance['visual']}
 - Expected CTA button text: {guidance['cta']}
 - Messaging focus: {guidance['messaging_focus']}
 """
@@ -638,12 +638,12 @@ import threading
 
 
 def _fetch_upcoming_posts():
-    """Fetch upcoming posts (next 30 days) from Notion Posts DB + campaign details.
+    """Fetch the next 100 upcoming posts from Notion Posts DB + campaign details.
     Runs in background — disk cache serves requests while this completes.
     Refreshes every 4 hours.
 
     Steps (each logged):
-      1. Query Posts DB with filter_properties (10 results/page, ~11s/page)
+      1. Query Posts DB with filter_properties (10 results/page, up to 10 pages = 100 posts)
          Brief Name rollup and Influencer formula are fetched directly from each post —
          no secondary campaign or ETM lookups needed.
       2. Compute frame numbers per campaign and build result
@@ -654,25 +654,27 @@ def _fetch_upcoming_posts():
     t_start = _time.time()
     now = datetime.utcnow()
     today = now.strftime("%Y-%m-%d")
-    one_month = (now + timedelta(days=30)).strftime("%Y-%m-%d")
+    one_year = (now + timedelta(days=365)).strftime("%Y-%m-%d")
 
     # Step 1: Resolve property IDs (includes Brief Name rollup + Influencer formula)
     post_pids = _get_posts_prop_ids()
     print(f"[notion] step 1: prop IDs resolved in {int((_time.time()-t_start)*1000)}ms", flush=True)
 
-    # Step 2: Query posts — page_size=10 + filter_properties
+    # Step 2: Query next 100 upcoming posts — page_size=10 + filter_properties
+    # Uses a 365-day window to guarantee at least 100 posts are found.
     t1 = _time.time()
     posts = _notion_query(NOTION_POSTS_DB, {
         "filter": {
             "and": [
                 {"property": "Post date", "date": {"on_or_after": today}},
-                {"property": "Post date", "date": {"on_or_before": one_month}},
+                {"property": "Post date", "date": {"on_or_before": one_year}},
             ]
         },
-        "_max_pages": 50,
+        "_max_pages": 10,  # 10 pages × 10 results = 100 posts
         "page_size": 10,
     }, prop_ids=post_pids)
     posts.sort(key=lambda p: _extract_date(p.get("properties", {}), "Post date") or "")
+    posts = posts[:100]  # cap at 100
     print(f"[notion] step 2: {len(posts)} posts in {int((_time.time()-t1)*1000)}ms", flush=True)
 
     # Step 3: Collect campaign IDs for frame-number computation + ETM IDs for brief fallback
