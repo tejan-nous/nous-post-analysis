@@ -58,7 +58,7 @@ def get_token():
     raise ValueError("No NOTION_API_KEY found")
 
 
-def notion_request(token, url, method="POST", body=None, retries=3, timeout=90):
+def notion_request(token, url, method="POST", body=None, retries=5, timeout=90):
     """Make a request to the Notion API. url should be a full URL."""
     data = json.dumps(body).encode() if body else None
     headers = {
@@ -109,14 +109,31 @@ def discover_property_ids(token):
 
 
 def fetch_posts_fast(token, prop_ids):
-    """Fetch the 100 most recently edited posts from Notion."""
-    base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query"
+    """Fetch the 100 most recently edited posts from Notion.
 
-    body = {"page_size": 100}
+    Uses filter_properties to only fetch the fields we need, and smaller
+    page sizes with pagination to avoid 504 Gateway Timeouts.
+    """
+    # Build URL with filter_properties to keep response small
+    fp_params = "&".join(f"filter_properties={pid}" for pid in prop_ids.values() if pid)
+    base_url = f"https://api.notion.com/v1/databases/{DB_ID}/query?{fp_params}"
 
-    resp = notion_request(token, base_url, body=body)
-    results = resp.get("results", [])
-    print(f"  Fetched {len(results)} posts")
+    results = []
+    cursor = None
+    # Fetch in pages of 25 to avoid timeouts, up to 100 total
+    for _ in range(4):
+        body = {"page_size": 25}
+        if cursor:
+            body["start_cursor"] = cursor
+        resp = notion_request(token, base_url, body=body)
+        batch = resp.get("results", [])
+        results.extend(batch)
+        print(f"  Fetched {len(batch)} posts (total: {len(results)})")
+        if not resp.get("has_more") or len(results) >= 100:
+            break
+        cursor = resp.get("next_cursor")
+        time.sleep(1)  # small delay between pages
+
     return results
 
 
@@ -345,11 +362,11 @@ def generate_upcoming_posts_cache(posts_list, token=None):
                             {"property": "Post date", "date": {"on_or_before": window.isoformat()}},
                         ]
                     },
-                    "page_size": 10,
+                    "page_size": 25,
                 }
                 pages = []
                 cursor = None
-                for _ in range(30):  # max 300 posts per window
+                for _ in range(12):  # max 300 posts per window
                     body = dict(query_body)
                     if cursor:
                         body["start_cursor"] = cursor
@@ -358,6 +375,7 @@ def generate_upcoming_posts_cache(posts_list, token=None):
                     if not resp.get("has_more"):
                         break
                     cursor = resp.get("next_cursor")
+                    time.sleep(1)
                 print(f"  Window {window_days}d → {len(pages)} posts")
                 if len(pages) >= 100:
                     break
