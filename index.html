@@ -72511,7 +72511,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
-    verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved*' : ':red_circle: *Needs work*',
+    verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + failCount + ' fails)*' : ':red_circle: *Needs work (' + failCount + ' fails)*',
   ];
   if (offBrief) {
     slackLines.push(':warning: *Off brief* — most brief criteria failed');
