@@ -72438,8 +72438,10 @@ async function ulAnalyse() {
   const agent = document.getElementById('ul-agent').value.trim() || '';
   const postDate = document.getElementById('ul-post-date').value;
 
+  const reviewer = document.getElementById('ul-reviewer').value;
   if (!name) { alert('Please enter the influencer name'); document.getElementById('ul-name').focus(); return; }
   if (!postDate) { alert('Please enter the post date'); document.getElementById('ul-post-date').focus(); return; }
+  if (!reviewer) { alert('Please select a reviewer name'); document.getElementById('ul-reviewer').focus(); return; }
   if (!ulImageQueue.length) { alert('Please upload at least one image first'); return; }
 
   // Apply current defaults to all images that haven't been explicitly overridden
