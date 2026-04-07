@@ -1055,6 +1055,26 @@ def analyse():
         )
 
         raw_text = message.content[0].text.strip()
+        stop_reason = message.stop_reason
+
+        # If truncated, retry once with higher max_tokens
+        if stop_reason == "max_tokens":
+            print(f"[ANALYSE] Response truncated (max_tokens), retrying with 12000...")
+            message = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=12000,
+                system=SYSTEM_PROMPT,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": image_b64}},
+                            {"type": "text", "text": prompt_text},
+                        ],
+                    }
+                ],
+            )
+            raw_text = message.content[0].text.strip()
 
         # Strip markdown code fences if present
         if "```" in raw_text:
