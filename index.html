@@ -72506,13 +72506,20 @@ async function ulAnalyse() {
 
     ulStartTypewriter(btn);
     try {
-      const res = await fetch(serverUrl + '/analyse', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
-        body: JSON.stringify({ image_base64: item.base64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: document.getElementById('ul-reviewer')?.value || '', first_review: firstReview })
-      });
+      const payload = JSON.stringify({ image_base64: item.base64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: document.getElementById('ul-reviewer')?.value || '', first_review: firstReview });
+      const fetchOpts = { method: 'POST', headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''}, body: payload };
+      let res, data;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          res = await fetch(serverUrl + '/analyse', fetchOpts);
+          data = await res.json();
+          if (res.ok) break;
+        } catch (fetchErr) {
+          if (attempt === 0) { console.log('Retrying analyse...'); continue; }
+          throw fetchErr;
+        }
+      }
       ulStopTypewriter(btn);
-      const data = await res.json();
       if (!res.ok) { const err = new Error(data.error || 'Server error'); err.raw = data.raw || data.detail || ''; throw err; }
       const wrapper = document.createElement('div');
       if (ulImageQueue.length > 1) {
