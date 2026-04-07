@@ -291,28 +291,20 @@ The JSON structure must be exactly:
       "note": "<brief specific observation, 1-2 sentences>"
     }
   ],
-  "summary": "<2-3 sentence summary of overall quality, referencing specific details visible in the image>",
+  "summary": "<1 sentence summary>",
   "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
-  "copy_rewrite": "<if there are text/copy issues, provide a full rewritten version of the story copy that fixes the issues. If no copy issues, return empty string>",
-  "email": "<single short email — addressed to agent if agent name provided, otherwise to influencer directly>",
-  "wrong_brief": "<ONLY flag this if the image content clearly doesn't match the BRIEF TOPIC at all. For example, if the brief is about mobile savings but the post is about energy switching with no mention of mobile. Do NOT flag just because frames look similar to each other — frames within the same brief will naturally share themes. Return empty string unless you're confident the content is completely off-topic for the stated brief.>"
+  "wrong_brief": "<ONLY if content is completely off-topic for the stated brief. Empty string otherwise.>"
 }
 
 "obvious_tweaks" covers technical issues: text readability, text size (too small or too big), button placement, button text, CTA visibility, font size, contrast, text layout. Do NOT include visual/image direction in this section — we do not steer on visuals.
 
 "brief_fit" covers content/messaging issues: hook quality, discovery moment, what Nous does, savings claims, sign-up ease, @get_nous tag usage, tone.
 
-IMPORTANT: Always include ALL items in both arrays — both passing AND failing criteria. Do not omit items just because they pass. The frontend needs the full list to show what was checked.
+IMPORTANT: Include ALL items in both arrays — passing AND failing. Keep notes to 1 sentence max.
 
-"improvements" is a short array of exactly 3 concise bullet points summarising what needs to change (e.g. "Move CTA button to the bottom of the story", "Add a specific savings figure like £781/year"). If good_to_go, still include 3 minor suggestions. Each should be actionable and specific.
+"improvements" — exactly 3 concise actionable bullet points.
 
-"copy_rewrite" should contain a complete rewritten version of the influencer's story text/copy that fixes any messaging issues found in brief_fit. Preserve the influencer's voice and tone while fixing compliance issues. If there are no text/copy issues (e.g. only visual problems), return an empty string.
-
-"wrong_brief" — ONLY flag if the image content is completely off-topic for the stated brief. For example, brief says "Mobile Savings" but the post is entirely about energy bills. Do NOT flag just because different frames look similar — that's expected. Return empty string unless clearly wrong brief.
-
-Do NOT include an "overall" verdict field (like "good_to_go" or "needs_work") — every post will have suggestions, so a binary tag adds no value. Just provide the checklist, improvements, and email.
-
-Do NOT include any "warning" section, cautionary notes, or disclaimer language in your output. Go straight to actionable feedback — no preamble, no warnings, no caveats.
+Do NOT include "copy_rewrite", "email", or any verdict field. Do NOT include warnings, caveats, or disclaimer language. JSON only.
 """
 
 CRITERIA_PROMPT = """
