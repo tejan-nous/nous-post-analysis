@@ -295,7 +295,7 @@ The JSON structure must be exactly:
   "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
   "copy_rewrite": "<if there are text/copy issues, provide a full rewritten version of the story copy that fixes the issues. If no copy issues, return empty string>",
   "email": "<single short email — addressed to agent if agent name provided, otherwise to influencer directly>",
-  "frame_mismatch": "<if the image content doesn't match what you'd expect for the stated frame number, explain why. For example: 'This looks like a Frame 2/3 — it mentions Nous by name and includes a CTA, but Frame 1 should only set up the problem.' If the content matches the frame, return empty string>"
+  "wrong_brief": "<ONLY flag this if the image content clearly doesn't match the BRIEF TOPIC at all. For example, if the brief is about mobile savings but the post is about energy switching with no mention of mobile. Do NOT flag just because frames look similar to each other — frames within the same brief will naturally share themes. Return empty string unless you're confident the content is completely off-topic for the stated brief.>"
 }
 
 "obvious_tweaks" covers technical issues: text readability, text size (too small or too big), button placement, button text, CTA visibility, font size, contrast, text layout. Do NOT include visual/image direction in this section — we do not steer on visuals.
@@ -308,7 +308,7 @@ IMPORTANT: Always include ALL items in both arrays — both passing AND failing 
 
 "copy_rewrite" should contain a complete rewritten version of the influencer's story text/copy that fixes any messaging issues found in brief_fit. Preserve the influencer's voice and tone while fixing compliance issues. If there are no text/copy issues (e.g. only visual problems), return an empty string.
 
-"frame_mismatch" — check if the image content matches the stated frame number. Frame 1 = problem/hook only (no Nous mention, no CTA). Frame 2 = discovery/solution (introduces Nous). Frame 3 = CTA/sign-up push. If the content doesn't match, explain what frame it looks like and why.
+"wrong_brief" — ONLY flag if the image content is completely off-topic for the stated brief. For example, brief says "Mobile Savings" but the post is entirely about energy bills. Do NOT flag just because different frames look similar — that's expected. Return empty string unless clearly wrong brief.
 
 Do NOT include an "overall" verdict field (like "good_to_go" or "needs_work") — every post will have suggestions, so a binary tag adds no value. Just provide the checklist, improvements, and email.
 

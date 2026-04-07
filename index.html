@@ -72604,16 +72604,12 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   // Format date as dd - mm - yyyy for Slack
   const slackDate = postDate ? postDate.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) => `${day} - ${m} - ${y}`) : '';
 
-  // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
+  // Build Slack text — verdict + typos + bullet improvements
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${postDate ? ' \u00b7 ' + postDate : ''}*`,
     verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + obvFails.length + ' fails)*' : ':red_circle: *Needs work (' + obvFails.length + ' fails)*',
   ];
-  if (offBrief) {
-    slackLines.push(':warning: *Off brief* — ' + briefFails.length + ' of ' + briefTotal + ' brief criteria failed');
-  } else if (briefFails.length > 0) {
-    slackLines.push(':memo: Brief fit: ' + briefFails.length + ' issue' + (briefFails.length > 1 ? 's' : ''));
-  }
+  slackLines.push(`:ab: Typos: ${briefFails.length}`);
   if (slackDate) {
     slackLines.push(`:calendar: Post date: ${slackDate}`);
   }
@@ -72650,48 +72646,16 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     </div>
     `}
 
-    ${(() => {
-      const allPosts = (typeof _notionPosts !== 'undefined' ? _notionPosts : []).filter(p => p.influencer_name === name);
-      if (allPosts.length <= 1) return '';
-      const frames = allPosts.map(p => p.frame).sort((a,b) => a - b);
-      const today = new Date().toISOString().slice(0, 10);
-      const pastPosts = allPosts.filter(p => p.post_date && p.post_date < today);
-      const pastFrames = pastPosts.map(p => p.frame);
-      if (pastFrames.includes(frame)) {
-        return '<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:10px">' +
-          '<span style="font-size:22px">\u26a0\ufe0f</span>' +
-          '<div>' +
-            '<div style="font-size:13px;font-weight:700;color:#92400e">Are you sure this is Frame ' + frame + '?</div>' +
-            '<div style="font-size:11px;color:#92400e;margin-top:2px">' + name + ' already has a Frame ' + frame + ' post dated ' + ((pastPosts.find(p => p.frame === frame) || {}).post_date || 'earlier') + '. This might be Frame ' + Math.max(...frames) + ' instead.</div>' +
-          '</div>' +
-        '</div>';
-      }
-      return '';
-    })()}
-
-    ${d.frame_mismatch ? `
-    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
-      <span style="font-size:22px">\u26a0\ufe0f</span>
+    ${d.wrong_brief ? `
+    <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:22px">\ud83d\udea9</span>
       <div>
-        <div style="font-size:13px;font-weight:700;color:#92400e">Frame mismatch detected</div>
-        <div style="font-size:11px;color:#92400e;margin-top:2px">${d.frame_mismatch}</div>
+        <div style="font-size:13px;font-weight:700;color:#991b1b">Wrong brief?</div>
+        <div style="font-size:11px;color:#991b1b;margin-top:2px">${d.wrong_brief}</div>
       </div>
     </div>` : ''}
 
-    <!-- OBVIOUS TWEAKS (max 4, compact) -->
-    <div class="card" style="margin-bottom:12px">
-      <div class="card-head" style="font-size:12px">\ud83d\udd27 Obvious tweaks${obvFails.length ? ' (' + obvFails.length + ')' : ' \u2713'}</div>
-      <div class="card-body" style="padding:8px 16px">${obvHtml()}</div>
-    </div>
-
-    <!-- TYPO COUNT -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px">
-      <span style="font-weight:700;color:var(--muted)">Typos:</span>
-      <span style="font-weight:700;color:${briefFails.length ? 'var(--red)' : 'var(--green)'}">${briefFails.length}</span>
-      ${briefFails.length ? briefFails.map(f => '<span style="background:var(--red-bg);color:var(--red);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600">' + f.label + '</span>').join('') : '<span style="color:var(--green)">\u2713 None found</span>'}
-    </div>
-
-    <!-- SLACK OUTPUT -->
+    <!-- SLACK OUTPUT (primary action) -->
     <div style="background:var(--surface);border:2px solid var(--nous);border-radius:12px;padding:0;margin-bottom:16px;overflow:hidden">
       <div style="background:var(--nous);color:#fff;padding:10px 16px;display:flex;justify-content:space-between;align-items:center">
         <span style="font-weight:700;font-size:13px">\ud83d\udcac Slack \u2014 #approving-content</span>
@@ -72703,6 +72667,19 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
       <div style="padding:12px 16px">
         <textarea id="${slackId}" data-original-bullets="${encodeURIComponent(JSON.stringify(improvements))}" data-brief="${brief}" data-frame="${frame}" data-name="${name ? name.replace(/"/g,'&quot;') : ''}" data-verdict="${verdict === 'good' ? 'good_to_go' : 'needs_work'}" data-post-date="${postDate}" style="width:100%;min-height:120px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);resize:vertical;font-family:inherit;box-sizing:border-box">${slackText.replace(/</g,'&lt;')}</textarea>
       </div>
+    </div>
+
+    <!-- OBVIOUS TWEAKS -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="card-head" style="font-size:12px">\ud83d\udd27 Obvious tweaks${obvFails.length ? ' (' + obvFails.length + ')' : ' \u2713'}</div>
+      <div class="card-body" style="padding:8px 16px">${obvHtml()}</div>
+    </div>
+
+    <!-- TYPO COUNT -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px">
+      <span style="font-weight:700;color:var(--muted)">Typos:</span>
+      <span style="font-weight:700;color:${briefFails.length ? 'var(--red)' : 'var(--green)'}">${briefFails.length}</span>
+      ${briefFails.length ? briefFails.map(f => '<span style="background:var(--red-bg);color:var(--red);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600">' + f.label + '</span>').join('') : '<span style="color:var(--green)">\u2713 None found</span>'}
     </div>
 
     <!-- EMAIL -->
