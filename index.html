@@ -70884,11 +70884,12 @@ function showPage(page, pushState=true) {
 window.addEventListener('popstate', e => {
   const state = e.state || {};
   if (state.page === 'meta') { showPage('meta', false); }
-  else {
-    showPage('upload', false);
+  else if (state.page === 'posts') {
+    showPage('posts', false);
     if (state.month) { selectedMonthLabel = state.month; selectedWeekLabel = state.week || null; renderMonthNav(); }
     if (state.idx != null) renderPost(state.idx);
   }
+  else { showPage('upload', false); }
 });
 
 // ── META PAGE ─────────────────────────────────────────────────────────────────
@@ -71204,7 +71205,7 @@ function renderFullMetaStats() {
 
 
 function goToPost(id) {
-  showPage('upload');
+  showPage('posts');
   const p = displayPosts.find(x => x.id === id);
   if (!p) return;
   const pk = getWeekLabel(p.date);
@@ -72930,6 +72931,8 @@ function ulCheckBlackImage(img) {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 renderMonthNav();
 renderPost(0);
+// Default to upload page
+showPage('upload', false);
 </script>
 </body>
 </html>
