@@ -314,7 +314,7 @@ CRITERIA TO CHECK:
    c. No "loads of people posting about Nous" or herd-following language
    d. Tone is confessional or self-deprecating, not corporate
    e. No unproven enthusiasm ("excited to see what we can save")
-   f. Hook connects logically with the rest of the post — the opening line should lead naturally into the body copy, not feel disconnected or unrelated to the story that follows
+   f. Hook connects logically with the rest of the post — this is CRITICAL. The opening line must lead naturally into the body copy. If the hook feels disconnected, random, or unrelated to the story that follows, this is a hard fail. A hook that doesn't flow into the rest of the post is worse than a weak hook.
 
 2. Discovery moment [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Discovery feels natural, not scripted ("I stumbled across", not "Nous asked me")
@@ -335,7 +335,7 @@ CRITERIA TO CHECK:
 
 5. Sign-up ease [FRAME 2 ONLY — skip for Frames 1 and 3]
    a. Mentions how quick it is ("2 minutes", "from my phone in like five minutes")
-   b. Mentions Nous is free — this is a NICE-TO-HAVE, not a hard requirement. Only flag if the post actively implies Nous costs money. Do NOT fail this just because "free" isn't mentioned.
+   b. Do NOT check whether Nous is mentioned as free. This is NOT a requirement. Never fail or flag this.
    c. References "just a few quick questions" or minimal effort
 
 6. @get_nous tag [ALL FRAMES]
@@ -343,26 +343,26 @@ CRITERIA TO CHECK:
    b. @get_nous does not appear in the opening line
 
 7. Save with Nous CTA [ALL FRAMES — critical for Frame 3]
-   a. CTA button is present — if the button is missing, do NOT hard-fail. Instead note that we'd just like to confirm a CTA button will be placed at the bottom of the frame before posting. Influencers often add the button last.
+   a. CTA button is present — if the button is missing, ALWAYS PASS but add a note: "Just confirm a CTA button will be placed at the bottom before posting." Influencers almost always add the button last, so a missing button is never a fail.
    b. Button text is acceptable — creative variations are FINE (e.g. "SAVE £€ WITH NOUS", "Start saving here!", "Save hundreds with Nous"). Only fail this if the button text is clearly bad or unengaging (e.g. just "nous.co", a bare URL, or completely unrelated text). Do NOT fail for capitalisation, emoji, or personality in the button text.
    c. No "AD" text inside the button itself
-   d. Link/chain emoji (🔗) present alongside CTA
+   d. Link/chain emoji (🔗) present alongside CTA — if missing, soft note only, not a fail
    e. Button text is readable — good contrast, not too small
    f. No vote/poll sticker on the story that competes with the CTA
 
 8. Button placement [ALL FRAMES — critical for Frame 3]
-   a. CTA button is at the BOTTOM of the story
+   a. CTA button is at the BOTTOM of the story — if no button is visible yet, PASS with a note to confirm placement
    b. Button is not obscured by AD label, stickers or text blocks
    c. Only one CTA button — no competing links
 
-9. Calming/lifestyle visual [ALL FRAMES — SOFT CHECK ONLY, do NOT steer on visuals]
-   NOTE: We do NOT give visual direction to influencers. Only flag a visual issue if it actively harms readability (e.g. text is invisible against the background). Do NOT suggest changing the setting, background, or style of the image. Always pass this criterion unless there is a genuine readability problem.
-   a. Visual does not actively harm text readability (e.g. busy background making text unreadable)
-   b. No competing visual elements that obscure the CTA or key text
+9. Calming/lifestyle visual [ALL FRAMES — ALWAYS PASS]
+   NOTE: We NEVER steer on visuals. ALWAYS pass this criterion. Do NOT comment on the image style, setting, background, lighting, or aesthetic. The only exception is if the visual literally makes text completely invisible — and even then, handle it under Text readability (criterion 10), not here.
+   a. ALWAYS PASS — we do not give visual direction
+   b. ALWAYS PASS — we do not give visual direction
 
-10. Text readability [ALL FRAMES]
-    a. Font size — ONLY fail if text is genuinely unreadable, i.e. so small that a viewer could not make it out at normal phone viewing distance without zooming in. A moderately small font is a PASS. Do NOT fail just because there is a lot of copy or because text could be slightly bigger. Only flag truly illegible text.
-    b. Text colour has strong contrast against the background
+10. Text readability [ALL FRAMES — be lenient]
+    a. Font size — ALWAYS PASS unless text is literally impossible to read. Small text is fine. Moderately small text is fine. Only fail if a viewer physically cannot make out the words. Do NOT worry about small text — the team has explicitly said this is not a concern.
+    b. Text colour has strong contrast against the background — only fail for genuinely invisible text (e.g. white on white)
     c. Long copy is broken into multiple text blocks, not a single wall of text
     d. Text is not placed over faces or focal points of the image
 
@@ -893,60 +893,6 @@ def test_query():
         })
     except Exception as e:
         return jsonify({"error": str(e), "post_pids": post_pids}), 500
-
-
-@app.route("/notion/fetch-page-blocks", methods=["GET"])
-def fetch_page_blocks():
-    """Temp debug: fetch all blocks from a Notion page/database by ID."""
-    page_id = request.args.get("id", "").strip()
-    if not page_id:
-        return jsonify({"error": "id param required"}), 400
-    try:
-        all_blocks = []
-        cursor = None
-        for _ in range(20):
-            url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100"
-            if cursor:
-                url += f"&start_cursor={cursor}"
-            resp = http_requests.get(url, headers=_get_notion_headers(), timeout=30)
-            if resp.status_code != 200:
-                return jsonify({"error": resp.status_code, "body": resp.text[:500]}), 500
-            data = resp.json()
-            all_blocks.extend(data.get("results", []))
-            if not data.get("has_more"):
-                break
-            cursor = data.get("next_cursor")
-        return jsonify({"blocks": all_blocks, "count": len(all_blocks)})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/notion/query-db", methods=["GET"])
-def query_db():
-    """Temp debug: query a Notion database by ID and return all rows."""
-    db_id = request.args.get("id", "").strip()
-    if not db_id:
-        return jsonify({"error": "id param required"}), 400
-    try:
-        all_results = []
-        cursor = None
-        for _ in range(10):
-            body = {"page_size": 100}
-            if cursor:
-                body["start_cursor"] = cursor
-            resp = http_requests.post(
-                f"https://api.notion.com/v1/databases/{db_id}/query",
-                headers=_get_notion_headers(), timeout=30, json=body)
-            if resp.status_code != 200:
-                return jsonify({"error": resp.status_code, "body": resp.text[:500]}), 500
-            data = resp.json()
-            all_results.extend(data.get("results", []))
-            if not data.get("has_more"):
-                break
-            cursor = data.get("next_cursor")
-        return jsonify({"results": all_results, "count": len(all_results)})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/notion/test-post-page", methods=["GET"])
