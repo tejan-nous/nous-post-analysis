@@ -415,10 +415,17 @@ def generate_upcoming_posts_cache(posts_list, token=None):
                     rt = brief_arr[0].get("rich_text", [])
                     brief = rt[0].get("plain_text", "") if rt else ""
 
+                # Get Post sequence directly from Notion (property dvkA)
+                post_seq_prop = props.get("Post sequence", {})
+                post_seq = None
+                if post_seq_prop.get("type") == "number":
+                    post_seq = post_seq_prop.get("number")
+                frame = post_seq if post_seq else frame_numbers.get(pid, 1)
+
                 upcoming.append({
                     "influencer_name": inf_name,
                     "post_date": post_date_str,
-                    "frame": frame_numbers.get(pid, 1),
+                    "frame": frame,
                     "brief": brief,
                     "campaign_name": inf_name,
                     "has_etm": False,

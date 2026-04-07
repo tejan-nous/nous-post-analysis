@@ -276,9 +276,9 @@
     <span class="logo-sub">Post Analysis</span>
   </div>
   <div class="page-tabs">
-    <div class="page-tab active" onclick="showPage('posts')" id="tab-posts">Posts</div>
-    <button class="tab-btn" id="tab-upload" onclick="showPage('upload')">↑ Upload</button>
-    <div class="page-tab" onclick="showPage('meta')" id="tab-meta">Meta Analysis</div>
+    <div class="page-tab" onclick="showPage('posts')" id="tab-posts" style="display:none">Posts</div>
+    <button class="tab-btn active" id="tab-upload" onclick="showPage('upload')">↑ Upload</button>
+    <div class="page-tab" onclick="showPage('meta')" id="tab-meta" style="display:none">Meta Analysis</div>
   </div>
   <div class="header-right" id="header-count"></div>
 </header>
@@ -372,7 +372,7 @@
             <input id="ul-post-date" type="date" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Review type</label>
             <select id="ul-default-review" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)">
@@ -383,6 +383,10 @@
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Agent name <span style="font-weight:400;opacity:.6">(for feedback)</span></label>
             <input id="ul-agent" type="text" placeholder="e.g. Sarah at Gleam" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box">
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Reviewer name</label>
+            <input id="ul-reviewer" type="text" placeholder="Your name" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_reviewer_name',this.value)">
           </div>
         </div>
       </div>
@@ -70874,7 +70878,7 @@ window.addEventListener('popstate', e => {
   const state = e.state || {};
   if (state.page === 'meta') { showPage('meta', false); }
   else {
-    showPage('posts', false);
+    showPage('upload', false);
     if (state.month) { selectedMonthLabel = state.month; selectedWeekLabel = state.week || null; renderMonthNav(); }
     if (state.idx != null) renderPost(state.idx);
   }
@@ -71193,7 +71197,7 @@ function renderFullMetaStats() {
 
 
 function goToPost(id) {
-  showPage('posts');
+  showPage('upload');
   const p = displayPosts.find(x => x.id === id);
   if (!p) return;
   const pk = getWeekLabel(p.date);
@@ -71874,6 +71878,8 @@ const UL_BRIEFS = [
   const pw = document.getElementById('ul-password');
   if (su) su.value = localStorage.getItem('ul_server_url') || '';
   if (pw) pw.value = localStorage.getItem('ul_password') || '';
+  const reviewerInput = document.getElementById('ul-reviewer');
+  if (reviewerInput) reviewerInput.value = localStorage.getItem('ul_reviewer_name') || '';
 })();
 
 // Pre-populate saved settings
@@ -72438,7 +72444,7 @@ async function ulAnalyse() {
       const res = await fetch(serverUrl + '/analyse', {
         method: 'POST',
         headers: {'Content-Type':'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
-        body: JSON.stringify({ image_base64: item.base64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: 'Bekki', first_review: firstReview })
+        body: JSON.stringify({ image_base64: item.base64, brief, frame, influencer_name: name, agent_name: agent, reviewer_name: document.getElementById('ul-reviewer')?.value || '', first_review: firstReview })
       });
       ulStopTypewriter(btn);
       const data = await res.json();
@@ -72462,6 +72468,33 @@ async function ulAnalyse() {
   }
   btn.disabled = false;
   btn.textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
+
+  // Add "Upload Another" button at the bottom of results
+  const uploadAnotherBtn = document.createElement('div');
+  uploadAnotherBtn.style.cssText = 'text-align:center;margin:32px 0';
+  uploadAnotherBtn.innerHTML = `<button onclick="ulResetForm()" style="background:var(--nous);color:#fff;border:none;border-radius:8px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer">\u2191 Upload Another</button>`;
+  resultsEl.appendChild(uploadAnotherBtn);
+}
+
+function ulResetForm() {
+  // Show input card, hide results
+  document.getElementById('ul-input-card').style.display = '';
+  document.getElementById('ul-results').style.display = 'none';
+  document.getElementById('ul-results').innerHTML = '';
+  const summary = document.getElementById('ul-collapsed-summary');
+  if (summary) summary.style.display = 'none';
+  // Clear images
+  ulImageQueue = [];
+  document.getElementById('ul-queue').innerHTML = '';
+  document.getElementById('ul-btn').textContent = 'Generate Feedback';
+  document.getElementById('ul-btn').disabled = true;
+  // Clear name and details
+  document.getElementById('ul-name').value = '';
+  document.getElementById('ul-details-section').style.display = 'none';
+  document.getElementById('ul-manual-link').style.display = '';
+  document.getElementById('ul-autofilled-badge').style.display = 'none';
+  // Scroll to top
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
@@ -72510,7 +72543,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
 
   // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
   const slackLines = [
-    `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
+    `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${postDate ? ' \u00b7 ' + postDate : ''}*`,
     verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + obvFails.length + ' fails)*' : ':red_circle: *Needs work (' + obvFails.length + ' fails)*',
   ];
   if (offBrief) {
@@ -72543,25 +72576,35 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
         ${verdict === 'good' ? '\u2705 Good to go!' : verdict === 'warn' ? '\uD83D\uDFE1 Could be improved' : '\u26a0\ufe0f Needs work'}
       </div>
     </div>
-    <div style="text-align:center;font-size:13px;color:var(--muted);margin:-12px 0 20px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
+    <div style="text-align:center;font-size:13px;color:var(--muted);margin:-12px 0 20px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${postDate ? ' \u00b7 ' + postDate : ''}</div>
     ` : `
     <div class="${verdict === 'good' ? 'ul-verdict-good' : verdict === 'warn' ? 'ul-verdict-warn' : 'ul-verdict-bad'}" style="margin-bottom:20px">
       <div style="font-size:36px">${verdict === 'good' ? '\u2705' : verdict === 'warn' ? '\uD83D\uDFE1' : '\u26a0\ufe0f'}</div>
       <div>
         <div style="font-size:18px;font-weight:800">${verdict === 'good' ? 'Good to go!' : verdict === 'warn' ? 'Could be improved' : 'Needs work'}</div>
-        <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
+        <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${postDate ? ' \u00b7 ' + postDate : ''}</div>
       </div>
     </div>
     `}
 
-    ${offBrief ? `
-    <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:28px">\ud83d\udea9</span>
-      <div>
-        <div style="font-size:15px;font-weight:800;color:#dc2626">Off brief</div>
-        <div style="font-size:12px;color:#7f1d1d;margin-top:2px">${briefFails.length} of ${briefTotal} brief criteria failed — this post needs significant rework</div>
-      </div>
-    </div>` : ''}
+    ${(() => {
+      const allPosts = (typeof _notionPosts !== 'undefined' ? _notionPosts : []).filter(p => p.influencer_name === name);
+      if (allPosts.length <= 1) return '';
+      const frames = allPosts.map(p => p.frame).sort((a,b) => a - b);
+      const today = new Date().toISOString().slice(0, 10);
+      const pastPosts = allPosts.filter(p => p.post_date && p.post_date < today);
+      const pastFrames = pastPosts.map(p => p.frame);
+      if (pastFrames.includes(frame)) {
+        return '<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:10px">' +
+          '<span style="font-size:22px">\u26a0\ufe0f</span>' +
+          '<div>' +
+            '<div style="font-size:13px;font-weight:700;color:#92400e">Are you sure this is Frame ' + frame + '?</div>' +
+            '<div style="font-size:11px;color:#92400e;margin-top:2px">' + name + ' already has a Frame ' + frame + ' post dated ' + ((pastPosts.find(p => p.frame === frame) || {}).post_date || 'earlier') + '. This might be Frame ' + Math.max(...frames) + ' instead.</div>' +
+          '</div>' +
+        '</div>';
+      }
+      return '';
+    })()}
 
     <!-- OBVIOUS TWEAKS (max 4, compact) -->
     <div class="card" style="margin-bottom:12px">
@@ -72569,13 +72612,11 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
       <div class="card-body" style="padding:8px 16px">${obvHtml()}</div>
     </div>
 
-    <!-- FITTING THE BRIEF (collapsible) -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-head" style="font-size:12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center" onclick="var el=document.getElementById('${briefDetailId}');el.style.display=el.style.display==='none'?'':'none';this.querySelector('.ul-chevron').textContent=el.style.display==='none'?'\u25b6':'\u25bc'">
-        <span>\ud83d\udccb Fitting the brief${briefFails.length ? ' (' + briefFails.length + ' issue' + (briefFails.length > 1 ? 's' : '') + ')' : ' \u2713'}</span>
-        <span class="ul-chevron" style="font-size:10px;color:var(--muted)">\u25b6</span>
-      </div>
-      <div id="${briefDetailId}" class="card-body" style="display:none;padding:8px 16px">${briefHtml()}</div>
+    <!-- TYPO COUNT -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px">
+      <span style="font-weight:700;color:var(--muted)">Typos:</span>
+      <span style="font-weight:700;color:${briefFails.length ? 'var(--red)' : 'var(--green)'}">${briefFails.length}</span>
+      ${briefFails.length ? briefFails.map(f => '<span style="background:var(--red-bg);color:var(--red);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600">' + f.label + '</span>').join('') : '<span style="color:var(--green)">\u2713 None found</span>'}
     </div>
 
     <!-- SLACK OUTPUT -->
