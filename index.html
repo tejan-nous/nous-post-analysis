@@ -72617,7 +72617,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   const typos = d.typos || [];
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
-    verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved*' : ':red_circle: *Needs work*',
+    verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? `:large_yellow_circle: *Could be improved (${improvements.length} improvements)*` : `:red_circle: *Needs work (${improvements.length} improvements)*`,
   ];
   if (typos.length) {
     slackLines.push(`:ab: *Typos:* ${typos.join(', ')}`);
