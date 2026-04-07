@@ -386,7 +386,13 @@
           </div>
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Reviewer name</label>
-            <input id="ul-reviewer" type="text" placeholder="Your name" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box" oninput="localStorage.setItem('ul_reviewer_name',this.value)">
+            <select id="ul-reviewer" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" onchange="localStorage.setItem('ul_reviewer_name',this.value)">
+              <option value="">Select reviewer...</option>
+              <option value="Matilda">Matilda</option>
+              <option value="Ezra">Ezra</option>
+              <option value="Bekki">Bekki</option>
+              <option value="Tejan">Tejan</option>
+            </select>
           </div>
         </div>
       </div>
@@ -72605,6 +72611,15 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
       }
       return '';
     })()}
+
+    ${d.frame_mismatch ? `
+    <div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:12px 18px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:22px">\u26a0\ufe0f</span>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#92400e">Frame mismatch detected</div>
+        <div style="font-size:11px;color:#92400e;margin-top:2px">${d.frame_mismatch}</div>
+      </div>
+    </div>` : ''}
 
     <!-- OBVIOUS TWEAKS (max 4, compact) -->
     <div class="card" style="margin-bottom:12px">
