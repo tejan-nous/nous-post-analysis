@@ -72470,6 +72470,9 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
   const briefFails = (d.brief_fit || []).filter(x => !x.pass);
   const failCount = obvFails.length + briefFails.length;
+  const briefTotal = (d.brief_fit || []).length;
+  const briefFailRatio = briefTotal > 0 ? briefFails.length / briefTotal : 0;
+  const offBrief = briefFailRatio >= 0.7 && briefFails.length >= 4;
   const verdict = failCount === 0 ? 'good' : failCount <= 2 ? 'warn' : 'bad';
   const good = verdict === 'good';
   const improvements = d.improvements || [];
@@ -72502,13 +72505,19 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
       </div>`).join('');
   }
 
+  // Format date as dd - mm - yyyy for Slack
+  const slackDate = postDate ? postDate.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) => `${day} - ${m} - ${y}`) : '';
+
   // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
-    verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? ':yellow_circle: *Minor tweaks*' : ':red_circle: *Needs work*',
+    verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved*' : ':red_circle: *Needs work*',
   ];
-  if (postDate) {
-    slackLines.push(`:calendar: Post date: ${postDate}`);
+  if (offBrief) {
+    slackLines.push(':warning: *Off brief* — most brief criteria failed');
+  }
+  if (slackDate) {
+    slackLines.push(`:calendar: Post date: ${slackDate}`);
   }
   if (improvements.length) {
     slackLines.push('');
@@ -72529,7 +72538,7 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     <div style="position:relative;margin-bottom:20px;cursor:zoom-in" onclick="openLightbox('${dataUrl}')">
       <img src="${dataUrl}" style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 24px rgba(0,0,0,.12)">
       <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:${verdict === 'good' ? 'rgba(22,163,74,.92)' : verdict === 'warn' ? 'rgba(217,119,6,.92)' : 'rgba(220,38,38,.92)'};color:#fff;padding:8px 20px;border-radius:99px;font-weight:800;font-size:14px;white-space:nowrap;backdrop-filter:blur(4px)">
-        ${verdict === 'good' ? '\u2705 Good to go!' : verdict === 'warn' ? '\uD83D\uDFE1 Minor tweaks' : '\u26a0\ufe0f Needs work'}
+        ${verdict === 'good' ? '\u2705 Good to go!' : verdict === 'warn' ? '\uD83D\uDFE1 Could be improved' : '\u26a0\ufe0f Needs work'}
       </div>
     </div>
     <div style="text-align:center;font-size:13px;color:var(--muted);margin:-12px 0 20px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
@@ -72537,11 +72546,20 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     <div class="${verdict === 'good' ? 'ul-verdict-good' : verdict === 'warn' ? 'ul-verdict-warn' : 'ul-verdict-bad'}" style="margin-bottom:20px">
       <div style="font-size:36px">${verdict === 'good' ? '\u2705' : verdict === 'warn' ? '\uD83D\uDFE1' : '\u26a0\ufe0f'}</div>
       <div>
-        <div style="font-size:18px;font-weight:800">${verdict === 'good' ? 'Good to go!' : verdict === 'warn' ? 'Minor tweaks' : 'Needs work'}</div>
+        <div style="font-size:18px;font-weight:800">${verdict === 'good' ? 'Good to go!' : verdict === 'warn' ? 'Could be improved' : 'Needs work'}</div>
         <div style="font-size:13px;margin-top:2px">${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}</div>
       </div>
     </div>
     `}
+
+    ${offBrief ? `
+    <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:28px">\ud83d\udea9</span>
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#dc2626">Off brief</div>
+        <div style="font-size:12px;color:#7f1d1d;margin-top:2px">${briefFails.length} of ${briefTotal} brief criteria failed — this post needs significant rework</div>
+      </div>
+    </div>` : ''}
 
     <!-- OBVIOUS TWEAKS (max 4, compact) -->
     <div class="card" style="margin-bottom:12px">
