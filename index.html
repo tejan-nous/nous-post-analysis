@@ -284,7 +284,7 @@
   <div class="header-right" id="header-count"></div>
 </header>
 
-<div class="month-nav" id="month-nav"></div>
+<div class="month-nav" id="month-nav" style="display:none"></div>
 <div id="date-range-panel" style="display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 28px;align-items:center;gap:10px;justify-content:center">
   <label style="font-size:11px;font-weight:600;color:var(--muted)">From</label>
   <input type="date" id="date-range-start" style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--text);background:var(--bg)">
@@ -296,7 +296,7 @@
 <div id="week-drop-portal"></div>
 
 
-<nav class="arrow-nav" id="arrow-nav">
+<nav class="arrow-nav" id="arrow-nav" style="display:none">
   <button class="arrow-btn" id="btn-prev" onclick="prevPost()">← Prev</button>
   <div class="arrow-center">
     <div id="arrow-name" style="font-weight:600;font-size:14px"></div>
@@ -305,7 +305,7 @@
   <button class="arrow-btn" id="btn-next" onclick="nextPost()">Next →</button>
 </nav>
 
-<div id="posts-view">
+<div id="posts-view" style="display:none">
   <div class="main" id="main-content"></div>
 </div>
 
@@ -313,7 +313,7 @@
   <div id="meta-content"></div>
 </div>
 
-<div id="upload-view" style="display:none;max-width:900px;margin:0 auto;padding:32px 28px">
+<div id="upload-view" style="max-width:900px;margin:0 auto;padding:32px 28px">
   <!-- HEADER -->
   <div style="margin-bottom:28px">
     <h2 style="font-size:22px;font-weight:800;margin-bottom:6px">Story Review</h2>
