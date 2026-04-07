@@ -72609,7 +72609,12 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${postDate ? ' \u00b7 ' + postDate : ''}*`,
     verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + obvFails.length + ' fails)*' : ':red_circle: *Needs work (' + obvFails.length + ' fails)*',
   ];
-  slackLines.push(`:ab: Typos: ${briefFails.length}`);
+  if (briefFails.length) {
+    slackLines.push(`:ab: *Typos: ${briefFails.length}*`);
+    briefFails.forEach(f => slackLines.push('\u2022 ' + f.label + (f.note ? ' — ' + f.note : '')));
+  } else {
+    slackLines.push(`:ab: Typos: 0`);
+  }
   if (slackDate) {
     slackLines.push(`:calendar: Post date: ${slackDate}`);
   }
