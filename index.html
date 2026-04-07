@@ -72469,11 +72469,11 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   postDate = postDate || '';
   const obvFails  = (d.obvious_tweaks || []).filter(x => !x.pass);
   const briefFails = (d.brief_fit || []).filter(x => !x.pass);
-  const failCount = obvFails.length + briefFails.length;
   const briefTotal = (d.brief_fit || []).length;
   const briefFailRatio = briefTotal > 0 ? briefFails.length / briefTotal : 0;
   const offBrief = briefFailRatio >= 0.7 && briefFails.length >= 4;
-  const verdict = failCount === 0 ? 'good' : failCount <= 2 ? 'warn' : 'bad';
+  // Verdict based on obvious tweaks only — brief fit shown separately
+  const verdict = obvFails.length === 0 ? 'good' : obvFails.length <= 2 ? 'warn' : 'bad';
   const good = verdict === 'good';
   const improvements = d.improvements || [];
   const copyRewrite = d.copy_rewrite || '';
@@ -72511,10 +72511,12 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   // Build Slack text — verdict + bullet improvements (no copy rewrite — that stays on review page only)
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
-    verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + failCount + ' fails)*' : ':red_circle: *Needs work (' + failCount + ' fails)*',
+    verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + obvFails.length + ' fails)*' : ':red_circle: *Needs work (' + obvFails.length + ' fails)*',
   ];
   if (offBrief) {
-    slackLines.push(':warning: *Off brief* — most brief criteria failed');
+    slackLines.push(':warning: *Off brief* — ' + briefFails.length + ' of ' + briefTotal + ' brief criteria failed');
+  } else if (briefFails.length > 0) {
+    slackLines.push(':memo: Brief fit: ' + briefFails.length + ' issue' + (briefFails.length > 1 ? 's' : ''));
   }
   if (slackDate) {
     slackLines.push(`:calendar: Post date: ${slackDate}`);
