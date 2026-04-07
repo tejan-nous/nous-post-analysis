@@ -1652,6 +1652,12 @@ def _check_pending_followups():
     slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
     if not slack_token:
         return
+    # Only nudge during working hours: 08:30–18:00 UK time
+    from zoneinfo import ZoneInfo
+    uk_now = datetime.now(ZoneInfo("Europe/London"))
+    uk_time = uk_now.hour * 60 + uk_now.minute  # minutes since midnight
+    if uk_time < 510 or uk_time >= 1080:  # before 08:30 or after 18:00
+        return
     pending = load_pending_reviews()
     now = datetime.now(timezone.utc)
     changed = False
