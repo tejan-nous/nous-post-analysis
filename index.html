@@ -281,7 +281,7 @@
     <button class="tab-btn active" id="tab-upload" onclick="showPage('upload')">↑ Upload</button>
     <div class="page-tab" onclick="showPage('meta')" id="tab-meta" style="display:none">Meta Analysis</div>
   </div>
-  <div class="header-right" id="header-count"></div>
+  <div class="header-right" id="header-count" style="display:none"></div>
 </header>
 
 <div class="month-nav" id="month-nav" style="display:none"></div>
@@ -443,10 +443,17 @@
 
 <!-- LOADING OVERLAY -->
 <div id="img-lightbox" onclick="this.classList.remove('open')"><img id="img-lightbox-img" src="" alt=""></div>
-<div id="ul-loading" style="display:none;position:fixed;inset:0;z-index:999;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:24px">
-  <div style="font-size:48px;animation:ul-spin 2s linear infinite">✨</div>
-  <div id="ul-loading-msg" style="font-size:18px;font-weight:600;color:var(--text);text-align:center;max-width:360px;min-height:28px"></div>
-  <div style="font-size:13px;color:var(--muted)">Analysing your story frame…</div>
+<div id="ul-loading" style="display:none;position:fixed;inset:0;z-index:999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:28px">
+  <div style="text-align:center">
+    <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px">Analysing story frame…</div>
+    <div style="width:280px;height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin:0 auto">
+      <div id="ul-loading-bar" style="width:0%;height:100%;background:var(--nous);border-radius:99px;transition:width .3s ease"></div>
+    </div>
+  </div>
+  <div style="max-width:360px;text-align:center">
+    <div id="ul-loading-fact" style="font-size:14px;color:var(--muted);line-height:1.6;min-height:48px"></div>
+    <div id="ul-loading-source" style="font-size:11px;color:var(--border);margin-top:6px"></div>
+  </div>
 </div>
 
 <script>
@@ -71782,74 +71789,113 @@ function getExperimentUrl(p) {
 const UL_SERVER = localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app';
 let ulImageQueue = []; // {base64, filename, dataUrl}
 
-const UL_LOADING_MSGS = [
-  "Consulting Meg Brackpool…",
-  "📸 The first Instagram post was a photo of a dog by co-founder Kevin Systrom, captioned \"test\" — July 16, 2010",
-  "Messaging Steph Elswood…",
-  "🚀 Instagram launched on October 6, 2010 and hit 1 million users in just 2 months",
-  "Checking with Bethany Swancott…",
-  "💰 Facebook bought Instagram for $1 billion in 2012. It's now worth over $100 billion",
-  "Running this past Natasha Sandhu…",
-  "🏆 The most-liked Instagram post ever is Lionel Messi celebrating the World Cup — 74.3M likes",
-  "Borrowing Lauren Pack's brain…",
-  "📍 The most geo-tagged city on Instagram is Los Angeles, followed by London, New York and São Paulo",
-  "Getting Mia Rose's take…",
-  "📱 Instagram Stories launched in August 2016 — copying Snapchat Stories almost feature-for-feature",
-  "Looping in Laura Anderson…",
-  "🎬 Reels first launched in Brazil in November 2019 under the name \"Cenas\"",
-  "Seeing what Liv Guy thinks…",
-  "🏢 Instagram is headquartered in Menlo Park, California",
-  "Gathering thoughts from Emma Stephenson…",
-  "📺 IGTV was released in June 2018 — and pretty much no one used it",
-  "Getting notes from Sophie Price…",
-  "👤 Adam Mosseri (@mosseri) is the current head of Instagram",
-  "Asking Victoria Emes…",
-  "🌍 Over 2 billion people use Instagram every month",
-  "Pulling insight from Brogan Cole…",
-  "Getting feedback from Lauren Elizabeth Adamson…",
-  "Checking with Scarlett Hannah B…",
-  "Calling Jennie Winlots…",
-  "Running it by Laura Louise…",
-  "Picking Alexandra Wren's brain…",
-  "Getting the honest take from Girl in Debt…",
-  "Checking ideas with Jade Darlington…",
-  "Getting a verdict from Anne-Marie…",
-  "Seeing what Chloe Patton would tweak…",
-  "Reviewing with Emily Lucy Rajch…",
-  "Gathering tips from Sevda Cataltas…",
-  "Getting pointers from Sophie Hawkins…",
+// On-this-day historical facts keyed by MM-DD, with fallbacks
+const UL_ON_THIS_DAY = {
+  "01-01": "On this day in 1983, the internet was born — ARPANET officially switched to TCP/IP.",
+  "01-15": "On this day in 2001, Wikipedia was launched by Jimmy Wales and Larry Sanger.",
+  "01-24": "On this day in 1984, Apple unveiled the Macintosh — the first mass-market personal computer with a GUI.",
+  "02-04": "On this day in 2004, Mark Zuckerberg launched 'TheFacebook' from his Harvard dorm room.",
+  "02-14": "On this day in 2005, three former PayPal employees registered the domain YouTube.com.",
+  "03-12": "On this day in 1989, Tim Berners-Lee proposed the World Wide Web at CERN.",
+  "03-21": "On this day in 2006, Jack Dorsey sent the first ever tweet: 'just setting up my twttr'.",
+  "04-01": "On this day in 1976, Steve Wozniak and Steve Jobs founded Apple Computer in a garage.",
+  "04-03": "On this day in 1973, the first mobile phone call was made by Martin Cooper of Motorola.",
+  "04-09": "On this day in 2003, the first episode of The Office aired on BBC Two.",
+  "04-12": "On this day in 1961, Yuri Gagarin became the first human in space aboard Vostok 1.",
+  "04-15": "On this day in 1912, the RMS Titanic sank after hitting an iceberg on her maiden voyage.",
+  "04-23": "On this day in 1564, William Shakespeare was born in Stratford-upon-Avon.",
+  "04-28": "On this day in 2001, Dennis Tito became the first space tourist, paying $20 million for the trip.",
+  "05-01": "On this day in 2009, Minecraft development began — it would go on to become the best-selling game ever.",
+  "05-14": "On this day in 1796, Edward Jenner gave the first smallpox vaccination.",
+  "05-25": "On this day in 1977, Star Wars premiered in cinemas and changed filmmaking forever.",
+  "06-07": "On this day in 2007, the first iPhone went on sale, and queues stretched around the block.",
+  "06-15": "On this day in 1215, King John sealed the Magna Carta at Runnymede.",
+  "06-28": "On this day in 1914, Archduke Franz Ferdinand was assassinated, triggering World War I.",
+  "06-29": "On this day in 2007, the original iPhone was released by Apple.",
+  "07-16": "On this day in 2010, Kevin Systrom posted the first ever Instagram photo — a dog at a taco stand.",
+  "07-20": "On this day in 1969, Neil Armstrong and Buzz Aldrin walked on the moon.",
+  "08-06": "On this day in 1991, Tim Berners-Lee published the first ever website at CERN.",
+  "08-12": "On this day in 1981, IBM introduced its first personal computer, the IBM PC.",
+  "09-04": "On this day in 1998, Larry Page and Sergey Brin founded Google in a garage in Menlo Park.",
+  "09-12": "On this day in 2005, the first YouTube video to reach 1 million views was a Nike ad.",
+  "10-06": "On this day in 2010, Instagram launched on the App Store and got 25,000 users in 24 hours.",
+  "10-29": "On this day in 1969, the first ARPANET message was sent — it was supposed to say 'LOGIN' but crashed after 'LO'.",
+  "11-10": "On this day in 1983, Bill Gates introduced Windows 1.0 at a press event in New York.",
+  "11-30": "On this day in 2022, ChatGPT was launched by OpenAI and reached 1 million users in 5 days.",
+  "12-17": "On this day in 1903, the Wright brothers made the first controlled powered flight at Kitty Hawk.",
+  "12-25": "On this day in 1990, Tim Berners-Lee made the first successful HTTP communication.",
+};
+const UL_FALLBACK_FACTS = [
+  "The first text message ever sent was 'Merry Christmas' in 1992.",
+  "Netflix was founded in 1997 as a DVD-by-mail service. A late fee on Apollo 13 inspired it.",
+  "The average person spends 2 hours 24 minutes per day on social media.",
+  "Instagram's original name was 'Burbn' — a check-in app with a photo feature.",
+  "The hashtag was first used on Twitter by Chris Messina in 2007. Twitter initially called it 'too nerdy'.",
+  "The first ever banner ad appeared in 1994 on HotWired. It read: 'Have you ever clicked your mouse right here? You will.'",
+  "TikTok was the most downloaded app worldwide in 2020, surpassing Facebook for the first time.",
+  "Amazon started in Jeff Bezos's garage in 1994, originally selling only books.",
+  "The 'Like' button on Facebook was originally going to be called the 'Awesome' button.",
+  "Spotify launched in 2008 and now has over 600 million users worldwide.",
+  "The first YouTube video, 'Me at the Zoo', was uploaded on April 23, 2005.",
+  "WhatsApp was created by two ex-Yahoo employees and acquired by Facebook for $19 billion in 2014.",
 ];
+function getLoadingFact() {
+  const now = new Date();
+  const key = String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+  if (UL_ON_THIS_DAY[key]) return { text: UL_ON_THIS_DAY[key], source: 'On this day' };
+  return { text: UL_FALLBACK_FACTS[Math.floor(Math.random() * UL_FALLBACK_FACTS.length)], source: 'Did you know?' };
+}
 let _twTimer = null;
+let _barTimer = null;
 function ulStartTypewriter(btn) {
-  // Show full-screen loading overlay
   const overlay = document.getElementById('ul-loading');
-  const msgEl = document.getElementById('ul-loading-msg');
+  const bar = document.getElementById('ul-loading-bar');
+  const factEl = document.getElementById('ul-loading-fact');
+  const sourceEl = document.getElementById('ul-loading-source');
   overlay.style.display = 'flex';
   btn.textContent = 'Generating…';
 
-  let msgIdx = Math.floor(Math.random() * UL_LOADING_MSGS.length);
-  let charIdx = 0;
-  let pauseTicks = 0;
-  let phase = 'typing';
-  msgEl.textContent = '';
+  // Reset bar
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  setTimeout(() => { bar.style.transition = 'width .3s ease'; }, 10);
+
+  // Show a fact
+  const fact = getLoadingFact();
+  factEl.textContent = fact.text;
+  sourceEl.textContent = fact.source;
+
+  // Animate bar: fast to 60%, slow to 85%, then hold
+  let progress = 0;
+  _barTimer = setInterval(() => {
+    if (progress < 60) progress += 3;
+    else if (progress < 85) progress += 0.3;
+    else { clearInterval(_barTimer); _barTimer = null; }
+    bar.style.width = progress + '%';
+  }, 100);
+
+  // Rotate facts every 6 seconds
   _twTimer = setInterval(() => {
-    if (phase === 'typing') {
-      const msg = UL_LOADING_MSGS[msgIdx];
-      if (charIdx < msg.length) { msgEl.textContent += msg[charIdx++]; }
-      else { phase = 'pause'; pauseTicks = 0; }
-    } else {
-      if (++pauseTicks > 40) {
-        msgIdx = (msgIdx + 1) % UL_LOADING_MSGS.length;
-        charIdx = 0;
-        msgEl.textContent = '';
-        phase = 'typing';
-      }
-    }
-  }, 30);
+    const f = getLoadingFact();
+    factEl.style.opacity = '0';
+    setTimeout(() => {
+      factEl.textContent = f.text;
+      sourceEl.textContent = f.source;
+      factEl.style.opacity = '1';
+    }, 300);
+  }, 6000);
+  factEl.style.transition = 'opacity .3s';
 }
 function ulStopTypewriter(btn) {
   if (_twTimer) clearInterval(_twTimer);
-  document.getElementById('ul-loading').style.display = 'none';
+  if (_barTimer) clearInterval(_barTimer);
+  // Complete the bar
+  const bar = document.getElementById('ul-loading-bar');
+  if (bar) bar.style.width = '100%';
+  setTimeout(() => {
+    document.getElementById('ul-loading').style.display = 'none';
+    if (bar) bar.style.width = '0%';
+  }, 400);
   btn.textContent = 'Generate Feedback';
   btn.disabled = false;
 }
@@ -72196,9 +72242,8 @@ function ulRefreshNotion() {
 })();
 
 
-// Build hall-of-fame loading facts from real post data
+// Inject Nous hall-of-fame facts into loading fallbacks
 (function() {
-  const facts = [];
   let bestAC = null, bestACName = '', bestCTR = null, bestCTRName = '', bestECAC = null, bestECACName = '';
   displayPosts.forEach(p => {
     const np = nPerf[p.id] || {};
@@ -72212,10 +72257,9 @@ function ulRefreshNotion() {
     if (ctr != null && (bestCTR == null || ctr > bestCTR)) { bestCTR = ctr; bestCTRName = first; }
     if (ecac != null && (bestECAC == null || ecac < bestECAC)) { bestECAC = Math.round(ecac); bestECACName = first; }
   });
-  if (bestACName && bestAC) facts.push(`🏆 Did you know? ${bestACName}'s post generated ${bestAC.toLocaleString()} accounts — our all-time best`);
-  if (bestCTRName && bestCTR) facts.push(`🎯 Did you know? ${bestCTRName} had our best ever CTR at ${bestCTR}%`);
-  if (bestECACName && bestECAC) facts.push(`💚 Did you know? ${bestECACName} hit our lowest ever eCAC at £${bestECAC}`);
-  facts.forEach(f => UL_LOADING_MSGS.push(f));
+  if (bestACName && bestAC) UL_FALLBACK_FACTS.push(`${bestACName}'s post generated ${bestAC.toLocaleString()} accounts — our all-time best.`);
+  if (bestCTRName && bestCTR) UL_FALLBACK_FACTS.push(`${bestCTRName} had our best ever CTR at ${bestCTR}%.`);
+  if (bestECACName && bestECAC) UL_FALLBACK_FACTS.push(`${bestECACName} hit our lowest ever eCAC at £${bestECAC}.`);
 })();
 
 // No longer needed — review type is per-image dropdown
