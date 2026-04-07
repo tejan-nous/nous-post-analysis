@@ -274,6 +274,7 @@
   <div style="display:flex;align-items:center">
     <span class="logo">nous</span>
     <span class="logo-sub">Post Analysis</span>
+    <span id="reviewer-badge" style="display:none;background:var(--nous-light);color:var(--nous);padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;margin-left:12px"></span>
   </div>
   <div class="page-tabs">
     <div class="page-tab" onclick="showPage('posts')" id="tab-posts" style="display:none">Posts</div>
@@ -386,7 +387,7 @@
           </div>
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Reviewer name</label>
-            <select id="ul-reviewer" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" onchange="localStorage.setItem('ul_reviewer_name',this.value)">
+            <select id="ul-reviewer" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" onchange="localStorage.setItem('ul_reviewer_name',this.value);updateReviewerBadge()">
               <option value="">Select reviewer...</option>
               <option value="Matilda">Matilda</option>
               <option value="Ezra">Ezra</option>
@@ -71886,7 +71887,18 @@ const UL_BRIEFS = [
   if (pw) pw.value = localStorage.getItem('ul_password') || '';
   const reviewerInput = document.getElementById('ul-reviewer');
   if (reviewerInput) reviewerInput.value = localStorage.getItem('ul_reviewer_name') || '';
+  updateReviewerBadge();
 })();
+
+function updateReviewerBadge() {
+  const name = document.getElementById('ul-reviewer')?.value || localStorage.getItem('ul_reviewer_name') || '';
+  const badge = document.getElementById('reviewer-badge');
+  if (badge) {
+    badge.textContent = name;
+    badge.style.display = name ? 'inline-block' : 'none';
+  }
+  document.title = name ? `${name} · Nous Post Analysis` : 'Nous · Post Analysis';
+}
 
 // Pre-populate saved settings
 (function() {
@@ -72805,6 +72817,10 @@ async function ulSendToSlack(id, btn) {
     if (captionEnd < 0) captionEnd = lines.length;
     const caption = lines.slice(0, captionEnd).join('\n');
     const payload = {text, caption};
+    payload.reviewer = document.getElementById('ul-reviewer')?.value || '';
+    payload.influencer = el.dataset.name || '';
+    payload.brief = el.dataset.brief || '';
+    payload.frame = el.dataset.frame || '';
     if (queueItem && queueItem.base64) {
       payload.image_base64 = queueItem.base64;
       payload.filename = queueItem.filename || 'story.jpg';
@@ -72840,6 +72856,34 @@ async function ulSendToSlack(id, btn) {
         });
       } catch(feedbackErr) {
         console.warn('Auto-feedback save failed:', feedbackErr);
+      }
+
+      // Show "Mark Returned" button if we have a thread_ts
+      if (data.thread_ts) {
+        const markBtn = document.createElement('button');
+        markBtn.style.cssText = 'background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer;margin-left:6px';
+        markBtn.textContent = '📋 Mark Returned';
+        markBtn.onclick = async () => {
+          markBtn.disabled = true;
+          markBtn.textContent = 'Marking...';
+          const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
+          try {
+            const resp = await fetch(serverUrl + '/mark-returned', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
+              body: JSON.stringify({thread_ts: data.thread_ts})
+            });
+            const result = await resp.json();
+            if (result.ok) {
+              markBtn.textContent = '✅ Returned';
+              markBtn.style.background = '#16a34a';
+              markBtn.disabled = true;
+            }
+          } catch(e) {
+            markBtn.textContent = '❌ Error';
+          }
+        };
+        btn.parentElement.appendChild(markBtn);
       }
     } else {
       btn.textContent = 'Failed: ' + (data.error || 'unknown error');

@@ -10,6 +10,8 @@ import traceback
 import requests as http_requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from pathlib import Path
+from datetime import datetime, timezone
 import anthropic
 app = Flask(__name__)
 CORS(app)
@@ -21,6 +23,24 @@ NOTION_TOKEN = os.environ.get("NOTION_API_KEY") or os.environ.get("NOTION_TOKEN"
 NOTION_FEEDBACK_DB = os.environ.get("NOTION_FEEDBACK_DB", "0e7d5f8cb1be416d9dc23b68103ce739")
 NOTION_POSTS_DB = (os.environ.get("NOTION_POSTS_DB") or "").strip()
 NOTION_CAMPAIGNS_DB = (os.environ.get("NOTION_CAMPAIGNS_DB") or "").strip()
+
+REVIEWER_SLACK_IDS = {
+    "Bekki": "U02BW0MQ62Y",
+    "Ezra": "U08LM17R4A1",
+    "Matilda": "U04SZAJ5J0J",
+    "Tejan": "U0A1LAXQQ83",
+}
+
+PENDING_REVIEWS_FILE = Path(__file__).parent / "data" / "pending_reviews.json"
+
+def load_pending_reviews():
+    if PENDING_REVIEWS_FILE.exists():
+        return json.loads(PENDING_REVIEWS_FILE.read_text())
+    return {"reviews": {}}
+
+def save_pending_reviews(data):
+    PENDING_REVIEWS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    PENDING_REVIEWS_FILE.write_text(json.dumps(data, indent=2))
 
 BRIEFS = [
     {"brief": "Family/Lifestyle Brief 1", "frames": [1, 2, 3]},
@@ -1474,7 +1494,24 @@ def send_to_slack():
             if not reply_data.get("ok"):
                 return jsonify({"error": f"Analysis post failed: {reply_data.get('error')} (image was shared OK)"}), 502
 
-            return jsonify({"ok": True, "threaded": bool(file_ts)})
+            # Save pending review if reviewer provided
+            thread_ts = file_ts or reply_data.get("ts", "")
+            reviewer = data.get("reviewer", "").strip()
+            if reviewer and thread_ts:
+                pending = load_pending_reviews()
+                pending["reviews"][thread_ts] = {
+                    "reviewer": reviewer,
+                    "influencer": data.get("influencer", ""),
+                    "brief": data.get("brief", ""),
+                    "frame": data.get("frame", ""),
+                    "channel_id": channel_id,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "returned": False,
+                    "followup_sent": False,
+                }
+                save_pending_reviews(pending)
+
+            return jsonify({"ok": True, "threaded": bool(file_ts), "thread_ts": thread_ts, "channel_id": channel_id})
 
         except Exception as e:
             traceback.print_exc()
@@ -1497,7 +1534,22 @@ def send_to_slack():
 
     result = resp.json()
     if result.get("ok"):
-        return jsonify({"ok": True})
+        thread_ts = result.get("ts", "")
+        reviewer = data.get("reviewer", "").strip()
+        if reviewer and thread_ts:
+            pending = load_pending_reviews()
+            pending["reviews"][thread_ts] = {
+                "reviewer": reviewer,
+                "influencer": data.get("influencer", ""),
+                "brief": data.get("brief", ""),
+                "frame": data.get("frame", ""),
+                "channel_id": channel_id,
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "returned": False,
+                "followup_sent": False,
+            }
+            save_pending_reviews(pending)
+        return jsonify({"ok": True, "thread_ts": thread_ts, "channel_id": channel_id})
     else:
         return jsonify({"error": result.get("error", "Unknown Slack error")}), 502
 
@@ -1545,6 +1597,86 @@ def post_review():
     else:
         print(f"[REVIEW] Notion API error {resp.status_code}: {resp.text[:300]}")
         return jsonify({"ok": False, "error": f"Notion API error {resp.status_code}"}), 500
+
+
+@app.route("/mark-returned", methods=["POST"])
+def mark_returned():
+    data = request.get_json(force=True, silent=True) or {}
+    thread_ts = data.get("thread_ts", "").strip()
+    if not thread_ts:
+        return jsonify({"error": "thread_ts required"}), 400
+
+    pending = load_pending_reviews()
+    review = pending["reviews"].get(thread_ts)
+    if not review:
+        return jsonify({"error": "Review not found"}), 404
+
+    review["returned"] = True
+    review["returned_at"] = datetime.now(timezone.utc).isoformat()
+    save_pending_reviews(pending)
+
+    # Post confirmation in Slack thread
+    slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
+    if slack_token:
+        http_requests.post("https://slack.com/api/chat.postMessage",
+            headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
+            json={"channel": review["channel_id"], "thread_ts": thread_ts,
+                   "text": f"✅ Content returned by {review['influencer']} — marked complete by {review['reviewer']}."})
+
+    return jsonify({"ok": True})
+
+
+@app.route("/pending-reviews", methods=["GET"])
+def pending_reviews():
+    pending = load_pending_reviews()
+    reviewer = request.args.get("reviewer", "").strip()
+    reviews = pending.get("reviews", {})
+    if reviewer:
+        reviews = {k: v for k, v in reviews.items() if v.get("reviewer") == reviewer}
+    return jsonify({"ok": True, "reviews": reviews})
+
+
+def _followup_checker_loop():
+    """Check for pending follow-ups every 30 minutes."""
+    import time as _time
+    _time.sleep(60)  # Wait 1 min after startup
+    while True:
+        try:
+            _check_pending_followups()
+        except Exception as e:
+            print(f"[FOLLOWUP] Error: {e}")
+        _time.sleep(1800)  # 30 minutes
+
+
+def _check_pending_followups():
+    slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
+    if not slack_token:
+        return
+    pending = load_pending_reviews()
+    now = datetime.now(timezone.utc)
+    changed = False
+    for review_id, review in pending["reviews"].items():
+        if review.get("returned") or review.get("followup_sent"):
+            continue
+        created = datetime.fromisoformat(review["created_at"])
+        if (now - created).total_seconds() < 7200:  # 2 hours
+            continue
+        # Post follow-up in thread
+        slack_user_id = REVIEWER_SLACK_IDS.get(review.get("reviewer", ""), "")
+        mention = f"<@{slack_user_id}>" if slack_user_id else review.get("reviewer", "reviewer")
+        text = f"{mention} Has {review['influencer']} returned the amended content for {review['brief']} Frame {review['frame']}?"
+        resp = http_requests.post("https://slack.com/api/chat.postMessage",
+            headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
+            json={"channel": review["channel_id"], "thread_ts": review_id, "text": text})
+        if resp.json().get("ok"):
+            review["followup_sent"] = True
+            changed = True
+            print(f"[FOLLOWUP] Sent follow-up for {review['influencer']} to {review['reviewer']}")
+    if changed:
+        save_pending_reviews(pending)
+
+
+threading.Thread(target=_followup_checker_loop, daemon=True).start()
 
 
 if __name__ == "__main__":
