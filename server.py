@@ -291,6 +291,7 @@ The JSON structure must be exactly:
       "note": "<brief specific observation, 1-2 sentences>"
     }
   ],
+  "typos": ["<exact typo or grammar error found in the visible text, e.g. \"'you're' should be 'your'\", \"'NOUSE' should be 'NOUS'\">"],
   "summary": "<1 sentence summary>",
   "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
   "wrong_brief": "<ONLY if content is completely off-topic for the stated brief. Empty string otherwise.>"
@@ -301,6 +302,8 @@ The JSON structure must be exactly:
 "brief_fit" covers content/messaging issues: hook quality, discovery moment, what Nous does, savings claims, sign-up ease, @get_nous tag usage, tone.
 
 IMPORTANT: Include ALL items in both arrays — passing AND failing. Keep notes to 1 sentence max.
+
+"typos" — list every spelling mistake, grammar error, or wrong word visible in the image text. Quote the exact error and the correction. E.g. "'you're bills' should be 'your bills'", "'NOUSE' should be 'NOUS'". Empty array if no typos found.
 
 "improvements" — exactly 3 concise actionable bullet points.
 

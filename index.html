@@ -72609,9 +72609,10 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}${postDate ? ' \u00b7 ' + postDate : ''}*`,
     verdict === 'good' ? ':green_circle: *Good to go (0 fails)*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved (' + obvFails.length + ' fails)*' : ':red_circle: *Needs work (' + obvFails.length + ' fails)*',
   ];
-  if (briefFails.length) {
-    slackLines.push(`:ab: *Typos: ${briefFails.length}*`);
-    briefFails.forEach(f => slackLines.push('\u2022 ' + f.label + (f.note ? ' — ' + f.note : '')));
+  const typos = d.typos || [];
+  if (typos.length) {
+    slackLines.push(`:ab: *Typos: ${typos.length}*`);
+    typos.forEach(t => slackLines.push('\u2022 ' + t));
   } else {
     slackLines.push(`:ab: Typos: 0`);
   }
@@ -72681,10 +72682,10 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
     </div>
 
     <!-- TYPO COUNT -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;font-size:13px">
       <span style="font-weight:700;color:var(--muted)">Typos:</span>
-      <span style="font-weight:700;color:${briefFails.length ? 'var(--red)' : 'var(--green)'}">${briefFails.length}</span>
-      ${briefFails.length ? briefFails.map(f => '<span style="background:var(--red-bg);color:var(--red);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600">' + f.label + '</span>').join('') : '<span style="color:var(--green)">\u2713 None found</span>'}
+      <span style="font-weight:700;color:${(d.typos||[]).length ? 'var(--red)' : 'var(--green)'}">${(d.typos||[]).length}</span>
+      ${(d.typos||[]).length ? (d.typos||[]).map(t => '<span style="background:var(--red-bg);color:var(--red);padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600">' + t + '</span>').join('') : '<span style="color:var(--green)">\u2713 None found</span>'}
     </div>
 
     <!-- FEEDBACK -->
