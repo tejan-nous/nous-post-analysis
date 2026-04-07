@@ -72604,19 +72604,20 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   // Format date as dd - mm - yyyy for Slack
   const slackDate = postDate ? postDate.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) => `${day} - ${m} - ${y}`) : '';
 
-  // Build Slack text — compact: header, verdict, typos count, date, max 4 bullets
+  // Build Slack text — compact: header, verdict, typos, date, max 4 improvement bullets
   const typos = d.typos || [];
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
     verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? ':large_yellow_circle: *Could be improved*' : ':red_circle: *Needs work*',
-    `:ab: Typos: ${typos.length}${slackDate ? '  \u00b7  :calendar: ' + slackDate : ''}`,
-    '',
   ];
-  // Combine typos + improvements into max 4 short bullets
-  const allBullets = [];
-  typos.forEach(t => allBullets.push(t));
-  improvements.forEach(imp => allBullets.push(imp));
-  allBullets.slice(0, 4).forEach(b => slackLines.push('\u2022 ' + b));
+  if (typos.length) {
+    slackLines.push(`:ab: *Typos:* ${typos.join(', ')}`);
+  }
+  if (slackDate) {
+    slackLines.push(`:calendar: ${slackDate}`);
+  }
+  slackLines.push('');
+  improvements.slice(0, 4).forEach(imp => slackLines.push('\u2022 ' + imp));
   slackLines.push('');
   const slackText = slackLines.join('\n');
 
