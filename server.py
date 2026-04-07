@@ -895,6 +895,60 @@ def test_query():
         return jsonify({"error": str(e), "post_pids": post_pids}), 500
 
 
+@app.route("/notion/fetch-page-blocks", methods=["GET"])
+def fetch_page_blocks():
+    """Temp debug: fetch all blocks from a Notion page/database by ID."""
+    page_id = request.args.get("id", "").strip()
+    if not page_id:
+        return jsonify({"error": "id param required"}), 400
+    try:
+        all_blocks = []
+        cursor = None
+        for _ in range(20):
+            url = f"https://api.notion.com/v1/blocks/{page_id}/children?page_size=100"
+            if cursor:
+                url += f"&start_cursor={cursor}"
+            resp = http_requests.get(url, headers=_get_notion_headers(), timeout=30)
+            if resp.status_code != 200:
+                return jsonify({"error": resp.status_code, "body": resp.text[:500]}), 500
+            data = resp.json()
+            all_blocks.extend(data.get("results", []))
+            if not data.get("has_more"):
+                break
+            cursor = data.get("next_cursor")
+        return jsonify({"blocks": all_blocks, "count": len(all_blocks)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/notion/query-db", methods=["GET"])
+def query_db():
+    """Temp debug: query a Notion database by ID and return all rows."""
+    db_id = request.args.get("id", "").strip()
+    if not db_id:
+        return jsonify({"error": "id param required"}), 400
+    try:
+        all_results = []
+        cursor = None
+        for _ in range(10):
+            body = {"page_size": 100}
+            if cursor:
+                body["start_cursor"] = cursor
+            resp = http_requests.post(
+                f"https://api.notion.com/v1/databases/{db_id}/query",
+                headers=_get_notion_headers(), timeout=30, json=body)
+            if resp.status_code != 200:
+                return jsonify({"error": resp.status_code, "body": resp.text[:500]}), 500
+            data = resp.json()
+            all_results.extend(data.get("results", []))
+            if not data.get("has_more"):
+                break
+            cursor = data.get("next_cursor")
+        return jsonify({"results": all_results, "count": len(all_results)})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route("/notion/test-post-page", methods=["GET"])
 def test_post_page():
     """Debug: fetch one post WITHOUT filter_properties to see if ETM is there."""
