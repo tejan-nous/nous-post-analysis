@@ -72644,8 +72644,9 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   // Format date as dd - mm - yyyy for Slack
   const slackDate = postDate ? postDate.replace(/(\d{4})-(\d{2})-(\d{2})/, (_, y, m, day) => `${day} - ${m} - ${y}`) : '';
 
-  // Build Slack text — compact: header, verdict, typos, date, max 4 improvement bullets
+  // Build Slack text — compact: header, verdict, typos, date, reviewer, max 4 improvement bullets
   const typos = d.typos || [];
+  const reviewer = document.getElementById('ul-reviewer')?.value || '';
   const slackLines = [
     `*${brief} \u00b7 Frame ${frame}${name ? ' \u00b7 ' + name : ''}*`,
     verdict === 'good' ? ':green_circle: *Good to go*' : verdict === 'warn' ? `:large_yellow_circle: *Could be improved (${improvements.length} improvements)*` : `:red_circle: *Needs work (${improvements.length} improvements)*`,
@@ -72653,8 +72654,11 @@ function ulRenderResults(d, brief, frame, name, agent, dataUrl, idx, postDate) {
   if (typos.length) {
     slackLines.push(`:ab: *Typos:* ${typos.join(', ')}`);
   }
-  if (slackDate) {
-    slackLines.push(`:calendar: ${slackDate}`);
+  if (slackDate || reviewer) {
+    const parts = [];
+    if (slackDate) parts.push(`:calendar: ${slackDate}`);
+    if (reviewer) parts.push(`:bust_in_silhouette: Reviewed by ${reviewer}`);
+    slackLines.push(parts.join('  \u00b7  '));
   }
   slackLines.push('');
   improvements.slice(0, 4).forEach(imp => slackLines.push('\u2022 ' + imp));
