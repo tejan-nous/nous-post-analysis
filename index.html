@@ -72537,6 +72537,12 @@ async function ulAnalyse() {
   resultsEl.innerHTML = '';
   resultsEl.style.display = 'block';
 
+  // Add "Upload Another" button at the top of results
+  const uploadAnotherTop = document.createElement('div');
+  uploadAnotherTop.style.cssText = 'text-align:center;margin:0 0 24px';
+  uploadAnotherTop.innerHTML = `<button onclick="ulResetForm()" style="background:var(--nous);color:#fff;border:none;border-radius:8px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer">\u2191 Upload Another</button>`;
+  resultsEl.appendChild(uploadAnotherTop);
+
   const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
 
   for (let i = 0; i < ulImageQueue.length; i++) {
@@ -72582,11 +72588,6 @@ async function ulAnalyse() {
   btn.disabled = false;
   btn.textContent = ulImageQueue.length > 1 ? `Generate Feedback (${ulImageQueue.length} images)` : 'Generate Feedback';
 
-  // Add "Upload Another" button at the bottom of results
-  const uploadAnotherBtn = document.createElement('div');
-  uploadAnotherBtn.style.cssText = 'text-align:center;margin:32px 0';
-  uploadAnotherBtn.innerHTML = `<button onclick="ulResetForm()" style="background:var(--nous);color:#fff;border:none;border-radius:8px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer">\u2191 Upload Another</button>`;
-  resultsEl.appendChild(uploadAnotherBtn);
 }
 
 function ulResetForm() {
