@@ -320,6 +320,17 @@
     <p style="color:var(--muted);font-size:14px">Upload a story image to get instant brief compliance feedback</p>
   </div>
 
+  <!-- PENDING REVIEWS -->
+  <div id="ul-pending-reviews" style="display:none;margin-bottom:24px">
+    <div class="card">
+      <div class="card-head" style="font-size:12px;display:flex;justify-content:space-between;align-items:center">
+        <span>Awaiting content return</span>
+        <button onclick="ulLoadPendingReviews()" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:10px;color:var(--muted);cursor:pointer">Refresh</button>
+      </div>
+      <div id="ul-pending-list" class="card-body" style="padding:0"></div>
+    </div>
+  </div>
+
   <!-- INPUT CARD -->
   <div id="ul-input-card" class="card" style="margin-bottom:24px">
     <div class="card-body">
@@ -355,9 +366,8 @@
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:12px">
           <div>
             <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:6px">Brief</label>
-            <select id="ul-brief" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text)" onchange="this.style.borderColor='var(--border)';var w=document.getElementById('ul-brief-warning');if(w)w.style.display='none'">
-              <option value="">Select brief...</option>
-            </select>
+            <input id="ul-brief" list="ul-brief-list" placeholder="Type or select brief..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);box-sizing:border-box" oninput="this.style.borderColor='var(--border)';var w=document.getElementById('ul-brief-warning');if(w)w.style.display='none'" autocomplete="off">
+            <datalist id="ul-brief-list"></datalist>
             <div id="ul-brief-warning" style="display:none;font-size:10px;color:#f59e0b;margin-top:3px"></div>
           </div>
           <div>
@@ -71951,12 +71961,12 @@ const UL_BRIEFS = [
   '👨‍👩‍👧‍👦 Family: No experiment',
 ];
 (function() {
-  const sel = document.getElementById('ul-brief');
-  if (!sel) return;
+  const dl = document.getElementById('ul-brief-list');
+  if (!dl) return;
   UL_BRIEFS.forEach(b => {
     const opt = document.createElement('option');
-    opt.value = b; opt.textContent = b;
-    sel.appendChild(opt);
+    opt.value = b;
+    dl.appendChild(opt);
   });
   // Restore settings from localStorage
   const su = document.getElementById('ul-server-url');
@@ -72212,57 +72222,31 @@ function ulRefreshNotion() {
     const frameSelect = document.getElementById('ul-frame');
     if (frameSelect && post.frame) frameSelect.value = String(post.frame);
 
-    // Match brief to dropdown
-    const briefSelect = document.getElementById('ul-brief');
+    // Auto-fill brief
+    const briefInput = document.getElementById('ul-brief');
     const briefWarning = document.getElementById('ul-brief-warning');
-    if (briefSelect) {
+    if (briefInput) {
       if (post.brief) {
+        // Try to match a datalist option, otherwise use the raw brief name
         const briefName = post.brief.trim();
-        let matched = false;
-        // Strategy 1: Exact match (strip emoji prefix)
-        for (const opt of briefSelect.options) {
-          if (!opt.value) continue;
-          const optText = opt.value.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, '');
-          if (optText.toLowerCase() === briefName.toLowerCase()) {
-            briefSelect.value = opt.value; matched = true; break;
-          }
-        }
-        // Strategy 2: Partial match
-        if (!matched) {
-          const briefLower = briefName.toLowerCase();
-          for (const opt of briefSelect.options) {
-            if (!opt.value) continue;
-            const optLower = opt.value.toLowerCase();
-            if (optLower.includes(briefLower) || briefLower.includes(optLower.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, ''))) {
-              briefSelect.value = opt.value; matched = true; break;
+        const dl = document.getElementById('ul-brief-list');
+        let matched = '';
+        if (dl) {
+          for (const opt of dl.options) {
+            if (opt.value.toLowerCase().includes(briefName.toLowerCase()) || briefName.toLowerCase().includes(opt.value.replace(/^[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]\s*/u, '').toLowerCase())) {
+              matched = opt.value; break;
             }
           }
         }
-        // Strategy 3: Keyword fallback
-        if (!matched) {
-          const searchText = (briefName + ' ' + (post.campaign_name || '')).toLowerCase();
-          const keywords = ['family', 'home', 'celebrity', 'fashion', 'lifestyle', 'repeat', 'march'];
-          for (const opt of briefSelect.options) {
-            if (!opt.value) continue;
-            const optLower = opt.value.toLowerCase();
-            for (const kw of keywords) {
-              if (searchText.includes(kw) && optLower.includes(kw)) {
-                briefSelect.value = opt.value; matched = true; break;
-              }
-            }
-            if (matched) break;
-          }
-        }
-        if (briefWarning) briefWarning.style.display = matched ? 'none' : 'block';
-        if (!matched && briefWarning) briefWarning.textContent = 'Brief "' + briefName + '" not matched — please select manually';
+        briefInput.value = matched || briefName;
+        if (briefWarning) briefWarning.style.display = 'none';
       } else {
-        // No ETM assigned — flag for user
-        briefSelect.value = '';
+        briefInput.value = '';
         if (briefWarning) {
           briefWarning.style.display = 'block';
-          briefWarning.textContent = 'No brief assigned in Notion — please select manually';
+          briefWarning.textContent = 'No brief assigned in Notion — please type or select one';
         }
-        briefSelect.style.borderColor = '#f59e0b';
+        briefInput.style.borderColor = '#f59e0b';
       }
     }
   }
@@ -72517,7 +72501,7 @@ async function ulAnalyse() {
     summaryBar.id = 'ul-collapsed-summary';
     inputCard.parentNode.insertBefore(summaryBar, inputCard);
   }
-  const briefLabel = document.getElementById('ul-brief').selectedOptions[0]?.text || '';
+  const briefLabel = document.getElementById('ul-brief').value || '';
   summaryBar.innerHTML = `<div class="card" style="margin-bottom:24px;cursor:pointer" onclick="document.getElementById('ul-input-card').style.display='';this.style.display='none'">
     <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px">
       <div style="display:flex;align-items:center;gap:16px;font-size:13px">
