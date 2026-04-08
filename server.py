@@ -1641,6 +1641,43 @@ def mark_returned():
     return jsonify({"ok": True})
 
 
+@app.route("/slack/interactions", methods=["POST"])
+def slack_interactions():
+    """Handle Slack interactive button clicks (Block Kit actions)."""
+    import urllib.parse as _urlparse
+    payload = json.loads(request.form.get("payload", "{}"))
+    action = (payload.get("actions") or [{}])[0]
+    action_id = action.get("action_id", "")
+    user_name = payload.get("user", {}).get("name", "someone")
+
+    if action_id == "mark_returned":
+        thread_ts = action.get("value", "")
+        pending = load_pending_reviews()
+        review = pending["reviews"].get(thread_ts)
+        if review and not review.get("returned"):
+            review["returned"] = True
+            review["returned_at"] = datetime.now(timezone.utc).isoformat()
+            save_pending_reviews(pending)
+
+            # Post confirmation in the thread
+            slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
+            if slack_token:
+                http_requests.post("https://slack.com/api/chat.postMessage",
+                    headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
+                    json={"channel": review["channel_id"], "thread_ts": thread_ts,
+                           "text": f"\u2705 Content returned by {review['influencer']} \u2014 marked by {user_name}."})
+
+            # Update the original message to remove the button
+            resp_url = payload.get("response_url")
+            if resp_url:
+                http_requests.post(resp_url, json={
+                    "replace_original": True,
+                    "text": f"\u2705 *{review['influencer']}* \u2014 content returned (marked by {user_name})",
+                })
+
+    return "", 200
+
+
 @app.route("/pending-reviews", methods=["GET"])
 def pending_reviews():
     pending = load_pending_reviews()
@@ -1686,9 +1723,15 @@ def _check_pending_followups():
         slack_user_id = REVIEWER_SLACK_IDS.get(review.get("reviewer", ""), "")
         mention = f"<@{slack_user_id}>" if slack_user_id else review.get("reviewer", "reviewer")
         text = f"{mention} Has {review['influencer']} returned the amended content for {review['brief']} Frame {review['frame']}?"
+        blocks = [
+            {"type": "section", "text": {"type": "mrkdwn", "text": text}},
+            {"type": "actions", "elements": [
+                {"type": "button", "text": {"type": "plain_text", "text": "\u2705 Mark Returned"}, "style": "primary", "action_id": "mark_returned", "value": review_id},
+            ]},
+        ]
         resp = http_requests.post("https://slack.com/api/chat.postMessage",
             headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
-            json={"channel": review["channel_id"], "thread_ts": review_id, "text": text})
+            json={"channel": review["channel_id"], "thread_ts": review_id, "text": text, "blocks": blocks})
         if resp.json().get("ok"):
             review["followup_sent"] = True
             changed = True
