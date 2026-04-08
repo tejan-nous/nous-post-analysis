@@ -72047,6 +72047,16 @@ function ulRefreshNotion() {
   const MAX_RETRIES = 36; // retry for ~6 min on first load (cold Railway starts can take 3-5 min)
 
   function fetchUpcomingPosts() {
+    // If we already have embedded upcoming posts data (from the daily GitHub Action sync),
+    // don't fetch from Railway — the embedded data has correct frame numbers.
+    if (upcomingPosts.length > 0) {
+      _notionPosts = upcomingPosts;
+      _notionPostsLoaded = true;
+      if (spinner) spinner.style.display = 'none';
+      if (check) { check.style.display = 'block'; setTimeout(() => check.style.display = 'none', 3000); }
+      if (statusEl) { statusEl.textContent = upcomingPosts.length + ' posts loaded'; setTimeout(() => statusEl.textContent = '', 3000); }
+      return;
+    }
     const base = serverUrl();
     if (!base) return;
     if (spinner) spinner.style.display = 'block';
