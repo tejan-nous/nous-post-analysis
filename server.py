@@ -1722,7 +1722,7 @@ def _check_pending_followups():
         # Post follow-up in thread
         slack_user_id = REVIEWER_SLACK_IDS.get(review.get("reviewer", ""), "")
         mention = f"<@{slack_user_id}>" if slack_user_id else review.get("reviewer", "reviewer")
-        text = f"{mention} Has {review['influencer']} returned the amended content for {review['brief']} Frame {review['frame']}?"
+        text = f"{mention} Have you returned the amended content for this post?"
         blocks = [
             {"type": "section", "text": {"type": "mrkdwn", "text": text}},
             {"type": "actions", "elements": [
