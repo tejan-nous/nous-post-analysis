@@ -291,7 +291,7 @@ The JSON structure must be exactly:
       "note": "<brief specific observation, 1-2 sentences>"
     }
   ],
-  "typos": ["<only clear spelling mistakes, e.g. \"'NOUSE' should be 'NOUS'\", \"'you're bills' should be 'your bills'\">"],
+  "typos": ["<just the misspelled word, e.g. \"NOUSE\", \"you're bills\">"],
   "summary": "<1 sentence summary>",
   "improvements": ["<improvement 1>", "<improvement 2>", "<improvement 3>"],
   "wrong_brief": "<ONLY if content is completely off-topic for the stated brief. Empty string otherwise.>"
@@ -303,7 +303,7 @@ The JSON structure must be exactly:
 
 IMPORTANT: Include ALL items in both arrays — passing AND failing. Keep notes to 1 sentence max.
 
-"typos" — ONLY flag clear spelling mistakes (e.g. 'NOUSE' instead of 'NOUS', 'you're' instead of 'your'). Do NOT flag grammar, tone, sentence structure, capitalisation of names, or informal language — influencers write in their own voice and that's fine. Only actual misspelled words. Empty array if none found.
+"typos" — ONLY actual misspelled words. Return just the wrong word/phrase, not an explanation (e.g. "NOUSE", "you're bills"). The improvements array can explain fixes if needed. Do NOT flag grammar, tone, capitalisation, or informal language. Empty array if none.
 
 "improvements" — exactly 3 concise actionable bullet points.
 
