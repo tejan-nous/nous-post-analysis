@@ -74763,8 +74763,8 @@ function ulRefreshNotion() {
       </div>` +
       posts.map((p, i) =>
         `<div class="ul-post-option" data-idx="${i}" style="padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s;display:flex;justify-content:space-between;align-items:center">
-          <span style="font-weight:600">Frame ${p.frame}</span>
-          <span style="font-size:11px;color:var(--muted)">${fmt(p.post_date)}${p.brief ? ' · ' + p.brief : ''}</span>
+          <span style="font-weight:600">${fmt(p.post_date)}</span>
+          <span style="font-size:11px;color:var(--muted)">${p.brief || ''}</span>
         </div>`
       ).join('');
     dropdown.style.display = 'block';
@@ -74801,9 +74801,8 @@ function ulRefreshNotion() {
     const dateInput = document.getElementById('ul-post-date');
     if (dateInput && post.post_date) dateInput.value = post.post_date;
 
-    // Auto-fill frame
-    const frameSelect = document.getElementById('ul-frame');
-    if (frameSelect && post.frame) frameSelect.value = String(post.frame);
+    // Frame is left for the user to set manually in the sidebar — auto-derived
+    // values from Notion's Post Sequence formula were unreliable for repeat campaigns.
 
     // Auto-fill brief
     const briefInput = document.getElementById('ul-brief');
