@@ -1688,6 +1688,43 @@ def pending_reviews():
     return jsonify({"ok": True, "reviews": reviews})
 
 
+@app.route("/slack/force-followup", methods=["POST", "GET"])
+def force_followup():
+    """TEMP debug: run the followup check ignoring 2h threshold + working-hours window."""
+    slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
+    if not slack_token:
+        return jsonify({"error": "SLACK_BOT_TOKEN missing"}), 500
+    pending = load_pending_reviews()
+    sent, skipped = [], []
+    changed = False
+    for review_id, review in pending["reviews"].items():
+        if review.get("returned") or review.get("followup_sent"):
+            skipped.append({"id": review_id, "reason": "returned" if review.get("returned") else "followup_sent"})
+            continue
+        slack_user_id = REVIEWER_SLACK_IDS.get(review.get("reviewer", ""), "")
+        mention = f"<@{slack_user_id}>" if slack_user_id else review.get("reviewer", "reviewer")
+        text = f"{mention} Have you returned the amended content for this post?"
+        blocks = [
+            {"type": "section", "text": {"type": "mrkdwn", "text": text}},
+            {"type": "actions", "elements": [
+                {"type": "button", "text": {"type": "plain_text", "text": "✅ Mark Returned"}, "style": "primary", "action_id": "mark_returned", "value": review_id},
+            ]},
+        ]
+        resp = http_requests.post("https://slack.com/api/chat.postMessage",
+            headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
+            json={"channel": review["channel_id"], "thread_ts": review_id, "text": text, "blocks": blocks})
+        body = resp.json()
+        if body.get("ok"):
+            review["followup_sent"] = True
+            changed = True
+            sent.append({"id": review_id, "reviewer": review.get("reviewer"), "influencer": review.get("influencer")})
+        else:
+            skipped.append({"id": review_id, "reason": f"slack_error: {body.get('error')}"})
+    if changed:
+        save_pending_reviews(pending)
+    return jsonify({"ok": True, "sent": sent, "skipped": skipped, "total_pending": len(pending["reviews"])})
+
+
 def _followup_checker_loop():
     """Check for pending follow-ups every 30 minutes."""
     import time as _time
