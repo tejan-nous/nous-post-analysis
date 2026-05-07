@@ -75008,10 +75008,7 @@ function ulRenderQueue() {
         <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Brief</div>
         <select data-idx="${i}" data-field="brief" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text)">${ulBriefOptions(item.brief)}</select>
       </div>
-      <div>
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px">Frame</div>
-        <select data-idx="${i}" data-field="frame" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;color:var(--text)">${ulFrameOptions(item.frame)}</select>
-      </div>`;
+      `;
     controls.querySelectorAll('select[data-idx]').forEach(sel => {
       sel.addEventListener('change', () => ulUpdateQueueItem(+sel.dataset.idx, sel.dataset.field, sel.value));
     });
@@ -75057,14 +75054,13 @@ async function ulAnalyse() {
   const defaultReview = document.getElementById('ul-default-review').value;
   if (!defaultBrief) { alert('Please select a brief in the defaults'); document.getElementById('ul-brief').focus(); return; }
   for (let i = 0; i < ulImageQueue.length; i++) {
+    // Frame ALWAYS comes from the sidebar dropdown — no per-image override.
+    ulImageQueue[i].frame = defaultFrame;
     if (!ulImageQueue[i].overridden) {
       ulImageQueue[i].brief = defaultBrief;
-      ulImageQueue[i].frame = defaultFrame;
       ulImageQueue[i].reviewType = defaultReview;
     } else {
-      // Still fill any blanks from defaults
       if (!ulImageQueue[i].brief) ulImageQueue[i].brief = defaultBrief;
-      if (!ulImageQueue[i].frame) ulImageQueue[i].frame = defaultFrame;
       if (!ulImageQueue[i].reviewType) ulImageQueue[i].reviewType = defaultReview;
     }
   }
