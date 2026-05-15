@@ -305,7 +305,24 @@ IMPORTANT: Include ALL items in both arrays — passing AND failing. Keep notes 
 
 "typos" — ONLY actual misspelled words. Return just the wrong word/phrase, not an explanation (e.g. "NOUSE", "you're bills"). The improvements array can explain fixes if needed. Do NOT flag grammar, tone, capitalisation, or informal language. Empty array if none.
 
-"improvements" — exactly 3 concise actionable bullet points.
+"improvements" — exactly 3 short bullets that read like a teammate's Slack reply. STRICT rules:
+- Max ~12 words per bullet (~80 characters). Be ruthless about length.
+- Start with an imperative verb: "Move...", "Add...", "Replace...", "Cut...", "Swap...".
+- Do NOT start with "Consider", "Perhaps", "Make sure to", "Try to" — those are hedges.
+- Do NOT add explanation tails ("...to make it clearer", "...so viewers understand", "...for credibility"). The action speaks for itself.
+- Quoted suggestions are fine but keep them short. Paste the literal replacement phrase, do not describe it.
+- One change per bullet. Don't pack multiple asks into one line.
+- Match the team's casual, direct Slack voice — short sentences, no corporate softening.
+
+Examples of the difference:
+BAD (too long, explanatory): "Replace 'already saving' with a specific approved figure (e.g. '£781 a year' or '£500+') to make the savings claim concrete."
+GOOD (short, direct): "Replace 'already saving' with '£781/yr' or '£500+'"
+
+BAD: "Consider adding a brief discovery line (e.g. 'a friend told me about') to make the find feel more natural and less like a direct brand endorsement"
+GOOD: "Add a discovery line — try 'a friend told me about it'"
+
+BAD: "Name the bill categories Nous covers — add energy, broadband, and phone/mobile explicitly so the scope of the service is clear."
+GOOD: "Name the bills covered: energy, broadband, phone"
 
 Do NOT include "copy_rewrite", "email", or any verdict field. Do NOT include warnings, caveats, or disclaimer language. JSON only.
 """
