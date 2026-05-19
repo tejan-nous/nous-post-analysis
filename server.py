@@ -54,6 +54,7 @@ BRIEFS = [
     {"brief": "Fashion Brief 2", "frames": [1, 2, 3]},
     {"brief": "Lifestyle Brief 1", "frames": [1, 2, 3]},
     {"brief": "Nous March 2026", "frames": [1, 2, 3]},
+    {"brief": "Nous Reminder Post", "frames": [1]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -229,6 +230,26 @@ BRIEF_FRAME_GUIDANCE = {
             ],
         },
     },
+    "nous reminder": {
+        # Single-frame follow-up post. Comes AFTER the influencer's original 3-frame campaign.
+        # Audience reaction angle: reference DMs from people who signed up after the first post.
+        # Brief copy itself opens with "@get_nous" — that's intentional and correct here.
+        1: {
+            "title": "Audience reaction — follow-up nudge",
+            "visual": "A lifestyle shot or selfie — ideally with a screenshot of a follower DM reacting to the original post",
+            "cta": "Save with Nous",
+            "messaging_focus": "FOLLOW-UP REMINDER BRIEF — single-frame follow-up to a previous campaign post. Expected copy: reaction to audience DMs about signing up to @get_nous, soft recap of how Nous found better deals across energy, broadband, mobile, savings figure (hundreds), nudge to check it out. NOT a fresh discovery story — this is a callback that assumes the audience saw the first post.",
+            "skip_criteria": ["problem_hook", "discovery_moment", "sign_up_ease"],
+            "special_rules": [
+                "FOLLOW-UP REMINDER BRIEF: this is a SINGLE-FRAME follow-up, not Frame 1 of a 3-frame sequence. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rules.",
+                "@get_nous SHOULD appear in body text and MAY appear in the opening line (e.g. 'loving the messages from everyone who signed up to @get_nous last week'). Do NOT fail criterion 6b (@get_nous in opening line) for this brief.",
+                "Do NOT require a fresh problem-aware hook. A light overpaying recap ('I had no idea I was paying too much') is enough — do not flag absence of a strong problem-first hook.",
+                "Required content: @get_nous tag, savings figure (hundreds / £500+ / personal saving), at least 2 bill categories (energy, broadband, mobile), and an audience-reaction angle (DMs, messages from followers, or callback to the first post).",
+                "Visual ideally includes a DM screenshot from a follower reacting to the first post — but this is a soft recommendation, NOT a fail. Always pass criterion 9 (visuals).",
+                "CTA button text: 'Save with Nous'.",
+            ],
+        },
+    },
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
@@ -333,7 +354,7 @@ Evaluate this Instagram Story image against the following criteria. For each sub
 IMPORTANT — Frame-specific guidance:
 Each brief has 3 frames. NOT all criteria apply equally to every frame:
 
-IMPORTANT OVERRIDE: If the brief guidance below contains a SPECIAL RULE saying "IDENTICAL MESSAGING BRIEF" or similar, that overrides ALL of the default per-frame rules below. Apply only what the brief guidance says for that frame.
+IMPORTANT OVERRIDE: If the brief guidance below contains a SPECIAL RULE saying "IDENTICAL MESSAGING BRIEF", "FOLLOW-UP REMINDER BRIEF", or similar, that overrides ALL of the default per-frame rules below. Apply only what the brief guidance says for that frame.
 
 Frame 1 (Hook): This is the opening story. It MUST have a problem-aware hook, personal confession, or shock stat. It should NOT mention Nous or @get_nous yet. Frame 1 should END ON THE PROBLEM, not the solution — do NOT let the influencer leak the Nous explanation, savings details, or how-it-works into Frame 1. If Frame 1 starts introducing the solution, flag it and suggest trimming back to leave the discovery for Frame 2. Criteria 1 (Problem-aware hook) is critical here. Criteria 3-5 (What Nous does, Savings claim, Sign-up ease) are NOT expected on Frame 1 — do NOT fail them if absent, but DO flag if the solution is being introduced too early.
 
