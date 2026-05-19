@@ -59,6 +59,30 @@ BRIEFS = [
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
 # Keys: brief name prefix (matched case-insensitively) → frame number → guidance dict
+
+# Single-frame follow-up post. Comes AFTER the influencer's original 3-frame campaign.
+# Aliased to multiple keys below ("follow up", "nous reminder") because Notion's
+# rollup may surface either the campaign name ("🏎️ Follow Up Post") or the
+# linked brief title ("Nous Reminder Post") depending on how the campaign is
+# configured / whether the ETM fallback fires.
+_FOLLOW_UP_GUIDANCE = {
+    1: {
+        "title": "Audience reaction — follow-up nudge",
+        "visual": "A lifestyle shot or selfie — ideally with a screenshot of a follower DM reacting to the original post",
+        "cta": "Save with Nous",
+        "messaging_focus": "FOLLOW-UP REMINDER BRIEF — single-frame follow-up to a previous campaign post. Expected copy: reaction to audience DMs about signing up to @get_nous, soft recap of how Nous found better deals across energy, broadband, mobile, savings figure (hundreds), nudge to check it out. NOT a fresh discovery story — this is a callback that assumes the audience saw the first post.",
+        "skip_criteria": ["problem_hook", "discovery_moment", "sign_up_ease"],
+        "special_rules": [
+            "FOLLOW-UP REMINDER BRIEF: this is a SINGLE-FRAME follow-up, not Frame 1 of a 3-frame sequence. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rules.",
+            "@get_nous SHOULD appear in body text and MAY appear in the opening line (e.g. 'loving the messages from everyone who signed up to @get_nous last week'). Do NOT fail criterion 6b (@get_nous in opening line) for this brief.",
+            "Do NOT require a fresh problem-aware hook. A light overpaying recap ('I had no idea I was paying too much') is enough — do not flag absence of a strong problem-first hook.",
+            "Required content: @get_nous tag, savings figure (hundreds / £500+ / personal saving), at least 2 bill categories (energy, broadband, mobile), and an audience-reaction angle (DMs, messages from followers, or callback to the first post).",
+            "Visual ideally includes a DM screenshot from a follower reacting to the first post — but this is a soft recommendation, NOT a fail. Always pass criterion 9 (visuals).",
+            "CTA button text: 'Save with Nous'.",
+        ],
+    },
+}
+
 BRIEF_FRAME_GUIDANCE = {
     "family": {
         1: {
@@ -230,26 +254,8 @@ BRIEF_FRAME_GUIDANCE = {
             ],
         },
     },
-    "nous reminder": {
-        # Single-frame follow-up post. Comes AFTER the influencer's original 3-frame campaign.
-        # Audience reaction angle: reference DMs from people who signed up after the first post.
-        # Brief copy itself opens with "@get_nous" — that's intentional and correct here.
-        1: {
-            "title": "Audience reaction — follow-up nudge",
-            "visual": "A lifestyle shot or selfie — ideally with a screenshot of a follower DM reacting to the original post",
-            "cta": "Save with Nous",
-            "messaging_focus": "FOLLOW-UP REMINDER BRIEF — single-frame follow-up to a previous campaign post. Expected copy: reaction to audience DMs about signing up to @get_nous, soft recap of how Nous found better deals across energy, broadband, mobile, savings figure (hundreds), nudge to check it out. NOT a fresh discovery story — this is a callback that assumes the audience saw the first post.",
-            "skip_criteria": ["problem_hook", "discovery_moment", "sign_up_ease"],
-            "special_rules": [
-                "FOLLOW-UP REMINDER BRIEF: this is a SINGLE-FRAME follow-up, not Frame 1 of a 3-frame sequence. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rules.",
-                "@get_nous SHOULD appear in body text and MAY appear in the opening line (e.g. 'loving the messages from everyone who signed up to @get_nous last week'). Do NOT fail criterion 6b (@get_nous in opening line) for this brief.",
-                "Do NOT require a fresh problem-aware hook. A light overpaying recap ('I had no idea I was paying too much') is enough — do not flag absence of a strong problem-first hook.",
-                "Required content: @get_nous tag, savings figure (hundreds / £500+ / personal saving), at least 2 bill categories (energy, broadband, mobile), and an audience-reaction angle (DMs, messages from followers, or callback to the first post).",
-                "Visual ideally includes a DM screenshot from a follower reacting to the first post — but this is a soft recommendation, NOT a fail. Always pass criterion 9 (visuals).",
-                "CTA button text: 'Save with Nous'.",
-            ],
-        },
-    },
+    "follow up": _FOLLOW_UP_GUIDANCE,
+    "nous reminder": _FOLLOW_UP_GUIDANCE,
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
