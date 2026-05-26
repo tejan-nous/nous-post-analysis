@@ -4851,6 +4851,69 @@
     }
   },
   {
+    "id": "366e4fd0-8136-8001-ba15-d58407ce8776",
+    "name": "Jordan T.K Rigby",
+    "post_sequence": null,
+    "date": "6 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/366e4fd081368001ba15d58407ce8776",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "368e4fd0-8136-80c5-9455-e1488e5ffca5",
     "name": "Chris Cespedes Affiliate.",
     "post_sequence": null,
@@ -10143,69 +10206,6 @@
     }
   },
   {
-    "id": "366e4fd0-8136-8001-ba15-d58407ce8776",
-    "name": "Jordan T.K Rigby",
-    "post_sequence": null,
-    "date": "26 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/366e4fd081368001ba15d58407ce8776",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
     "id": "358e4fd0-8136-8095-a207-d7da3c62c983",
     "name": "Vicky Burton",
     "post_sequence": null,
@@ -10411,9 +10411,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 11,
+      "delegations": 8,
+      "landing_page_views": 48,
       "post_fee": null,
       "ecac": null
     },
@@ -10537,9 +10537,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": 115,
+      "accounts_created": 1,
+      "delegations": 1,
+      "landing_page_views": 189,
       "post_fee": null,
       "ecac": null
     },
@@ -10600,9 +10600,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 12,
-      "delegations": 6,
-      "landing_page_views": 138,
+      "accounts_created": 15,
+      "delegations": 8,
+      "landing_page_views": 165,
       "post_fee": null,
       "ecac": null
     },
@@ -10665,7 +10665,7 @@
     "performance": {
       "accounts_created": 13,
       "delegations": 9,
-      "landing_page_views": 30,
+      "landing_page_views": 35,
       "post_fee": null,
       "ecac": null
     },
@@ -10726,9 +10726,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 4,
-      "delegations": null,
-      "landing_page_views": 44,
+      "accounts_created": 6,
+      "delegations": 2,
+      "landing_page_views": 62,
       "post_fee": null,
       "ecac": null
     },
@@ -10789,9 +10789,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 24,
-      "delegations": 12,
-      "landing_page_views": 67,
+      "accounts_created": 26,
+      "delegations": 13,
+      "landing_page_views": 78,
       "post_fee": null,
       "ecac": null
     },
@@ -10854,7 +10854,7 @@
     "performance": {
       "accounts_created": 4,
       "delegations": 2,
-      "landing_page_views": 19,
+      "landing_page_views": 30,
       "post_fee": null,
       "ecac": null
     },
@@ -10915,8 +10915,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
+      "accounts_created": 30,
+      "delegations": 24,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
