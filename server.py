@@ -55,6 +55,11 @@ BRIEFS = [
     {"brief": "Lifestyle Brief 1", "frames": [1, 2, 3]},
     {"brief": "Nous March 2026", "frames": [1, 2, 3]},
     {"brief": "Nous Reminder Post", "frames": [1]},
+    {"brief": "The 'Do It Yourself' fail", "frames": [1, 2, 3]},
+    {"brief": "Mystery variants", "frames": [1, 2, 3]},
+    {"brief": "Specific before/after savings number", "frames": [1, 2, 3]},
+    {"brief": "Total savings number first", "frames": [1, 2, 3]},
+    {"brief": "Energy only", "frames": [1, 2, 3]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -79,6 +84,200 @@ _FOLLOW_UP_GUIDANCE = {
             "Required content: @get_nous tag, savings figure (hundreds / £500+ / personal saving), at least 2 bill categories (energy, broadband, mobile), and an audience-reaction angle (DMs, messages from followers, or callback to the first post).",
             "Visual ideally includes a DM screenshot from a follower reacting to the first post — but this is a soft recommendation, NOT a fail. Always pass criterion 9 (visuals).",
             "CTA button text: 'Save with Nous'.",
+        ],
+    },
+}
+
+# "Do It Yourself fail" brief — influencer tried to sort cheaper bills themselves,
+# got overwhelmed, gave up, then Nous did it for them. All 3 frames are full
+# stories. Frame 1 unusually uses "Start saving here!" CTA despite the body
+# mentioning Nous — this is intentional.
+_DIY_FAIL_GUIDANCE = {
+    1: {
+        "title": "Tried doing it myself → gave up → Nous sorted it",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Start saving here!",
+        "messaging_focus": "DIY-FAIL BRIEF — full story on Frame 1. Personal 'spent a whole day trying to sort cheaper bills, got confused, gave up' angle. Then friend recommendation → @get_nous did all of it (energy, broadband, phone). ~£700 saved with zero effort. Frame 1 CTA is 'Start saving here!' NOT 'Save with Nous'.",
+        "skip_criteria": ["discovery_moment"],
+        "special_rules": [
+            "DIY-FAIL BRIEF: Frame 1 is a FULL STORY, not a hook-only frame. @get_nous SHOULD appear in body. Do NOT apply default 'Frame 1 = no Nous mention' rule.",
+            "Frame 1 CTA button text MUST be 'Start saving here!' NOT 'Save with Nous'.",
+            "Hook angle: 'tried doing it myself, got overwhelmed, gave up'. Followed by Nous discovery. Both should be present.",
+            "Required: @get_nous tag, ~£700 savings figure, all 3 bill types (energy, broadband, phone), zero-effort framing.",
+        ],
+    },
+    2: {
+        "title": "Energy news → tried to compare → gave up → Nous did it",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "DIY-FAIL BRIEF Frame 2 — Hook: energy prices in the news, started comparing tariffs, got overwhelmed, gave up. Then @get_nous did the comparing and switching. Saved ~£700 across all bills in <5 min. 'Chronic put-it-offer' relatability.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "DIY-FAIL BRIEF Frame 2: full story with @get_nous and ~£700 savings.",
+        ],
+    },
+    3: {
+        "title": "Got overwhelmed → Nous sorted it → £700 saved",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "DIY-FAIL BRIEF Frame 3 — Tight recap. 'Tried to sort cheaper bills, got overwhelmed, gave up.' Then 'something' did the comparing and switching. ~£700 saved, 5 min instead of a whole weekend.",
+        "skip_criteria": ["problem_hook", "discovery_moment"],
+        "special_rules": [
+            "DIY-FAIL BRIEF Frame 3: callback recap with the DIY angle and savings figure.",
+        ],
+    },
+}
+
+# "Mystery variants" brief — DO NOT mention or tag Nous in the body copy.
+# CTA button still says 'Save with Nous' on Frames 2-3 but the body stays mysterious.
+_MYSTERY_GUIDANCE = {
+    1: {
+        "title": "Mystery — saved £600 without naming Nous",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Start saving here!",
+        "messaging_focus": "MYSTERY BRIEF — do NOT mention Nous or @get_nous in body. 'Finally did some boring life admin and saved £600 a year' angle. Mysterious, intriguing tone. Frame 1 CTA: 'Start saving here!'",
+        "skip_criteria": ["problem_hook", "discovery_moment", "what_nous_does", "get_nous_tag"],
+        "special_rules": [
+            "MYSTERY BRIEF: body MUST NOT mention Nous, @get_nous, or any brand name. PASS criterion 6 (@get_nous tag) automatically. Do NOT flag the absence of Nous mention.",
+            "Frame 1 CTA button text MUST be 'Start saving here!' NOT 'Save with Nous'.",
+            "Required: savings figure (~£600), short intriguing copy, no Nous mention anywhere in text.",
+        ],
+    },
+    2: {
+        "title": "Mystery — overpaying revelation, no Nous mention",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "MYSTERY BRIEF Frame 2 — body MUST NOT mention Nous. 'Why did no one tell me I'd been overpaying??' Saved ~£600 across energy, broadband, phone. CTA button is 'Save with Nous' but body stays mysterious.",
+        "skip_criteria": ["problem_hook", "discovery_moment", "get_nous_tag"],
+        "special_rules": [
+            "MYSTERY BRIEF: body MUST NOT mention Nous or @get_nous. The CTA button does say 'Save with Nous' — that's correct. PASS criterion 6 (@get_nous tag).",
+            "Required: savings figure, all 3 bill types mentioned, no Nous mention in body.",
+        ],
+    },
+    3: {
+        "title": "Mystery — annoyed they didn't do it sooner",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "MYSTERY BRIEF Frame 3 — body MUST NOT mention Nous. 'Was paying way too much, took 5 min to sort, saving ~£600. Annoyed I didn't do it sooner.' Conversational call to check.",
+        "skip_criteria": ["problem_hook", "discovery_moment", "get_nous_tag"],
+        "special_rules": [
+            "MYSTERY BRIEF Frame 3: body MUST NOT mention Nous or @get_nous. PASS criterion 6.",
+            "Required: savings figure, no Nous mention in body.",
+        ],
+    },
+}
+
+# "Specific before/after savings number" brief — each frame focuses on a single
+# bill type with a specific before and after £ number.
+_BEFORE_AFTER_GUIDANCE = {
+    1: {
+        "title": "Phone: £50 → £10 with Nous",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Start saving here!",
+        "messaging_focus": "BEFORE/AFTER BRIEF Frame 1 — Specific phone before/after: £50/mo → £10/mo. Personal: assumed price was normal, @get_nous found cheaper deal, switched without lifting a finger. <5 min, ~£500/yr saved.",
+        "skip_criteria": ["discovery_moment"],
+        "special_rules": [
+            "BEFORE/AFTER BRIEF: Frame 1 is FULL STORY with @get_nous. Do NOT apply default 'Frame 1 = no Nous mention' rule.",
+            "Frame 1 CTA MUST be 'Start saving here!' NOT 'Save with Nous'.",
+            "Required: specific before £ figure AND specific after £ figure for one bill type (phone here). @get_nous tag. Easy switching emphasis.",
+        ],
+    },
+    2: {
+        "title": "Broadband: £45 → half with Nous",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "BEFORE/AFTER BRIEF Frame 2 — Specific broadband before/after: £45/mo → half. 'Signed up on a whim, they had a look at all my bills.' Same wifi for less money, didn't have to call anyone.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "BEFORE/AFTER BRIEF Frame 2: specific before/after for one bill type (broadband). @get_nous required.",
+        ],
+    },
+    3: {
+        "title": "Energy: £150/mo → £100/mo with Nous",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "BEFORE/AFTER BRIEF Frame 3 — Specific energy before/after: £150/mo → £100/mo (£600/yr saved). 'Felt like a normal amount but turns out I was overpaying.' 5 min of life admin paid off.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "BEFORE/AFTER BRIEF Frame 3: specific before/after for one bill type (energy). @get_nous required.",
+        ],
+    },
+}
+
+# "Total savings number first" brief — frames OPEN with the savings figure.
+# £600 is the headline number on every frame.
+_SAVINGS_FIRST_GUIDANCE = {
+    1: {
+        "title": "Just saved £600 — opens with the number",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Start saving here!",
+        "messaging_focus": "SAVINGS-FIRST BRIEF Frame 1 — OPENS with the savings number: 'Just found a way to save £600 a year on my bills'. Then @get_nous did all 3 bills (energy, broadband, phone). Few questions, done.",
+        "skip_criteria": ["problem_hook", "discovery_moment"],
+        "special_rules": [
+            "SAVINGS-FIRST BRIEF: Frame 1 hook IS the savings figure. Do NOT fail criterion 1 for not having a problem-aware hook — the savings number is the hook by design.",
+            "Frame 1 includes @get_nous in body — do NOT apply default 'no Nous on Frame 1' rule.",
+            "Frame 1 CTA MUST be 'Start saving here!' NOT 'Save with Nous'.",
+            "Required: ~£600 figure as the opening line. All 3 bills named. @get_nous tag.",
+        ],
+    },
+    2: {
+        "title": "Just saved £600 — overpaying revelation",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "SAVINGS-FIRST BRIEF Frame 2 — Opens with '£600 saved'. Then 'assumed bills were just that price', @get_nous found overpaying on all 3, switched. Few questions, done.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "SAVINGS-FIRST BRIEF Frame 2: opens with savings figure. @get_nous tag and all 3 bill types required.",
+        ],
+    },
+    3: {
+        "title": "Just saved £600 — 5-min recap",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "SAVINGS-FIRST BRIEF Frame 3 — 'Just saved nearly £600 on my bills and it took 5 minutes'. Energy, broadband, mobile — all overpaying. Some life admin paid off.",
+        "skip_criteria": ["problem_hook", "discovery_moment"],
+        "special_rules": [
+            "SAVINGS-FIRST BRIEF Frame 3: savings figure leads. @get_nous tag and 3 bills referenced.",
+        ],
+    },
+}
+
+# "Energy only" brief — ONLY energy is mentioned, not broadband or mobile.
+# Tighter savings figure (~£300, energy only).
+_ENERGY_ONLY_GUIDANCE = {
+    1: {
+        "title": "Energy bills shock → Nous saved £300",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Start saving here!",
+        "messaging_focus": "ENERGY-ONLY BRIEF Frame 1 — 'In disbelief over energy bills' angle. Researched, found Nous (energy only — NOT broadband/mobile). Saved ~£300 on energy. Frame 1 CTA: 'Start saving here!'",
+        "skip_criteria": ["discovery_moment"],
+        "special_rules": [
+            "ENERGY-ONLY BRIEF: This brief is SOLELY about energy. Do NOT flag missing mentions of broadband or phone/mobile — those are intentionally absent.",
+            "Frame 1 includes 'get_nous' / Nous mention in body. Do NOT apply default 'no Nous on Frame 1' rule.",
+            "Frame 1 CTA MUST be 'Start saving here!' NOT 'Save with Nous'.",
+            "Criterion 3a (mentions switching across energy, broadband AND phone) should PASS as long as energy is mentioned — the other bills are intentionally omitted for this brief.",
+            "Required: energy hook, ~£300 savings figure on energy, get_nous reference.",
+        ],
+    },
+    2: {
+        "title": "Energy increase incoming → Nous saved £300",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "ENERGY-ONLY BRIEF Frame 2 — 'Energy prices going up again' hook. @get_nous found overpaying on energy, sorted better deal, ~£300 saved. Energy ONLY — no broadband/mobile.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "ENERGY-ONLY BRIEF Frame 2: Energy only. Do NOT flag missing broadband/mobile mentions.",
+            "@get_nous tag required.",
+        ],
+    },
+    3: {
+        "title": "Energy prices rising → Nous saved £300 in 5 min",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "ENERGY-ONLY BRIEF Frame 3 — 'Energy bills going up AGAIN in summer' callback. ~£300 saved on energy, 5 min from phone. Drop the link.",
+        "skip_criteria": ["problem_hook", "discovery_moment"],
+        "special_rules": [
+            "ENERGY-ONLY BRIEF Frame 3: Energy only. Do NOT flag missing broadband/mobile.",
         ],
     },
 }
@@ -256,6 +455,15 @@ BRIEF_FRAME_GUIDANCE = {
     },
     "follow up": _FOLLOW_UP_GUIDANCE,
     "nous reminder": _FOLLOW_UP_GUIDANCE,
+    "do it yourself": _DIY_FAIL_GUIDANCE,
+    "diy fail": _DIY_FAIL_GUIDANCE,
+    "mystery": _MYSTERY_GUIDANCE,
+    "before/after": _BEFORE_AFTER_GUIDANCE,
+    "before vs after": _BEFORE_AFTER_GUIDANCE,
+    "specific before": _BEFORE_AFTER_GUIDANCE,
+    "total savings": _SAVINGS_FIRST_GUIDANCE,
+    "savings number first": _SAVINGS_FIRST_GUIDANCE,
+    "energy only": _ENERGY_ONLY_GUIDANCE,
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
@@ -360,7 +568,7 @@ Evaluate this Instagram Story image against the following criteria. For each sub
 IMPORTANT — Frame-specific guidance:
 Each brief has 3 frames. NOT all criteria apply equally to every frame:
 
-IMPORTANT OVERRIDE: If the brief guidance below contains a SPECIAL RULE saying "IDENTICAL MESSAGING BRIEF", "FOLLOW-UP REMINDER BRIEF", or similar, that overrides ALL of the default per-frame rules below. Apply only what the brief guidance says for that frame.
+IMPORTANT OVERRIDE: If the brief guidance below contains a SPECIAL RULE saying "IDENTICAL MESSAGING BRIEF", "FOLLOW-UP REMINDER BRIEF", "DIY-FAIL BRIEF", "MYSTERY BRIEF", "BEFORE/AFTER BRIEF", "SAVINGS-FIRST BRIEF", "ENERGY-ONLY BRIEF", or similar, that overrides ALL of the default per-frame rules below. Apply only what the brief guidance says for that frame.
 
 Frame 1 (Hook): This is the opening story. It MUST have a problem-aware hook, personal confession, or shock stat. It should NOT mention Nous or @get_nous yet. Frame 1 should END ON THE PROBLEM, not the solution — do NOT let the influencer leak the Nous explanation, savings details, or how-it-works into Frame 1. If Frame 1 starts introducing the solution, flag it and suggest trimming back to leave the discovery for Frame 2. Criteria 1 (Problem-aware hook) is critical here. Criteria 3-5 (What Nous does, Savings claim, Sign-up ease) are NOT expected on Frame 1 — do NOT fail them if absent, but DO flag if the solution is being introduced too early.
 
