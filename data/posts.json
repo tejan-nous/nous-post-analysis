@@ -7623,6 +7623,69 @@
     }
   },
   {
+    "id": "367e4fd0-8136-80df-8f77-e7b4d547b92b",
+    "name": "Chessie King",
+    "post_sequence": null,
+    "date": "2 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/367e4fd0813680df8f77e7b4d547b92b",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "326e4fd0-8136-807f-aeb1-d9668f276ccf",
     "name": "Jennie Winlots (I am Mum Bum)",
     "post_sequence": 7,
@@ -7630,6 +7693,195 @@
     "format": "Story",
     "niche": "Family",
     "notion_url": "https://www.notion.so/326e4fd08136807faeb1d9668f276ccf",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "368e4fd0-8136-8027-bd82-d5872aa54d00",
+    "name": "Daisy Richmond",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/368e4fd081368027bd82d5872aa54d00",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": 1,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "36fe4fd0-8136-80bb-b6c5-c212ceccfe1c",
+    "name": "Keeping Kate",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/36fe4fd0813680bbb6c5c212ceccfe1c",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "36ee4fd0-8136-8041-8b5c-cbb046360007",
+    "name": "Ellie Hillary",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/36ee4fd0813680418b5ccbb046360007",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -9214,9 +9466,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 496,
-      "delegations": 340,
-      "landing_page_views": 1346,
+      "accounts_created": 386,
+      "delegations": 270,
+      "landing_page_views": 1169,
       "post_fee": null,
       "ecac": null
     },
@@ -9324,6 +9576,132 @@
     }
   },
   {
+    "id": "36de4fd0-8136-80b2-a0ae-da4408e1bcf1",
+    "name": "Eden Harvey",
+    "post_sequence": null,
+    "date": "30 May 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/36de4fd0813680b2a0aeda4408e1bcf1",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "370e4fd0-8136-8028-9c8a-c6de568973be",
+    "name": "Sharon (diary of my home life)",
+    "post_sequence": null,
+    "date": "30 May 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/370e4fd0813680289c8ac6de568973be",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": 203,
+      "delegations": 124,
+      "landing_page_views": 573,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "367e4fd0-8136-809a-8859-dbb7c5d6ea77",
     "name": "Charlie Hopper",
     "post_sequence": null,
@@ -9342,7 +9720,7 @@
     "performance": {
       "accounts_created": 7,
       "delegations": 5,
-      "landing_page_views": 17,
+      "landing_page_views": 16,
       "post_fee": null,
       "ecac": null
     },
@@ -10159,9 +10537,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 49,
-      "delegations": 32,
-      "landing_page_views": 191,
+      "accounts_created": 53,
+      "delegations": 35,
+      "landing_page_views": 227,
       "post_fee": null,
       "ecac": null
     },
@@ -10222,9 +10600,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 102,
-      "delegations": 56,
-      "landing_page_views": 229,
+      "accounts_created": 116,
+      "delegations": 64,
+      "landing_page_views": 284,
       "post_fee": null,
       "ecac": null
     },
@@ -10285,9 +10663,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 17,
-      "delegations": 9,
-      "landing_page_views": 79,
+      "accounts_created": 23,
+      "delegations": 14,
+      "landing_page_views": 116,
       "post_fee": null,
       "ecac": null
     },
@@ -10348,9 +10726,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 3,
-      "delegations": null,
-      "landing_page_views": 29,
+      "accounts_created": 4,
+      "delegations": 2,
+      "landing_page_views": 32,
       "post_fee": null,
       "ecac": null
     },
@@ -10411,9 +10789,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 59,
-      "delegations": 35,
-      "landing_page_views": 267,
+      "accounts_created": 68,
+      "delegations": 39,
+      "landing_page_views": 138,
       "post_fee": null,
       "ecac": null
     },
@@ -10537,9 +10915,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 12,
-      "delegations": 6,
-      "landing_page_views": 66,
+      "accounts_created": 24,
+      "delegations": 14,
+      "landing_page_views": 106,
       "post_fee": null,
       "ecac": null
     },
@@ -10600,72 +10978,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 34,
-      "delegations": 24,
-      "landing_page_views": 173,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "36de4fd0-8136-80b2-a0ae-da4408e1bcf1",
-    "name": "Eden Harvey",
-    "post_sequence": null,
-    "date": "29 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/36de4fd0813680b2a0aeda4408e1bcf1",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 41,
+      "delegations": 27,
+      "landing_page_views": 205,
       "post_fee": null,
       "ecac": null
     },
@@ -10789,135 +11104,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 40,
-      "delegations": 19,
-      "landing_page_views": 233,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "367e4fd0-8136-80df-8f77-e7b4d547b92b",
-    "name": "Chessie King",
-    "post_sequence": null,
-    "date": "29 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/367e4fd0813680df8f77e7b4d547b92b",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "368e4fd0-8136-8027-bd82-d5872aa54d00",
-    "name": "Daisy Richmond",
-    "post_sequence": null,
-    "date": "29 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/368e4fd081368027bd82d5872aa54d00",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": 1,
+      "accounts_created": 44,
+      "delegations": 22,
+      "landing_page_views": 247,
       "post_fee": null,
       "ecac": null
     },
@@ -10978,72 +11167,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 743,
-      "delegations": 419,
-      "landing_page_views": 3043,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "36fe4fd0-8136-80bb-b6c5-c212ceccfe1c",
-    "name": "Keeping Kate",
-    "post_sequence": null,
-    "date": "29 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/36fe4fd0813680bbb6c5c212ceccfe1c",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 781,
+      "delegations": 442,
+      "landing_page_views": 3254,
       "post_fee": null,
       "ecac": null
     },
@@ -11104,72 +11230,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 39,
-      "delegations": 25,
-      "landing_page_views": 105,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "36ee4fd0-8136-8041-8b5c-cbb046360007",
-    "name": "Ellie Hillary",
-    "post_sequence": null,
-    "date": "29 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/36ee4fd0813680418b5ccbb046360007",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 51,
+      "delegations": 32,
+      "landing_page_views": 152,
       "post_fee": null,
       "ecac": null
     },
@@ -11232,7 +11295,7 @@
     "performance": {
       "accounts_created": 5,
       "delegations": 4,
-      "landing_page_views": 80,
+      "landing_page_views": 91,
       "post_fee": null,
       "ecac": null
     },
@@ -11293,9 +11356,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 4,
-      "delegations": 2,
-      "landing_page_views": 44,
+      "accounts_created": 5,
+      "delegations": 3,
+      "landing_page_views": 52,
       "post_fee": null,
       "ecac": null
     },
@@ -11356,9 +11419,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 249,
-      "delegations": 156,
-      "landing_page_views": 959,
+      "accounts_created": 269,
+      "delegations": 170,
+      "landing_page_views": 1045,
       "post_fee": null,
       "ecac": null
     },
@@ -11419,9 +11482,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 7,
-      "delegations": 5,
-      "landing_page_views": 16,
+      "accounts_created": 11,
+      "delegations": 7,
+      "landing_page_views": 34,
       "post_fee": null,
       "ecac": null
     },
@@ -11482,9 +11545,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 196,
-      "delegations": 122,
-      "landing_page_views": 610,
+      "accounts_created": 210,
+      "delegations": 129,
+      "landing_page_views": 690,
       "post_fee": null,
       "ecac": null
     },
