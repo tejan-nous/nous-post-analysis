@@ -126,6 +126,132 @@
     }
   },
   {
+    "id": "372e4fd0-8136-80c0-950a-ca6f8f19535e",
+    "name": "Links in bio",
+    "post_sequence": null,
+    "date": "30 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/372e4fd0813680c0950aca6f8f19535e",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "372e4fd0-8136-8007-b15b-fbbe22af8e96",
+    "name": "Affiliates",
+    "post_sequence": null,
+    "date": "30 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/372e4fd081368007b15bfbbe22af8e96",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "36de4fd0-8136-80a8-aad0-f54a6a9caa56",
     "name": "Ellie Mae Grady",
     "post_sequence": null,
@@ -7686,6 +7812,69 @@
     }
   },
   {
+    "id": "36de4fd0-8136-80b2-a0ae-da4408e1bcf1",
+    "name": "Eden Harvey",
+    "post_sequence": null,
+    "date": "2 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/36de4fd0813680b2a0aeda4408e1bcf1",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "326e4fd0-8136-807f-aeb1-d9668f276ccf",
     "name": "Jennie Winlots (I am Mum Bum)",
     "post_sequence": 7,
@@ -7765,9 +7954,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": 1,
+      "accounts_created": 33,
+      "delegations": 18,
+      "landing_page_views": 104,
       "post_fee": null,
       "ecac": null
     },
@@ -7882,6 +8071,132 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/36ee4fd0813680418b5ccbb046360007",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "36ee4fd0-8136-8031-a62d-d6f8556d1473",
+    "name": "Georgia Kousoulou",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/36ee4fd081368031a62dd6f8556d1473",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "36fe4fd0-8136-807e-a3b0-cb1a733e3100",
+    "name": "Ezekielthe1St ✪",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/36fe4fd08136807ea3b0cb1a733e3100",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -8575,69 +8890,6 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/368e4fd0813680d1ada4d0ad79578f1a",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "36ee4fd0-8136-8031-a62d-d6f8556d1473",
-    "name": "Georgia Kousoulou",
-    "post_sequence": null,
-    "date": "31 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/36ee4fd081368031a62dd6f8556d1473",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -9468,133 +9720,7 @@
     "performance": {
       "accounts_created": 386,
       "delegations": 270,
-      "landing_page_views": 1169,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "36fe4fd0-8136-807e-a3b0-cb1a733e3100",
-    "name": "Ezekielthe1St ✪",
-    "post_sequence": null,
-    "date": "30 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/36fe4fd08136807ea3b0cb1a733e3100",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "36de4fd0-8136-80b2-a0ae-da4408e1bcf1",
-    "name": "Eden Harvey",
-    "post_sequence": null,
-    "date": "30 May 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/36de4fd0813680b2a0aeda4408e1bcf1",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "landing_page_views": 610,
       "post_fee": null,
       "ecac": null
     },
@@ -9655,9 +9781,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 203,
-      "delegations": 124,
-      "landing_page_views": 573,
+      "accounts_created": 289,
+      "delegations": 201,
+      "landing_page_views": 1007,
       "post_fee": null,
       "ecac": null
     },
@@ -11548,6 +11674,69 @@
       "accounts_created": 210,
       "delegations": 129,
       "landing_page_views": 690,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "372e4fd0-8136-8000-a15e-cb0fdcc1ee4a",
+    "name": "Sammi Pamela",
+    "post_sequence": null,
+    "date": "29 May 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/372e4fd081368000a15ecb0fdcc1ee4a",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
       "post_fee": null,
       "ecac": null
     },
