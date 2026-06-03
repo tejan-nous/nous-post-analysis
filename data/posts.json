@@ -142,8 +142,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 27,
-      "delegations": 21,
+      "accounts_created": 33,
+      "delegations": 25,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -205,9 +205,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 77,
-      "delegations": 47,
-      "landing_page_views": 185,
+      "accounts_created": 92,
+      "delegations": 55,
+      "landing_page_views": 283,
       "post_fee": null,
       "ecac": null
     },
@@ -1087,7 +1087,7 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 12,
+      "accounts_created": null,
       "delegations": null,
       "landing_page_views": null,
       "post_fee": null,
@@ -8316,13 +8316,13 @@
     }
   },
   {
-    "id": "367e4fd0-8136-80df-8f77-e7b4d547b92b",
-    "name": "Chessie King",
+    "id": "372e4fd0-8136-8036-97cf-c8b8b296db6f",
+    "name": "Georgia Sian",
     "post_sequence": null,
-    "date": "2 Jun 2026",
+    "date": "3 Jun 2026",
     "format": "Story",
     "niche": "",
-    "notion_url": "https://www.notion.so/367e4fd0813680df8f77e7b4d547b92b",
+    "notion_url": "https://www.notion.so/372e4fd08136803697cfc8b8b296db6f",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -8379,13 +8379,13 @@
     }
   },
   {
-    "id": "372e4fd0-8136-8036-97cf-c8b8b296db6f",
-    "name": "Georgia Sian",
+    "id": "367e4fd0-8136-80df-8f77-e7b4d547b92b",
+    "name": "Chessie King",
     "post_sequence": null,
     "date": "2 Jun 2026",
     "format": "Story",
     "niche": "",
-    "notion_url": "https://www.notion.so/372e4fd08136803697cfc8b8b296db6f",
+    "notion_url": "https://www.notion.so/367e4fd0813680df8f77e7b4d547b92b",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -8458,9 +8458,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 9,
+      "delegations": 7,
+      "landing_page_views": 58,
       "post_fee": null,
       "ecac": null
     },
@@ -8694,13 +8694,13 @@
     }
   },
   {
-    "id": "368e4fd0-8136-8027-bd82-d5872aa54d00",
-    "name": "Daisy Richmond",
+    "id": "373e4fd0-8136-803e-afc0-eabf6d36a286",
+    "name": "(New post)",
     "post_sequence": null,
-    "date": "31 May 2026",
+    "date": "1 Jun 2026",
     "format": "Story",
     "niche": "",
-    "notion_url": "https://www.notion.so/368e4fd081368027bd82d5872aa54d00",
+    "notion_url": "https://www.notion.so/373e4fd08136803eafc0eabf6d36a286",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -8710,9 +8710,72 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 33,
-      "delegations": 18,
-      "landing_page_views": 104,
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "373e4fd0-8136-801b-bd0b-c52b8e8c02f5",
+    "name": "Aamirah Essof",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/373e4fd08136801bbd0bc52b8e8c02f5",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
       "post_fee": null,
       "ecac": null
     },
@@ -9406,6 +9469,69 @@
       "accounts_created": null,
       "delegations": null,
       "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "368e4fd0-8136-8027-bd82-d5872aa54d00",
+    "name": "Daisy Richmond",
+    "post_sequence": null,
+    "date": "30 May 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/368e4fd081368027bd82d5872aa54d00",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": 33,
+      "delegations": 18,
+      "landing_page_views": 106,
       "post_fee": null,
       "ecac": null
     },
@@ -10222,8 +10348,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 386,
-      "delegations": 270,
+      "accounts_created": 190,
+      "delegations": 100,
       "landing_page_views": 610,
       "post_fee": null,
       "ecac": null
@@ -10285,8 +10411,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 107,
-      "delegations": 63,
+      "accounts_created": 106,
+      "delegations": 76,
       "landing_page_views": 297,
       "post_fee": null,
       "ecac": null
@@ -10348,9 +10474,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 7,
-      "delegations": 5,
-      "landing_page_views": 16,
+      "accounts_created": 3,
+      "delegations": 2,
+      "landing_page_views": 17,
       "post_fee": null,
       "ecac": null
     },
@@ -11419,8 +11545,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 68,
-      "delegations": 39,
+      "accounts_created": 11,
+      "delegations": 5,
       "landing_page_views": 71,
       "post_fee": null,
       "ecac": null
@@ -11797,8 +11923,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 781,
-      "delegations": 442,
+      "accounts_created": 395,
+      "delegations": 200,
       "landing_page_views": 3254,
       "post_fee": null,
       "ecac": null
@@ -12049,8 +12175,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 269,
-      "delegations": 170,
+      "accounts_created": 53,
+      "delegations": 27,
       "landing_page_views": 1045,
       "post_fee": null,
       "ecac": null
@@ -12175,8 +12301,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 210,
-      "delegations": 129,
+      "accounts_created": 97,
+      "delegations": 55,
       "landing_page_views": 398,
       "post_fee": null,
       "ecac": null
@@ -12238,8 +12364,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
+      "accounts_created": 50,
+      "delegations": 25,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -12301,8 +12427,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 667,
-      "delegations": 396,
+      "accounts_created": 398,
+      "delegations": 200,
       "landing_page_views": 3043,
       "post_fee": null,
       "ecac": null
@@ -13498,8 +13624,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 163,
-      "delegations": 99,
+      "accounts_created": 144,
+      "delegations": 74,
       "landing_page_views": 866,
       "post_fee": null,
       "ecac": null
@@ -14506,8 +14632,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 74,
-      "delegations": 42,
+      "accounts_created": 37,
+      "delegations": 21,
       "landing_page_views": 545,
       "post_fee": null,
       "ecac": null
@@ -16459,9 +16585,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 60,
-      "delegations": 30,
-      "landing_page_views": 1088,
+      "accounts_created": 114,
+      "delegations": 78,
+      "landing_page_views": 408,
       "post_fee": null,
       "ecac": null
     },
