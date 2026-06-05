@@ -142,8 +142,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 33,
-      "delegations": 25,
+      "accounts_created": 95,
+      "delegations": 61,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -205,8 +205,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 92,
-      "delegations": 55,
+      "accounts_created": 128,
+      "delegations": 75,
       "landing_page_views": 283,
       "post_fee": null,
       "ecac": null
@@ -8571,7 +8571,7 @@
     "id": "36ee4fd0-8136-8041-8b5c-cbb046360007",
     "name": "Ellie Hillary",
     "post_sequence": null,
-    "date": "4 Jun 2026",
+    "date": "5 Jun 2026",
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/36ee4fd0813680418b5ccbb046360007",
@@ -8634,7 +8634,7 @@
     "id": "372e4fd0-8136-8036-97cf-c8b8b296db6f",
     "name": "Georgia Sian",
     "post_sequence": null,
-    "date": "4 Jun 2026",
+    "date": "5 Jun 2026",
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/372e4fd08136803697cfc8b8b296db6f",
@@ -9394,6 +9394,195 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/374e4fd0813680cb9f84d90c5c88f2b2",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "375e4fd0-8136-80bd-aa11-c4a755738dd7",
+    "name": "Pritrica",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/375e4fd0813680bdaa11c4a755738dd7",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "375e4fd0-8136-80f0-89c8-c1918f637b0a",
+    "name": "Icy ☆",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/375e4fd0813680f089c8c1918f637b0a",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "375e4fd0-8136-80e0-afce-c460166fd5e2",
+    "name": "Chioma",
+    "post_sequence": null,
+    "date": "1 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/375e4fd0813680e0afcec460166fd5e2",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
