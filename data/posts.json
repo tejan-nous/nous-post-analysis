@@ -457,8 +457,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 332,
-      "delegations": 219,
+      "accounts_created": 356,
+      "delegations": 231,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -520,9 +520,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 447,
-      "delegations": 279,
-      "landing_page_views": 1865,
+      "accounts_created": 458,
+      "delegations": 285,
+      "landing_page_views": 1964,
       "post_fee": null,
       "ecac": null
     },
@@ -5749,9 +5749,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 8,
+      "delegations": 6,
+      "landing_page_views": 35,
       "post_fee": null,
       "ecac": null
     },
@@ -5812,9 +5812,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 213,
+      "delegations": 146,
+      "landing_page_views": 763,
       "post_fee": null,
       "ecac": null
     },
@@ -6946,9 +6946,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 13,
-      "delegations": 9,
-      "landing_page_views": 72,
+      "accounts_created": 14,
+      "delegations": 10,
+      "landing_page_views": 78,
       "post_fee": null,
       "ecac": null
     },
@@ -7009,9 +7009,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 52,
-      "delegations": 33,
-      "landing_page_views": 169,
+      "accounts_created": 114,
+      "delegations": 75,
+      "landing_page_views": 379,
       "post_fee": null,
       "ecac": null
     },
@@ -7072,9 +7072,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 23,
-      "delegations": 13,
-      "landing_page_views": 72,
+      "accounts_created": 29,
+      "delegations": 19,
+      "landing_page_views": 99,
       "post_fee": null,
       "ecac": null
     },
@@ -7135,9 +7135,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 211,
-      "delegations": 140,
-      "landing_page_views": 911,
+      "accounts_created": 260,
+      "delegations": 168,
+      "landing_page_views": 1138,
       "post_fee": null,
       "ecac": null
     },
