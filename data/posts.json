@@ -189,6 +189,69 @@
     }
   },
   {
+    "id": "384e4fd0-8136-8037-b7e1-caf750a3288d",
+    "name": "Aaliyah Daniels",
+    "post_sequence": null,
+    "date": "14 Jul 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd081368037b7e1caf750a3288d",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "381e4fd0-8136-8062-a498-e90a53bdb450",
     "name": "Emma C (Brummy Mummy)",
     "post_sequence": null,
@@ -882,6 +945,69 @@
     }
   },
   {
+    "id": "384e4fd0-8136-8084-aec3-c448a9c7811c",
+    "name": "Rebecca Interiors",
+    "post_sequence": null,
+    "date": "9 Jul 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd081368084aec3c448a9c7811c",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "382e4fd0-8136-80df-a361-cf4241e7f4df",
     "name": "Onesmallstep",
     "post_sequence": null,
@@ -952,69 +1078,6 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/383e4fd0813680a490b7de3dd67bf80d",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "383e4fd0-8136-80bd-b1f8-ffe172b10596",
-    "name": "Evie 🤍 (councilhousemama)",
-    "post_sequence": null,
-    "date": "8 Jul 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/383e4fd0813680bdb1f8ffe172b10596",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -1204,6 +1267,132 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/380e4fd0813680189ab5ede44352a3b3",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "384e4fd0-8136-8067-b62d-fcdc77110ce5",
+    "name": "Claire Kennedy",
+    "post_sequence": null,
+    "date": "7 Jul 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd081368067b62dfcdc77110ce5",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "383e4fd0-8136-80bd-b1f8-ffe172b10596",
+    "name": "Evie 🤍 (councilhousemama)",
+    "post_sequence": null,
+    "date": "6 Jul 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/383e4fd0813680bdb1f8ffe172b10596",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -2583,6 +2772,69 @@
     }
   },
   {
+    "id": "384e4fd0-8136-8020-9f1c-d4f512f6f361",
+    "name": "Claire Kennedy",
+    "post_sequence": null,
+    "date": "30 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd0813680209f1cd4f512f6f361",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "36de4fd0-8136-80a8-aad0-f54a6a9caa56",
     "name": "Ellie Mae Grady",
     "post_sequence": null,
@@ -3276,6 +3528,132 @@
     }
   },
   {
+    "id": "383e4fd0-8136-807d-9e19-c74464a29cdd",
+    "name": "Evie 🤍 (councilhousemama)",
+    "post_sequence": null,
+    "date": "29 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/383e4fd08136807d9e19c74464a29cdd",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "384e4fd0-8136-808b-b69a-c9cd5766d033",
+    "name": "Aaliyah Daniels",
+    "post_sequence": null,
+    "date": "29 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd08136808bb69ac9cd5766d033",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "326e4fd0-8136-80e6-bdf1-c03eddb0dc93",
     "name": "Jennie Winlots (I am Mum Bum)",
     "post_sequence": 9,
@@ -3472,6 +3850,69 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/382e4fd08136802da7d2ebede0013e4c",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "384e4fd0-8136-8094-8f3a-e7e6e9930870",
+    "name": "Rebecca Interiors",
+    "post_sequence": null,
+    "date": "28 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd0813680948f3ae7e6e9930870",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -5166,69 +5607,6 @@
     }
   },
   {
-    "id": "383e4fd0-8136-807d-9e19-c74464a29cdd",
-    "name": "Evie 🤍 (councilhousemama)",
-    "post_sequence": null,
-    "date": "26 Jun 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/383e4fd08136807d9e19c74464a29cdd",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
     "id": "381e4fd0-8136-809d-90c8-f7c1e57ac70c",
     "name": "Liam Brown",
     "post_sequence": null,
@@ -5866,6 +6244,69 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/380e4fd081368003b519d7235dbe2991",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "383e4fd0-8136-80f3-8188-dcdc2f7e81e9",
+    "name": "Ella Hudson",
+    "post_sequence": null,
+    "date": "25 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/383e4fd0813680f38188dcdc2f7e81e9",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -6678,6 +7119,195 @@
     }
   },
   {
+    "id": "384e4fd0-8136-8058-8a75-c5b0ddd4cf0c",
+    "name": "Aaliyah Daniels",
+    "post_sequence": null,
+    "date": "23 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd0813680588a75c5b0ddd4cf0c",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "384e4fd0-8136-808f-ae1e-fdc1cbdd3cd4",
+    "name": "Rebecca Interiors",
+    "post_sequence": null,
+    "date": "23 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd08136808fae1efdc1cbdd3cd4",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "384e4fd0-8136-80b9-af79-e7abfb3e1a2f",
+    "name": "Claire Kennedy",
+    "post_sequence": null,
+    "date": "23 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd0813680b9af79e7abfb3e1a2f",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "379e4fd0-8136-80e5-9894-d2ee5a01b909",
     "name": "Robyn Elliot",
     "post_sequence": null,
@@ -6930,69 +7560,6 @@
     }
   },
   {
-    "id": "383e4fd0-8136-80f3-8188-dcdc2f7e81e9",
-    "name": "Ella Hudson",
-    "post_sequence": null,
-    "date": "22 Jun 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/383e4fd0813680f38188dcdc2f7e81e9",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
     "id": "382e4fd0-8136-80c0-937f-cec76cb59da2",
     "name": "Flo Kate",
     "post_sequence": null,
@@ -7056,13 +7623,13 @@
     }
   },
   {
-    "id": "384e4fd0-8136-8007-8bbb-ddba905196c6",
-    "name": "Lynsey Queen Of Clean",
+    "id": "383e4fd0-8136-801a-9321-c7e3c0f0346f",
+    "name": "Vicki Collis",
     "post_sequence": null,
     "date": "22 Jun 2026",
     "format": "Story",
     "niche": "",
-    "notion_url": "https://www.notion.so/384e4fd0813680078bbbddba905196c6",
+    "notion_url": "https://www.notion.so/383e4fd08136801a9321c7e3c0f0346f",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -7119,13 +7686,76 @@
     }
   },
   {
-    "id": "383e4fd0-8136-801a-9321-c7e3c0f0346f",
-    "name": "Vicki Collis",
+    "id": "383e4fd0-8136-8067-a919-c89f0584a158",
+    "name": "Evie 🤍 (councilhousemama)",
     "post_sequence": null,
     "date": "22 Jun 2026",
     "format": "Story",
     "niche": "",
-    "notion_url": "https://www.notion.so/383e4fd08136801a9321c7e3c0f0346f",
+    "notion_url": "https://www.notion.so/383e4fd081368067a919c89f0584a158",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
+    "id": "384e4fd0-8136-8007-8bbb-ddba905196c6",
+    "name": "Lynsey Queen Of Clean",
+    "post_sequence": null,
+    "date": "21 Jun 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/384e4fd0813680078bbbddba905196c6",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -7315,69 +7945,6 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/383e4fd0813680cd93eeef50e027dc67",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "383e4fd0-8136-8067-a919-c89f0584a158",
-    "name": "Evie 🤍 (councilhousemama)",
-    "post_sequence": null,
-    "date": "21 Jun 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/383e4fd081368067a919c89f0584a158",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -7828,9 +8395,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 19,
+      "delegations": 12,
+      "landing_page_views": 50,
       "post_fee": null,
       "ecac": null
     },
@@ -8269,9 +8836,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 3,
+      "delegations": 0,
+      "landing_page_views": 37,
       "post_fee": null,
       "ecac": null
     },
@@ -8332,9 +8899,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 17,
+      "delegations": 10,
+      "landing_page_views": 48,
       "post_fee": null,
       "ecac": null
     },
@@ -8395,9 +8962,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 15,
+      "delegations": 14,
+      "landing_page_views": 34,
       "post_fee": null,
       "ecac": null
     },
@@ -8458,9 +9025,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 0,
+      "delegations": 0,
+      "landing_page_views": 9,
       "post_fee": null,
       "ecac": null
     },
@@ -8521,9 +9088,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 21,
+      "delegations": 14,
+      "landing_page_views": 68,
       "post_fee": null,
       "ecac": null
     },
