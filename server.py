@@ -60,6 +60,7 @@ BRIEFS = [
     {"brief": "Specific before/after savings number", "frames": [1, 2, 3]},
     {"brief": "Total savings number first", "frames": [1, 2, 3]},
     {"brief": "Energy only", "frames": [1, 2, 3]},
+    {"brief": "Rising energy prices", "frames": [1, 2]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -282,6 +283,39 @@ _ENERGY_ONLY_GUIDANCE = {
     },
 }
 
+# "Rising energy prices" brief — energy-only, tied to the 1 July 2026 price rise
+# (£221 on average). Only TWO frames. Both frames are FULL stories that mention
+# @get_nous in the body, and both use the 'Save with Nous' CTA. ~£300+ energy saving.
+_RISING_ENERGY_GUIDANCE = {
+    1: {
+        "title": "Energy prices rising 1 July → @get_nous saved £300+ on energy",
+        "visual": "A calming shot within your house",
+        "cta": "Save with Nous",
+        "messaging_focus": "RISING ENERGY PRICES BRIEF Frame 1 — Hook: energy bills going up AGAIN by more than £221 on average on 1 July. Looked into it, discovered most of us are massively overpaying on energy even with suppliers we trust. Used @get_nous to check bills before prices rise, found overpaying by more than £300 a year. Nous did all the work to find a better deal and switch — saved hundreds doing basically nothing. Try Nous before bills shoot up. Energy ONLY — no broadband/mobile. Frame 1 is a FULL STORY with @get_nous in the body.",
+        "skip_criteria": ["discovery_moment"],
+        "special_rules": [
+            "RISING ENERGY PRICES BRIEF: this brief is SOLELY about energy (prices rising ~£221 on average on 1 July). Do NOT flag missing mentions of broadband or phone/mobile — those are intentionally absent.",
+            "Frame 1 is a FULL STORY, not a hook-only frame. @get_nous SHOULD appear in the body. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rule.",
+            "Frame 1 CTA button text MUST be 'Save with Nous' (NOT 'Start saving here!').",
+            "Criterion 3a (switching across energy, broadband AND phone) should PASS as long as energy is mentioned — the other bills are intentionally omitted for this brief.",
+            "Required: the 1 July / ~£221 energy-rise hook, @get_nous tag, ~£300+ energy savings figure, and the 'they did all the work / zero effort' framing.",
+        ],
+    },
+    2: {
+        "title": "Expert advice on energy → check before 1 July, @get_nous saved £300+",
+        "visual": "A calming shot within your house",
+        "cta": "Save with Nous",
+        "messaging_focus": "RISING ENERGY PRICES BRIEF Frame 2 — Hook: money experts say we all need to check our energy bills or they'll go up by £221 on average on 1 July. Most overpaying even with a supplier we trust. Used @get_nous to sort it — they figure out how much you're overpaying, find a better deal and sort the switch for you. Saved more than £300 on energy doing pretty much nothing. Check them out before 1 July. Energy ONLY — no broadband/mobile.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "RISING ENERGY PRICES BRIEF Frame 2: energy only. Do NOT flag missing broadband/mobile mentions.",
+            "@get_nous tag required in the body.",
+            "Frame 2 CTA button text: 'Save with Nous'.",
+            "Required: the expert-advice / 1 July ~£221 energy-rise hook, @get_nous tag, and the ~£300+ energy savings figure.",
+        ],
+    },
+}
+
 BRIEF_FRAME_GUIDANCE = {
     "family": {
         1: {
@@ -464,6 +498,7 @@ BRIEF_FRAME_GUIDANCE = {
     "total savings": _SAVINGS_FIRST_GUIDANCE,
     "savings number first": _SAVINGS_FIRST_GUIDANCE,
     "energy only": _ENERGY_ONLY_GUIDANCE,
+    "rising energy": _RISING_ENERGY_GUIDANCE,
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
@@ -1664,6 +1699,40 @@ def slack_test():
     })
 
 
+def _slack_blocks_with_approve(text, page_id):
+    """Render `text` as Block Kit section block(s) (3000-char limit each) followed
+    by a green ✅ Approve button. The post's Notion page_id rides in the button
+    value so the interaction handler is self-contained (no store lookup needed)."""
+    chunks = []
+    cur = ""
+    for line in (text or "").split("\n"):
+        # Hard-slice any single line that would blow the section limit on its own.
+        while len(line) > 2900:
+            if cur:
+                chunks.append(cur)
+                cur = ""
+            chunks.append(line[:2900])
+            line = line[2900:]
+        if len(cur) + len(line) + 1 > 2900:
+            chunks.append(cur)
+            cur = line
+        else:
+            cur = (cur + "\n" + line) if cur else line
+    if cur:
+        chunks.append(cur)
+    if not chunks:
+        chunks = [" "]
+    blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": c}} for c in chunks]
+    blocks.append({"type": "actions", "elements": [
+        {"type": "button",
+         "text": {"type": "plain_text", "text": "✅ Approve", "emoji": True},
+         "style": "primary",
+         "action_id": "approve_post",
+         "value": (page_id or "")[:1900]},
+    ]})
+    return blocks
+
+
 @app.route("/slack", methods=["POST"])
 def send_to_slack():
     if not SLACK_BOT_TOKEN:
@@ -1746,8 +1815,13 @@ def send_to_slack():
                 if file_ts:
                     break
 
-            # Step 6: Post the bullet analysis as a thread reply
-            reply_payload = {"channel": channel_id, "text": data["text"]}
+            # Step 6: Post the bullet analysis as a thread reply, with the
+            # ✅ Approve button attached directly to it.
+            reply_payload = {
+                "channel": channel_id,
+                "text": data["text"],
+                "blocks": _slack_blocks_with_approve(data["text"], data.get("post_page_id")),
+            }
             if file_ts:
                 reply_payload["thread_ts"] = file_ts
 
@@ -1772,9 +1846,8 @@ def send_to_slack():
                     "brief": data.get("brief", ""),
                     "frame": data.get("frame", ""),
                     "channel_id": channel_id,
+                    "post_page_id": data.get("post_page_id"),
                     "created_at": datetime.now(timezone.utc).isoformat(),
-                    "returned": False,
-                    "followup_sent": False,
                 }
                 save_pending_reviews(pending)
 
@@ -1795,6 +1868,7 @@ def send_to_slack():
         json={
             "channel": channel_id,
             "text": data["text"],
+            "blocks": _slack_blocks_with_approve(data["text"], data.get("post_page_id")),
         },
         timeout=10,
     )
@@ -1811,9 +1885,8 @@ def send_to_slack():
                 "brief": data.get("brief", ""),
                 "frame": data.get("frame", ""),
                 "channel_id": channel_id,
+                "post_page_id": data.get("post_page_id"),
                 "created_at": datetime.now(timezone.utc).isoformat(),
-                "returned": False,
-                "followup_sent": False,
             }
             save_pending_reviews(pending)
         return jsonify({"ok": True, "thread_ts": thread_ts, "channel_id": channel_id})
@@ -1866,66 +1939,65 @@ def post_review():
         return jsonify({"ok": False, "error": f"Notion API error {resp.status_code}"}), 500
 
 
-@app.route("/mark-returned", methods=["POST"])
-def mark_returned():
-    data = request.get_json(force=True, silent=True) or {}
-    thread_ts = data.get("thread_ts", "").strip()
-    if not thread_ts:
-        return jsonify({"error": "thread_ts required"}), 400
-
-    pending = load_pending_reviews()
-    review = pending["reviews"].get(thread_ts)
-    if not review:
-        return jsonify({"error": "Review not found"}), 404
-
-    review["returned"] = True
-    review["returned_at"] = datetime.now(timezone.utc).isoformat()
-    save_pending_reviews(pending)
-
-    # Post confirmation in Slack thread
-    slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
-    if slack_token:
-        http_requests.post("https://slack.com/api/chat.postMessage",
-            headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
-            json={"channel": review["channel_id"], "thread_ts": thread_ts,
-                   "text": f"✅ Content returned by {review['influencer']} — marked complete by {review['reviewer']}."})
-
-    return jsonify({"ok": True})
-
-
 @app.route("/slack/interactions", methods=["POST"])
 def slack_interactions():
     """Handle Slack interactive button clicks (Block Kit actions)."""
-    import urllib.parse as _urlparse
     payload = json.loads(request.form.get("payload", "{}"))
     action = (payload.get("actions") or [{}])[0]
     action_id = action.get("action_id", "")
     user_name = payload.get("user", {}).get("name", "someone")
+    resp_url = payload.get("response_url")
 
-    if action_id == "mark_returned":
-        thread_ts = action.get("value", "")
-        pending = load_pending_reviews()
-        review = pending["reviews"].get(thread_ts)
-        if review and not review.get("returned"):
-            review["returned"] = True
-            review["returned_at"] = datetime.now(timezone.utc).isoformat()
-            save_pending_reviews(pending)
+    if action_id == "approve_post":
+        # The Notion post page_id rides in the button value (empty if the post
+        # was sent without a specific Notion post selected).
+        page_id = (action.get("value") or "").strip()
 
-            # Post confirmation in the thread
-            slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
-            if slack_token:
-                http_requests.post("https://slack.com/api/chat.postMessage",
-                    headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
-                    json={"channel": review["channel_id"], "thread_ts": thread_ts,
-                           "text": f"\u2705 Content returned by {review['influencer']} \u2014 marked by {user_name}."})
+        notion_ok = None
+        if page_id:
+            try:
+                r = http_requests.patch(
+                    f"https://api.notion.com/v1/pages/{page_id}",
+                    headers=notion_headers(),
+                    json={"properties": {"Status": {"status": {"name": "Approved Scheduled"}}}},
+                    timeout=15,
+                )
+                notion_ok = (r.status_code == 200)
+                if not notion_ok:
+                    print(f"[APPROVE] Notion API error {r.status_code}: {r.text[:300]}")
+            except Exception as e:
+                notion_ok = False
+                print(f"[APPROVE] Notion exception: {e}")
 
-            # Update the original message to remove the button
-            resp_url = payload.get("response_url")
-            if resp_url:
-                http_requests.post(resp_url, json={
-                    "replace_original": True,
-                    "text": f"\u2705 *{review['influencer']}* \u2014 content returned (marked by {user_name})",
-                })
+        if not resp_url:
+            return "", 200
+
+        if page_id and notion_ok is False:
+            # Notion write failed \u2014 keep the button so it can be retried, and
+            # tell only the clicker (ephemeral).
+            http_requests.post(resp_url, json={
+                "response_type": "ephemeral",
+                "replace_original": False,
+                "text": "\u26a0\ufe0f Couldn't update Notion (status unchanged). Try again, or set the post to \u201cApproved Scheduled\u201d manually.",
+            })
+            return "", 200
+
+        # Success (or no linked post): redraw the message keeping the analysis,
+        # dropping the Approve button, and appending an approved note.
+        if page_id:
+            note = f"\u2705 Approved by {user_name} \u2192 Approved Scheduled"
+        else:
+            note = f"\u2705 Approved by {user_name} (no linked Notion post)"
+
+        original_blocks = (payload.get("message") or {}).get("blocks") or []
+        new_blocks = [b for b in original_blocks if b.get("type") != "actions"]
+        new_blocks.append({"type": "context", "elements": [{"type": "mrkdwn", "text": note}]})
+
+        http_requests.post(resp_url, json={
+            "replace_original": True,
+            "text": note,
+            "blocks": new_blocks,
+        })
 
     return "", 200
 
@@ -1939,60 +2011,6 @@ def pending_reviews():
         reviews = {k: v for k, v in reviews.items() if v.get("reviewer") == reviewer}
     return jsonify({"ok": True, "reviews": reviews})
 
-
-def _followup_checker_loop():
-    """Check for pending follow-ups every 30 minutes."""
-    import time as _time
-    _time.sleep(60)  # Wait 1 min after startup
-    while True:
-        try:
-            _check_pending_followups()
-        except Exception as e:
-            print(f"[FOLLOWUP] Error: {e}")
-        _time.sleep(1800)  # 30 minutes
-
-
-def _check_pending_followups():
-    slack_token = os.environ.get("SLACK_BOT_TOKEN", "")
-    if not slack_token:
-        return
-    # Only nudge during working hours: 08:30–18:00 UK time
-    from zoneinfo import ZoneInfo
-    uk_now = datetime.now(ZoneInfo("Europe/London"))
-    uk_time = uk_now.hour * 60 + uk_now.minute  # minutes since midnight
-    if uk_time < 510 or uk_time >= 1080:  # before 08:30 or after 18:00
-        return
-    pending = load_pending_reviews()
-    now = datetime.now(timezone.utc)
-    changed = False
-    for review_id, review in pending["reviews"].items():
-        if review.get("returned") or review.get("followup_sent"):
-            continue
-        created = datetime.fromisoformat(review["created_at"])
-        if (now - created).total_seconds() < 7200:  # 2 hours
-            continue
-        # Post follow-up in thread
-        slack_user_id = REVIEWER_SLACK_IDS.get(review.get("reviewer", ""), "")
-        mention = f"<@{slack_user_id}>" if slack_user_id else review.get("reviewer", "reviewer")
-        text = f"{mention} Have you returned the amended content for this post?"
-        blocks = [
-            {"type": "section", "text": {"type": "mrkdwn", "text": text}},
-            {"type": "actions", "elements": [
-                {"type": "button", "text": {"type": "plain_text", "text": "\u2705 Mark Returned"}, "style": "primary", "action_id": "mark_returned", "value": review_id},
-            ]},
-        ]
-        resp = http_requests.post("https://slack.com/api/chat.postMessage",
-            headers={"Authorization": f"Bearer {slack_token}", "Content-Type": "application/json"},
-            json={"channel": review["channel_id"], "thread_ts": review_id, "text": text, "blocks": blocks})
-        if resp.json().get("ok"):
-            review["followup_sent"] = True
-            changed = True
-            print(f"[FOLLOWUP] Sent follow-up for {review['influencer']} to {review['reviewer']}")
-    if changed:
-        save_pending_reviews(pending)
-
-
-threading.Thread(target=_followup_checker_loop, daemon=True).start()
 
 
 if __name__ == "__main__":

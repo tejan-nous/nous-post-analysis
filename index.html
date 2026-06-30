@@ -119404,6 +119404,7 @@ const UL_BRIEFS = [
   '🔢 Specific before/after savings number',
   '💰 Total savings number first',
   '⚡ Energy only',
+  '🔥 Rising energy prices',
 ];
 (function() {
   const dl = document.getElementById('ul-brief-list');
@@ -120349,33 +120350,8 @@ async function ulSendToSlack(id, btn) {
         console.warn('Auto-feedback save failed:', feedbackErr);
       }
 
-      // Show "Mark Returned" button if we have a thread_ts
-      if (data.thread_ts) {
-        const markBtn = document.createElement('button');
-        markBtn.style.cssText = 'background:var(--green);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer;margin-left:6px';
-        markBtn.textContent = '📋 Mark Returned';
-        markBtn.onclick = async () => {
-          markBtn.disabled = true;
-          markBtn.textContent = 'Marking...';
-          const serverUrl = (localStorage.getItem('ul_server_url') || 'https://nous-post-analysis-production.up.railway.app').replace(/\/$/, '');
-          try {
-            const resp = await fetch(serverUrl + '/mark-returned', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json', 'X-Access-Password': localStorage.getItem('ul_password') || ''},
-              body: JSON.stringify({thread_ts: data.thread_ts})
-            });
-            const result = await resp.json();
-            if (result.ok) {
-              markBtn.textContent = '✅ Returned';
-              markBtn.style.background = '#16a34a';
-              markBtn.disabled = true;
-            }
-          } catch(e) {
-            markBtn.textContent = '❌ Error';
-          }
-        };
-        btn.parentElement.appendChild(markBtn);
-      }
+      // Approval is now handled by the ✅ Approve button posted directly on the
+      // Slack message (action_id: approve_post → sets Notion "Approved Scheduled").
     } else {
       btn.textContent = 'Failed: ' + (data.error || 'unknown error');
       btn.style.background = 'var(--red)';
