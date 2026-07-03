@@ -61,6 +61,7 @@ BRIEFS = [
     {"brief": "Total savings number first", "frames": [1, 2, 3]},
     {"brief": "Energy only", "frames": [1, 2, 3]},
     {"brief": "Rising energy prices", "frames": [1, 2]},
+    {"brief": "Post-price cap brief", "frames": [1, 2]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -316,6 +317,42 @@ _RISING_ENERGY_GUIDANCE = {
     },
 }
 
+# Post-price-cap July 2026 brief. Like the rising-energy brief but AFTER the rise:
+# energy bills ALREADY went up on 1 July 2026 (past tense, "went up again this week
+# by more than £200"). Energy ONLY, 2 frames, angle = there are still good deals so
+# lock one in ASAP before they're gone. Not future/anticipatory — the rise has happened.
+_POST_PRICE_CAP_GUIDANCE = {
+    1: {
+        "title": "Energy bills just shot up again → @get_nous saved nearly £300 on energy",
+        "visual": "A calming shot within your house",
+        "cta": "Save with Nous",
+        "messaging_focus": "POST-PRICE-CAP BRIEF Frame 1 — Hook: energy bills went up AGAIN this week (1 July) by more than £200. But you can still bring bills back down and save if you're quick — there are good deals out there right now. Used @get_nous to sort it: they found a deal so prices aren't going up and I'm saving nearly £300 a year. Worth jumping on ASAP to lock in a good price while you still can. Energy ONLY — no broadband/mobile. Frame 1 is a FULL STORY with @get_nous in the body.",
+        "skip_criteria": ["discovery_moment"],
+        "special_rules": [
+            "POST-PRICE-CAP BRIEF: this brief is SOLELY about energy (prices went up ~£200 on 1 July). Do NOT flag missing mentions of broadband or phone/mobile — those are intentionally absent.",
+            "This is a POST-rise brief: the increase has ALREADY happened (past tense, 'bills went up again this week'). Do NOT flag the copy for talking about the rise as done rather than upcoming.",
+            "Frame 1 is a FULL STORY, not a hook-only frame. @get_nous SHOULD appear in the body. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rule.",
+            "Frame 1 CTA button text MUST be 'Save with Nous' (NOT 'Start saving here!').",
+            "Criterion 3a (switching across energy, broadband AND phone) should PASS as long as energy is mentioned — the other bills are intentionally omitted for this brief.",
+            "Required: the 'bills went up again / more than £200 on 1 July' hook, @get_nous tag, ~£300 energy savings figure, and the 'lock in a good deal ASAP while you still can' urgency framing.",
+        ],
+    },
+    2: {
+        "title": "Expert advice on energy → prices went up 1 July, @get_nous saved £300+",
+        "visual": "A calming shot within your house",
+        "cta": "Save with Nous",
+        "messaging_focus": "POST-PRICE-CAP BRIEF Frame 2 — Hook: money experts say we all need to check our energy bills ASAP because prices just went up AGAIN on 1 July. You can still bring costs down and save because there are good deals out there if you're quick. Used @get_nous to sort it — they work out how much you're overpaying, find a better deal and sort the switch for you. Saved more than £300 on energy doing pretty much nothing. Check them out while there are still good savings out there. Energy ONLY — no broadband/mobile.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "POST-PRICE-CAP BRIEF Frame 2: energy only. Do NOT flag missing broadband/mobile mentions.",
+            "This is a POST-rise brief: the increase has ALREADY happened (past tense, 'prices just went up on 1 July'). Do NOT flag the copy for treating the rise as done rather than upcoming.",
+            "@get_nous tag required in the body.",
+            "Frame 2 CTA button text: 'Save with Nous'.",
+            "Required: the expert-advice / 'prices went up on 1 July' hook, @get_nous tag, and the ~£300+ energy savings figure.",
+        ],
+    },
+}
+
 BRIEF_FRAME_GUIDANCE = {
     "family": {
         1: {
@@ -499,6 +536,7 @@ BRIEF_FRAME_GUIDANCE = {
     "savings number first": _SAVINGS_FIRST_GUIDANCE,
     "energy only": _ENERGY_ONLY_GUIDANCE,
     "rising energy": _RISING_ENERGY_GUIDANCE,
+    "price cap": _POST_PRICE_CAP_GUIDANCE,
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
