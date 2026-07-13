@@ -62,6 +62,7 @@ BRIEFS = [
     {"brief": "Energy only", "frames": [1, 2, 3]},
     {"brief": "Rising energy prices", "frames": [1, 2]},
     {"brief": "Post-price cap brief", "frames": [1, 2]},
+    {"brief": "July Performance Brief", "frames": [1, 2, 3]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -353,6 +354,55 @@ _POST_PRICE_CAP_GUIDANCE = {
     },
 }
 
+# July "Performance Brief" (aka "Greatest Hits"). Unlike a normal hook→story→CTA
+# arc, each of the 3 frames is a DIFFERENT proven standalone hook, and EVERY frame
+# is a full story with @get_nous in the body (not a hook-only Frame 1):
+#   F1 = broadband halved (£45 → ~half), F2 = "£7 for mobile" stat (+ £500 across
+#   all bills), F3 = "£781 a year wasted" overpaying stat. CTA "Save with Nous" on
+#   all. Visual: calming home shot / selfie / family photo.
+_PERFORMANCE_GUIDANCE = {
+    1: {
+        "title": "How to cut your broadband bill in half",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "PERFORMANCE BRIEF Frame 1 (Broadband) — Hook: was paying ~£45/month for broadband and didn't need to. Signed up to @get_nous, within minutes they found a broadband deal about HALF the price and handled the switch (no phone calls, nothing to cancel). Worth seeing if you're overpaying too. Broadband-led — a full story with @get_nous in the body.",
+        "skip_criteria": [],
+        "special_rules": [
+            "PERFORMANCE / GREATEST HITS BRIEF: each of the 3 frames is a DIFFERENT standalone proven hook, NOT a sequential hook→story→CTA arc. Every frame is a FULL story with @get_nous in the body — do NOT apply the default 'Frame 1 = hook only, no Nous mention' rule.",
+            "Frame 1 is BROADBAND-led (~£45/month → about half price). Do NOT flag missing energy or mobile mentions — this frame is intentionally broadband-only.",
+            "Criterion 3a (switching across energy, broadband AND phone) should PASS as long as broadband is covered — the other bills are intentionally omitted for this frame.",
+            "Frame 1 CTA button text MUST be 'Save with Nous'.",
+            "Required: the ~£45/month broadband hook, the 'about half price' saving, @get_nous tag, and the 'they handled the switch' framing.",
+        ],
+    },
+    2: {
+        "title": "None of us should be paying more than £7 for our phone",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "PERFORMANCE BRIEF Frame 2 (Phone £7 stat) — Hook: people are really only paying £7 a month for mobile?! Was paying loads more with no idea it could be cheaper. @get_nous checked ALL household bills, found cheaper deals and sorted the switches — now saving over £500 across mobile, broadband and energy. Worth checking what you could save. Full story with @get_nous in the body.",
+        "skip_criteria": [],
+        "special_rules": [
+            "PERFORMANCE / GREATEST HITS BRIEF: full story in every frame with @get_nous in the body — do NOT apply the 'Frame 1 = hook only' rule to any frame.",
+            "Frame 2 uses the '£7 a month for mobile' stat as the hook and should mention saving £500+ across mobile, broadband AND energy.",
+            "Frame 2 CTA button text MUST be 'Save with Nous'.",
+            "Required: the '£7 a month for mobile' hook, @get_nous tag, and the £500+ across-all-bills savings figure.",
+        ],
+    },
+    3: {
+        "title": "Overpaying on bills costs a typical household £781 a year",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "PERFORMANCE BRIEF Frame 3 (£781 stat) — Hook: thought expensive bills were just normal, never questioned it, let contracts roll over. The average family wastes £781 a year doing the same. Signed up to @get_nous, they checked everything, found better deals and have already saved hundreds — barely had to do anything. Worth checking if you've not looked at your bills for ages. Full story with @get_nous in the body.",
+        "skip_criteria": [],
+        "special_rules": [
+            "PERFORMANCE / GREATEST HITS BRIEF: full story in every frame with @get_nous in the body — do NOT apply the 'Frame 1 = hook only' rule to any frame.",
+            "Frame 3 uses the '£781 a year wasted' overpaying stat and the 'contracts rolling over / thought it was normal' framing.",
+            "Frame 3 CTA button text MUST be 'Save with Nous'.",
+            "Required: the '£781 a year' overpaying stat, @get_nous tag, and the 'saved hundreds with barely any effort' framing.",
+        ],
+    },
+}
+
 BRIEF_FRAME_GUIDANCE = {
     "family": {
         1: {
@@ -537,6 +587,7 @@ BRIEF_FRAME_GUIDANCE = {
     "energy only": _ENERGY_ONLY_GUIDANCE,
     "rising energy": _RISING_ENERGY_GUIDANCE,
     "price cap": _POST_PRICE_CAP_GUIDANCE,
+    "performance": _PERFORMANCE_GUIDANCE,
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
