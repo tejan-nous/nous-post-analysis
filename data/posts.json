@@ -331,9 +331,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 377,
-      "delegations": 243,
-      "landing_page_views": 2356,
+      "accounts_created": 383,
+      "delegations": 247,
+      "landing_page_views": 2427,
       "post_fee": null,
       "ecac": null
     },
@@ -394,8 +394,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 377,
-      "delegations": 265,
+      "accounts_created": 404,
+      "delegations": 282,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5796,6 +5796,69 @@
     }
   },
   {
+    "id": "395e4fd0-8136-8073-92e2-e6d377488056",
+    "name": "Amy Bell",
+    "post_sequence": null,
+    "date": "13 Jul 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/395e4fd08136807392e2e6d377488056",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "383e4fd0-8136-807a-afb7-ee4db1b37ccc",
     "name": "Alex Mansuroglu",
     "post_sequence": null,
@@ -6111,69 +6174,6 @@
     }
   },
   {
-    "id": "395e4fd0-8136-8073-92e2-e6d377488056",
-    "name": "Amy Bell",
-    "post_sequence": null,
-    "date": "11 Jul 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/395e4fd08136807392e2e6d377488056",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
     "id": "396e4fd0-8136-80c8-b0cf-c47fc7ca1f43",
     "name": "Evie 🤍 (councilhousemama)",
     "post_sequence": null,
@@ -6190,8 +6190,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 10,
-      "delegations": 7,
+      "accounts_created": 13,
+      "delegations": 9,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
