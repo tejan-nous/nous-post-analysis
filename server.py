@@ -63,6 +63,11 @@ BRIEFS = [
     {"brief": "Rising energy prices", "frames": [1, 2]},
     {"brief": "Post-price cap brief", "frames": [1, 2]},
     {"brief": "July Performance Brief", "frames": [1, 2, 3]},
+    {"brief": "Kids on Summer Holidays", "frames": [1, 2, 3]},
+    {"brief": "The Singles Tax", "frames": [1, 2, 3]},
+    {"brief": "Before / After prices V2", "frames": [1, 2, 3]},
+    {"brief": "Startling Stats (best of - phones)", "frames": [1, 2, 3]},
+    {"brief": "When did you last check?", "frames": [1, 2, 3]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -403,6 +408,57 @@ _PERFORMANCE_GUIDANCE = {
     },
 }
 
+# Shared guidance for the July 2026 "check your bills" experiment briefs. These
+# five variants are structurally identical — only the Frame 1 hook theme differs:
+#   Kids on Summer Holidays / The Singles Tax / Startling Stats (best of - phones)
+#   / When did you last check? / Before / After prices V2.
+# In ALL of them: every frame is a FULL story with @get_nous in the body, Frame 1's
+# CTA is "Start saving here!" (NOT "Save with Nous"), Frames 2 & 3 are "Save with
+# Nous", the saving is ~£600/yr across energy/broadband/mobile (or a per-bill
+# before/after), and Frame 3 is a community/DM callback to the earlier frames.
+_CHECK_BILLS_GUIDANCE = {
+    1: {
+        "title": "Themed hook → checked bills with @get_nous, saved ~£600",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Start saving here!",
+        "messaging_focus": "CHECK-YOUR-BILLS BRIEF Frame 1 — Opens with this brief's themed hook (summer-holiday costs / the 'singles tax' / the '£7 phone' stat / 'when did you last check/switch' / a before-after price reveal), then a full story: realised they'd quietly been overpaying, used @get_nous to check their household bills (energy / broadband / mobile), found roughly £600 a year (or a per-bill before/after like £45→half price), took ~5 minutes and Nous handled the switching. Frame 1 is a FULL STORY with @get_nous in the body; its CTA is 'Start saving here!'.",
+        "skip_criteria": [],
+        "special_rules": [
+            "CHECK-YOUR-BILLS BRIEF (shared across the summer-holidays / singles-tax / startling-stats-phones / when-did-you-last-check / before-after-prices-V2 variants): every frame is a FULL story with @get_nous in the body. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rule.",
+            "Frame 1 CTA button text MUST be 'Start saving here!' — NOT 'Save with Nous'. Do NOT flag Frame 1 for using 'Start saving here!'.",
+            "@get_nous tag required in the body.",
+            "Bills: the post references overpaying on one or more of energy, broadband or mobile with a specific £ saving (commonly ~£600/year, or a per-bill before/after such as £45→half, £150→£100, £50→£10). Do NOT require all three bills in every frame — some variants focus on a single bill per frame.",
+            "Savings figures are illustrative — the influencer should use their own substantiable figure; a specific £ amount should be present.",
+        ],
+    },
+    2: {
+        "title": "Why we overpay → @get_nous switched everything, saved ~£600",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "CHECK-YOUR-BILLS BRIEF Frame 2 — Continues the theme with the 'why we overpay' angle (contracts quietly rolling onto pricier deals / being the only bill-payer / still paying after the handset's paid off / £150→£100 energy). Full story: @get_nous checked their bills, found where they were overpaying, switched them and keeps monitoring. Saving ~£600/yr (or a per-bill before/after). CTA 'Save with Nous'.",
+        "skip_criteria": [],
+        "special_rules": [
+            "CHECK-YOUR-BILLS BRIEF: every frame is a FULL story with @get_nous in the body — do NOT apply the 'Frame 1 = hook only' rule to any frame.",
+            "Frame 2 CTA button text MUST be 'Save with Nous'.",
+            "@get_nous tag required in the body.",
+            "Bills: references overpaying on one or more of energy/broadband/mobile with a specific £ saving. Do NOT require all three bills — some variants focus on a single bill per frame.",
+        ],
+    },
+    3: {
+        "title": "Community/DM callback → recap ~£600 saved, invite followers to check",
+        "visual": "Calming shot within your home / selfie / picture with your family",
+        "cta": "Save with Nous",
+        "messaging_focus": "CHECK-YOUR-BILLS BRIEF Frame 3 — A COMMUNITY/DM CALLBACK to the earlier frames ('replies to my story', 'worst answer wins', 'what did everyone find', 'my DMs went mad'). References audience reactions, recaps ~£600/yr saved across energy/broadband/mobile and that Nous keeps monitoring their bills, and invites followers to check theirs / share. CTA 'Save with Nous'.",
+        "skip_criteria": ["problem_hook", "discovery_moment"],
+        "special_rules": [
+            "CHECK-YOUR-BILLS BRIEF: every frame is a FULL story with @get_nous in the body — do NOT apply the 'Frame 1 = hook only' rule to any frame.",
+            "Frame 3 is a COMMUNITY/DM CALLBACK referencing responses to the earlier posts. Do NOT flag the absence of a fresh problem-first hook — a callback opener is correct here.",
+            "Frame 3 CTA button text MUST be 'Save with Nous'.",
+            "@get_nous tag required in the body; a specific £ saving (commonly ~£600/year) should be present.",
+        ],
+    },
+}
+
 BRIEF_FRAME_GUIDANCE = {
     "family": {
         1: {
@@ -588,6 +644,11 @@ BRIEF_FRAME_GUIDANCE = {
     "rising energy": _RISING_ENERGY_GUIDANCE,
     "price cap": _POST_PRICE_CAP_GUIDANCE,
     "performance": _PERFORMANCE_GUIDANCE,
+    "summer holidays": _CHECK_BILLS_GUIDANCE,
+    "singles tax": _CHECK_BILLS_GUIDANCE,
+    "before / after prices": _CHECK_BILLS_GUIDANCE,
+    "best of - phones": _CHECK_BILLS_GUIDANCE,
+    "when did you last check": _CHECK_BILLS_GUIDANCE,
     "nous march": {
         1: {
             "title": "How Nous is saving you money on your bills",
