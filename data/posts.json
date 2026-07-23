@@ -3087,6 +3087,69 @@
     }
   },
   {
+    "id": "39ce4fd0-8136-8041-86a0-c9c1497fd908",
+    "name": "Marnie",
+    "post_sequence": null,
+    "date": "27 Jul 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/39ce4fd08136804186a0c9c1497fd908",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "39ce4fd0-8136-8016-bd4c-c2b757f43813",
     "name": "Sammi Pamela",
     "post_sequence": null,
@@ -5056,8 +5119,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
+      "accounts_created": 11,
+      "delegations": 9,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5308,8 +5371,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
+      "accounts_created": 6,
+      "delegations": 6,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5371,8 +5434,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
+      "accounts_created": 31,
+      "delegations": 25,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5434,8 +5497,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
+      "accounts_created": 36,
+      "delegations": 23,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5488,69 +5551,6 @@
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/39ee4fd0813680e78fe3c4fe64a3a74e",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "39ce4fd0-8136-8041-86a0-c9c1497fd908",
-    "name": "Marnie",
-    "post_sequence": null,
-    "date": "22 Jul 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/39ce4fd08136804186a0c9c1497fd908",
     "image": "",
     "instagram_url": "",
     "instagram_handle": "",
@@ -5812,8 +5812,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 72,
-      "delegations": 39,
+      "accounts_created": 84,
+      "delegations": 48,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5875,8 +5875,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 33,
-      "delegations": 24,
+      "accounts_created": 39,
+      "delegations": 29,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5938,8 +5938,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 25,
-      "delegations": 14,
+      "accounts_created": 28,
+      "delegations": 16,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -6001,8 +6001,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 11,
-      "delegations": 5,
+      "accounts_created": 28,
+      "delegations": 25,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -6127,8 +6127,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 19,
-      "delegations": 17,
+      "accounts_created": 27,
+      "delegations": 22,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -6190,8 +6190,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 9,
-      "delegations": 4,
+      "accounts_created": 14,
+      "delegations": 8,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
