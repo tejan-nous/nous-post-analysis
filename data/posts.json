@@ -1024,9 +1024,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 120,
-      "delegations": 89,
-      "landing_page_views": 681,
+      "accounts_created": 125,
+      "delegations": 92,
+      "landing_page_views": 763,
       "post_fee": null,
       "ecac": null
     },
@@ -1087,8 +1087,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 189,
-      "delegations": 128,
+      "accounts_created": 222,
+      "delegations": 151,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -5938,9 +5938,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 7,
+      "delegations": 6,
+      "landing_page_views": 26,
       "post_fee": null,
       "ecac": null
     },
@@ -6442,9 +6442,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 56,
-      "delegations": 31,
-      "landing_page_views": 228,
+      "accounts_created": 108,
+      "delegations": 67,
+      "landing_page_views": 425,
       "post_fee": null,
       "ecac": null
     },
@@ -6505,9 +6505,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 64,
-      "delegations": 46,
-      "landing_page_views": 339,
+      "accounts_created": 77,
+      "delegations": 54,
+      "landing_page_views": 388,
       "post_fee": null,
       "ecac": null
     },
@@ -6568,9 +6568,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 278,
-      "delegations": 158,
-      "landing_page_views": 1245,
+      "accounts_created": 393,
+      "delegations": 230,
+      "landing_page_views": 1684,
       "post_fee": null,
       "ecac": null
     },
