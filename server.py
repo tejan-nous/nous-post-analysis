@@ -68,6 +68,7 @@ BRIEFS = [
     {"brief": "Before / After prices V2", "frames": [1, 2, 3]},
     {"brief": "Startling Stats (best of - phones)", "frames": [1, 2, 3]},
     {"brief": "When did you last check?", "frames": [1, 2, 3]},
+    {"brief": "August price cap brief", "frames": [1, 2]},
 ]
 
 # Per-brief, per-frame guidance extracted from Notion briefs.
@@ -459,6 +460,46 @@ _CHECK_BILLS_GUIDANCE = {
     },
 }
 
+# "August price cap brief" — tied to the October 2026 price cap announcement, which
+# lands "in the next few days". This is a PRE-rise brief: July's 13% rise has already
+# happened, the further ~4% October rise has NOT (typical bills ~£250 higher than the
+# start of the year once it does). Only TWO frames. Unlike the July post-price-cap
+# brief, this one is NOT energy-only — both frames name broadband and phones too
+# (~£200/yr on energy "plus hundreds more" on broadband and mobile). Both frames are
+# FULL stories with @get_nous in the body; Frame 1's CTA is "Start saving here!" and
+# Frame 2's is "Save with Nous".
+_AUG_PRICE_CAP_GUIDANCE = {
+    1: {
+        "title": "New price cap about to land → beat the October rise with @get_nous",
+        "visual": "A calming shot within your house",
+        "cta": "Start saving here!",
+        "messaging_focus": "AUGUST PRICE CAP BRIEF Frame 1 — Hook: the new Energy Price Cap will be announced in the next few days and energy bills are expected to go up AGAIN. Bills already went up 13% in July and are supposed to rise another ~4% in October, leaving typical bills around £250 higher than at the start of the year. Thankfully there is a way to save and help cancel out those rises: using @get_nous to sort the bills — around £200 a year on energy, plus hundreds more on broadband and phones. Recommends giving Nous a try BEFORE the new prices kick in. Frame 1 is a FULL STORY with @get_nous in the body; CTA 'Start saving here!'.",
+        "skip_criteria": ["discovery_moment"],
+        "special_rules": [
+            "AUGUST PRICE CAP BRIEF: this is a PRE-rise brief. The October increase has NOT happened yet — it is announced/expected ('going up again', 'before the new prices kick in'). Do NOT flag the copy for treating the rise as upcoming rather than done. The July rise, by contrast, is correctly referred to in the past tense.",
+            "This brief is NOT energy-only: broadband and phones/mobile ARE part of the message (~£200/yr on energy PLUS hundreds more on broadband and phones). Do NOT apply the energy-only rules from the July post-price-cap brief.",
+            "Frame 1 is a FULL STORY, not a hook-only frame. @get_nous SHOULD appear in the body. Do NOT apply the default 'Frame 1 = hook only, no Nous mention' rule.",
+            "Frame 1 CTA button text MUST be 'Start saving here!' — NOT 'Save with Nous'. Do NOT flag Frame 1 for using 'Start saving here!'.",
+            "Required: the incoming-price-cap / bills-going-up-again hook, the July 13% rise and/or ~4% October rise (or the ~£250-higher-than-January framing), @get_nous tag, a savings figure (~£200 energy plus more across broadband/phones), and the 'try Nous before the new prices kick in' urgency framing.",
+            "Savings figures are illustrative — the influencer should substitute their own substantiable figure; a specific £ amount should be present.",
+        ],
+    },
+    2: {
+        "title": "Bills going up again in October → check you're not overpaying, @get_nous",
+        "visual": "A calming shot within your house",
+        "cta": "Save with Nous",
+        "messaging_focus": "AUGUST PRICE CAP BRIEF Frame 2 — Hook: just seen in the news that bills are going up AGAIN in October, when they literally JUST went up in July — meaning the typical household could end up paying over £250 more than at the start of the year. So it's a really good time to check whether you're overpaying, because most people aren't on the best deal. Used @get_nous to sort it all: around £200 a year on energy, plus hundreds more on broadband and phones, which could help cancel out the price rises. Check them out before the new prices kick in. CTA 'Save with Nous'.",
+        "skip_criteria": ["problem_hook"],
+        "special_rules": [
+            "AUGUST PRICE CAP BRIEF Frame 2: PRE-rise. The October increase is still upcoming ('going up again in October', 'before the new prices kick in') while the July rise has already happened. Do NOT flag the mixed tenses — both are correct for this brief.",
+            "This brief is NOT energy-only: broadband and phones/mobile ARE part of the message. Do NOT apply the energy-only rules from the July post-price-cap brief.",
+            "Frame 2 is a FULL STORY with @get_nous in the body; the @get_nous tag is required.",
+            "Frame 2 CTA button text MUST be 'Save with Nous'.",
+            "Required: the 'bills going up again in October / just went up in July' news hook, the 'most people are overpaying — good time to check' framing, @get_nous tag, and the savings figure (~£200 energy plus hundreds more on broadband/phones).",
+        ],
+    },
+}
+
 BRIEF_FRAME_GUIDANCE = {
     "family": {
         1: {
@@ -642,6 +683,11 @@ BRIEF_FRAME_GUIDANCE = {
     "savings number first": _SAVINGS_FIRST_GUIDANCE,
     "energy only": _ENERGY_ONLY_GUIDANCE,
     "rising energy": _RISING_ENERGY_GUIDANCE,
+    # ORDER MATTERS: get_brief_guidance() does a first-match-wins substring scan in
+    # insertion order, and "August price cap brief" also contains "price cap". This
+    # more specific key MUST stay above the July "price cap" one, or the August brief
+    # silently gets reviewed against July's energy-only, post-rise rules.
+    "august price cap": _AUG_PRICE_CAP_GUIDANCE,
     "price cap": _POST_PRICE_CAP_GUIDANCE,
     "performance": _PERFORMANCE_GUIDANCE,
     "summer holidays": _CHECK_BILLS_GUIDANCE,
