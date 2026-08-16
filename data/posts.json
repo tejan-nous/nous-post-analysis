@@ -2284,9 +2284,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 290,
-      "delegations": 205,
-      "landing_page_views": 1757,
+      "accounts_created": 296,
+      "delegations": 206,
+      "landing_page_views": 1812,
       "post_fee": null,
       "ecac": null
     },
@@ -2347,8 +2347,8 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 394,
-      "delegations": 262,
+      "accounts_created": 440,
+      "delegations": 299,
       "landing_page_views": null,
       "post_fee": null,
       "ecac": null
@@ -8130,7 +8130,7 @@
     "id": "3bae4fd0-8136-805e-bba5-fe29fcf983a0",
     "name": "Gaz Beadle",
     "post_sequence": null,
-    "date": "14 Aug 2026",
+    "date": "15 Aug 2026",
     "format": "Story",
     "niche": "",
     "notion_url": "https://www.notion.so/3bae4fd08136805ebba5fe29fcf983a0",
@@ -8143,9 +8143,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": 1,
+      "accounts_created": 23,
+      "delegations": 17,
+      "landing_page_views": 114,
       "post_fee": null,
       "ecac": null
     },
@@ -8332,9 +8332,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 30,
-      "delegations": 24,
-      "landing_page_views": 195,
+      "accounts_created": 37,
+      "delegations": 30,
+      "landing_page_views": 224,
       "post_fee": null,
       "ecac": null
     },
@@ -8521,9 +8521,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 58,
-      "delegations": 41,
-      "landing_page_views": 226,
+      "accounts_created": 85,
+      "delegations": 58,
+      "landing_page_views": 302,
       "post_fee": null,
       "ecac": null
     },
