@@ -3150,6 +3150,69 @@
     }
   },
   {
+    "id": "3c6e4fd0-8136-80b1-afd2-e84eb7f14df2",
+    "name": "Maria Fowler",
+    "post_sequence": null,
+    "date": "28 Sep 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/3c6e4fd0813680b1afd2e84eb7f14df2",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "3dee4fd0-8136-8010-a876-d3ca1f321ba2",
     "name": "Beth Turbutt-Rogers",
     "post_sequence": null,
@@ -4174,9 +4237,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 61,
+      "delegations": 38,
+      "landing_page_views": 187,
       "post_fee": null,
       "ecac": null
     },
@@ -4237,9 +4300,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 3,
+      "delegations": 2,
+      "landing_page_views": 37,
       "post_fee": null,
       "ecac": null
     },
@@ -4300,9 +4363,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 16,
+      "delegations": 10,
+      "landing_page_views": 79,
       "post_fee": null,
       "ecac": null
     },
@@ -4363,9 +4426,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 18,
+      "delegations": 15,
+      "landing_page_views": 117,
       "post_fee": null,
       "ecac": null
     },
@@ -4473,69 +4536,6 @@
     }
   },
   {
-    "id": "3c6e4fd0-8136-80b1-afd2-e84eb7f14df2",
-    "name": "Maria Fowler",
-    "post_sequence": null,
-    "date": "25 Sep 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/3c6e4fd0813680b1afd2e84eb7f14df2",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
     "id": "3e2e4fd0-8136-802e-8560-cd128b393b72",
     "name": "Jaydene Palser",
     "post_sequence": null,
@@ -4552,9 +4552,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 4,
+      "accounts_created": 2,
       "delegations": 3,
-      "landing_page_views": 21,
+      "landing_page_views": 6,
       "post_fee": null,
       "ecac": null
     },
@@ -4867,9 +4867,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 9,
-      "delegations": 6,
-      "landing_page_views": 51,
+      "accounts_created": 13,
+      "delegations": 7,
+      "landing_page_views": 79,
       "post_fee": null,
       "ecac": null
     },
@@ -4932,7 +4932,7 @@
     "performance": {
       "accounts_created": 2,
       "delegations": 1,
-      "landing_page_views": 10,
+      "landing_page_views": 11,
       "post_fee": null,
       "ecac": null
     },
@@ -4993,9 +4993,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 4,
-      "delegations": 2,
-      "landing_page_views": 15,
+      "accounts_created": 5,
+      "delegations": 3,
+      "landing_page_views": 18,
       "post_fee": null,
       "ecac": null
     },
