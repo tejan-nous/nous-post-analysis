@@ -6633,7 +6633,7 @@
     "performance": {
       "accounts_created": null,
       "delegations": null,
-      "landing_page_views": 1,
+      "landing_page_views": 7,
       "post_fee": null,
       "ecac": null
     },
@@ -6757,9 +6757,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 19,
-      "delegations": 13,
-      "landing_page_views": 73,
+      "accounts_created": 26,
+      "delegations": 18,
+      "landing_page_views": 89,
       "post_fee": null,
       "ecac": null
     },
@@ -6946,9 +6946,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 2,
+      "accounts_created": 3,
       "delegations": 3,
-      "landing_page_views": 10,
+      "landing_page_views": 14,
       "post_fee": null,
       "ecac": null
     },
