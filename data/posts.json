@@ -3717,6 +3717,69 @@
     }
   },
   {
+    "id": "3f3e4fd0-8136-8048-b38b-d8530041a5d4",
+    "name": "Laura Louise",
+    "post_sequence": null,
+    "date": "24 Oct 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/3f3e4fd081368048b38bd8530041a5d4",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "3f1e4fd0-8136-80e4-a34a-fad11861c5eb",
     "name": "Gaz Beadle",
     "post_sequence": null,
@@ -5497,72 +5560,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 25,
-      "delegations": 18,
-      "landing_page_views": 76,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
-    "id": "3f3e4fd0-8136-8048-b38b-d8530041a5d4",
-    "name": "Laura Louise",
-    "post_sequence": null,
-    "date": "17 Oct 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/3f3e4fd081368048b38bd8530041a5d4",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 28,
+      "delegations": 20,
+      "landing_page_views": 80,
       "post_fee": null,
       "ecac": null
     },
@@ -5686,9 +5686,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 3,
-      "delegations": 2,
-      "landing_page_views": 37,
+      "accounts_created": 12,
+      "delegations": 8,
+      "landing_page_views": 113,
       "post_fee": null,
       "ecac": null
     },
@@ -5749,9 +5749,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 43,
-      "delegations": 30,
-      "landing_page_views": 146,
+      "accounts_created": 60,
+      "delegations": 44,
+      "landing_page_views": 192,
       "post_fee": null,
       "ecac": null
     },
