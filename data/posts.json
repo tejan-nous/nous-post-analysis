@@ -4599,6 +4599,69 @@
     }
   },
   {
+    "id": "3f7e4fd0-8136-807e-a2f4-ff7b526e37be",
+    "name": "Sammi Pamela",
+    "post_sequence": null,
+    "date": "22 Oct 2026",
+    "format": "Story",
+    "niche": "",
+    "notion_url": "https://www.notion.so/3f7e4fd08136807ea2f4ff7b526e37be",
+    "image": "",
+    "instagram_url": "",
+    "instagram_handle": "",
+    "campaign_timeline": [],
+    "brief_info": {
+      "niche_brief": "",
+      "pillars": []
+    },
+    "performance": {
+      "accounts_created": null,
+      "delegations": null,
+      "landing_page_views": null,
+      "post_fee": null,
+      "ecac": null
+    },
+    "brief_compliance": [
+      {
+        "label": "Problem-aware hook",
+        "pass": false
+      },
+      {
+        "label": "Discovery moment",
+        "pass": false
+      },
+      {
+        "label": "What Nous does",
+        "pass": false
+      },
+      {
+        "label": "Savings claim",
+        "pass": false
+      },
+      {
+        "label": "Sign-up ease",
+        "pass": false
+      },
+      {
+        "label": "@get_nous tag",
+        "pass": false
+      },
+      {
+        "label": "Save with Nous CTA",
+        "pass": false
+      },
+      {
+        "label": "Calming/lifestyle visual",
+        "pass": false
+      }
+    ],
+    "review_comments": [],
+    "review_reflection": {
+      "good": [],
+      "missed": []
+    }
+  },
+  {
     "id": "3dfe4fd0-8136-80c2-a42a-d9efda766f33",
     "name": "Yasmin Lauren T",
     "post_sequence": null,
@@ -4788,69 +4851,6 @@
     }
   },
   {
-    "id": "3f7e4fd0-8136-807e-a2f4-ff7b526e37be",
-    "name": "Sammi Pamela",
-    "post_sequence": null,
-    "date": "21 Oct 2026",
-    "format": "Story",
-    "niche": "",
-    "notion_url": "https://www.notion.so/3f7e4fd08136807ea2f4ff7b526e37be",
-    "image": "",
-    "instagram_url": "",
-    "instagram_handle": "",
-    "campaign_timeline": [],
-    "brief_info": {
-      "niche_brief": "",
-      "pillars": []
-    },
-    "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
-      "post_fee": null,
-      "ecac": null
-    },
-    "brief_compliance": [
-      {
-        "label": "Problem-aware hook",
-        "pass": false
-      },
-      {
-        "label": "Discovery moment",
-        "pass": false
-      },
-      {
-        "label": "What Nous does",
-        "pass": false
-      },
-      {
-        "label": "Savings claim",
-        "pass": false
-      },
-      {
-        "label": "Sign-up ease",
-        "pass": false
-      },
-      {
-        "label": "@get_nous tag",
-        "pass": false
-      },
-      {
-        "label": "Save with Nous CTA",
-        "pass": false
-      },
-      {
-        "label": "Calming/lifestyle visual",
-        "pass": false
-      }
-    ],
-    "review_comments": [],
-    "review_reflection": {
-      "good": [],
-      "missed": []
-    }
-  },
-  {
     "id": "3f3e4fd0-8136-8025-878e-e02c5265adcb",
     "name": "Nat 🏴󠁧󠁢󠁷󠁬󠁳󠁿 Working Mum, Parenting & Real Life",
     "post_sequence": null,
@@ -4869,7 +4869,7 @@
     "performance": {
       "accounts_created": null,
       "delegations": null,
-      "landing_page_views": null,
+      "landing_page_views": 13,
       "post_fee": null,
       "ecac": null
     },
@@ -4930,9 +4930,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 45,
+      "delegations": 33,
+      "landing_page_views": 146,
       "post_fee": null,
       "ecac": null
     },
@@ -4993,9 +4993,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 13,
+      "delegations": 13,
+      "landing_page_views": 68,
       "post_fee": null,
       "ecac": null
     },
@@ -5058,7 +5058,7 @@
     "performance": {
       "accounts_created": null,
       "delegations": null,
-      "landing_page_views": null,
+      "landing_page_views": 1,
       "post_fee": null,
       "ecac": null
     },
@@ -5245,9 +5245,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 35,
+      "delegations": 22,
+      "landing_page_views": 135,
       "post_fee": null,
       "ecac": null
     },
@@ -5371,9 +5371,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 8,
-      "delegations": 5,
-      "landing_page_views": 54,
+      "accounts_created": 17,
+      "delegations": 7,
+      "landing_page_views": 78,
       "post_fee": null,
       "ecac": null
     },
@@ -5436,7 +5436,7 @@
     "performance": {
       "accounts_created": 3,
       "delegations": 2,
-      "landing_page_views": 8,
+      "landing_page_views": 10,
       "post_fee": null,
       "ecac": null
     },
@@ -5497,9 +5497,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 18,
-      "delegations": 16,
-      "landing_page_views": 80,
+      "accounts_created": 19,
+      "delegations": 17,
+      "landing_page_views": 108,
       "post_fee": null,
       "ecac": null
     },
