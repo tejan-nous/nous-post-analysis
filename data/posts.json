@@ -4300,9 +4300,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 28,
+      "delegations": 19,
+      "landing_page_views": 211,
       "post_fee": null,
       "ecac": null
     },
@@ -4428,7 +4428,7 @@
     "performance": {
       "accounts_created": null,
       "delegations": null,
-      "landing_page_views": null,
+      "landing_page_views": 2,
       "post_fee": null,
       "ecac": null
     },
@@ -4615,9 +4615,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 14,
+      "delegations": 10,
+      "landing_page_views": 65,
       "post_fee": null,
       "ecac": null
     },
@@ -4804,9 +4804,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": 2,
-      "delegations": 3,
-      "landing_page_views": 15,
+      "accounts_created": 5,
+      "delegations": 7,
+      "landing_page_views": 33,
       "post_fee": null,
       "ecac": null
     },
