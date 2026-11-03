@@ -1528,9 +1528,9 @@
       "pillars": []
     },
     "performance": {
-      "accounts_created": null,
-      "delegations": null,
-      "landing_page_views": null,
+      "accounts_created": 22,
+      "delegations": 11,
+      "landing_page_views": 70,
       "post_fee": null,
       "ecac": null
     },
