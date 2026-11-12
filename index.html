@@ -3838,7 +3838,7 @@ const posts = [
     "performance": {
       "accounts_created": null,
       "delegations": null,
-      "landing_page_views": null,
+      "landing_page_views": 1,
       "post_fee": null,
       "ecac": null
     },
@@ -3899,9 +3899,9 @@ const posts = [
       "pillars": []
     },
     "performance": {
-      "accounts_created": 38,
-      "delegations": 17,
-      "landing_page_views": 198,
+      "accounts_created": 39,
+      "delegations": 20,
+      "landing_page_views": 211,
       "post_fee": null,
       "ecac": null
     },
@@ -161913,7 +161913,7 @@ function updateReviewerBadge() {
 })();
 
 // --- Notion upcoming posts autocomplete ---
-const upcomingPosts = [{"influencer_name": "Carly Harris", "post_date": "2026-11-11", "frame": 9, "brief": "", "campaign_name": "Carly Harris", "has_etm": false}, {"influencer_name": "Salaha", "post_date": "2026-11-12", "frame": 15, "brief": "", "campaign_name": "Salaha", "has_etm": false}, {"influencer_name": "Jess Duxbury", "post_date": "2026-11-12", "frame": 6, "brief": "", "campaign_name": "Jess Duxbury", "has_etm": false}, {"influencer_name": "Maddison \ud83e\udd0e", "post_date": "2026-11-13", "frame": 18, "brief": "", "campaign_name": "Maddison \ud83e\udd0e", "has_etm": false}, {"influencer_name": "Aleena Razzaq", "post_date": "2026-11-13", "frame": 17, "brief": "", "campaign_name": "Aleena Razzaq", "has_etm": false}, {"influencer_name": "Abby Lever", "post_date": "2026-11-14", "frame": 14, "brief": "", "campaign_name": "Abby Lever", "has_etm": false}, {"influencer_name": "Irsa", "post_date": "2026-11-16", "frame": 18, "brief": "", "campaign_name": "Irsa", "has_etm": false}, {"influencer_name": "Salaha", "post_date": "2026-11-19", "frame": 16, "brief": "", "campaign_name": "Salaha", "has_etm": false}, {"influencer_name": "Abby Lever", "post_date": "2026-11-21", "frame": 15, "brief": "", "campaign_name": "Abby Lever", "has_etm": false}, {"influencer_name": "Salaha", "post_date": "2026-11-26", "frame": 17, "brief": "", "campaign_name": "Salaha", "has_etm": false}];
+const upcomingPosts = [{"influencer_name": "Salaha", "post_date": "2026-11-12", "frame": 15, "brief": "", "campaign_name": "Salaha", "has_etm": false}, {"influencer_name": "Jess Duxbury", "post_date": "2026-11-12", "frame": 6, "brief": "", "campaign_name": "Jess Duxbury", "has_etm": false}, {"influencer_name": "Maddison \ud83e\udd0e", "post_date": "2026-11-13", "frame": 18, "brief": "", "campaign_name": "Maddison \ud83e\udd0e", "has_etm": false}, {"influencer_name": "Aleena Razzaq", "post_date": "2026-11-13", "frame": 17, "brief": "", "campaign_name": "Aleena Razzaq", "has_etm": false}, {"influencer_name": "Abby Lever", "post_date": "2026-11-14", "frame": 14, "brief": "", "campaign_name": "Abby Lever", "has_etm": false}, {"influencer_name": "Irsa", "post_date": "2026-11-16", "frame": 18, "brief": "", "campaign_name": "Irsa", "has_etm": false}, {"influencer_name": "Salaha", "post_date": "2026-11-19", "frame": 16, "brief": "", "campaign_name": "Salaha", "has_etm": false}, {"influencer_name": "Abby Lever", "post_date": "2026-11-21", "frame": 15, "brief": "", "campaign_name": "Abby Lever", "has_etm": false}, {"influencer_name": "Salaha", "post_date": "2026-11-26", "frame": 17, "brief": "", "campaign_name": "Salaha", "has_etm": false}];
 let _notionPosts = upcomingPosts.length ? upcomingPosts : [];
 let _notionPostsLoaded = upcomingPosts.length > 0;
 
