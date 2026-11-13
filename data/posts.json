@@ -521,7 +521,7 @@
     },
     "performance": {
       "accounts_created": null,
-      "delegations": null,
+      "delegations": 12,
       "landing_page_views": 1,
       "post_fee": null,
       "ecac": null
